@@ -1,0 +1,113 @@
+<!--
+  ~  © 2021. NHN Commerce Corp. All rights reserved.
+  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~  @author hyeyeon-park
+  ~  @since 2021.8.20
+  -->
+
+<script id="productInquiryPopupTemplate" type="text/x-handlebars-template">
+    <div class="ly_pop ly_effect_3 ly_show">
+        <div class="ly_wrap">
+            <div class="layer_common_wrapper write_qa">
+                <div class="ly_head">
+                    <h1 class="h_tit">
+                        {{name}}
+                    </h1>
+                </div>
+
+                <div id="productInquiryContent" class="write_wrap" data-template-id='productInquiryContentTemplate'>
+                </div>
+
+                <div class="close_btn">
+                    <button type="button" class="lys_close_btn ly_btn_close" data-action-type="close">닫기</button>
+                </div>
+            </div>
+        </div>
+        <ul class="btn_box">
+            <li><button type="button" class="address_cancel_btn ly_btn_close " data-action-type="close">이전</button></li>
+            <li><button type="button" id="btnWriteArticle" class="address_save_btn" data-action-type="submit">저장</button>
+        </ul>
+    </div>
+</script>
+
+<script id="productInquiryContentTemplate" type="text/x-handlebars-template">
+    <div id="productInquiryContent" class="write_wrap" data-template-id='productInquiryContentTemplate'>
+      <div class="box common_popup_body">
+        <div class="view">
+          <div class="board_write_box">
+            <dl>
+              <dt><label for="category">문의유형</label></dt>
+              <dd>
+                <div class="inp_sel">
+                  <select name="type" {{#ifEq replied true}}disabled{{/ifEq}}>
+                    {{#each inquiryTypes}}
+                      {{option value label ../type ''}}
+                    {{/each}}
+                  </select>
+                </div>
+              </dd>
+            </dl>
+
+            <dl>
+              <dt><label for="selectGoodsBox">상품</label></dt>
+              <dd id='selectedProduct'
+                  data-image-url="{{imageUrl}}"
+                  data-product-no="{{productNo}}"
+                  data-product-name="{{productName}}">
+                {{#if productName}}
+                  {{#ifNe unchangeable true}}
+                  <div>
+                    <button title='찾아보기' class='prd_select_btn btn_goods_select' data-action-type='searchProduct'>
+                      다른 상품 선택
+                    </button>
+                  </div>
+                  {{/ifNe}}
+                  <span class="select_item_img">
+                    {{#if imageUrl}}
+                      {{img imageUrl '' '' productName '' 'max-width:50px;vertical-align:middle;'}}
+                    {{/if}}
+                  </span>
+                  <a href="/pages/product/view.html?productNo={{productNo}}">
+                  {{safeString productName}}
+                  </a>
+                {{else}}
+                  {{#ifEq mode 'registration'}}
+                    <div class="board_goods_select">
+                        <span>
+                            문의를 작성할 상품을 선택해주세요.
+                        </span>
+                      <button title='찾아보기' class='prd_select_btn btn_goods_select' data-action-type='searchProduct'>
+                        상품 선택
+                      </button>
+                    </div>
+                  {{/ifEq}}
+                {{/if}}
+              </dd>
+            </dl>
+            <dl class="b_content">
+              <dt>
+                <label>내용</label>
+                {{#if displayOption.secretPostingUsed}}
+                  <div class="b_content_chk">
+                    <span class="inp_chk">
+                        <input type="checkbox" name="secreted" id="secreted" {{#if secreted}}checked{{/if}}>
+                      <label for="secreted" class="check_s">비밀글</label>
+                    </span>
+                  </div>
+                {{/if}}
+              </dt>
+              <dd>
+                <div class="textarea_box">
+                  <textarea id="editor" class="textarea" name="content" cols="30" rows="10" maxlength="1000" placeholder="내용을 입력해주세요." data-pattern="article" {{#ifEq replied true}}disabled{{/ifEq}}>{{articles.content}}</textarea>
+                  <p class="textarea_box_length">{{content.length}}/1000</p>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+
+<script type="text/javascript" src="/js/components/popup/product-inquiry.js"></script>

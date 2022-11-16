@@ -1,0 +1,39 @@
+<!--
+  ~  © 2021. NHN Commerce Corp. All rights reserved.
+  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~  @author hyeyeon-park
+  ~  @since 2021.7.29
+  -->
+
+<script id="termsPopupTemplate" type="text/x-handlebars-template">
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='ly_wrap'>
+            <div class='layer_common_wrapper'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        {{title}}
+                    </h1>
+                </div>
+                <div class='scroll_box' style='padding: 20px;'>
+                    <div class='agreement_box'>
+                        {{{contents}}}
+                    </div>
+                </div>
+                <ul class='btn_box'>
+                    <li>
+                        <button type='button' class='address_cancel_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                            닫 기
+                        </button>
+                    </li>
+                    <li>
+                        <button type='button' class='address_save_btn btnClosePopup' data-action-type='positive'>
+                            확 인
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript" src="/js/components/popup/terms.js"></script>

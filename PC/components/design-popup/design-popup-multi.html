@@ -1,0 +1,35 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~ @author Daejoong Son
+  ~ @since 2021.7.14
+  -->
+
+<script id="designPopupMultiTemplate" type="text/x-handlebars-template">
+    <div class="design-popup-multi-wrap">
+      <div class="design-popup-multi-main-wrap">
+        <div class="bxslider-wrap" style="width: {{ popupSlideInfo.slideMaxWidth }}px; height: {{ popupSlideInfo.slideMaxHeight }}px; position:relative; overflow:hidden;">
+          <div class="slider-wrap mp_select_img" id="design-popup-big-slider-wrap"></div>
+        </div>
+        <div>
+          <div class="mp_item_wrap" style="width: {{ imageListBoxSize.width }}px; height: {{ imageListBoxSize.height }}px; overflow:hidden;">
+            {{#each popupSlideInfo.slideImages}}
+            <div id="design-popup-small-slide-wrap-{{ @index }}" class="mp_item" data-slide-index="{{ @index }}" style="width: {{ ../popupSlideInfo.slideMinWidth }}px; height: {{ ../popupSlideInfo.slideMinHeight }}px; overflow:hidden;"></div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+      <div class="design-popup-multi-bottom-wrap">
+    {{#if visibleToday}}
+        <div class="ctrl" id="design-popup-today">
+          <label class="check-s" for="design-popup-today-{{ popupNo }}">오늘 하루 보이지 않음</label>
+          <input type="checkbox" class="checkbox" id="design-popup-today-{{ popupNo }}" />
+        </div>
+      {{/if}}
+      </div>
+      <button type="button" class="design-popup-multi-close" id="design-popup-close" >닫기</button>
+    </div>
+</script>
+
+<script type="text/javascript" src="/js/components/design-popup/design-popup-multi.js"></script>

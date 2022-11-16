@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <title>회사소개</title>
+    </head>
+
+    <body>
+        <header id="header"></header>
+        <div id="contents">
+            <main class="sub_content">
+                <div class="location_wrap visible">
+                    <div class="location_cont">
+                        <em><a href="/" class="local_home">HOME</a> &gt; 회사소개</em>
+                    </div>
+                </div>
+                <div class="content_box" id="component-agreement">
+                    <div class="service_tit">
+                        <h2>회사소개</h2>
+                    </div>
+                    <div class="service_cont">
+                        {{{termsContents}}}
+                    </div>
+                    {{#if kakaoMap}}
+                    <div class="location">
+                        <div class="service_tit">
+                            <h3>위치안내</h3>
+                        </div>
+                        <div id="map" style="width: 700px; height: 400px;"></div>
+                    </div>
+                    {{/if}}
+                </div>
+            </main>
+        </div>
+        <aside id="aside"></aside>
+        <footer id="footer"></footer>
+        <div id="popups-area"></div>
+
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/pages/service/company.js"></script>
+    </body>
+</html>

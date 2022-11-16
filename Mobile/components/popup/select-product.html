@@ -1,0 +1,105 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~  @author hyeyeon-park
+  ~  @since 2021.8.24
+  -->
+
+<script id="selectProductPopupTemplate" type="text/x-handlebars-template">
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='ly_wrap layer_goods_select' style='text-align: left;'>
+            <div class='ly_head'>
+                <h1 class='h_tit'>
+                    상품 선택
+                </h1>
+            </div>
+            <div class='write_wrap'>
+                <div class='view' style='text-align: left;'>
+                    <div class='scroll_box'>
+                        <div class='ly_cont'>
+                            <div class='ly_buy_info'>
+                                <div class='search_box js_singel_option'>
+                                    <div class='search_filter'>
+                                        <div class='inp_sel'>
+                                            <select id='filterSelector'>
+                                                <option value='KEYWORDS'>
+                                                    키워드
+                                                </option>
+                                                <option value='PRODUCT_NO'>
+                                                    상품번호
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class='search_text ly_date_search_list'>
+                                        <input type='text' name='keyword' maxlength='20' placeholder='검색어를 입력해주세요.' />
+                                    </div>
+                                </div>
+                                <div class='btn_box' style='width:auto;position:relative'>
+                                    <button class='ly_select_search_btn' type='button' id='searchProduct'>
+                                        검색
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class='top_table_type'>
+                                    <ul id='searchedProducts' class='ly_loop product_list' data-template-id='searchedProductsTemplate'>
+                                    </ul>
+                                    <div id='btnMoreProduct'></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='close_btn'>
+                    <button type='button' class='lys_close_btn ly_btn_close' data-action-type='negative'>
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="searchedProductsTemplate" type="text/x-handlebars-template">
+    <ul id='searchedProducts' class='ly_loop product_list' data-template-id='searchedProductsTemplate'>
+        {{#each products}}
+            <li class='my_goods' data-product-no="{{productNo}}">
+                <div class='info'>
+                    <div class='itemhead'>
+                        <div class='thmb img'>
+                            <img src="{{listImageUrls}}" alt='{productName}}' />
+                        </div>
+                    </div>
+                    <div class='itembody'>
+                        <p class='name'>
+                            {{safeString productName}}
+                        </p>
+                        <p class='prc'>
+                            상품금액 :
+                            <span class='goods_price'>
+                                {{toCurrencyString salePrice}}원
+                            </span>
+                        </p>
+                    </div>
+                    <div class='btn_bx'>
+                        <button id='selectProduct' class='ly_select_search_btn1 js_select_confirm'>
+                            선택
+                        </button>
+                    </div>
+                </div>
+            </li>
+        {{else}}
+            <div class='itemselect' style='background-color: #fff;'>
+                <div class='itemselect_comment' style='display: block;text-align:center'>
+                    검색된 상품이 없습니다.
+                </div>
+            </div>
+        {{/each}}
+    </ul>
+</script>
+
+<script src="/js/components/popup/select-product.js"></script>

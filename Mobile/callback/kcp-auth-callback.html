@@ -1,0 +1,33 @@
+<!--
+  ~  © 2021. NHN Commerce Corp. All rights reserved.
+  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~  
+  ~  @author choisohyun
+  ~  @since 2021.7.8
+  ~
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <title>휴대폰인증</title>
+    </head>
+
+    <body>
+        <div id="form-holder"></div>
+        <iframe id="kcp_cert" name="kcp_cert" width="100%" height="700" frameborder="0" scrolling="no" style="display:none" sandbox="allow-top-navigation allow-top-navigation-by-user-activation allow-popups allow-scripts allow-modals allow-forms"></iframe>
+        <div id="popups-area"></div>
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/callback/js/kcp-auth-callback.js"></script>
+    </body>
+</html>

@@ -1,0 +1,16 @@
+{
+	"name": "mallName",
+	"short_name": "mallName",
+	"description": "mallName",
+	"start_url": "/",
+	"incognito":"split",
+	"display": "standalone",
+	"icons": [
+		{
+			"src": "https://rlyfaazj0.toastcdn.net/20211220/141125.985487000/app_icon(144).png",
+			"sizes": "144x144",
+			"type": "image/png",
+			"purpose": "any"
+		}
+	]
+}

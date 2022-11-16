@@ -1,0 +1,82 @@
+/*
+ * © NHN Commerce Corp. All rights reserved.
+ * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ * @author JongKeun Kim
+ * @since 2021.6.30
+ */
+
+/**
+ * global
+ */
+@import 'common/reset.css';
+@import 'common/common.css';
+@import 'common/button.css';
+@import 'common/layer.css';
+@import 'layout/layout.css';
+@import 'post_search.css';
+/**
+ * library
+ */
+ /* @import '/lib/foo/foo.css' */
+@import '../../lib/slick/slick.css';
+
+
+/**
+ * pages
+ */
+@import 'main/main.css';
+@import 'board/board.css';
+@import 'event/event.css';
+@import 'goods/goods.css';
+@import 'goods/list.css';
+@import 'member/member.css';
+@import 'mypage/mypage.css';
+@import 'order/order.css';
+@import 'service/service.css';
+@import 'design-popup/design-popup.css';
+
+
+/**
+ * utils
+ * @author HaekyuCho
+ * @desc 개발에 필요한것들..
+ */
+.hide {display:none;}
+
+
+/**
+ * global layout box height
+ *
+ * @author : JongKeun Kim
+ */
+
+#header {
+    visibility: hidden;
+    box-sizing: border-box;
+    min-height: 107px;
+}
+
+#footer {
+    visibility: hidden;
+    box-sizing: border-box;
+    min-height: 728px;
+}
+
+#contents {
+    visibility: hidden;
+    box-sizing: border-box;
+    min-height: calc(100vh - 107px - 728px);
+}
+
+.visible {
+    visibility: visible !important;
+}
+
+.invisible {
+    visibility: hidden !important;
+}
+
+.popup-open {
+    overflow: hidden;
+}

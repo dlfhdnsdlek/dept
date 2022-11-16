@@ -1,0 +1,34 @@
+<script id="photoReviewsTemplate" type="text/x-handlebars-template">
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='ly_wrap' id='photoReviewContents'>
+            <div class='layer_common_wrapper layer_shipping_address_regist'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        포토 ({{totalCount}})
+                    </h1>
+                </div>
+                <div class='scroll_box ly_content'>
+                    <div class='p-grid' id='reviewImages'>
+                        {{#each contents}}
+                            <button class='img-frame reviewImg' data-review-no="{{reviewNo}}">
+                                <img src="{{getFirstItem urls}}" alt='포토리뷰' />
+                                {{#ifGt attachedFileCount 1}}
+                                    <span class='p-grid-file-count'>
+                                        {{attachedFileCount}}
+                                    </span>
+                                {{/ifGt}}
+                            </button>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            <div class='close_btn'>
+                <button type='button' class='lys_close_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript" src="/js/components/popup/photo-reviews.js"></script>

@@ -1,0 +1,190 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~ @author hyeyeon-park
+  ~ @since 2021.8.13
+  -->
+
+<script id="downloadCouponPopupTemplate" type="text/x-handlebars-template">
+    <div class='ly_pop ly_effect_3 ly_show dimed'>
+        <div class='ly_wrap'>
+            <div class='layer_common_wrapper layer_coupon_down' style='height: 100%;box-sizing:border-box'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        쿠폰 다운받기
+                    </h1>
+                </div>
+
+                <!-- 본문 영역 html-->
+                <div class='write_wrap'>
+                    <div class='ly_cont'>
+                        <div class='scroll_box' style='min-height:430px;max-height:calc(100vh - 100px);'>
+                            <div class='ly_content ly_ct'>
+                                <div class='coupondown'>
+                                    <div class='coupon_down_list'>
+                                        <ul id='coupons' data-template-id='couponsTemplate'></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- //scroll_box -->
+                    </div>
+                    <!-- //ly_cont -->
+
+                    <div id="couponInfo{{couponNo}}" class='coupon_infor_layer_dim' data-template-id='counponInfoTemplate' data-coupon-no="{{couponNo}}">
+                    </div>
+
+                    <div class='close_btn'>
+                        <button type='button' class='lys_close_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                            닫기
+                        </button>
+                    </div>
+                </div>
+
+                <ul class='btn_box'>
+                    <div class='coupon_btn_box'>
+                        <a href='#' type='button' id='btnAllCouponDown' class='coupon_all_down_btn' data-action-type='positive'>
+                            전체다운로드
+                        </a>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="couponsTemplate" type="text/x-handlebars-template">
+    <ul id='coupons' data-template-id='couponsTemplate'>
+        {{#each coupons}}
+            <li data-coupon-no="{{couponNo}}">
+                <div>
+                    <div class='coupon_left'>
+                        <dl>
+                            <dt>
+                                <span>
+                                    {{couponName}}
+                                </span>
+                            </dt>
+
+                            <dd class='coupon_discount'>
+                                {{#if discountInfo.discountAmt}}
+                                    <b>
+                                        {{toCurrencyString discountInfo.discountAmt}}원
+                                    </b>
+                                {{else}}
+                                    {{#if discountInfo.discountRate}}
+                                        <b>
+                                            {{discountInfo.discountRate}}%
+                                        </b>
+                                    {{/if}}
+                                {{/if}}
+                                {{#ifEq couponType 'PRODUCT'}}
+                                    상품 할인
+                                {{else}}
+                                    주문 할인
+                                {{/ifEq}}
+                            </dd>
+                            <dd>
+                                {{#if discountInfo.maxDiscountAmt}}
+                                    <div>
+                                        - 최대
+                                        {{toCurrencyString discountInfo.maxDiscountAmt}}원 할인
+                                    </div>
+                                {{/if}}
+                            </dd>
+                            <dd>
+                                {{#if useConstraint.minSalePrice}}
+                                    <div>
+                                        -
+                                        {{toCurrencyString useConstraint.minSalePrice}}원 이상 구매 시 사용가능
+                                    </div>
+                                {{/if}}
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class='coupon_right'>
+                        <a id="download{{couponNo}}" class='coupon_download_btn btn_coupon_down btnDownloadCoupon'>
+                            <span>
+                                쿠폰 다운로드
+                            </span>
+                        </a>
+                        <span id="downloaded{{couponNo}}" class='coupon_issue' style='display:none;'>
+                            발급완료
+                        </span>
+                    </div>
+                </div>
+                <div class='coupon_infor'>
+                    <a href='javascript:void(0)' class='btn_coupon_info'>
+                        쿠폰 안내
+                    </a>
+                </div>
+            </li>
+        {{/each}}
+    </ul>
+</script>
+<script id="counponInfoTemplate" type="text/x-handlebars-template">
+    <div id="couponInfo{{couponNo}}" class='coupon_infor_layer_dim' data-template-id='counponInfoTemplate'>
+        <div class='coupon_infor_layer'>
+            <div class='coupon_infor_layer_top'>
+                <p>
+                    쿠폰 이용안내
+                </p>
+                <a class='btn_coupon_infor_layer' href='#'>
+                    <img src='/assets/img/icon/icon_x2.png' alt='닫기' />
+                </a>
+            </div>
+            <div class='coupon_infor_layer_cont'>
+                <ul>
+                    <li>
+                        <dl>
+                            <dt>
+                                · 사용기간
+                            </dt>
+                            <dd>
+                                {{#ifNe useConstraint.useDays -1}}
+                                    {{#ifEq useConstraint.useDays 0}}
+                                        발급일 당일 사용 가능
+                                    {{else}}
+                                        발급일
+                                        {{#ifEq useConstraint.useDays 31}}
+                                            당월 말일
+                                        {{else}}
+                                            + {{useConstraint.useDays}}일
+                                        {{/ifEq}}
+                                        까지 사용 가능
+                                    {{/ifEq}}
+                                {{else}}
+                                    {{useConstraint.useEndYmdt}}
+                                {{/ifNe}}
+                            </dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt>
+                                · 사용플랫폼
+                            </dt>
+                            <dd>
+                                {{#each useConstraint.usablePlatformTypes}}
+                                    {{#ifEq this 'PC'}}
+                                        PC웹
+                                    {{/ifEq}}
+                                    {{#ifEq @index 1}}
+                                        ,
+                                    {{/ifEq}}
+                                    {{#ifEq this 'MOBILE_WEB'}}
+                                        모바일웹
+                                    {{/ifEq}}
+                                {{/each}}
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+                <p>
+                    * 본 이벤트는 예고 없이 변경되거나, 조기 종료될 수 있습니다.
+                </p>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="/js/components/popup/download-coupon.js"></script>

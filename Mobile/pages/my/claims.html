@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <link type="text/css" rel="stylesheet" href="/lib/date-picker/tui-date-picker.css" />
+        <script src="/lib/date-picker/tui-date-picker.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <script src="/js/pages/my/components/mypage-components.js"></script>
+        <title>취소/반품/교환 내역</title>
+    </head>
+    <body>
+        <header id="header"></header>
+
+        <div id="contents">
+            <main class="contents_wrap">
+                <div class="page_top_area">
+                    <div class="navi_g">
+                        <ul>
+                            <li>홈</li>
+                            <li>마이페이지</li>
+                            <li>취소/반품/교환 내역</li>
+                        </ul>
+                    </div>
+                    <div class="sub_top">
+                        <div class="sub_top_left">
+                            <a id="goBack"></a>
+                        </div>
+                        <h2><a href="/pages/my/claims.html">취소/반품/교환 내역</a></h2>
+                    </div>
+                </div>
+
+                <div class="order_list claim-order_list">
+                    <div id="dateSelector"></div>
+                    <div class="order-list-table">
+                        <div class="order_table_body">
+                            <script id="claimsResult" type="text/x-handlebars-template">
+                                <div class="order_goods_list">
+                                {{#each this}}
+                                    <div class="orderlist_wrap">
+                                        <p class="order_top_date">{{orderYmd}} (총 <strong>{{orders.length}}</strong>건)</p>
+                                        <div class="order_number_box">
+                                            <div class="order_number">
+                                                <div class="order_number_left">
+                                                    주문번호 <span>{{orderNo}}</span>
+                                                </div>
+                                                <div class="order_number_right">
+                                                    <a class="btn_order_detail_view" href="/pages/my/order.html?orderNo={{orderNo}}">주문 상세 보기</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="order_goods_list">
+                                            <ul class="my_goods"">
+                                                {{#each orders}}
+                                                    <li>
+                                                        <a class="info" href="/pages/product/view.html?productNo={{productNo}}">
+                                                            <div class="itemhead">
+                                                                <div class="img">
+                                                                    <img src="{{imageUrl}}" alt="{{productName}}" title="{{productName}}" class='middle' />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="itembody">
+                                                                <div class="ing_chk">
+                                                                    {{{claimStatus}}}
+                                                                </div>
+
+                                                                <dl>
+                                                                    <dt class="prd_name product_name">
+                                                                        {{{productName}}}
+                                                                    </dt>
+                                                                    {{#ifNe productName optionName}}
+                                                                    <dd class="prd_option">
+                                                                        <span>
+                                                                            {{{optionTextInfo}}}
+                                                                        </span>
+                                                                    </dd>
+                                                                    {{/ifNe}}
+                                                                </dl>
+                                                            </div>
+                                                        </a>
+
+                                                        <div class="order_info">
+                                                            <div class="info_box">
+                                                                <div class="info2">
+                                                                    수량 : {{toCurrencyString orderCnt}}
+                                                                    <span title="amount">{{toCurrencyString buyAmt}}</span>
+                                                                </div>
+                                                                <div class="ing_chk" data-claim-nos="{{claimNos}}">
+                                                                    {{{nextAction}}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                {{/each}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                                {{#ifEq length 0}}
+                                    <div class='my_goods no'>
+                                        <p>
+                                            최근 주문 내역이 없습니다.
+                                        </p>
+                                    </div>
+                                {{/ifEq}}
+                                </div>
+                            </script>
+                        </div>
+                        <div id="readMore"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <footer id="footer"></footer>
+        <div id="popups-area"></div>
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/pages/my/claims.js"></script>
+    </body>
+</html>

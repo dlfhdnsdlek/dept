@@ -1,0 +1,12 @@
+,bannerGroupCode,bannerTitle,bannerImage,displayOrder
+,LOGO0001,로고 전용 - 상단로고,/assets/img/banner/top-logo.png,1
+,BANNER01,움직이는 배너 - 메인 상단 배너,/assets/img/banner/bigbanner-01.jpg,1
+,BANNER02,일반 배너 - 메인 중간 배너1,/assets/img/banner/main-banner01.png,1
+,BANNER03,일반 배너 - 메인 중간 배너2,/assets/img/banner/main-banner02.png,1
+,BANNER04,일반 배너 - 메인 중간 배너3,/assets/img/banner/main-banner03.png,1
+,BANNER05,일반 배너 - 메인 중간 배너4,/assets/img/banner/main-banner04.png,1
+,BANNER06,일반 배너 - 메인 중간 배너5,/assets/img/banner/main-banner05.png,1
+,BANNER07,일반 배너 - 메인 하단 배너,/assets/img/banner/main-banner06.png,1
+,BANNER08,일반 배너 - 스크롤 좌측 배너,/assets/img/banner/main_left_banner.png,1
+,BANNER09,일반 배너 - 스크롤 우측 배너,/assets/img/banner/main_right_banner.png,1
+,BANNER10,일반 배너 - 메인 중간 좌측 배너,/assets/img/banner/main-banner07.png,1

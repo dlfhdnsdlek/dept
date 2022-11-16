@@ -1,0 +1,150 @@
+<!--
+  ~  © 2021. NHN Commerce Corp. All rights reserved.
+  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~  @author hyeyeon-park
+  ~  @since 2021.7.29
+  -->
+
+<script id="joinPopupTemplate" type="text/x-handlebars-template">
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='layer_common_wrapper'>
+            <div class='ly_wrap'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        간편로그인 회원가입
+                    </h1>
+                </div>
+                <div class='ly_content layer_simple_join join_agreement' style='padding: 15px;'>
+                    <p>
+                        쇼핑몰 이용을 위해 {{profile.providerType}} 회원 정보로 가입됩니다.
+                        <br />
+                        제공된 서비스는 쇼핑몰 탈퇴 시까지 보관됩니다.
+                    </p>
+                    <div class='join_form_box'>
+                        {{#hasUserInfo profile}}
+                            <table>
+                                <colgroup>
+                                    <col style='width:100px;' />
+                                    <col />
+                                </colgroup>
+                                <tbody>
+                                    {{#if profile.memberId}}
+                                        <tr>
+                                            <th scope='row'>
+                                                아이디
+                                            </th>
+                                            <td>
+                                                {{profile.memberId}}
+                                            </td>
+                                        </tr>
+                                    {{/if}}
+                                    {{#if profile.memberName}}
+                                        <tr>
+                                            <th scope='row'>
+                                                이름
+                                            </th>
+                                            <td>
+                                                {{profile.memberName}}
+                                            </td>
+                                        </tr>
+                                    {{/if}}
+                                    {{#if profile.email}}
+                                        <tr>
+                                            <th scope='row'>
+                                                이메일
+                                            </th>
+                                            <td>
+                                                {{profile.email}}
+                                            </td>
+                                        </tr>
+                                    {{/if}}
+                                    {{#if profile.mobileNo}}
+                                        <tr>
+                                            <th scope='row'>
+                                                휴대폰 번호
+                                            </th>
+                                            <td>
+                                                {{profile.mobileNo}}
+                                            </td>
+                                        </tr>
+                                    {{/if}}
+                                    {{#if profile.sex}}
+                                        {{#ifNe profile.sex 'X'}}
+                                            <tr>
+                                                <th scope='row'>
+                                                    성별
+                                                </th>
+                                                <td>
+                                                    {{#ifEq profile.sex 'M'}}
+                                                        남자
+                                                    {{/ifEq}}
+                                                    {{#ifEq profile.sex 'F'}}
+                                                        여자
+                                                    {{/ifEq}}
+                                                </td>
+                                            </tr>
+                                        {{/ifNe}}
+                                    {{/if}}
+                                    {{#if profile.birthday}}
+                                        <tr>
+                                            <th scope='row'>
+                                                생일
+                                            </th>
+                                            <td>
+                                                {{profile.birthday}}
+                                            </td>
+                                        </tr>
+                                    {{/if}}
+                                </tbody>
+                            </table>
+                        {{else}}
+                            <div>
+                                {{profile.mallName}} 계정으로 쇼핑몰에 연결됩니다.
+                            </div>
+                        {{/hasUserInfo}}
+                    </div>
+                    <div class='terms_wrap'>
+                        {{#each optionalTerms}}
+                            <div class='inp_chk'>
+                                <input type='checkbox' id="agreeCheckbox-{{key}}" name='termItem' class='option' data-term-id="{{key}}" />
+                                <label for="agreeCheckbox-{{key}}" class='check_s'>
+                                    <em>
+                                        <b>
+                                            [선택]
+                                        </b>
+                                        {{#if contents}}
+                                            <span class='agreement_detail' data-term-id="{{key}}">
+                                                {{label}}
+                                            </span>
+                                        {{/if}}
+                                    </em>
+                                </label>
+                            </div>
+                        {{/each}}
+                    </div>
+                    <div class='join_form_agree_txt'>
+                        본인은 만 14세 이상이며,
+                        <a href='#' class='agreement_detail' data-term-id='USE'>
+                            이용약관 (내용보기),
+                        </a>
+                        <br />
+                        <a href='#' class='agreement_detail' data-term-id='PI_COLLECTION_AND_USE_REQUIRED'>
+                            개인정보 수집 및 이용동의 (내용보기)
+                        </a>
+                        <br />
+                        내용을 확인하였으며 동의합니다.
+                    </div>
+                </div>
+                <ul class='btn_box'>
+                    <li>
+                        <button type='button' class='address_save_btn btnCloseLayer' data-action-type='positive'>
+                            동의하고 가입하기
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript" src="/js/components/popup/join-open-id.js"></script>

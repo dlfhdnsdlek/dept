@@ -1,0 +1,131 @@
+@charset "utf-8";
+
+
+/*───────────────────────────────────────────────────────────
+
+	 리스트 타입 : 상품상세/관련상품/검색/타임세일
+
+───────────────────────────────────────────────────────────*/
+/*** 갤러리형 | goods/list/list_01.html   ***/
+@import url("../goods/list/list_01.css");
+/*** 상품 리스트형 | goods/list/list_02.html ***/
+@import url("../goods/list/list_02.css");
+/*** 심플이미지형 1 | goods/list/list_09.html ***/
+@import url("../goods/list/list_09.css");
+/*** 장바구니형 | goods/list/list_11.html ***/
+@import url("../goods/list/list_11.css");
+
+/*** 타임세일 | goods/goods_view.php ***/
+
+.time_sale .ctt img {width:100%;}
+.time_sale .tit_term {padding:10px 10px 10px 10px; background:#f9f9f9;}
+.time_sale .tit_term h3 {padding:0 0 5px; color:#1c1c1c; font-size:16px; line-height:1.2; color:#000; }
+.time_sale .tit_term strong {color:#979797; font-size:12px;}
+.time_sale .time_sale_box {padding:20px 0 30px 0; background:#606e89;}
+.time_sale .time_sale_box .event {}
+.time_sale .time_sale_box .event .time_count {}
+.time_sale .time_sale_box .event .time_count .c_time {color:#ffffff; font-weight:bold; font-size:20px; text-align:center;}
+.time_sale .time_sale_box .event .time_count .time_sale_date_box {padding:7px 0 0px 0;text-align:center;}
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .time_sale_icon {display:inline-block; vertical-align:top;}
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .time_sale_icon img {width:20px; margin:7px 0 0 0; vertical-align:top;}
+/* 날짜 */
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .timesaledate .time_day strong {padding:0 2px 0 2px;}
+/* 시간 */
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .timesaledate {display:inline-block; vertical-align:top;}
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .timesaledate .time_box {display:inline-block; font-size:0;}
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .timesaledate .time_box .time {display:inline-block; padding:0 2px 0 2px;}
+/* 시,분,초 색상 */
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .timesaledate span {color:#fff; font-size:24px;}
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .timesaledate strong {color:#fff; font-size:24px;}
+.time_sale .time_sale_box .event .time_count .time_sale_date_box .timesaledate span.time_day_view_tail {font-size:19px;}
+.time_sale .goods_list_content .goods_top_box {padding:10px; background:#f9f9f9;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box {display:table; width:100%; }
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_sort {display:table-cell; width:50%; vertical-align:middle;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_sort .inp_sel {width:128px;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type {display:table-cell; width:50%; text-align:right; vertical-align:middle;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul {font-size:0; text-align:right;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li {display:inline-block; padding:0 0 0 4px;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li button {display:inline-block; width:31px; height:31px; font-size:0; border:1px solid #cfcfcf;}
+/* OFF */
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li:nth-child(1) button {background:#ffffff url('/assets/img/icon/icon_product_type_list.png') no-repeat center; background-size:16px;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li:nth-child(2) button {background:#ffffff url('/assets/img/icon/icon_product_type_gallery1.png') no-repeat center; background-size:16px;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li:nth-child(3) button {background:#ffffff url('/assets/img/icon/icon_product_type_gallery2.png') no-repeat center; background-size:16px;}
+/* ON */
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li:nth-child(1) button.on {background:#ffffff url('/assets/img/icon/icon_product_type_list_on.png') no-repeat center; background-size:16px;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li:nth-child(2) button.on {background:#ffffff url('/assets/img/icon/icon_product_type_gallery1_on.png') no-repeat center; background-size:16px;}
+.time_sale .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li:nth-child(3) button.on {background:#ffffff url('/assets/img/icon/icon_product_type_gallery2_on.png') no-repeat center; background-size:16px;}
+.time_sale .goods_list_box {font-size:0; list-style:none;}
+
+/** 모바일샵 출석체크 */
+.check_attendance > p{font-size:10px; color:#717174; padding:27px 15px 10px;}
+.check_attendance > p .point_attend{color:#323438;}
+.stamp_calendar_box .stamp_calendar{padding:17px; border:6px solid #f4f4f4;}
+.stamp_calendar .attend_states{overflow:hidden;}
+.stamp_calendar .attend_states p{float:left;}
+.stamp_calendar .attend_states span{float:right; font-size:10px; color:#999999;}
+.stamp_calendar .calendar_month{padding:15px 0 11px 0; font-size:15px; color:#24242c; text-align:center;}
+.stamp_calendar .calendar_month button{background:none; border:none; padding:0; margin:0; vertical-align:middle;}
+.stamp_calendar .calendar_month .prev_month{width:7px; height:13px; font-size:0; text-indent:-9999px; background:url('/assets/img/btn/btn_attend_calendar.png') no-repeat left top; background-size:15px 13px; overflow:hidden;}
+.stamp_calendar .calendar_month .next_month{width:7px; height:13px; font-size:0; text-indent:-9999px; background:url('/assets/img/btn/btn_attend_calendar.png') no-repeat right top; background-size:15px 13px; overflow:hidden;}
+.stamp_calendar .calendar_month strong{padding:0 29px; vertical-align:middle;}
+.stamp_calendar .calendar_sec{}
+.stamp_calendar .calendar_sec table{width:100%;}
+.stamp_calendar .calendar_sec table th{height:45px; padding: 0 0; font-size:11px; color:#333333; text-align:center;}
+.stamp_calendar .calendar_sec table td{height:45px; padding: 0 0; border-top:1px solid #F4F4F4; font-size:12px; color:#bcbcbc; font-weight:bold; text-align:center;}
+.stamp_calendar .calendar_sec .next-month{color:#dfdfdf;}
+.stamp_calendar .calendar_sec .attend{background:url('/assets/img/etc/bg_attendance_stamp.png') no-repeat center center; background-size:29px 29px; font-size:11px; color:#333333; padding-top:6px; height:39px;}
+.stamp_calendar .calendar_sec .today{background:url('/assets/img/etc/bg_attendance_today.png') no-repeat center center; background-size:29px 29px; font-size:11px; color:#333333;}
+.stamp_calendar_box .btn_attend_check{display:block; width:120px; height:38px; margin:20px auto 33px; padding:0; background:#323438; border:none;}
+.stamp_calendar_box .btn_attend_check span{display:inline-block; background:url('/assets/img/etc/btn_point_check.png') no-repeat left center; background-size:10px auto; color:#fff; font-weight:bold; font-size:12px; padding-left:16px;}
+
+/* 캘린더 색반전 */
+.stamp_calendar_box .stamp_calendar_type2{background:#35353f; border:6px solid #35353f; border-top:none;}
+.stamp_calendar_type2 .calendar_states,
+.stamp_calendar_type2 .calendar_month,
+.stamp_calendar_type2 .calendar_sec table th,
+.stamp_calendar_type2 .calendar_sec .attend,
+.stamp_calendar_type2 .calendar_sec .today{color:#fff;}
+.stamp_calendar_type2 .calendar_month .prev_month{background:url('/assets/img/btn/btn_attend_calendar2.png') no-repeat left top; background-size:15px 13px;}
+.stamp_calendar_type2 .calendar_month .next_month{background:url('/assets/img/btn/btn_attend_calendar2.png') no-repeat right top; background-size:15px 13px;}
+.stamp_calendar_type2 .calendar_sec .next-month{color:#5a5a60;}
+.stamp_calendar_type2 .calendar_sec table th,
+.stamp_calendar_type2 .calendar_sec table td{border-bottom:none;}
+.stamp_calendar_type2 .calendar_sec table tbody{background:#282831;}
+
+.stamp_calendar_box .btn_attend_check{display:block; width:120px; height:38px; margin:20px auto 33px; padding:0; background:#323438; border:none;}
+.stamp_calendar_box .btn_attend_check span{display:inline-block; background:url('/assets/img/etc/btn_point_check.png') no-repeat left center; background-size:10px auto; color:#fff; font-weight:bold; font-size:12px; padding-left:16px;}
+
+/* 쿠폰존 페이지 */
+.coupon_content *{font-family:Noto Sans KR;}
+.coupon_content{padding-bottom:30px;}
+.coupon_content .cp_zone_wrap{padding:10px 15px;border-bottom:1px solid #cdcdcd;font-weight:700;font-size:14px;background:#f2f3f3;}
+.coupon_content .cp_list_wrap{}
+.coupon_content .cp_list_wrap .title{display:inline-block;padding:0 15px;margin-top:25px;font-weight:300;font-size:19px;color:#333;letter-spacing:-0.05em;}
+.coupon_content .cp_list_wrap.margin-type .title{margin-top:43px;}
+.coupon_content .cp_list_wrap .cp_list{}
+.coupon_content .cp_list_wrap .cp_list li{display:table;width:100%;padding:15px 15px;box-sizing:border-box;border-bottom:1px solid #f1f1f1;vertical-align:middle;overflow:hidden;}
+.coupon_content .cp_list_wrap .cp_list li.last{border-bottom:0;}
+.coupon_content .cp_list_wrap .cp_list li > div{display:table-cell;vertical-align:middle;}
+.coupon_content .cp_list_wrap .cp_list li .img_cp{position:relative;width:89px;min-height:81px;}
+.coupon_content .cp_list_wrap .cp_list li .img_cp .image{vertical-align:middle;}
+.coupon_content .cp_list_wrap .cp_list li .img_cp img{max-width:100%;vertical-align:middle;}
+.coupon_content .cp_list_wrap .cp_list li .img_cp .text_dis{display:block;position:absolute;top:50%;left:9px;}
+.coupon_content .cp_list_wrap .cp_list li .img_cp .text_dis span{display:block;max-width:62px;max-height:38px;overflow:hidden;}
+.coupon_content .cp_list_wrap .cp_list li .img_cp .text_dis span,
+.coupon_content .cp_list_wrap .cp_list li .img_cp .text_dis .txt-1{display:inline-block;font-weight:700;font-size:17px;color:#9e4556;word-break:break-all;line-height:17px;}
+.coupon_content .cp_list_wrap .cp_list li .img_cp .text_dis .txt-1{margin-left:-2px;}
+.coupon_content .cp_list_wrap .cp_list li .img_cp .text_dis em{display:block;font-style:normal;font-weight:400;font-size:16px;color:#333;letter-spacing:-0.05em;}
+.coupon_content .cp_list_wrap .cp_list li .text_wrap{width:calc(100% - 149px);}
+.coupon_content .cp_list_wrap .cp_list li .text_wrap .text_info{padding-right:15px;padding-left:15px;}
+.coupon_content .cp_list_wrap .cp_list li .text_wrap .text_info .tit{display:block;height:38px;overflow:hidden;line-height:19px;font-weight:400;font-size:14px;color:#333;letter-spacing:-0.05em;}
+.coupon_content .cp_list_wrap .cp_list li .text_wrap .text_info .date{display:block;line-height:14px;margin-top:8px;font-size:12px;color:#a2a2a2;}
+.coupon_content .cp_list_wrap .cp_list li .btn_wrap{width:60px;}
+.coupon_content .cp_down{display:block;width:100%;height:52px;line-height:52px;text-align:center;border:1px solid #e0e0e0;}
+.coupon_content .cp_down span{padding-right:21px;font-weight:500;font-size:13px;color:#333;background:url('/assets/img/btn/btn_cp_down.png') no-repeat 100% 50%;background-size:16px 11px;color:#333;}
+.coupon_content .cp_list_wrap .cp_list .cp_down_2{display:block;width:60px;height:60px;line-height:60px;text-align:center;box-sizing:border-box;border-radius:50%;background:#323438;color:#fff;}
+.coupon_content .cp_list_wrap .cp_list .cp_down_3{display:block;width:60px;height:60px;line-height:60px;text-align:center;box-sizing:border-box;border:1px solid #323438;border-radius:50%;background:#fff;color:#323438;}
+.coupon_content .cp_list_wrap .cp_list .cp_down_4{display:block;width:60px;height:60px;line-height:60px;text-align:center;box-sizing:border-box;border-radius:50%;background:#efefef;color:#838383;}
+.coupon_content .cp_list_wrap .btn_all{padding:0 15px;margin-top:7px;}
+.coupon_content .cp_list_none{display:none; text-align:center;padding:65px 0 100px;}
+.coupon_content .cp_list_none p{padding-top:102px;font-weight:700;font-size:15px;letter-spacing:-0.05em;color:#222;background:url('/assets/img/icon/bg_notice.png') no-repeat 50% 0;background-size:80px 80px;}
+/* //쿠폰존 페이지 */

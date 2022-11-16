@@ -1,0 +1,73 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~ @author Eunbi Kim
+  ~ @since 2021.7.20
+  -->
+
+<script id="claimInfoTemplate" type="text/x-handlebars-template">
+    <div id='lyClaimInfo' class='ly_pop ly_effect_3 ly_show dimed'>
+        <div class='ly_wrap'>
+            <div class='layer_order_refund_reason'>
+                <div class='ly_head'>
+                    <h1 id='claimInfoTitle' class='h_tit'></h1>
+                </div>
+                <div class='content_box'>
+                    <div id='claimInfoContents' data-template-id='claimInfoContentsTemplate'></div>
+                </div>
+
+                <ul class='btn_bx2'>
+                    <li>
+                        <button class='reason_confirm_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                            확인
+                        </button>
+                    </li>
+                </ul>
+                <div class='close_btn'>
+                    <button type='button' class='lys_close_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="claimInfoContentsTemplate" type="text/x-handlebars-template">
+    <div id='claimInfoContents' data-template-id='claimInfoContentsTemplate'>
+        <dl>
+            <dt>
+                신청일
+            </dt>
+            <dd>
+                {{claimYmdt}}
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                사유
+            </dt>
+            <dd>
+                {{reasonType}}
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                상세사유
+            </dt>
+            <dd>
+                {{claimReasonDetail}}
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                환불정보
+            </dt>
+            <dd>
+                {{refundBankAccount.bankName}} / {{refundBankAccount.bankAccount}} / {{refundBankAccount.bankDepositorName}}
+            </dd>
+        </dl>
+    </div>
+</script>
+
+<script type="text/javascript" src="/js/components/popup/claim-info.js"></script>

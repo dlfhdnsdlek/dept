@@ -1,0 +1,134 @@
+<!--
+  ~  © 2021. NHN Commerce Corp. All rights reserved.
+  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~  @author hyeyeon-park
+  ~  @since 2021.7.27
+  -->
+
+<script id="addBoardArticlePopupTemplate" type="text/x-handlebars-template">
+    <div class="ly_pop ly_effect_3 ly_show">
+      <div class="ly_wrap">
+        <div class="layer_common_wrapper write_qa">
+          <div class="ly_head">
+            <h1 class="h_tit">
+              {{boardInfo.name}}
+            </h1>
+          </div>
+
+          <div class="write_wrap">
+            <div class="box common_popup_body">
+              <div class="view" style="text-align: left;">
+                <div class="board_write_box">
+                    <dl>
+                      <dt><label for="subject">작성자</label></dt>
+                      <dd>
+                        <div class="element_box">
+                          {{#ifLogined}}
+                            <input type="text" class="writerName js_text_length_check_input" name="writerName" value="{{writer}}" data-maxlength="20" readonly>
+                          {{else}}
+                            <input type="text" class="writerName js_text_length_check_input" name="writerName" data-pattern="writer" data-maxlength="20">
+                          {{/ifLogined}}
+                        </div>
+                      </dd>
+                    </dl>
+                  {{#ifLogined}}
+                    {{else}}
+                    <dl>
+                      <dt><label for="inputPw">비밀번호</label></dt>
+                      <dd>
+                        <input type="password" data-pattern="password" minlength="4" maxlength="20" class="text" name="password" id="inputPw">
+                      </dd>
+                    </dl>
+                  {{/ifLogined}}
+                    <dl>
+                      <dt><label for="subject">제목</label></dt>
+                      <dd>
+                        <div class="element_box">
+                          <input maxlength="50" type="text" name="title" value="{{articles.title}}" class="js_text_length_check_input" placeholder="제목을 입력하세요" data-pattern="article">
+                        </div>
+                      </dd>
+                    </dl>
+                  <dl class="b_content">
+                    <dt>
+                      <label style="padding-left:10px;">내용</label>
+                      {{#if boardInfo.secretPostingUsed}}
+                          <div class="b_content_chk">
+                        <span class="inp_chk">
+                            <input type="checkbox" name="secreted" id="secreted" {{#if articles.secreted}}checked{{/if}}>
+                          <label for="secreted" class="check_s">비밀글</label>
+                        </span>
+                          </div>
+                      {{/if}}
+                    </dt>
+                    <dd>
+                      <div class="textarea_box">
+                        <textarea id="editor" class="textarea" name="content" cols="30" rows="10" maxlength="1000" placeholder="내용을 입력해주세요.">{{articles.content}}</textarea>
+                        <p class="textarea_box_length">0/1000</p>
+                      </div>
+
+                        <div class="add_file_area">
+                          <ul>
+                            {{#if boardInfo.attachmentUsed}}
+                            <li class="item">
+                              <button class="file_face" type="button">파일첨부</button>
+                              <input type="file" id="attach1" name="upfiles" class="file" title="파일찾기"
+                                     accept="image/png,image/jpeg,image/gif,image/jpg,image/bmp" multiple>
+                            </li>
+                            {{/if}}
+                            <ul id ="attachImages" class="js_add_file_area" data-template-id="attachmentsTemplate">
+                            </ul>
+                          </ul>
+                        </div>
+
+                    </dd>
+                  </dl>
+                  {{#ifLogined}}{{else}}
+                    <dl class="b_guest">
+                      <dt>
+                        <span class="inp_chk">
+                          <input type="checkbox" name="private" value="y" id="acceptTerms">
+                          <label for="acceptTerms" class="check_s"><strong>비회원 글작성에 대한 개인정보 수집 및 이용동의</strong>
+                          </label>
+                        </span>
+                      </dt>
+                      <dd>
+                        <div class="textarea_box">
+                          <div class="textarea_box_scroll" id="guestArticleTerms">
+                          </div>
+                        </div>
+                      </dd>
+                    </dl>
+                  {{/ifLogined}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="close_btn">
+            <button type="button" class="lys_close_btn ly_btn_close" data-action-type="negative">닫기</button>
+          </div>
+        </div>
+      </div>
+      <ul class="btn_box">
+        <li><button type="button" class="address_cancel_btn ly_btn_close " data-action-type="negative">이전</button></li>
+        <li><button type="button" id="btnWriteArticle" class="address_save_btn" data-action-type="positive">저장</button>
+      </ul>
+    </div>
+</script>
+<script id="attachmentsTemplate" type="text/x-handlebars-template">
+    <ul id='attachImages' class='js_add_file_area' data-template-id='attachmentsTemplate'>
+        {{#each attachedImages}}
+            <li class='vis_mode' data-image-id="{{@index}}">
+                <div>
+                    {{img imageUrl}}
+                    <a id='deleteAttachImage' class='del' href='#'>
+                        <img src='/assets/img/icon/icon_del_add_file.png' alt='삭제' />
+                    </a>
+                </div>
+            </li>
+        {{/each}}
+    </ul>
+</script>
+
+<script type="text/javascript" src="/js/components/popup/board-article.js"></script>

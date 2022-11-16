@@ -1,0 +1,71 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~ @author Bomee Yoon
+  ~ @since 2021.7.5
+  -->
+
+<script id="downloadCouponPopupTemplate" type="text/x-handlebars-template">
+    <div class='layer_wrap coupon_down_layer dimed'>
+        <div class='layer_wrap_cont' style='position: absolute; margin: 0px 0 0 -330px; top: 201px; left: 50%;'>
+            <div class='ly_tit'>
+                <h4>
+                    쿠폰 다운받기
+                    <span>
+                        다운로드 가능한 총
+                        <strong id='couponCount' class='goods-coupon-cnt'>
+                        </strong>
+                        의 쿠폰이
+                    있습니다.
+                    </span>
+                </h4>
+            </div>
+            <div class='ly_cont'>
+                <div class='scroll_box'>
+                    <div class='top_table_type'>
+                        <table>
+                            <colgroup>
+                                <col style='width: 150px;' />
+                                <col />
+                                <col style='width: 114px;' />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        쿠폰
+                                    </th>
+                                    <th>
+                                        혜택
+                                    </th>
+                                    <th>
+                                        다운받기
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id='coupons'></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- //scroll_box -->
+                <div class='btn_center_box'>
+                    <button class='btn_ly_cancel layer_close btnClosePopup' data-action-type='negative'>
+                        <strong>
+                            취소
+                        </strong>
+                    </button>
+                    <button id='downloadAllCouponsBtn' class='btn_ly_download'>
+                        <strong>
+                            쿠폰 전체 다운받기
+                        </strong>
+                    </button>
+                </div>
+            </div>
+            <!-- //ly_cont -->
+            <a href='#close' class='ly_close btnClosePopup' data-action-type='negative'>
+                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
+            </a>
+        </div>
+    </div>
+</script>
+<script src="/js/components/popup/download-coupon.js"></script>

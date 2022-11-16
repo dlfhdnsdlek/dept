@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <title>배송지 관리</title>
+    </head>
+    <body>
+        <header id="header"></header>
+
+        <div id="contents">
+            <main class="sub_content">
+                <div class="content_box">
+                    <div class="page_top_area">
+                        <div class="sub_top">
+                            <div class="sub_top_left">
+                                <a id="goBack"></a>
+                            </div>
+                            <h2><a href="#" class="js_page_reload">배송지 관리</a></h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="mypage_main">
+                        <div class="shipping">
+                            <div class="s_content">
+                                <script id="addresses" type="text/x-handlebars-template">
+                                    {{#each this}}
+                                        <div class='s_info' data-shipping-name="{{addressName}}" data-shipping-no="{{addressNo}}">
+                                            <div class='s_tit'>
+                                                {{addressName}}
+                                                <span>
+                                                    {{#ifEq defaultYn 'Y'}}
+                                                        (기본배송지)
+                                                    {{/ifEq}}
+                                                </span>
+                                                <br />
+                                            </div>
+                                            <div class='s_address'>
+                                                <span>
+                                                    ({{receiverZipCd}})
+                                                </span>
+                                                <p>
+                                                    {{receiverAddress}}
+                                                </p>
+                                            </div>
+                                            <div class='s_data'>
+                                                <dl>
+                                                    <dt>
+                                                        받으실 분
+                                                    </dt>
+                                                    <dd>
+                                                        {{receiverName}}
+                                                    </dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>
+                                                        전화번호
+                                                    </dt>
+                                                    <dd>
+                                                        {{receiverContact2}}
+                                                    </dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>
+                                                        휴대폰
+                                                    </dt>
+                                                    <dd>
+                                                        {{receiverContact1}}
+                                                    </dd>
+                                                </dl>
+                                                <ul class='s_btn'>
+                                                    {{#ifEq defaultYn 'N'}}
+                                                        <li>
+                                                            <a href='javascript:;' id='defaultSetting' class='default_setting_btn'>
+                                                                기본 배송지로 설정
+                                                            </a>
+                                                        </li>
+                                                    {{/ifEq}}
+                                                    <li>
+                                                        <a href='javascript:;' class='modify_address_btn btnAddress' data-id='shippingAddressUpdate'>
+                                                            수정
+                                                        </a>
+                                                        <button
+                                                            class='del_address_btn js_delete'
+                                                            data-default-yn="{{defaultYn}}"
+                                                            data-id='shippingAddressDelete'
+                                                        >
+                                                            삭제
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    {{else}}
+                                        <p class='my_goods no'>
+                                            등록된 배송지가 없습니다.
+                                        </p>
+                                    {{/each}}
+                                </script>
+                            </div>
+                        </div>
+                        <div class="shipping_add_layer btn_box">
+                            <a href="javascript:void(0);" id="addShippingAddress" class="add_address_btn btnAddress">배송지 추가</a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <footer id="footer"></footer>
+        <div id="popups-area"></div>
+
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/pages/my/shipping.js"></script>
+    </body>
+</html>
