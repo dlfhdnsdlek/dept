@@ -1,0 +1,102 @@
+<!--
+  ~  © 2021. NHN Commerce Corp. All rights reserved.
+  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~  @author choisohyun
+  ~  @since 2021.7.5
+  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <title>휴면회원 해제</title>
+    </head>
+
+    <body>
+        <header id="header"></header>
+        <div id="contents" class="visible">
+            <div class="location_wrap">
+                <div class="location_cont">
+                    <em> <a href="/" class="local_home">HOME</a> > 휴면해제 안내</em>
+                </div>
+            </div>
+            <div class="content_box">
+                <div class="member_wrap">
+                    <div class="member_tit">
+                        <h2>휴면 회원</h2>
+                    </div>
+                    <!-- 휴면해제 안내 -->
+                    <div class="member_cont">
+                        <div class="wake_base_box">
+                            <div class="wake_base_tit">
+                                <p class="complete">
+                                    장기 미 접속으로 인해
+                                    <strong>휴면회원</strong>
+                                    전환 상태입니다.
+                                </p>
+                                <div class="wake_date invisible" id="dormantDateInfo">
+                                    <dl>
+                                        <dt>최초가입일 :&nbsp;</dt>
+                                        <dd>{{joinDate}}</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>최종접속일 :&nbsp;</dt>
+                                        <dd>{{lastLoginDate}}</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>휴면처리일 :&nbsp;</dt>
+                                        <dd><strong>{{dormantDate}}</strong></dd>
+                                    </dl>
+                                </div>
+                                <p class="wake_notice">
+                                    정보통신망법 이용촉진 및 정보보호 등에 관한 법률에 의거하여, 장기간 접속하지 않으신 회원님들의 개인정보가 휴면처리
+                                    상태입니다.<br />
+                                    <em>휴면 처리 해제를 원하실 경우 아래 버튼을 클릭해 해제하시기 바랍니다.</em>
+                                </p>
+                            </div>
+                            <div class="btn_center_box">
+                                <button type="button" id="btnPrevStep" class="btn_member_cancel">취소</button>
+                                <button type="button" id="btnNextStep" class="btn_comfirm">휴면 해제하기</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 휴면해제 완료 -->
+                    <div class="member_cont hide" id="completeDormantRelease">
+                        <div class="wake_complete_box">
+                            <div class="wake_complete_tit">
+                                <p class="complete">
+                                    정상적으로
+                                    <strong>휴면해제</strong>
+                                    처리되었습니다.
+                                </p>
+                            </div>
+                            <div class="btn_member_sec">
+                                <ul>
+                                    <li>
+                                        <button type="button" id="btnConfirm">확인</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <aside id="aside"></aside>
+        <footer id="footer"></footer>
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/pages/login/dormant.js"></script>
+        <div id="popups-area"></div>
+    </body>
+</html>

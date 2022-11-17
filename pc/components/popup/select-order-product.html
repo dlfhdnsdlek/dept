@@ -1,0 +1,172 @@
+<!--
+  ~  © 2021. NHN Commerce Corp. All rights reserved.
+  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~  @author hyeyeon-park
+  ~  @since 2021.7.12
+  -->
+<script id="selectOrderProductPopupTemplate" type="text/x-handlebars-template">
+    <div class='layer_wrap dimed'>
+        <div class='box common_popup_body' style='width: 1000px;'>
+            <div class='view' style='text-align: left;'>
+                <h2>
+                    주문상품선택
+                </h2>
+                <div class='ly_cont'>
+                    <div class='ly_date_list_box'>
+                        {{#unless isProductViewPage}}
+                            <div class='ly_date_select_list'>
+                                <div class='ly_date_search_list'>
+                                    <div id='searchOrderProductDateRangePicker'></div>
+                                    <h5>
+                                        검색어
+                                    </h5>
+                                    <select name='keywordType'>
+                                        <option value='productName'>
+                                            상품명
+                                        </option>
+                                        <option value='orderNo'>
+                                            주문번호
+                                        </option>
+                                    </select>
+                                    <input type='text' name='keyword' maxlength='20' placeholder='검색어를 입력해주세요.' />
+                                </div>
+                                <!-- //ly_date_search_list -->
+                            </div>
+                            <!-- //ly_date_list_box -->
+
+                            <div class='btn_center_box'>
+                                <button type='button' id='searchOrderProduct' class='btn_ly_date_check js_select_search'>
+                                    <em>
+                                        조회
+                                    </em>
+                                </button>
+                            </div>
+                        {{/unless}}
+                        <div id='resultReviewableProducts' class='scroll_box'>
+                            <div id='searchResult' class='top_table_type' data-template-id='searchResultTemplate'>
+                            </div>
+                        </div>
+
+                        <div id='searchOrderProductPagination' class='pagination'></div>
+                        <!-- //pagination -->
+                    </div>
+
+                    <div class='btn_center_box'>
+                        <button type='button' class='btn_ly_cancel layer_close btnClosePopup' data-action-type='negative'>
+                            <strong>
+                                취소
+                            </strong>
+                        </button>
+                        <button type='button' class='btn_ly_ok js_select_confirm' data-action-type='positive'>
+                            <strong>
+                                확인
+                            </strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <a href='#close' class='ly_close btnClosePopup' data-action-type='negative'>
+                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
+            </a>
+        </div>
+    </div>
+</script>
+<script id="searchResultTemplate" type="text/x-handlebars-template">
+    <div id='searchResult' class='top_table_type' data-template-id='searchResultTemplate'>
+        {{#unless isProductViewPage}}
+            <span class='pick_list_num'>
+                주문목록 /배송조회 내역 총
+                <strong>
+                    {{totalCount}}
+                </strong>
+                건
+            </span>
+        {{/unless}}
+        <table>
+            <colgroup>
+                <col style='width: 20px;' />
+                <col />
+                <col style='width: 300px;' />
+                <col style='width: 137px;' />
+                <col />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        선택
+                    </th>
+                    <th>
+                        날짜/주문번호
+                    </th>
+                    <th>
+                        상품명/옵션
+                    </th>
+                    <th>
+                        상품금액/수량
+                    </th>
+                    <th>
+                        주문상태
+                    </th>
+                </tr>
+            </thead>
+            <tbody id='reviewableProducts' class='product_list'>
+                {{#each products}}
+                    <tr id="tbl_add_{{orderNo}}" data-product-no="{{productNo}}" data-order-option-no="{{orderOptionNo}}" data-option-no="{{optionNo}}">
+                        <td class='td_left'>
+                            <div class='form_element'>
+                                <input type='radio' id="{{orderNo}}{{productNo}}{{optionNo}}" name='productNo[]' class='radio' value="{{orderNo}}" />
+                                <label class='choice_s' for="{{orderNo}}{{productNo}}{{optionNo}}">
+                                    <!-- //pick_add_info -->
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            {{substring orderStatusDate.registerYmdt 0 10}}<br />
+                            <a href="/pages/my/order.html?orderNo={{orderNo}}">
+                                {{orderNo}}
+                            </a>
+                        </td>
+                        <!--buyConfirmYmdt-->
+                        <td>
+                            <div class='pick_add_cont'>
+                                <span class='pick_add_img' style='float: left;'>
+                                    <a href="/pages/product/view.html?productNo={{productNo}}" target='_blank'>
+                                        <img src="{{imageUrl}}" alt="{{safeString productName}}" style='width: 40px; height: auto;' />
+                                    </a>
+                                </span>
+                                <span class='pick_add_info' style='float: left;width: 80%;text-align: left;margin-left: 5px;'>
+                                    <em>
+                                        {{safeString productName}}
+                                    </em>
+                                    <br />
+                                    <span class='option_name_value'>
+                                        {{{getOptionNameAndValue optionName optionValue}}}
+                                    </span>
+                                </span>
+                            </div>
+                        </td>
+                        <td class='js_item_price'>
+                            <strong>
+                                {{toCurrencyString price.salePrice}}원 / {{orderCnt}} 개
+                            </strong>
+                        </td>
+                        <td class='order_status'>
+                            {{setOrderStateValue orderStatusType}}
+                        </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan='5'>
+                            검색된 주문 상품이 없습니다.
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<link type="text/css" rel="stylesheet" href="/lib/date-picker/tui-date-picker.css" />
+<script src="/lib/date-picker/tui-date-picker.js"></script>
+<script type="text/javascript" src="/js/components/popup/select-order-product.js"></script>

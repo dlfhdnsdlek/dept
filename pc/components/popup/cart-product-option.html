@@ -1,0 +1,350 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~ @author Bomee Yoon
+  ~ @since 2021.7.11
+  -->
+
+<script id="selectOptionTemplate" type="text/x-handlebars-template">
+    {{#if optionUsed}}
+    <div class="item_add_option_box" id="selectOption" data-template-id="selectOptionTemplate">
+        {{#each options}}
+            <dl>
+                <dt><span>{{#ifEq ../selectType 'FLAT'}}옵션 선택{{else}}{{ safeString label }}{{/ifEq}}</span></dt>
+                <dd>
+                    <select
+                        class="optionSelectors"
+                        name="select-option"
+                        data-depth="{{ depth }}"
+                    >
+                        {{#each optionValues}}
+                            {{option  @index value ../selectedIndex disabled}}
+                        {{/each}}
+                    </select>
+                </dd>
+            </dl>
+        {{/each}}
+
+        <div class="item_choice_list">
+            <table id="selectedOption" data-template-id="selectedOptionTemplate" class="option_display_area"></table>
+        {{#each textOptions}}
+        {{#ifEq inputMatchingType 'PRODUCT'}}
+            <dl class="goods_text_option" data-text-input-no="{{inputNo}}">
+                <dt>
+                    <span class="{{#if required}}essential{{/if}}">{{safeString inputLabel}}</span>
+                </dt>
+                <dd>
+                    <input
+                        type="text"
+                        name="{{inputNo}}"
+                        placeholder="{{safeString inputLabel}} 을(를) 입력하세요."
+                        data-reqired="{{#if required}}yes{{/if}}"
+                        data-option-matching-type="PRODUCT"
+                        class="text text-input-option product"
+                        maxlength="100"
+                        value="{{safeString value}}"
+                    />
+                </dd>
+            </dl>
+        {{/ifEq}}
+        {{/each}}
+        </div>
+    </div>
+    {{/if}}
+</script>
+
+<script id="selectedOptionTemplate" type="text/x-handlebars-template">
+    <table id="selectedOption" data-template-id="selectedOptionTemplate" class="option_display_area" border="0" cellpadding="0" cellspacing="0">
+        <colgroup>
+            <col width="330px" />
+            <col />
+            <col width="100px" />
+            <col width="20px" />
+        </colgroup>
+        {{#if showsTotalPriceWithSelectedOptionsArea}}
+            <tbody id="option_display_item_0" data-option-no="{{ optionNo }}" style="border-bottom:1px solid #dbdbdb">
+        {{#each selectedOptions}}
+            <tr class="check" data-option-no="{{optionNo}}">
+                <td class="cart_prdt_name">
+                    <div class="cart_tit_box">
+                        <strong class="cart_tit">
+                            {{#if optionUsed}}
+                                <span>{{ safeString label }} {{ addPriceLabel }}</span>
+                            {{else}}
+                                <span>{{safeString selectedOptionsValues}}</span>
+                            {{/if}}
+                        </strong>
+                    </div>
+                </td>
+                <td>
+                    <span class="count">
+                          <span class="goods_qty">
+                              <input type="text" name="orderCnt" class="text" title="수량"
+                                     value="{{orderCnt}}" data-key="0" data-value="1" data-stock="0"/>
+                              <span>
+                                  <button type="button" class="up goods_cnt" data-action-type="up" title="증가"
+                                          value="up^|^0">증가</button>
+                                  <button type="button" class="down goods_cnt" data-action-type="down" title="감소"
+                                          value="dn^|^0">감소</button>
+                              </span>
+                          </span>
+                    </span>
+                </td>
+                <td class="item_choice_price">
+                    <strong class="option_price_display_0">{{priceWithOptions}}</strong>원
+                </td>
+                <td>
+                    {{#if ../optionUsed}}
+                        <button class="delete_goods btnDeleteChoicedOption" data-action-type="deleteOption"><img src="/assets/img/icon/goods_icon/icon-detail-option-del.png" style="vertical-align:middle" alt="삭제"></button>
+                    {{/if}}
+                </td>
+            </tr>
+
+            {{#each textOptions}}
+            {{#ifEq inputMatchingType 'OPTION'}}
+            <tr data-option-no="{{ ../optionNo }}">
+                <td colspan="4" class="pad_align_inte">
+                    <div class="">
+                        <div class="item_add_option_box">
+                            <dl id="amountTextOption" class="goods_text_option" data-option-no="{{../optionNo}}" data-text-input-no="{{inputNo}}">
+                                <dt>
+                                    <span class="{{#if required}}essential{{/if}}">{{safeString inputLabel}}</span>
+                                </dt>
+                                <dd>
+                                    <input type="text" name="{{inputNo}}" class="text text-input-option option" data-option-matching-type="OPTION" data-required="{{required}}" placeholder="{{safeString inputLabel}} (을)를 입력하세요." value="{{ safeString value }}" maxlength="100">
+                                    {{#ifGt ../orderCnt 1}}
+                                        <div class="amount_text_option{{#unless isRealAmountMode}}hide{{/unless}}">
+                                            {{#each amountValues}}
+                                                {{#if ../isRealAmountMode}}
+                                                    <input type="text" name="{{../inputNo}}" class="text text-input-option amount" data-option-matching-type="AMOUNT" data-required="{{required}}" placeholder="{{safeString ../inputLabel}} (을)를 입력하세요." value="{{ safeString value }}" maxlength="100" data-index="{{@index}}">
+                                                {{/if}}
+                                            {{/each}}
+                                        </div>
+                                    {{/ifGt}}
+                                </dd>
+                            </dl>
+                            {{#ifGt ../orderCnt 1}}
+                                <a href="javascript:;" id="btnToggleTextOptionMode" class="btn_goods_text_option {{#if isRealAmountMode}}on{{/if}}">
+                                    {{#if isRealAmountMode}}옵션별{{else}}수량별{{/if}} 입력
+                                </a>
+                            {{/ifGt}}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {{/ifEq}}
+            {{/each}}
+        {{/each}}
+        </tbody>
+
+        {{/if}}
+    </table>
+</script>
+
+<script id="cartProductOptionPopupTemplate" type="text/x-handlebars-template">
+    <div class='layer_wrap dimed'>
+        <div class='box common_popup_body' style='width: 620px;'>
+            <div id='container' class='view' style='text-align: left;'>
+                <h2>
+                    옵션 선택
+                </h2>
+                <div class='scroll_box order_table_type' style='margin-top: 15px;'>
+                    <div class='item_photo_info_sec'>
+                        <div class='item_photo_view_box' style='width: 120px; float: left; position: relative;'>
+                            <div class='item_photo_view'>
+                                <img id='productImage' src='' style='width: 100%;' />
+                            </div>
+                        </div>
+                        <div class='item_info_box' style='width: 420px;'>
+                            <!-- //time_sale -->
+                            <div class='item_tit_detail_cont'>
+                                <div class='item_detail_tit' id='productSummary'>
+                                    <div>
+                                        <h3>
+                                            {{safeString baseInfo.productName}}
+                                        </h3>
+                                    </div>
+                                    <div>
+                                        <p class='item_detail_promotext'>
+                                            {{baseInfo.promotionText}}&nbsp;
+                                        </p>
+                                        {{#if shouldShowContentsIfPausing}}
+                                            <h3>
+                                                {{price.contentsIfPausing}}
+                                            </h3>
+                                        {{else}}
+                                            <h3>
+                                                <strong>
+                                                    {{toCurrencyString price.discountedPrice}}
+                                                </strong>
+                                                원
+                                                {{#if price.hasDiscount}}
+                                                    <del>
+                                                        <small>
+                                                            {{toCurrencyString price.salePrice}}원
+                                                        </small>
+                                                    </del>
+                                                {{/if}}
+                                            </h3>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class='item_detail_list' id='productBenefits'>
+                                    {{#unless shouldShowContentsIfPausing}}
+                                        {{#if price.hasBenefit}}
+                                            <dl class='item_discount_mileage dn'>
+                                                <dt>
+                                                    <span>
+                                                        구매혜택
+                                                    </span>
+                                                </dt>
+                                                <dd>
+                                                    {{#ifGt totalDiscount 0}}
+                                                        <span class='item_discount'>
+                                                            할인 : -
+                                                            <strong class='total_benefit_price'>
+                                                                {{toCurrencyString price.totalDiscount}}
+                                                            </strong>
+                                                            원
+                                                        </span>
+                                                    {{/ifGt}}
+
+                                                    {{#ifGt accumulationAmtWhenBuyConfirm 0}}
+                                                        <span class='item_mileage'>
+                                                            적립 : +
+                                                            <strong class='total_benefit_mileage'>
+                                                                {{toCurrencyString price.accumulationAmtWhenBuyConfirm}}
+                                                            </strong>
+                                                            원
+                                                        </span>
+                                                    {{/ifGt}}
+                                                </dd>
+                                            </dl>
+                                        {{/if}}
+                                        {{#if price.maxCouponAmt}}
+                                            <dl class='goods_coupon'>
+                                                <dt>
+                                                    <span>
+                                                        쿠폰
+                                                    </span>
+                                                </dt>
+                                                <dd>
+                                                    <span class='coupon_badge'>
+                                                        {{price.couponRate}}%
+                                                    </span>
+                                                    <span>
+                                                        {{toCurrencyString price.priceWithCoupon}}
+                                                    </span>
+                                                    원
+                                                    <span class='btn_gray_list'>
+                                                        <a href='' class='btn_gray_small' data-action-type='downloadCoupon'>
+                                                            <em>
+                                                                쿠폰다운받기
+                                                            </em>
+                                                        </a>
+                                                    </span>
+                                                </dd>
+                                            </dl>
+                                        {{/if}}
+                                    {{/unless}}
+                                    {{#ifNe status.saleStatusType 'FINISHED'}}
+                                        <dl class='item_delivery'>
+                                            <dt>
+                                                <span>
+                                                    배송비
+                                                </span>
+                                            </dt>
+                                            <dd>
+                                                {{#if isUndeliverable}}
+                                                    <div>
+                                                        <span style='color: #e90606;'>
+                                                            배송 불가 상품
+                                                        </span>
+                                                        <small>
+                                                            {{baseInfo.deliveryCustomerInfo}}
+                                                        </small>
+                                                    </div>
+                                                {{else}}
+                                                    <div>
+                                                        <strong>
+                                                            {{deliveryFee.deliveryFeeLabel}}
+                                                        </strong>
+                                                        {{deliveryFee.conditionLabel}}
+                                                        {{#if deliveryFee.remoteDeliveryAreaFees}}
+                                                            <span class='btn_gray_list'>
+                                                                <a href='' class='btn_gray_small btnShowAdditionalDeliveryFee'>
+                                                                    <em>
+                                                                        추가배송비
+                                                                    </em>
+                                                                </a>
+                                                            </span>
+                                                            <div id='deliveryFeeArea' class='layer_area hide'></div>
+                                                        {{/if}}
+                                                    </div>
+                                                {{/if}}
+                                                <div>
+                                                    <strong>
+                                                        {{deliveryFee.deliveryLabel}}
+                                                    </strong>
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    {{/ifNe}}
+
+                                    <div class='item_add_option_box' id='selectOption' data-template-id='selectOptionTemplate'>
+                                    </div>
+                                </div>
+
+                                <div class='item_choice_list'>
+                                    <table
+                                        id='selectedOption'
+                                        data-template-id='selectedOptionTemplate'
+                                        class='option_display_area'
+                                        border='0'
+                                        cellpadding='0'
+                                        cellspacing='0'
+                                    >
+                                    </table>
+                                    <div class='item_price_cont'>
+                                        <div class='end_price item_tatal_box'>
+                                            <dl class='total_amount'>
+                                                <dt>
+                                                    총 합계금액
+                                                </dt>
+                                                <dd>
+                                                    <strong id='totalPrice'>
+                                                        {{totalPrice}}<b>
+                                                            원
+                                                        </b>
+                                                    </strong>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='btn_box'>
+                    <button id='cartBtn' type='button' class='btn_cancel' data-action-type='createCart'>
+                        <span>
+                            장바구니
+                        </span>
+                    </button>
+                    <button id='orderBtn' type='button' class='btn_confirm' data-action-type='createOrder'>
+                        <span>
+                            바로구매
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <a href='#close' class='ly_close btnClosePopup' data-action-type='negative'>
+                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
+            </a>
+        </div>
+    </div>
+</script>
+
+<script src="/js/components/popup/cart-product-option.js"></script>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <title>Join</title>
+    </head>
+
+    <body>
+        <header id="header"></header>
+        <div id="contents" class="visible">
+            <main class="sub_content">
+                <div class="location_wrap">
+                    <div class="location_cont">
+                        <em><a href="/" class="local_home">HOME</a> &gt; 회원가입 &gt; 약관동의</em>
+                    </div>
+                </div>
+                <div class="content_box">
+                    <div class="join_agreement_wrap">
+                        <div class="member_tit">
+                            <h2>회원가입</h2>
+                            <ol>
+                                <li class="page_on">
+                                    <span>01</span> 약관동의<span><img src="/assets/img/member/icon_join_step_on.png" alt="" /></span>
+                                </li>
+                                <li>
+                                    <span>02</span> 정보입력<span><img src="/assets/img/member/icon_join_step_off.png" alt="" /></span>
+                                </li>
+                                <li><span>03</span> 가입완료</li>
+                            </ol>
+                        </div>
+                        <!-- //member_tit -->
+                        <div id="joinAgreement" data-template-id="joinAgreementTemplate"></div>
+                        <script id="joinAgreementTemplate" type="text/x-handlebars-template">
+                            <div class="member_cont">
+                                <h3>약관동의</h3>
+                                <div class="join_agreement_cont">
+                                    <div class="join_agreement_box">
+                                        <div class="form_element">
+                                            <input type="checkbox" id="allAgree" name="termAllTem" {{isAllChecked}} />
+                                            <label class="check" for="allAgree">
+                                                <em>{{mallName}}의 모든 약관을 확인하고 전체동의합니다.</em></label
+                                            >
+                                            <span>(전체동의, 선택항목도 포함됩니다.)</span>
+                                        </div>
+                                    </div>
+                                    <!-- //join_agreement_box -->
+                                    {{#each agreements}}
+                                    <div class="join_agreement_box ">
+                                        <div class="form_element">
+                                            <input type="checkbox" id="agreeCheckbox-{{key}}" name="termItem"
+                                                   class="{{#if required}}require{{else}}option{{/if}}" data-term-id="{{key}}">
+                                            <label for="agreeCheckbox-{{key}}" class="check_s">
+                                                <em><b>{{#if required}}[필수]{{else}}[선택]{{/if}}</b>{{label}}</em>
+                                            </label>
+                                            {{#if contents}}
+                                            <span class="agreement_detail" data-term-id="{{key}}">보기</span>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    <div class="join_agreement_box ">
+                                        <div class="form_element">
+                                            <input type="checkbox" id="agreeCheckbox-JOIN_POSSIBLE_AGE" name="termItem"
+                                            class="require" data-term-id="JOIN_POSSIBLE_AGE">
+                                            <label class="check_s" for="agreeCheckbox-JOIN_POSSIBLE_AGE">
+                                                <em><b>[필수]</b>본인은 만 14세 이상입니다.</em>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="important_check_box">
+                                        <strong class="important_check">필수항목을 체크해주세요.</strong>
+                                    </div>
+                                </div>
+                                <!-- //join_agreement_cont -->
+                                {{#if isAuthPhoneConfig}}
+                                <h3>본인 인증방법 선택</h3>
+                                <div class="join_certify_list">
+                                    <ul>
+                                        <li>
+                                            <div class="form_element">
+                                                <button type="button" class="btnAuthKCP">휴대폰 본인인증</button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                {{/if}}
+                                <div class="btn_center_box">
+                                    <button type="button" id="prevStepBtn" class="btn_member_prev">이전단계</button>
+                                    <button type="button" id="nextStepBtn" class="btn_member_next">다음단계</button>
+                                </div>
+                                <!-- //btn_member_sec -->
+                            </div>
+                            <!-- //member_cont -->
+                        </script>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <aside id="aside"></aside>
+        <footer id="footer"></footer>
+        <div id="popups-area"></div>
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/pages/join/agreement.js"></script>
+    </body>
+</html>

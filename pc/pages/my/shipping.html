@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <link type="text/css" rel="stylesheet" href="/lib/date-picker/tui-date-picker.css" />
+        <script src="/lib/date-picker/tui-date-picker.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <script src="/js/pages/my/components/mypage-components.js"></script>
+        <title>배송지 관리</title>
+    </head>
+    <body>
+        <header id="header"></header>
+
+        <div id="contents" style="visibility: hidden;">
+            <main class="sub_content">
+                <div class="content_box">
+                    <div class="location_wrap">
+                        <div class="location_cont">
+                            <em><a href="/" class="local_home">HOME</a> &gt; 마이페이지 > 배송지 관리</em>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="myPageLeftMenu" class="side_cont"></div>
+
+                <div class="content">
+                    <div class="mypage_main">
+                        <!-- 마이페이지 > 쇼핑정보, 혜택관리 공통으로 쓰이는 summary -->
+                        <div id="myPageSummary"></div>
+                        <div class="mypage_top_info"></div>
+
+                        <div class="mypage_zone_tit">
+                            <span class="pick_list_num">배송지 관리 내역 총 <strong id="totalCount">0</strong>건</span>
+                        </div>
+
+                        <div class="mypage_lately_info">
+                            <div class="mypage_zone_tit"></div>
+                            <div id="searchDateRange"></div>
+                        </div>
+                        <div class="mypage_shipping">
+                            <a href="#addShippingAddressPopup" id="addShippingAddress" class="btn_add_shipping btnAddress">
+                                + 배송지 추가
+                            </a>
+                            <div class="mypage_shipping_cont">
+                                <div class="mypage_table_type">
+                                    <script id="addresses" type="text/x-handlebars-template">
+                                        <table>
+                                            <colgroup>
+                                                <col style='width: 12%;' />
+                                                <col style='width: 12%;' />
+                                                <col />
+                                                <col style='width: 20%;' />
+                                                <col style='width: 12%;' />
+                                            </colgroup>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        배송지이름
+                                                    </th>
+                                                    <th>
+                                                        받으실 분
+                                                    </th>
+                                                    <th>
+                                                        주소
+                                                    </th>
+                                                    <th>
+                                                        연락처
+                                                    </th>
+                                                    <th>
+                                                        수정/삭제
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#each this}}
+                                                    <tr>
+                                                        <td>
+                                                            {{#ifEq defaultYn 'Y'}}
+                                                                (기본배송지)
+                                                                <br />
+                                                            {{/ifEq}}
+                                                            {{addressName}}
+                                                        </td>
+                                                        <td>
+                                                            {{receiverName}}
+                                                        </td>
+                                                        <td>
+                                                            {{receiverAddress}}
+                                                        </td>
+                                                        <td>
+                                                            휴대전화 : {{receiverContact1}}
+                                                            {{#if receiverContact2}}
+                                                                <br />
+                                                                연락처
+                                                        : {{receiverContact2}}
+                                                            {{/if}}
+                                                        </td>
+                                                        <td>
+                                                            <span class='btn_gray_list'>
+                                                                <a
+                                                                    href='#update'
+                                                                    class='btn_gray_small btnAddress modify_address_btn'
+                                                                    data-id='shippingAddressUpdate'
+                                                                    data-address-no="{{addressNo}}"
+                                                                >
+                                                                    <span>
+                                                                        수정
+                                                                    </span>
+                                                                </a>
+                                                            </span>
+                                                            <span class='btn_gray_list'>
+                                                                <a
+                                                                    href='#delete'
+                                                                    class='btn_gray_small delete_address_btn btnDeleteAddress'
+                                                                    data-id='shippingAddressDelete'
+                                                                    data-address-no="{{addressNo}}"
+                                                                    data-address-name="{{addressName}}"
+                                                                    data-default-yn="{{defaultYn}}"
+                                                                >
+                                                                    <span>
+                                                                        삭제
+                                                                    </span>
+                                                                </a>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                {{/each}}
+
+                                                {{#ifEq length 0}}
+                                                    <tr>
+                                                        <td colspan='5'>
+                                                            <p class='no_data'>
+                                                                배송지 목록이 없습니다.
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                {{/ifEq}}
+                                            </tbody>
+                                        </table>
+                                    </script>
+                                </div>
+                                <div class="pagination" id="pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <aside id="aside"></aside>
+        <footer id="footer"></footer>
+        <div id="popups-area"></div>
+
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/pages/my/shipping.js"></script>
+    </body>
+</html>

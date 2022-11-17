@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <title>주문완료</title>
+    </head>
+    <body>
+        <header id="header"></header>
+        <div id="contents">
+            <div id="app" class="sub_content">
+                <div class="location_wrap visible">
+                    <div class="location_cont">
+                        <em><a href="/" class="local_home">HOME</a> &gt; 주문완료</em>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="content_box">
+                        <div class="order_wrap">
+                            <!-- order_tit -->
+                            <div class="order_tit visible">
+                                <h2>주문완료</h2>
+                                <ol>
+                                    <li>
+                                        <span>01</span> 장바구니
+                                        <span><img src="/assets/img/member/icon_join_step_off.png" alt="장바구니 단계 사진" /></span>
+                                    </li>
+                                    <li>
+                                        <span>02</span> 주문서작성/결제<span
+                                            ><img src="/assets/img/member/icon_join_step_off.png" alt="주문서 단계 사진"
+                                        /></span>
+                                    </li>
+                                    <li class="page_on"><span>03</span> 주문완료</li>
+                                </ol>
+                            </div>
+
+                            <div class="order_cont">
+                                <div class="order_end">
+                                    <div class="order_end_completion">
+                                        <div class="order_end_completion" id="orderEndCompletion">
+                                            <span>
+                                                {{img imageUrl x x '' 'middle'}}
+                                            </span>
+                                            <p>
+                                                <strong>
+                                                    {{mainMessage}}
+                                                </strong>
+                                                <br />
+                                                <em>
+                                                    {{subMessage}}
+                                                </em>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 주문 요약 정보 -->
+                                    <div class="order_zone_tit" id="orderSummaryTitle">
+                                        {{#if hasOrderData}}
+                                        <h4>주문요약정보</h4>
+                                        {{/if}}
+                                    </div>
+
+                                    <div class="order_table_type" id="orderInfoTable">
+                                        {{#if hasOrderData}}
+                                        <table class="table_left">
+                                            <colgroup>
+                                                <col style="width: 15%;" />
+                                                <col style="width: 85%;" />
+                                            </colgroup>
+                                            <tbody>
+                                                <tr>
+                                                    <th>결제수단</th>
+                                                    <td>
+                                                        <strong>{{payTypeLabel}}</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr id="bankInfo" style="">
+                                                    <th>입금 정보</th>
+                                                    <td>
+                                                        <div class="pay_with_list">
+                                                            <ul>
+                                                                <li>입금자명 : {{bankInfo.remitterName}}</li>
+                                                                <li>은행명 : {{bankInfo.bankName}}</li>
+                                                                <li>입금계좌 : {{bankInfo.account}}</li>
+                                                                <li>입금기한 : {{bankInfo.paymentExpirationYmdt}}</li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>주문번호</th>
+                                                    <td>{{orderNo}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>주문일자</th>
+                                                    <td>{{orderYmdt}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>주문상품</th>
+                                                    <td>
+                                                        {{#each productTitles}}
+                                                        <strong>{{safeString productName}}</strong><br />
+                                                        {{#if optionTitle}} - {{{optionTitle}}}<br />
+                                                        {{/if}} {{#each optionInputs}} - {{safeString this}}<br />
+                                                        {{/each}} {{/each}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>주문자명</th>
+                                                    <td>{{ordererName}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>배송정보</th>
+                                                    <td>
+                                                        <p>
+                                                            <strong>{{shippingAddress.receiverName}}</strong> <br />
+                                                            {{shippingAddress.receiverContact1}} / {{shippingAddress.receiverContact2}}
+                                                            <br />
+                                                            ({{shippingAddress.receiverZipCd}})<br />
+                                                            {{shippingAddress.receiverAddress}} {{shippingAddress.receiverDetailAddress}}<br />
+                                                            배송 메모 : {{deliveryMemo}}
+                                                            <br />
+                                                            {{#if shippingAddress.customsIdNumber}} 개인통관고유부호: {{shippingAddress.customsIdNumber}}
+                                                            {{/if}}
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>상품 합계 금액</th>
+                                                    <td>
+                                                        <strong class="order_payment_sum format_currency"
+                                                            >{{toCurrencyString lastOrderAmount.totalProductAmt}}원</strong
+                                                        >
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>배송비</th>
+                                                    <td>
+                                                        기본배송
+                                                        <span class="add_currency format_currency">{{toCurrencyString lastOrderAmount.deliveryAmt}}원</span>
+                                                    </td>
+                                                </tr>
+                                                <!--                                                {{#ifNe lastOrderAmount.remoteDeliveryAmt 0}}-->
+                                                <tr class="remoteDeliveryAmt">
+                                                    <th>지역별 배송비</th>
+                                                    <td>
+                                                        <span class="format_currency">{{toCurrencyString lastOrderAmount.remoteDeliveryAmt }}원</span>
+                                                    </td>
+                                                </tr>
+                                                <!--                                                {{/ifNe}}-->
+                                                <tr>
+                                                    <th>할인혜택</th>
+                                                    <td>
+                                                        <div class="accumulation_list">
+                                                            <ul class="benefit_list">
+                                                                <li class="benefit_sale">
+                                                                    <em>할인</em><strong> : {{toCurrencyString totalDiscountAmt}}원</strong>
+                                                                    (즉시할인 {{toCurrencyString lastOrderAmount.immediateDiscountAmt}}원 + 상품쿠폰할인
+                                                                    {{toCurrencyString lastOrderAmount.productCouponDiscountAmt}}원 + 주문쿠폰 할인
+                                                                    {{toCurrencyString lastOrderAmount.cartCouponDiscountAmt}}원)
+                                                                </li>
+                                                                {{#ifNe lastOrderAmount.subPayAmt 0}}
+                                                                <li class="benefit_mileage">
+                                                                    <em>적립금 사용</em
+                                                                    ><strong> : {{toCurrencyString lastOrderAmount.subPayAmt}}{{accumulationUnit}}</strong>
+                                                                </li>
+                                                                {{/ifNe}}
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>총 결제금액</th>
+                                                    <td>
+                                                        <strong class="order_payment_sum format_currency">{{toCurrencyString lastOrderAmount.chargeAmt}}</strong
+                                                        >원
+                                                    </td>
+                                                </tr>
+                                                <!--{{#ifNe accumulationAmtWhenBuyConfirm 0}}-->
+                                                <tr>
+                                                    <th>적립정보</th>
+                                                    <td>
+                                                        <div class="pay_with_list">
+                                                            <ul>
+                                                                <li>
+                                                                    구매 확정 시 {{toCurrencyString accumulationAmtWhenBuyConfirm}}{{accumulationUnit}} 적립
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <!--{{/ifNe}}-->
+                                            </tbody>
+                                        </table>
+                                        {{/if}}
+                                    </div>
+                                    <!-- 주문 요약 정보 -->
+
+                                    <div class="btn_center_box" id="orderCompleteBtns">
+                                        {{#unless isPaySuccess}}
+                                        <a href="#goback" class="btn_order_prev"><em>이전 페이지</em></a>
+                                        <a href="/pages/order/cart.html" class="btn_order_cart"><em>장바구니 가기</em></a>
+                                        {{/unless}}
+                                        <a href="/" class="btn_order_end_ok"><em>{{#unless isPaySuccess}}홈으로 가기{{else}}확인{{/unless}}</em></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <aside id="aside"></aside>
+        <footer id="footer"></footer>
+        <div id="popups-area"></div>
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/pages/order/order-complete.js"></script>
+    </body>
+</html>
