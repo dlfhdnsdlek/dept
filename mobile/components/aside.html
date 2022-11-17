@@ -1,0 +1,66 @@
+<div class="scroll_wrap">
+    <div id="include_scroll_left">
+        <div id="scroll_left" class="scrollBanner">
+            {{#if imageUrl}}
+            <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                {{img imageUrl '' '' '스크롤 좌측 배너'}}
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <!-- 우측 스크롤 배너 -->
+    <!-- @fixme: 구 sidebanner.hbs참고 -->
+    <div id="include_scroll_right">
+        <div id="scroll_right" class="scrollBanner invisible">
+            <div class="right_banner">
+                {{#if imageUrl}}
+                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                    {{img imageUrl '' '' '스크롤 우측 배너'}}
+                </a>
+                {{/if}}
+            </div>
+
+            <div id="recentProduct" class="scroll_right_cont hide">
+                <h4>최근 본 상품</h4>
+                {{#if itemsByPaging}}
+                <ul>
+                    {{#each itemsByPaging}}
+                    <li>
+                        <a href="/pages/product/view.html?productNo={{productNo}}">
+                            <span class="photo">
+                                {{#if adult}}
+                                <img src="/assets/img/icon/goods_icon/only_adult_pc.png" alt="최근이미지" />
+                                {{else}} {{img listImageUrls 80 80 "최근이미지" ""}} {{/if}}
+                            </span>
+                            <span class="src_box">
+                                <em>{{safeString productName}}</em>
+                                <strong>{{toCurrencyString salePrice}}<b>원</b></strong>
+                            </span>
+                        </a>
+                        <button data-product-no="{{productNo}}" type="button" class="btn_scroll_list_del" title="최근본 상품에서 삭제"></button>
+                    </li>
+                    {{/each}}
+                </ul>
+                <div class="scr_paging">
+                    <button type="button" class="bnt_scroll_prev" title="최근본 이전 상품">
+                        <img src="/assets/img/common/btn/btn_scroll_prev.png" alt="최근본 이전 상품" />
+                    </button>
+                    <span>
+                        <strong class="js_current">{{currentPage}}</strong>/
+                        <span class="js_total" style="float: none; width: auto;">{{totalPage}}</span>
+                    </span>
+                    <button type="button" class="bnt_scroll_next" title="최근본 다음 상품">
+                        <img src="/assets/img/common/btn/btn_scroll_next.png" alt="최근본 다음 상품" />
+                    </button>
+                </div>
+                {{else}}
+                <div class="scr_paging empty">최근 본 상품이<br />없습니다.</div>
+                {{/if}}
+            </div>
+            <!-- @fixme anchor 수정해야함 -->
+            <span class="btn_scroll_top"><a href="#TOP"></a></span>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/components/aside.js"></script>

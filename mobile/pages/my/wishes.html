@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <title>찜리스트</title>
+    </head>
+    <body>
+        <header id="header"></header>
+
+        <div id="contents">
+            <main class="sub_content">
+                <div class="content_box">
+                    <div class="location_wrap">
+                        <div class="location_cont">
+                            <em><a href="/" class="local_home">HOME</a> &gt; 마이페이지 > 찜리스트</em>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="myPageLeftMenu" class="side_cont"></div>
+
+                <div class="content">
+                    <div class="mypage_main">
+                        <div id="myPageSummary"></div>
+
+                        <div class="mypage_top_info"></div>
+
+                        <div class="mypage_lately_info">
+                            <div class="mypage_zone_tit">
+                                <h3>찜리스트</h3>
+                            </div>
+                        </div>
+
+                        <div class="mypage_lately_info">
+                            <div class="mypage_zone_tit">
+                                <h3>
+                                    <span>총 <span id="totalCount">0</span>건</span>
+                                </h3>
+                            </div>
+                            <div class="mypage_table_type">
+                                <script id="wishResults" type="text/x-handlebars-template">
+                                    <table>
+                                        <colgroup>
+                                            <col style='width:8%' />
+                                            <col />
+                                            <col style='width:20%' />
+                                            <col style='width:20%' />
+                                            <col style='width:20%' />
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <div class='form_element'>
+                                                        <div class='form_element'>
+                                                            <input type='checkbox' id='allChecked' />
+                                                            <label for='allChecked' class='check_s'></label>
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    상품명
+                                                </th>
+                                                <th>
+                                                    상품금액
+                                                </th>
+                                                <th>
+                                                    할인/적립
+                                                </th>
+                                                <th>
+                                                    합계금액
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each this}}
+                                                <tr data-product-no="{{productNo}}">
+                                                    <td>
+                                                        <div class='form_element'>
+                                                            <input type='checkbox' name='checked' id="{{productNo}}" />
+                                                            <label for="{{productNo}}" class='check_s'></label>
+                                                        </div>
+                                                    </td>
+                                                    <td class='td_left'>
+                                                        <div class='pick_add_cont'>
+                                                            <span class='pick_add_img'>
+                                                                <div>
+                                                                    <a href="/pages/product/view.html?productNo={{productNo}}">
+                                                                        {{img imageUrls x x productName 'middle'}}
+                                                                    </a>
+                                                                </div>
+                                                            </span>
+
+                                                            <div class='pick_add_info'>
+                                                                {{#if invalid}}
+                                                                    <div class='icon_exclamationmark'>
+                                                                        구매제한 상품
+                                                                    </div>
+                                                                {{/if}}
+                                                                <em>
+                                                                    <a href="/pages/product/view.html?productNo={{productNo}}">
+                                                                        {{safeString productName}}
+                                                                    </a>
+                                                                </em>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    {{#if shouldShowContentsIfPausing}}
+                                                        <td>
+                                                            {{contentsIfPausing}}
+                                                        </td>
+                                                        <td>
+                                                            <ul class='benefit_list'>
+                                                                -
+                                                            </ul>
+                                                        </td>
+                                                        <td>
+                                                            -
+                                                        </td>
+                                                    {{else}}
+                                                        <td>
+                                                            {{toCurrencyString salePrice}}원
+                                                        </td>
+                                                        <td>
+                                                            <ul class='benefit_list'>
+                                                                {{{discountHtml}}}
+                                                                {{{accumulateHtml}}}
+                                                            </ul>
+                                                        </td>
+                                                        <td>
+                                                            <strong>
+                                                                {{toCurrencyString displayProductPrice}}원
+                                                                {{#if canDiscount}}
+                                                                    <del class='add_currency'>
+                                                                        {{toCurrencyString salePrice}}원
+                                                                    </del>
+                                                                {{/if}}
+                                                            </strong>
+                                                        </td>
+                                                    {{/if}}
+                                                </tr>
+                                            {{/each}}
+                                        </tbody>
+                                    </table>
+                                </script>
+                                <!--<button class="btn_wish_choice_cart btnAddCart"  data-action-type="bulk"><em>선택 상품 장바구니</em></button>-->
+                            </div>
+                            <button id="deleteBtn" class="btn_wish_choice_del"><em>선택 상품 삭제</em></button>
+                            <div class="pagination" id="pagination"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <aside id="aside"></aside>
+        <footer id="footer"></footer>
+        <div id="popups-area"></div>
+
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <script src="/js/pages/my/components/mypage-components.js"></script>
+        <script src="/js/pages/my/wishes.js"></script>
+    </body>
+</html>

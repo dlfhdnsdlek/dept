@@ -1,0 +1,117 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* 하단영역 */
+.attend_reply_wrap + .addition_zone,
+.attend_stamp_wrap + .addition_zone{width:1000px; margin:0 auto;}
+
+/* ------------- 출석체트 > 댓글 ------------- */
+.attend_reply_wrap{width:1000px; margin:0 auto;}
+.attend_reply_box .attend_reply_check{padding: 30px 40px; border:6px solid #f4f4f4; border-top:none;}
+.attend_reply_check .attend_states{overflow:hidden; font-size:14px;}
+.attend_reply_check .attend_states p{float:left;}
+.attend_reply_check .attend_states span{float:right;}
+.attend_reply_check .attend_reply_sec{margin:15px 0 0 0;}
+.attend_reply_check .attend_reply_sec table{width:100%;}
+.attend_reply_check .attend_reply_sec table th{padding: 15px 0px; border-top:1px solid #999999; border-bottom:1px solid #dbdbdb; background:#f7f7f7; color:#24242c; text-align:center;}
+.attend_reply_check .attend_reply_sec table td{padding: 15px 5px; border-bottom:1px solid #dbdbdb; color:#444; text-align:center;}
+.attend_reply_check .attend_reply_sec table .reply_cont{text-align:left;}
+/* 댓글 색반전 */
+.attend_reply_box .attend_reply_check_type2{background:#35353f; border:6px solid #35353f;}
+.attend_reply_check_type2 .attend_states{color:#fff;}
+.attend_reply_check_type2 .attend_reply_sec table th{background:#2E2E38; border-bottom:1px solid #44444D; border-top:1px solid #44444D; color:#fff;}
+.attend_reply_check_type2 .attend_reply_sec table td{color:#e1e1e2; border-bottom:1px solid #44444D;}
+.attend_reply_box .attend_reply_comment{overflow:hidden; margin:20px 0 50px 0;}
+.attend_reply_box .attend_reply_comment textarea{float:left; width:830px; height:86px; padding:5px 10px; border:1px solid #ccc; line-height:18px;}
+.attend_reply_box .attend_reply_comment .btn_attend_check{display:block; float:right; width:160px; height:86px; padding:0 0 0 29px; background:#323437 url('/assets/img/event/btn_point_check2.png') no-repeat 41px center; border:1px solid #323437; color:#fff; font-weight:bold; font-size:13px;}
+.attend_reply_box .attend_reply_comment .btn_attend_check:hover{background:#46484c url('/assets/img/event/btn_point_check2.png') no-repeat 41px center; border:1px solid #46484c;}
+
+
+/* ------------- 출석체크 > 스템프 ------------- */
+.attend_stamp_wrap{width:1000px; margin:0 auto;}
+.stamp_calendar_box .stamp_calendar{padding: 30px 40px; border:6px solid #f4f4f4; border-top:none;}
+.stamp_calendar .attend_states{overflow:hidden; font-size:14px;}
+.stamp_calendar .attend_states p{float:left;}
+.stamp_calendar .attend_states span{float:right;}
+.stamp_calendar .calendar_month{padding:24px 0 10px 0; font-size:28px; color:#24242c; text-align:center;}
+.stamp_calendar .calendar_month .prev_month{width:15px; height:26px; font-size:0; text-indent:-9999px; background:url('/assets/img/event/btn_attend_calendar.png') no-repeat left top;}
+.stamp_calendar .calendar_month .next_month{width:15px; height:26px; font-size:0; text-indent:-9999px; background:url('/assets/img/event/btn_attend_calendar.png') no-repeat right top;}
+.stamp_calendar .calendar_month strong{padding:0 29px; vertical-align:-2px;}
+.stamp_calendar .calendar_sec{}
+.stamp_calendar .calendar_sec table th{height:89px; padding: 0 54px; /*border-bottom:1px solid #F4F4F4;*/ font-size:18px; color:#24242c; text-align:center;}
+.stamp_calendar .calendar_sec table td{height:89px; padding: 0 54px; border-top:1px solid #F4F4F4; font-size:18px; color:#bcbcbc; font-weight:bold; text-align:center;}
+.stamp_calendar .calendar_sec .next-month{color:#dfdfdf;}
+.stamp_calendar .calendar_sec .attend{background:url('/assets/img/event/bg_attendance_stamp.png') no-repeat center 13px; color:#3e3d3c;}
+/* 캘린더 색반전 */
+.stamp_calendar_box .stamp_calendar_type2{background:#35353f; border:6px solid #35353f; border-top:none;}
+.stamp_calendar_type2 .calendar_states,
+.stamp_calendar_type2 .calendar_month,
+.stamp_calendar_type2 .calendar_sec table th,
+.stamp_calendar_type2 .calendar_sec .attend{color:#fff;}
+.stamp_calendar_type2 .calendar_month .prev_month{background:url('/assets/img/event/btn_attend_calendar.png') no-repeat left bottom;}
+.stamp_calendar_type2 .calendar_month .next_month{background:url('/assets/img/event/btn_attend_calendar.png') no-repeat right bottom;}
+.stamp_calendar_type2 .calendar_sec .next-month{color:#5a5a60;}
+.stamp_calendar_type2 .calendar_sec table th,
+.stamp_calendar_type2 .calendar_sec table td{border-bottom:none;}
+.stamp_calendar_type2 .calendar_sec table tbody{background:#282831;}
+
+.stamp_calendar_box .btn_attend_check{display:block; width:240px; height:61px; margin:30px auto; padding:0 0 0 29px; background:#323437 url('/assets/img/event/btn_point_check.png') no-repeat 65px 24px; border:1px solid #323437; color:#fff; font-weight:bold; font-size:20px;}
+.stamp_calendar_box .btn_attend_check:hover{background:#46484c url('/assets/img/event/btn_point_check.png') no-repeat 65px 24px; border:1px solid #46484c;}
+
+
+/* ------------- 타임세일 ------------- */
+.time_sale_cont{}
+.time_sale_tit{overflow:hidden; position:relative; border-bottom:1px solid #999999;}
+.time_sale_tit h2{/*width:70%;*/ padding:0 0 30px 0; font-size:24px;}
+.time_sale_tit strong{position:absolute; bottom:7px; right:10px; color:#323437; font-size:13px;}
+
+.time_sale_info{/*min-height:200px; border:1px solid #dbdbdb;*/}
+.time_sale_info img{max-width:100%;}
+
+/* 상단 타임보드 */
+.sale_clock{overflow:hidden; margin:0 0 35px 0; padding:20px 0 20px 0; border:1px solid #dbdbdb; vertical-align:middle;}
+.sale_clock .clock_cont{text-align:center;}
+.sale_clock .clock_cont .clock_tit{padding:0 30px 0 0; font-size:22px;}
+.sale_clock .clock_box{display:inline-block; font-size:0; line-height:50px; vertical-align:middle;}
+.sale_clock .clock_box strong,
+.sale_clock .clock_box span{display:inline-block; font-size:34px;}
+.sale_clock .clock_box em{display:inline-block; height:50px; margin:0 10px 0 0; font-size:34px;}
+.sale_clock .clock_box em strong{display:inline-block; width:38px; height:50px; margin:0 -5px 0 0; padding:0; color:#ffffff; font-size:36px; font-weight:bold; text-align:center; line-height:50px;
+    background:url("/assets/img/common/bg/bg_sale_clock.png") no-repeat 0 0;}
+.sale_clock .clock_box em + span{padding:0 10px 0 5px;}
+.sale_clock .clock_box .next-month{margin:0 10px 0 0;}
+.sale_clock .clock_box .next-month + span{margin:0 7px 0 -5px;}
+.sale_clock .sale_buy_num{font-size:20px; text-align:center;}
+.sale_clock .sale_buy_num strong{color:#323437; font-size:24px;}
+
+.coupon_content{}
+.coupon_content h2{font-size:24px;}
+.coupon_content .cp_zone_wrap{margin-top:12px;}
+.coupon_content .cp_list_wrap{margin-top:60px;}
+.coupon_content .cp_list_wrap.margin-type{margin-top:0;}
+.coupon_content .cp_list_wrap .list_top:after{display:block;content:'';clear:both;}
+.coupon_content .cp_list_wrap .list_top .title{float:left;font-weight:bold;font-size:23px;letter-spacing:-0.1em;}
+.coupon_content .cp_list_wrap .cp_down{float:right;display:inline-block;height:33px;line-height:33px;border:1px solid #323437;padding:0 9px 0 12px;}
+.coupon_content .cp_list_wrap .cp_down span{display:inline-block;padding-right:22px;font-weight:bold;font-size:12px;letter-spacing:-0.05em;background:url(/assets/img/common/btn/btn_cp_down.png) no-repeat 100% 50%;color:#323437;}
+.coupon_content .cp_list_wrap .cp_list{display:table;width:960px;margin:30px 0 50px;}
+.coupon_content .cp_list_wrap .cp_list:after{display:block;content:'';clear:both;}
+.coupon_content .cp_list_wrap .cp_list li{float:left;width:300px;margin-right:30px;margin-bottom:50px;vertical-align:middle;}
+.coupon_content .cp_list_wrap .cp_list li.last{padding-right:0;margin-right:0;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon{position:relative;width:300px;min-height:196px;vertical-align:middle;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .img_cp{width:100%;min-height:196px;text-align:center;vertical-align:middle;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .img_cp img{max-width:100%;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .text_wrap{position:absolute;top:50%;left:0;width:100%;z-index:10;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .text_wrap .text_info{padding:25px 28px 25px 28px;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .text_wrap .text_info span{display:block;text-align:left;overflow:hidden;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .text_wrap .text_info .tit{font-size:14px;color:#666;letter-spacing:-0.05em;max-height:42px;line-height:21px;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .text_wrap .text_info .dis{font-weight:bold;font-size:30px;color:#323437;letter-spacing:-0.05em;line-height:32px;margin-top:5px;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .text_wrap .text_info .txt{font-weight:bold;font-size:22px;color:#333;letter-spacing:-0.05em;line-height:29px;margin-top:8px;}
+.coupon_content .cp_list_wrap .cp_list li .box_coupon .text_wrap .text_info .date{display:inline-block;max-width:205px;height:18px;overflow:hidden;margin-top:30px;font-size:12px;color:#b5b5b5;}
+.coupon_content .cp_list_wrap .cp_list li .cp_down_2{display:block;height:47px;line-height:47px;margin-top:10px;text-align:center;background:#323437;}
+.coupon_content .cp_list_wrap .cp_list li .cp_down_2 span{display:inline-block;padding-right:35px;font-weight:bold;font-size:14px;letter-spacing:-0.1em;background:url(/assets/img/common/btn/btn_cp_down_2.png) no-repeat 100% 50%;color:#fff;}
+.coupon_content .cp_list_wrap .cp_list li .cp_down_3{display:block;height:45px;line-height:45px;margin-top:10px;text-align:center;border:1px solid #323437;background:#fff;}
+.coupon_content .cp_list_wrap .cp_list li .cp_down_3 span{display:inline-block;font-weight:bold;font-size:14px;letter-spacing:-0.05em;color:#323437;}
+.coupon_content .cp_list_wrap .cp_list li .cp_down_4{display:block;height:47px;line-height:47px;margin-top:10px;text-align:center;background:#efefef;}
+.coupon_content .cp_list_wrap .cp_list li .cp_down_4 span{display:inline-block;font-weight:bold;font-size:14px;letter-spacing:-0.05em;color:#8a8a8a;}
+.coupon_content .cp_list_none{display:none; margin-top:60px;border:1px solid #e1e1e1;text-align:center;padding:78px 0;}
+.coupon_content .cp_list_none p{font-size:16px;letter-spacing:-0.05em;color:#666;}

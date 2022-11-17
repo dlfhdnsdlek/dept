@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
+        <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
+        <script src="/js/core/shopby.js"></script>
+        <title>Join Method</title>
+    </head>
+
+    <body>
+        <header id="header"></header>
+        <div id="contents" class="visible">
+            <main class="sub_content">
+                <div class="location_wrap">
+                    <div class="location_cont">
+                        <em><a href="/" class="local_home">HOME</a> &gt; 회원가입 &gt; 가입방법 선택</em>
+                    </div>
+                </div>
+                <div class="content_box">
+                    <div class="member_wrap">
+                        <div class="member_tit">
+                            <h2 class="skip">회원가입</h2>
+                        </div>
+                        <!-- //member_tit -->
+                        <div class="member_cont">
+                            <div class="member_login_box">
+                                <div class="member_login_shop">
+                                    <a href="/pages/join/agreement.html" id="btnJoin" class="shop_mall_join"><span>쇼핑몰 회원가입</span></a>
+                                </div>
+                                <div id="openIdMethod" class="member_sns_login invisible">
+                                    {{#each providers}}
+                                    <a href="#" class="btn_{{provider}}_login js_btn_{{provider}}_login btn_login_sns" data-provider="{{provider}}">
+                                        {{img url '' '' title}}
+                                    </a>
+                                    {{/each}}
+                                </div>
+                                <strong class="chk_none">
+                                    SNS계정을 연동하여 빠르고 쉽고 안전하게 회원가입 할 수 있습니다. <br />
+                                    이 과정에서 고객님의 데이터는 철저하게 보호됩니다.
+                                </strong>
+                            </div>
+                        </div>
+                        <!-- //member_cont -->
+                        <div class="member_guide_txt">
+                            <p>이미 쇼핑몰 회원이세요? <a href="/pages/login/login.html">로그인</a></p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <aside id="aside"></aside>
+        <footer id="footer"></footer>
+        <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
+        <script src="/js/pages/join/method.js"></script>
+        <div id="popups-area"></div>
+    </body>
+</html>

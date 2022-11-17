@@ -1,0 +1,217 @@
+<!--
+  ~  © 2021. NHN Commerce Corp. All rights reserved.
+  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~  @author hyeyeon-park
+  ~  @since 2021.7.14
+  -->
+
+<script id="productReviewPopupTemplate" type="text/x-handlebars-template">
+    <div class='layer_wrap dimed'>
+        <div class='box common_popup_body' style='width: 600px;'>
+            <div class='view' style='text-align: left;'>
+                <h2 class='boardTitle'>
+                    {{productReviewConfig.name}}
+                </h2>
+                <div class='board_write_box'>
+                    <table class='board_write_table'>
+                        <colgroup>
+                            <col style='width: 23%;' />
+                            <col style='width: 77%;' />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    주문상품
+                                </th>
+                                <td>
+                                    <div class='board_goods_select'>
+                                        <div id='selectedProductBox' data-template-id='selectedProductTemplate'></div>
+                                        {{#if canSelectProduct}}
+                                            <span class='js_selected_info_text'>
+                                                후기를 작성할 상품을 선택해주세요.
+                                            </span>
+                                        {{/if}}
+                                        {{#if needsSelectProductBtn}}
+                                            <a href='javascript:void(0)' title='찾아보기' id='selectOrderProduct' class='btn_order_goods_select'>
+                                                상품 선택
+                                            </a>
+                                        {{/if}}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope='row'>
+                                    평점
+                                </th>
+                                <td>
+                                    <ul class='rating_star'>
+                                        <li>
+                                            1
+                                        </li>
+                                        <li>
+                                            2
+                                        </li>
+                                        <li>
+                                            3
+                                        </li>
+                                        <li>
+                                            4
+                                        </li>
+                                        <li>
+                                            5
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            <tr class='form_element' style='display: table-row;'>
+                                <th scope='row'>
+                                    내용
+                                </th>
+                                <td class='write_editor'>
+                                    <div class='element_box'>
+                                        <textarea
+                                            id='editor'
+                                            name='content'
+                                            cols='30'
+                                            rows='10'
+                                            maxlength='1000'
+                                            data-pattern='article'
+                                            placeholder="{{expandedReviewConfig.writingReviewNoticeText}}"
+                                        ></textarea>
+
+                                        <span class='text_length'>
+                                            {{#if myProductReview}}
+                                                {{myProductReview.content.length}}
+                                            {{else}}
+                                                0
+                                            {{/if}}
+                                            /1000
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr id='attachmentBox'>
+                                <th scope='row'>
+                                    첨부파일
+                                </th>
+                                <td id='uploadBox'>
+                                    <div class='file_upload_sec'>
+                                        <div class='btn_upload_box'>
+                                            <button type='button' class='btn_upload' title='찾아보기'>
+                                                <em>
+                                                    파일찾기
+                                                </em>
+                                            </button>
+                                            <input
+                                                type='file'
+                                                id='attach1'
+                                                name='upfiles'
+                                                class='file'
+                                                title='파일찾기'
+                                                accept='image/png,image/jpeg,image/gif,image/jpg,image/bmp'
+                                                multiple
+                                            />
+                                        </div>
+                                    </div>
+                                    <div id='attachImages' class='add_file_area' data-template-id='attachmentsTemplate'></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class='btn_box'>
+                        <button type='button' class='btn_cancel' data-action-type='negative'>
+                            <span>
+                                취소
+                            </span>
+                        </button>
+                        <button type='button' id='btnAddReview' class='btn_confirm' data-action-type='positive'>
+                            <span>
+                                저장
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <a href='#close' class='ly_close' data-action-type='negative' style='outline: 0;'>
+                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
+            </a>
+        </div>
+    </div>
+</script>
+<script id="attachmentsTemplate" type="text/x-handlebars-template">
+    <div id='attachImages' class='add_file_area' data-template-id='attachmentsTemplate'>
+        <ul>
+            {{#each attachedImages}}
+                <li class='vis_mode' data-image-id="{{@index}}">
+                    <div>
+                        {{img imageUrl}}
+                        <a id='deleteAttachImage' class='del' href='#'>
+                            <img src='/assets/img/board/icon_del_add_file.png' alt='삭제' />
+                        </a>
+                    </div>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
+<script id="selectedProductTemplate" type="text/x-handlebars-template">
+    <div id='selectedProductBox' data-template-id='selectedProductTemplate'>
+        <div class='js_select_item'>
+            <input type='hidden' name='productNo' data-product-no="{{product.productNo}}" />
+            {{#each options}}
+                {{#if @first}}
+                    <input type='hidden' name='optionNo' data-option-no="{{optionNo}}" />
+                    <input type='hidden' name='orderOptionNo' data-order-option-no="{{orderOptionNo}}" />
+                {{/if}}
+            {{/each}}
+
+            <span class='select_item_img'>
+                <a href="/pages/product/view.html?productNo={{product.productNo}}">
+                    {{img product.imageUrls '' '' product.productName}}
+                </a>
+            </span>
+            <span class='select_item_info'>
+                <em>
+                    <a href="/pages/product/view.html?productNo={{product.productNo}}">
+                        {{safeString product.productName}}
+                    </a>
+                </em>
+                <span class='option_name_value'>
+                    {{#each options}}
+                        {{#if optionUsed}}
+                            {{#if @first}}
+                                {{{getOptionNameAndValue optionName optionValue}}}
+                            {{/if}}
+                        {{else}}
+                            {{safeString optionNameValue}}
+                        {{/if}}
+                    {{/each}}
+                    {{#if product.optionText}}
+                        {{safeString product.optionText}}
+                    {{/if}}
+                </span>
+            </span>
+            <span class='select_item_order_status'>
+                {{#each options}}
+                    {{#if @first}}
+                        {{#if orderStatusType}}
+                            {{setOrderStateValue orderStatusType}}
+                        {{else}}
+                            {{optionOrderStatus}}
+                        {{/if}}
+                    {{/if}}
+                {{/each}}
+                {{#if product.orderStatusType}}
+                    {{setOrderStateValue product.orderStatusType}}
+                {{/if}}
+            </span>
+        </div>
+    </div>
+</script>
+<script type="text/javascript" src="/js/components/popup/product-review.js"></script>

@@ -1,0 +1,97 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~ @author Eunbi Kim
+  ~ @since 2021.7.20
+  -->
+
+<script id="claimInfoTemplate" type="text/x-handlebars-template">
+    <div id='lyClaimInfo' class='layer_wrap dimed'>
+        <div class='layer_wrap_cont' style='position: absolute; margin: 0 0 0 -300px; top: 201px; left: 50%; width:600px;'>
+            <div class='claim-title ly_tit'>
+                <h4 id='claimInfoTitle'></h4>
+            </div>
+            <div class='ly_cont'>
+                <div class='scroll_box'>
+                    <div class='mypage_table_type claim-info left_table_type'>
+                        <table id='claimInfoContents' data-template-id='claimInfoContentsTemplate'></table>
+                    </div>
+                </div>
+                <div class='btn_center_box'>
+                    <button class='btn_ly_save btnClosePopup' data-action-type='negative'>
+                        <strong>
+                            확인
+                        </strong>
+                    </button>
+                </div>
+            </div>
+            <a href='#close' class='ly_close btnClosePopup'>
+                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
+            </a>
+        </div>
+    </div>
+</script>
+<script id="claimInfoContentsTemplate" type="text/x-handlebars-template">
+    <table id='claimInfoContents' data-template-id='claimInfoContentsTemplate'>
+        <colgroup>
+            <col style='width:18%;' />
+            <col style='width:82%;' />
+        </colgroup>
+        <tbody>
+            <tr>
+                <th scope='row'>
+                    신청일
+                </th>
+                <td>
+                    {{claimYmdt}}
+                </td>
+            </tr>
+            <tr>
+                <th scope='row'>
+                    사유
+                </th>
+                <td>
+                    {{reasonType}}
+                </td>
+            </tr>
+            <tr>
+                <th scope='row'>
+                    상세사유
+                </th>
+                <td>
+                    {{claimReasonDetail}}
+                </td>
+            </tr>
+            {{#if exchangePayInfo.exchangePayAmt}}
+                <tr>
+                    <th scope='row'>
+                        추가결제정보
+                    </th>
+                    {{#ifEq exchangePayInfo.payType 'CASH'}}
+                        <td>
+                            무통장입금 - {{exchangePayInfo.bankAccount.bankName}} / {{exchangePayInfo.bankAccount.bankAccount}} / {{
+                                exchangePayInfo.bankAccount.bankDepositorName
+                            }}
+                        </td>
+                    {{else}}
+                        <td>
+                            적립금 결제
+                        </td>
+                    {{/ifEq}}
+                </tr>
+            {{else}}
+                <tr>
+                    <th scope='row'>
+                        환불정보
+                    </th>
+                    <td>
+                        {{refundBankAccount.bankName}} / {{refundBankAccount.bankAccount}} / {{refundBankAccount.bankDepositorName}}
+                    </td>
+                </tr>
+            {{/if}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/javascript" src="/js/components/popup/claim-info.js"></script>
