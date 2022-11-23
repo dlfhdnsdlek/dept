@@ -1,0 +1,95 @@
+/*========================================================================
+Layout
+========================================================================*/
+body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
+.dk-noto { font-family: 'Noto Sans KR', sans-serif; }
+/* LAYOUT */
+body { min-width:1200px; }
+
+/*========================================================================
+상단 영역
+========================================================================*/
+body #header { min-height:auto; padding:14px 0; border-bottom:1px solid #353535; visibility: visible; }
+#header .header_top { display:none; }
+#header .dk-header-gnb { display:flex; justify-content: space-between; align-items: center; width:100%; min-width:1200px; margin-top:0; }
+.dk-header-gnb .dk-left-box { flex:1; }
+.dk-header-gnb .dk-left-box ul { display: flex; justify-content: space-around; }
+.dk-header-gnb .dk-left-box ul > li > a { color:#353535; font-size:22px; font-weight:400; }
+#header #logo { flex:1; width:auto; margin-right:0; }
+#header #logo a { height:auto; }
+.dk-header-gnb .dk-right-box { flex:1; }
+.dk-header-gnb .dk-right-box ul { display: flex; justify-content: space-around; }
+.dk-header-gnb .dk-right-box ul > li > a { color:#353535; font-size:22px; font-weight:400; }
+
+#header .gnb { display:none; float:none; position:absolute; top:100%; left:0; width:100%; padding:14px 0 0; font-size:0; background:#fff; z-index:100;  }
+#header .gnb_allmenu_wrap { width:100%; height:auto; margin-left:0; }
+#header .gnb .gnb-wrap { display:table; width: 100%; }
+#header .gnb .gnb_menu0 { text-align:center; }
+#header .gnb .gnb_menu0 { display:flex; flex-direction: column; height:auto; overflow:visible; }
+#header .gnb .depth0 > li > a { padding:0; color:#353535; font-size:20px; font-family: 'jost', sans-serif;  font-weight:400; }
+#category-navigation { display:inline-block; vertical-align:top; width:19.125%; margin-left:16.14583%; text-align:center; white-space:normal; }
+.community-menu { display:inline-block; vertical-align:top; width:16.14583%; margin-left:48.5833%; text-align:center; }
+.community-menu ul { text-align:center; }
+.community-menu ul li a { line-height:43px; color:#353535; font-size:20px; font-weight:400; }
+.top_member_box { float:none; display:flex; align-items:center; justify-content: center; height:55px; background:#353535; }
+.top_member_box > li { float:none;  }
+.top_member_box > li a { position:relative; padding:0 25px; color:#fff; font-size:14px; font-weight:300; font-family: 'jost', sans-serif; }
+.top_member_box > li a::after { position:absolute; top:2px; right:0; width:1px; height:10px; background:#5b5b5b; content: ''; }
+.top_member_box > li:last-child a::after { display: none; }
+
+#header .gnb_search { display:none; } /* 상단 검색창 없앰 */
+
+/*========================================================================
+하단 영역
+========================================================================*/
+body #footer { min-height: auto !important; border-top: 1px solid #2a2a2a; box-sizing: border-box; visibility: visible; }
+.dk-bottom-search { position:relative; padding:60px 100px; }
+.dk-bottom-search .footer-logo { display:inline-block; }
+.dk-bottom-search .top_search { position:absolute; top:58px; left:50%; margin-left:-270px; }
+.dk-bottom-search .top_text_cont { position: relative; width:520px; height:58px; border:1px solid #353535; border-radius:40px; overflow: hidden; }
+.dk-bottom-search .top_text_cont input { width:520px; height:58px; padding:0 40px; color:#828282; font-size:18px; border:0; }
+.dk-bottom-search .top_text_cont button { position: absolute; top:50%; right:26px; transform: translateY(-50%); }
+#footer_wrap { border-top: 0; }
+.dk-bottom-search .dk-footer-sns { float:right; padding:18px 0; }
+.dk-bottom-search .dk-footer-sns ul { display:flex; align-items: center; }
+.dk-bottom-search .dk-footer-sns ul li { padding:0 10px; }
+.dk-bottom-search .dk-footer-sns ul li:last-child { padding-right:0; }
+#footer .footer_content { background:none; padding:0; }
+#footer .footer_content .footer_left { float:none; width:100%; }
+#footer .footer_content .foot_list ul { display:flex; justify-content: center; }
+#footer .footer_content .foot_list ul li { float:none; padding:0 0 15px; }
+#footer .footer_content .foot_list ul li a { position:relative; color:#353535; font-size:14px; font-weight:400; border-left:0; }
+#footer .footer_content .foot_list ul li a::after { position:absolute; top:-3px; right:0; content:'·'; }
+#footer .footer_content .foot_list ul li:last-child a::after { display:none; }
+#footer .footer_content .foot_list ul li a strong { font-weight:500; }
+.foot_cont .foot_info_list { display:flex; justify-content: center; }
+.foot_cont .foot_info { text-align:center; }
+.foot_cont .foot_info span { padding:0 4px; color:#717171; font-size:14px; font-weight:400; }
+.foot_cont .foot_info a { color:#717171; font-size:14px; font-weight:400; border-bottom:0; }
+.foot_cont .foot_info p { color:#717171; font-size:14px; font-weight:400; }
+.foot_cont .foot_info p.copyright { color:#969696; font-size:14px; font-weight:400; text-align: center; }
+
+/*========================================================================
+브랜드 페이지
+========================================================================*/
+#brand { overflow:hidden; }
+#brand .brand-top { display:flex; justify-content: center; }
+#brand .brand-btm { display:flex; justify-content: center; }
+#brand img { width:100%; }
+
+/*========================================================================
+목록
+========================================================================*/
+.item_photo_box { width:100%; }
+.item_photo_box img { width:100%; }
+.item_photo_box .item_soldout_bg { background-size:auto; }
+
+/*========================================================================
+네이버 톡톡
+========================================================================*/
+#scroll_right { position:fixed; top:auto; bottom:20px; right:0; left:auto; width:auto; margin:20px; }
+#scroll_right.ban_fixed { top:auto; bottom:20px; left:auto; right:0; margin:20px; }
+body .talk_banner_div .talk_preview_area .talk_banner_link { width:72px; height:72px; border-radius:50%; overflow:hidden; }
+body .talk_banner_div .talk_preview_area .talk_banner_preview { min-width:72px; min-height:72px; max-width:72px; max-height:72px; }
+body .talk_banner_div .talk_banner_preview.talk_expose_green .ico_talk_banner { width:40px; height:40px; background-size:150px auto; background-position:-79px -34px; }
+body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
