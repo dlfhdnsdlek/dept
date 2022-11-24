@@ -1,35 +1,6 @@
 $(() => {
   shopby.my = shopby.my || {};
 
-  shopby.my.menu = {
-    init(selector) {
-      $('#contents').addClass('visible');
-      $(selector).renderTemplateWithRawHtml(this._getMenuData(), menuHtml);
-    },
-    _getMenuData() {
-      const config = shopby.cache.getBoardsConfig();
-      const {
-        accumulationConfig: { accumulationName },
-      } = shopby.cache.getMall();
-      return {
-        accumulationName,
-        inquiryConfig: {
-          used: config.inquiryConfig.used,
-          name: config.inquiryConfig.name,
-        },
-        productInquiryConfig: {
-          used: config.productInquiryConfig.used,
-          name: config.productInquiryConfig.name,
-        },
-        productReviewConfig: {
-          used: config.productReviewConfig.used,
-          name: config.productReviewConfig.name,
-        },
-        openIdMember: shopby.localStorage.getItem(shopby.cache.key.member.oauthProvider),
-      };
-    },
-  };
-
   shopby.my.summary = {
     async init(selector, summary, summaryAmount, likeCount = 0, grade = null) {
       let gradeInfo = null;
@@ -46,7 +17,10 @@ $(() => {
       this.bindEventForSummary();
     },
     bindEventForSummary() {
-      $('#gradeBenefitInfo,#gradeBenefitCloseBtn').on('click', () => $('.grade_benefit_info').toggle());
+      $('#gradeBenefitInfo,#gradeBenefitCloseBtn').on('click', event => {
+        event.preventDefault();
+        $('#gradeBenefitInfoTooltip').toggle();
+      });
       $('#allGradeBenefitInfo').on('click', () => $('#allGradeBenefit').toggle());
     },
     _getSummaryData(summary, summaryAmount, likeCount, grade) {
@@ -71,26 +45,25 @@ $(() => {
         accumulationTotalAmt: summary.accumulations.totalAmt,
         availableCoupons: summary.availableCoupons.totalCount,
         likeProductsCnt: likeCount,
+        openIdMember: shopby.localStorage.getItem(shopby.cache.key.member.oauthProvider),
       };
     },
   };
 
   const summaryHtml = `
-    <div class="mypage_top_info_renew my_top_summary">
-        <div class="mypage_top_info_renew_left">
-            <p class="left_info1"><span>{{name}}</span> 님은 <span>{{gradeLabel}}</span>입니다.</p>
-            <div class="left_info2">
-                <p>구매금액<span>{{toCurrencyString orderAmtlastHalfYear}}</span>원</p>
-                <p>구매횟수<span>{{orderCntlastHalfYear}}</span>건</p>
-            </div>
-            
-            <div class="left_info_btn">
-                <a href="#" id="gradeBenefitInfo">등급혜택 안내</a>
+    <div class="member_summary_area">
+        <div class="member_summary_info_1">
+            <p><string class="summary_name">{{name}}</string> 님은<br><strong class="summary_grade">{{gradeLabel}}</strong>입니다.</p>
+            <div>
+                <a href="#gradeBenefitInfoTooltip" id="gradeBenefitInfo">등급혜택 안내</a>
+                <a href="/pages/my/shipping.html">배송지 관리</a>
+                {{#unless openIdMember}}
                 <a href="/pages/my/modify-member.html">회원정보 수정</a>
-                <div class="grade_benefit_info">
+                {{/unless}}
+                <div id="gradeBenefitInfoTooltip" class="grade_benefit_info">
                     <div class="grade_benefit_info_top">
                         <p>등급혜택 안내</p>
-                        <a href="#" id="gradeBenefitCloseBtn" class="btn_layer_close"><img src="/assets/img/mypage/icon-layer-close.png" alt="닫기" /></a>
+                        <a href="#" id="gradeBenefitCloseBtn" class="btn_layer_close"><img src="/assets/img/icon/btn_layer_close.png" alt="닫기" /></a>
                     </div>
                     <div class="grade_benefit_info_bot">
                         <p>나의 등급혜택</p>
@@ -130,8 +103,8 @@ $(() => {
                               <!--{{#each mallGrades}}-->
                               {{#if used}}
                               <tr>
-                                  <th scope="row" {{#ifEq label ../gradeLabel}}class="fc_red"{{/ifEq}}>{{label}}</th>
-                                  <td {{#ifEq label ../gradeLabel}}class="fc_red"{{/ifEq}}>
+                                  <th scope="row" {{#ifEq label ../gradeLabel}}class="c_red"{{/ifEq}}>{{label}}</th>
+                                  <td {{#ifEq label ../gradeLabel}}class="c_red"{{/ifEq}}>
                                       {{#each coupons}}
                                       - {{couponName}} / {{#ifEq discountType 'AMOUNT'}}{{toCurrencyString discountAmount}}원{{else}}{{discountPercent}}%{{/ifEq}} 쿠폰 <br/>
                                       {{/each}}
@@ -151,62 +124,35 @@ $(() => {
                 </div>
             </div>
         </div>
-        <div class="mypage_top_info_renew_right">
-            <dl class="icon_mypage_info_1">
-                <dt>사용 가능 {{accumulationName}}</dt>
-                <dd><a href="/pages/my/mileages.html"><span>{{toCurrencyString accumulationTotalAmt}}</span>{{accumulationUnit}}</a></dd>
-            </dl>
-            <dl class="icon_mypage_info_2">
-                <dt>보유중인 쿠폰</dt>
-                <dd><a href="/pages/my/coupons.html"><span>{{toCurrencyString availableCoupons}}</span>건</a></dd>
-            </dl>
-            <dl class="icon_mypage_info_3">
-                <dt>찜리스트</dt>
-                <dd><a href="/pages/my/wishes.html"><span>{{toCurrencyString likeProductsCnt}}</span>건</a></dd>
-            </dl>
+        <div class="member_summary_info_box">
+            <div class="member_summary_info_2">
+                <div class="user_buy_area">
+                    <dl>
+                        <dt>구매금액</dt><dd><span>{{toCurrencyString orderAmtlastHalfYear}}</span>원</dd>
+                    </dl>
+                    <dl>
+                        <dt>구매횟수</dt><dd><span>{{orderCntlastHalfYear}}</span>건</dd>
+                    </dl>
+                </div>
+                <div class="user_have_area">
+                    <a href="/pages/my/mileages.html">
+                        <dl class="have_save_money">
+                            <dt>사용 가능 {{accumulationName}}</dt><dd><span>{{toCurrencyString accumulationTotalAmt}}</span>{{accumulationUnit}}</dd>
+                        </dl>
+                    </a>
+                    <a href="/pages/my/coupons.html">
+                        <dl class="have_coupon">
+                            <dt>보유중인 쿠폰</dt><dd><span>{{toCurrencyString availableCoupons}}</span>건</dd>
+                        </dl>
+                    </a>
+                    <a href="/pages/my/wishes.html">
+                        <dl class="have_wish">
+                            <dt>찜리스트</dt><dd><span>{{toCurrencyString likeProductsCnt}}</span>건</dd>
+                        </dl>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 `.trim();
-
-  const menuHtml = `
-    <div class="sub_menu_box">
-        <h2>마이페이지</h2>
-        <ul class="sub_menu_mypage">
-            <li>쇼핑정보
-                <ul class="sub_depth1">
-                    <li><a href="/pages/my/orders.html">- 주문목록/배송조회</a></li>
-                    <li><a href="/pages/my/claims.html">- 취소/반품/교환 내역</a></li>
-                    <li><a href="/pages/my/wishes.html">- 찜리스트</a></li>
-                </ul>
-            </li>
-            <li>혜택관리
-                <ul class="sub_depth1">
-                    <li><a href="/pages/my/coupons.html">- 쿠폰</a></li>
-                    <li><a href="/pages/my/mileages.html">- {{accumulationName}}</a></li>
-                </ul>
-            </li>
-            <li>회원정보
-                <ul class="sub_depth1">
-                    {{#unless openIdMember}}
-                    <li><a href="/pages/my/modify-member.html">- 회원정보 수정</a></li>
-                    {{/unless}}
-                    <li><a href="/pages/my/withdrawal.html">- 회원 탈퇴</a></li>
-                    <li><a href="/pages/my/shipping.html">- 배송지 관리</a></li>
-                </ul>
-            </li>
-            <li>나의 게시글
-                <ul class="sub_depth1">
-                    {{#if inquiryConfig.used}}
-                    <li><a href="/pages/my/inquiries.html" class="sb_a_inquiry_name">- {{inquiryConfig.name}}</a></li>
-                    {{/if}}
-                    {{#if productInquiryConfig.used}}
-                    <li><a href="/pages/my/product-inquiries.html" class="sb_a_goods_inquiry_name">- {{productInquiryConfig.name}}</a></li>
-                    {{/if}}
-                    {{#if productReviewConfig.used}}
-                    <li><a href="/pages/my/product-reviews.html" class="sb_a_goods_review_name">- {{productReviewConfig.name}}</a></li>
-                    {{/if}}
-                </ul>
-            </li>
-        </ul>
-    </div>`.trim();
 });

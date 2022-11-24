@@ -8,7 +8,6 @@
 
 $(() => {
   const orderNo = shopby.utils.getUrlParam('orderNo');
-  const $orderEndCompletion = $('#orderEndCompletion');
   const $orderInfoTable = $('#orderInfoTable');
 
   shopby.orderComplete = {
@@ -19,21 +18,17 @@ $(() => {
     },
 
     async initiate() {
-      this._checkIsPayPopup();
+      const result = shopby.utils.getUrlParam('result');
+      const orderSheetNo = shopby.utils.getUrlParam('orderSheetNo');
+      if (result !== 'SUCCESS' && result === '2222') {
+        const orderPage = `/pages/order/order.html?ordersheetno=${orderSheetNo}`;
+        window.location.replace(orderPage);
+        return;
+      }
       await this._fetchOrderDetail();
       this.render();
-      this.bindEvents();
     },
-    /*
-     * 주문페이지(부모)에서 결제창(자식)을 띄우고 결제완료/취소하는 경우 주문완료페이지가 결제창에서 노출되는 경우
-     * 결제창은 닫고 결제창을 띄어준 부모창으로 url을 넘겨줌.
-     * */
-    _checkIsPayPopup() {
-      if (opener) {
-        opener.location.href = self.location.href;
-        self.close();
-      }
-    },
+
     async _fetchOrderDetail() {
       if (shopby.logined()) {
         // 회원 주문 조회
@@ -89,57 +84,81 @@ $(() => {
             name: orderOption.productName,
             cnt: orderOption.orderCnt,
             price: orderOption.price.buyAmt,
-            deliveryMemo: orderOption.deliveryMemo,
           }))
       );
     },
 
     render() {
       const defaultOrderStatusType =
-        (this.data.orderDetailResponse && this.data.orderDetailResponse.defaultOrderStatusType) || null;
+        (this.data.orderDetailResponse && this.data.orderDetailResponse.defaultOrderStatusType) || '';
 
-      $orderEndCompletion.render(this._getOrderEndCompletion(defaultOrderStatusType));
       $orderInfoTable.render(this._getOrderInfoTable());
       $('#orderSummaryTitle').render({ hasOrderData: !!defaultOrderStatusType });
-      $('#orderCompleteBtns').render({ isPaySuccess: this.data.isPaySuccess });
     },
 
-    bindEvents() {
-      $('.btn_order_prev').click(e => {
-        e.preventDefault();
-        location.href = `/pages/order/order.html?ordersheetno=${shopby.utils.getUrlParam('orderSheetNo')}`;
-      });
+    _getOrderInfoTable() {
+      const { orderDetailResponse } = this.data;
+      const hasOrderData = orderDetailResponse && !!orderDetailResponse.defaultOrderStatusType;
+      if (!hasOrderData) {
+        return {
+          hasOrderData,
+          orderEndCompletion: this._getOrderEndCompletion(
+            (orderDetailResponse && orderDetailResponse.defaultOrderStatusType) || null,
+          ),
+        };
+      }
+
+      const {
+        immediateDiscountAmt,
+        productCouponDiscountAmt,
+        cartCouponDiscountAmt,
+      } = orderDetailResponse.lastOrderAmount;
+      const bankInfoPayTypes = 'ACCOUNT';
+      const virtualInfoPayTypes = ['VIRTUAL_ACCOUNT', 'ESCROW_VIRTUAL_ACCOUNT'];
+
+      return {
+        hasOrderData,
+        orderNo: orderDetailResponse.orderNo,
+        orderYmdt: orderDetailResponse.orderYmdt,
+        deliveryMemo: orderDetailResponse.deliveryMemo,
+        payTypeLabel: orderDetailResponse.payTypeLabel,
+        payType: orderDetailResponse.payType,
+        ordererName: orderDetailResponse.orderer.ordererName,
+        shippingAddress: orderDetailResponse.shippingAddress,
+        lastOrderAmount: orderDetailResponse.lastOrderAmount,
+        hasBankInfo: bankInfoPayTypes.includes(orderDetailResponse.payType),
+        hasVirtualInfo: virtualInfoPayTypes.includes(orderDetailResponse.payType),
+        bankInfo:
+          orderDetailResponse.payInfo && orderDetailResponse.payInfo.bankInfo
+            ? orderDetailResponse.payInfo.bankInfo
+            : null,
+        accumulationAmtWhenBuyConfirm: orderDetailResponse.accumulationAmtWhenBuyConfirm,
+        productTitles: this.makeProductTitles(
+          (orderDetailResponse && orderDetailResponse.orderOptionsGroupByPartner) || null,
+        ),
+        totalDiscountAmt: immediateDiscountAmt + productCouponDiscountAmt + cartCouponDiscountAmt,
+        orderEndCompletion: this._getOrderEndCompletion(orderDetailResponse.defaultOrderStatusType),
+      };
     },
 
     _getOrderEndCompletion(defaultOrderStatusType) {
-      const serviceCenterNumber = shopby.cache.getMall().mall.serviceCenter.phoneNo;
       const messages = {
         DEPOSIT_WAIT: {
-          imageUrl: '/assets/img/order/order_end_completion.png',
           mainMessage: '주문이 정상적으로 접수 되었습니다.',
-          subMessage: '감사합니다.',
         },
         PAY_DONE: {
-          imageUrl: '/assets/img/order/order_end_completion.png',
           mainMessage: '결제가 완료 되었습니다.',
-          subMessage: '감사합니다.',
         },
         PAY_FAIL: {
-          imageUrl: '/assets/img/order/order_end_error.png',
-          mainMessage: '결제가 정상적으로 이루어지지 않았습니다. 다시 결제 진행을 해주시기 바랍니다.',
-          subMessage: '지속적으로 문제가 발생될 경우 관리자에게 문의 하시기 바랍니다.',
+          mainMessage: '결제가 정상적으로 이루어지지 않았습니다. 다시 결제 진행을 해주시기 바랍니다.1',
         },
         DEFAULT: {
-          imageUrl: '/assets/img/order/order_end_error.png',
           mainMessage: '이미 결제가 완료된 주문입니다.',
-          subMessage: '감사합니다.',
         },
         UNDEFINED: {
-          imageUrl: '/assets/img/order/order_end_error.png',
           mainMessage: this.data.isPaySuccess
             ? '주문 정보가 없습니다. 다시 확인 바랍니다.'
             : shopby.utils.getUrlParam('message'),
-          subMessage: `실패사유를 확인하신 후 '이전페이지 가기' 또는 '장바구니 가기' 버튼을 통해 주문/결제를 다시 시도하시기 바랍니다. 계속 실패되시는 경우 고객센터 ${serviceCenterNumber}로 문의 주시기 바랍니다.`,
         },
       };
 
@@ -164,51 +183,9 @@ $(() => {
         }
       }
 
-      return messages[defaultOrderStatusType] || messages['DEFAULT'];
+      return messages[defaultOrderStatusType] ? messages[defaultOrderStatusType] : messages['DEFAULT'];
     },
 
-    _getOrderInfoTable() {
-      const hasOrderData = this.data.orderDetailResponse && !!this.data.orderDetailResponse.defaultOrderStatusType;
-      if (!hasOrderData) {
-        return { hasOrderData };
-      }
-
-      const { orderDetailResponse } = this.data;
-      const {
-        immediateDiscountAmt,
-        productCouponDiscountAmt,
-        cartCouponDiscountAmt,
-      } = orderDetailResponse.lastOrderAmount;
-      this.hideBankInfo(orderDetailResponse.payType);
-
-      const { accumulationConfig } = shopby.cache.getMall();
-
-      return {
-        hasOrderData,
-        orderNo: orderDetailResponse.orderNo,
-        orderYmdt: orderDetailResponse.orderYmdt,
-        deliveryMemo: orderDetailResponse.deliveryMemo,
-        payTypeLabel: orderDetailResponse.payTypeLabel,
-        ordererName: orderDetailResponse.orderer.ordererName,
-        shippingAddress: orderDetailResponse.shippingAddress,
-        lastOrderAmount: orderDetailResponse.lastOrderAmount,
-        bankInfo: (orderDetailResponse.payInfo && orderDetailResponse.payInfo.bankInfo) || null,
-        accumulationUnit:
-          accumulationConfig && accumulationConfig.accumulationName ? accumulationConfig.accumulationName : '원',
-        accumulationAmtWhenBuyConfirm: orderDetailResponse.accumulationAmtWhenBuyConfirm,
-        productTitles: this.makeProductTitles(
-          (orderDetailResponse && orderDetailResponse.orderOptionsGroupByPartner) || [],
-        ),
-        totalDiscountAmt: immediateDiscountAmt + productCouponDiscountAmt + cartCouponDiscountAmt,
-      };
-    },
-
-    hideBankInfo(payType) {
-      const bankInfoPayTypes = ['ACCOUNT', 'VIRTUAL_ACCOUNT', 'ESCROW_VIRTUAL_ACCOUNT'];
-      if (bankInfoPayTypes.includes(payType) === false) {
-        $('#bankInfo').hide();
-      }
-    },
     makeProductTitles(orderOptionsGroupByPartner) {
       const getOptionTit = tit => {
         const result = tit.split('/').reduce((acc, title) => {

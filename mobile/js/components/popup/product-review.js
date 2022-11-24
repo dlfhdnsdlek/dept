@@ -3,7 +3,7 @@
  *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  *  @author hyeyeon-park
- *  @since 2021.7.12
+ *  @since 2021.8.20
  */
 
 (() => {
@@ -24,8 +24,6 @@
     }
 
     optionInrercepter(option) {
-      //팝업모듈이 핸들바로 랜더링이되서 api값을 렌더링못하는 이슈가 생겼습니다.
-      //그래서 핸들바로 컴파일하기전 option값을 인터셉트하여 컴파일전 데이터를 넣어주었습니다.
       option.canSelectProduct = !option.myProductReview && !option.notSelectProduct;
       option.needsSelectProductBtn = option.canSelectProduct || (option && option.needsSelectProductBtn) || null;
       option.expandedReviewConfig = this.expandedReviewConfig;
@@ -58,6 +56,7 @@
 
     render() {
       const { myProductReview: isOriginData, product, options, canSelectProduct, isProductViewPage } = this.option;
+
       if (isProductViewPage) {
         $('#selectOrderProduct').text('다른 상품 선택');
       }
@@ -65,6 +64,7 @@
       if (!canSelectProduct) {
         this.renderOrderedProduct({ product, options, canSelectProduct });
       }
+
       if (isOriginData) {
         this._drawRate(isOriginData.rate);
         this._fetchAttachImages(isOriginData);
@@ -78,8 +78,9 @@
       this._checkAttachmentConfig(isOriginData);
     }
 
-    async _checkAttachmentConfig(isOriginData) {
-      const { productReviewConfig } = this.option;
+    _checkAttachmentConfig(isOriginData) {
+      const { productReviewConfig, accumulationRewardNoticeText } = this.option;
+      this.accumulationRewardNoticeText = accumulationRewardNoticeText;
 
       if (productReviewConfig.attachmentUsed) return;
       if (!isOriginData) {
@@ -97,7 +98,7 @@
         .on('click', '#btnAddReview', this.writeReview.bind(this))
         .on('click', '.rating_star li', this.fillRate.bind(this))
         .on('click', '#selectOrderProduct', this.openSelectOrderProduct.bind(this))
-        .on('click', '.btn_cancel,.ly_close', this.closeButton.bind(this));
+        .on('click', '.ly_btn_close', this.closeButton.bind(this));
     }
 
     onInputText({ target }) {
@@ -131,6 +132,54 @@
       });
     }
 
+    async _checkValidation(articleData) {
+      const reviewTextLength =
+        this.attachedImages.length > 0
+          ? this.reviewAccumulationInfo.photoReviewsLength
+          : this.reviewAccumulationInfo.reviewsLength;
+      if (!articleData.productNo) {
+        shopby.alert({ message: '주문상품을 선택해주세요.' });
+        return;
+      }
+
+      if (!articleData.content) {
+        shopby.alert({ message: '내용을 입력해주세요.' });
+        return;
+      }
+      if (
+        articleData.content.length < reviewTextLength &&
+        this.expandedReviewConfig.accumulationRewardNoticeText !== ''
+      ) {
+        shopby.confirm({ message: this.expandedReviewConfig.accumulationRewardNoticeText }, ({ state }) => {
+          if (state !== 'ok') {
+            shopby.alert('작성을 취소하였습니다.');
+            return;
+          }
+
+          this._checkBuyConfirm();
+        });
+      } else {
+        this._checkBuyConfirm();
+      }
+    }
+
+    async writeReview() {
+      const reviewData = this.reviewData;
+      const { myProductReview: isOriginData } = this.option;
+      try {
+        if (isOriginData) {
+          this._checkModifyCondition(reviewData);
+          this._updateProductReview(isOriginData, reviewData);
+        } else {
+          await this._checkValidation(reviewData);
+        }
+      } catch (e) {
+        if (isOriginData) {
+          this._reviewContentsCheckMessage(e.message, isOriginData, reviewData);
+        }
+      }
+    }
+
     async _addProductReview(reviewData) {
       const postReviewRequest = {
         pathVariable: { productNo: reviewData.productNo },
@@ -156,7 +205,6 @@
         pathVariable: { productNo, reviewNo },
         requestBody: { content, rate, urls: filteredImages || [] },
       };
-
       await shopby.api.display.putProductsProductNoProductReviewsReviewNo(request);
       shopby.alert('저장되었습니다', () => {
         this.close({ state: 'ok' });
@@ -177,13 +225,15 @@
     }
 
     openSelectOrderProduct() {
-      const foundOption = this.option.options && this.option.options.find(option => option.orderOptionNo);
+      const optionOrderNo = $('#selectedProductBox input[name="orderOptionNo"]').data('order-option-no');
+      const productNo = this.option.product && this.option.product.productNo ? this.option.product.productNo : null;
       shopby.popup(
         'select-order-product',
         {
           isProductViewPage: this.option.isProductViewPage,
-          productNo: (this.option.product && this.option.product.productNo) || null,
-          orderOptionNo: (foundOption && foundOption.orderOptionNo) || null,
+          productNo,
+          orderOptionNo: optionOrderNo || null, //todo pc
+          //orderOptionNo: this.option.options?.find(option => option.orderOptionNo)?.orderOptionNo ?? null,
         },
         callback => {
           if (callback.state === 'close') return;
@@ -197,6 +247,7 @@
 
     closeButton() {
       const isNotChanged = shopby.utils.isEqual(this.originData, this.reviewData);
+
       if (isNotChanged) {
         this.$el.remove();
       } else {
@@ -212,7 +263,6 @@
       const { data: selectedProduct } = await shopby.api.product.getProductsProductNo({
         pathVariable: { productNo: selectedProductNo },
       });
-
       const { imageUrls, productName, productNo } = selectedProduct.baseInfo;
       const product = { imageUrls, productName, productNo };
       this.renderOrderedProduct({ product, options: [selectedProductOptions] });
@@ -223,7 +273,7 @@
     }
 
     _fetchAttachImages(isOriginData) {
-      if (isOriginData && isOriginData.fileUrls && isOriginData.fileUrls.length === 0) return;
+      if (!isOriginData || !isOriginData.fileUrls || isOriginData.fileUrls.length === 0) return;
       this.attachedImages = isOriginData.fileUrls.map(articleAttachment => ({
         imageUrl: articleAttachment,
         originName: '',
@@ -234,68 +284,15 @@
       $('#attachImages').render({ attachedImages });
     }
 
-    async _checkValidation(articleData) {
-      const reviewTextLength =
-        this.attachedImages.length > 0
-          ? this.reviewAccumulationInfo.photoReviewsLength
-          : this.reviewAccumulationInfo.reviewsLength;
-
-      if (!articleData.productNo) {
-        shopby.alert({ message: '주문상품을 선택해주세요.' });
-        return;
-      }
-
-      if (!articleData.content) {
-        shopby.alert({ message: '내용을 입력해주세요.' });
-        return;
-      }
-
-      if (
-        articleData.content.length < reviewTextLength &&
-        this.expandedReviewConfig.accumulationRewardNoticeText !== ''
-      ) {
-        shopby.confirm({ message: this.expandedReviewConfig.accumulationRewardNoticeText }, ({ state }) => {
-          if (state !== 'ok') {
-            shopby.alert('작성을 취소하였습니다.');
-            return;
-          }
-
-          this._checkBuyConfirm();
-        });
-      } else {
-        this._checkBuyConfirm();
-      }
-    }
-
     _checkBuyConfirm() {
       if (this.option.orderStatusType === 'BUY_CONFIRM') {
         this._addProductReview(this.reviewData);
         return;
       }
-
       shopby.confirm({ message: '후기 작성과 함께 구매확정 처리하시겠습니까?' }, ({ state }) => {
         if (state !== 'ok') return;
         this._addProductReview(this.reviewData);
       });
-    }
-
-    async writeReview() {
-      const reviewData = this.reviewData;
-      const { myProductReview: isOriginData } = this.option;
-      try {
-        if (isOriginData) {
-          this._checkModifyCondition(reviewData);
-          this._updateProductReview(isOriginData, reviewData);
-        } else {
-          this._checkValidation(reviewData);
-        }
-      } catch (e) {
-        if (isOriginData) {
-          this._reviewContentsCheckMessage(e.message, isOriginData, reviewData);
-        } else {
-          shopby.alert(e.message);
-        }
-      }
     }
 
     _checkModifyCondition(reviewData) {

@@ -8,13 +8,19 @@
  */
 
 $(() => {
-  window.shopKcpCallback = function (result) {
+  const shopKcpCallback = function (result) {
     if (result) {
-      shopby.alert('본인 인증에 성공하였습니다.', shopby.goHome);
+      shopby.alert('본인 인증에 성공하였습니다.', () => {
+        shopby.goHome();
+        shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
+      });
     } else {
       shopby.alert('본인 인증에 실패하였습니다.');
+      shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
     }
   };
+  const kcpProfile = shopby.localStorage.getItemWithExpire(shopby.cache.key.member.kcpAuth);
+  kcpProfile && shopKcpCallback(kcpProfile);
 
   shopby.intro.adultCertification = {
     async initiate() {
@@ -24,7 +30,6 @@ $(() => {
     async render() {
       const memberInfo = shopby.logined() ? await shopby.api.member.getProfile() : null;
       const memberName = memberInfo && memberInfo.data.memberName ? memberInfo.data.memberName : '';
-
       $('#contents').render({
         memberName,
         providers: this.providers,
@@ -34,15 +39,18 @@ $(() => {
       const mallInfo = shopby.cache.getMall();
       return mallInfo.openIdJoinConfig.providers
         .sort((a, b) => b.charCodeAt(0) - a.charCodeAt(0))
-        .map(provider => ({ provider, url: `/assets/img/etc/pc_${provider}.png`, title: `${provider} 아이디 로그인` }));
+        .map(provider => ({
+          provider,
+          url: `/assets/img/etc/txt_mo_${provider}.png`,
+          title: `${provider} 아이디 로그인`,
+        }));
     },
     bindEvents() {
-      $('.btn_exit').on('click', shopby.goHome);
-      $('.btnCertificationByMobile').on('click', shopby.helper.member.openKcpCallback);
-
+      $('.teenager_out').on('click', shopby.goHome);
       $('button[name="member-login-btn"]').on('click', this.memberLogin.bind(this)).enterKeyup('#password');
-      $('#loginBox').on('click', 'button', this.movePage);
-      $('.btn_login_sns').on('click', shopby.helper.login.openIdLogin.bind(shopby.helper.login));
+      $('.btnLoginSns').on('click', shopby.helper.login.openIdLogin.bind(shopby.helper.login));
+      const btnAuthKCP = document.getElementById('btnAuthKCP')
+      btnAuthKCP.href = shopby.helper.member.getKcpCallbackUrl()
     },
     async memberLogin() {
       const memberId = $('#memberId').val().trim();
@@ -62,20 +70,6 @@ $(() => {
           shopby.platform === 'PC' ? '.member_login_box .js_caution_msg1' : '.login_box .js_caution_msg1';
         $(selector).show();
       }
-    },
-    movePage(event) {
-      const $el = $(event.target);
-      let type = $el.data('action');
-      if (!type) {
-        type = $el.parents('button').data('action');
-      }
-
-      const pages = {
-        joinMethod: '/pages/join/method.html',
-        findId: '/pages/find-id/find-id.html',
-        findPwd: '/pages/find-password/find-password.html',
-      };
-      location.href = pages[type];
     },
 
     _validateLoginForm() {

@@ -14,7 +14,6 @@
 
       this.pageSize = 5;
       this.shippingAddress = {};
-      this.displayShippingAddress = [];
 
       this.init($parent, option);
     }
@@ -23,16 +22,15 @@
       const compiled = Handlebars.compile($('#myShippingListPopupTemplate').html());
       this.$el = $(compiled(option));
       $parent.append(this.$el);
-      this.setPagination();
+      this.setReadMore();
 
       await this.fetchShippingAddress();
-      this.paging();
+      this.render();
       this.bindEvents();
     }
 
-    setPagination() {
-      $('#pagination').children().remove();
-      this.page = new shopby.pagination(this.paging.bind(this), '#pagination', this.pageSize);
+    setReadMore() {
+      this.page = new shopby.readMore(this.paging.bind(this), '#readMore', this.pageSize);
     }
 
     async fetchShippingAddress() {
@@ -41,42 +39,60 @@
     }
 
     paging() {
-      const pageStart = (this.page.pageNumber - 1) * this.pageSize;
-      const pageEnd = pageStart + this.pageSize;
+      const { pageNumber, pageSize } = this.page;
+      const start = pageSize / pageNumber;
 
-      this.displayShippingAddress = this.shippingAddress.bookedAddresses.slice(pageStart, pageEnd);
-
-      this.render();
+      const data = this.shippingAddress.bookedAddresses.slice(start, pageSize);
+      this.append(data);
     }
 
-    render() {
+    render(rerender = false) {
       const compiled = Handlebars.compile($('#shippingListTemplate').html());
+      const { pageNumber, pageSize } = this.page;
+      const start = pageNumber - 1;
+      const end = pageSize;
+      const data = this.shippingAddress.bookedAddresses.slice(start, end);
+      if (rerender) $('#shippingList').children().remove();
+      $('#shippingList').append(compiled(data));
+      this.page.render(this.shippingAddress.bookedAddresses.length);
+      this.page.pageSize = end * 2;
+    }
 
-      // 테이블은 리렌더가 안되서 clear 후 다시 삽입
-      $('.top_table_type').remove();
-      $('#shippingList').append(compiled(this._getShippingListData()));
-
+    append(data) {
+      const compiled = Handlebars.compile($('#shippingListTemplate').html());
+      const $addressElements = $(compiled(data)).find('li');
+      $('#shippingList ul').append($addressElements);
       this.page.render(this.shippingAddress.bookedAddresses.length);
     }
 
     bindEvents() {
       $('#addShipping').on('click', this.onOpenShippingRegister.bind(this));
       this.$el
-        .on('click', '#modifyAddress', this.onOpenShippingRegister.bind(this))
-        .on('click', '.btnChoiceAddress', this.onClickChoiceBtn.bind(this))
-        .on('click', '.btnDeleteAddress', this.onClickDeleteBtn.bind(this));
+        .on('click', '[data-action="modifyAddress"]', this.onOpenShippingRegister.bind(this))
+        .on('click', '[data-action="deleteAddress"]', this.onClickDeleteBtn.bind(this))
+        .on('click', '#choiceSubmit', this.choiceSubmit.bind(this))
+        .on('click', '.btnClosePopup', this.closePopup.bind(this));
     }
 
-    onClickChoiceBtn(e) {
-      e.preventDefault();
-      const addressNo = Number(e.target.dataset.addressNo);
+    closePopup() {
+      this.page.unBindEvents();
+    }
+
+    choiceSubmit() {
+      const choiceAddressNo =
+        this.$el.find('input[type="radio"]:checked') && this.$el.find('input[type="radio"]:checked').val();
+      if (!choiceAddressNo) {
+        shopby.alert('배송지를 선택해주세요.');
+        return;
+      }
 
       const selectedAddress = this.shippingAddress.bookedAddresses.find(
-        bookedAddress => bookedAddress.addressNo === addressNo,
+        bookedAddress => bookedAddress.addressNo === Number(choiceAddressNo),
       );
 
       this.callback({ selectedAddress });
-      this.$el.remove();
+      this.close();
+      this.page.unBindEvents();
     }
 
     onClickDeleteBtn(e) {
@@ -91,13 +107,16 @@
 
     onOpenShippingRegister(e) {
       e.preventDefault();
+
       const addressNo = e.target.dataset.addressNo;
       const modifyTarget = this.shippingAddress.bookedAddresses.find(
         bookedAddress => bookedAddress.addressNo === Number(addressNo),
       );
       const isDefaultAddress = this.shippingAddress.bookedAddresses.length > 0;
+
       shopby.popup('my-shipping-register', { addresses: modifyTarget, isDefaultAddress }, async result => {
         if (result.state === 'close') return;
+
         if (!result.address.addressNo) {
           this.addNewShipping(result);
         } else {
@@ -142,17 +161,9 @@
     }
 
     async resetShippingAddress() {
-      this.setPagination();
+      this.setReadMore();
       await this.fetchShippingAddress();
-      this.paging();
-      $('.btnChoiceAddress').attr('data-action-type', 'updated');
-      $('.btnClosePopup').attr('data-action-type', 'updated');
-    }
-
-    _getShippingListData() {
-      return {
-        displayShippingAddress: this.displayShippingAddress,
-      };
+      this.render(true);
     }
 
     throwing(message) {

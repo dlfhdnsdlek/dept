@@ -11,11 +11,12 @@
 <html lang="ko">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
         <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
         <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
+        <script src="/lib/slick/slick.min.js"></script>
         <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
         <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
         <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
@@ -25,43 +26,45 @@
 
     <body>
         <header id="header"></header>
-        <div id="contents" class="visible">
-            <main class="sub_content">
-                <div class="location_wrap">
-                    <div class="location_cont">
-                        <em><a href="/" class="local_home">HOME</a> &gt; 회원가입 &gt; 가입완료</em>
+        <div id="contents">
+            <div class="page_top_area">
+                <div class="page_top_area">
+                    <div class="navi_g">
+                        <ul>
+                            <li>홈</li>
+                            <li>회원가입</li>
+                        </ul>
+                    </div>
+                    <div class="sub_top">
+                        <div class="sub_top_left">
+                            <a id="goBack"></a>
+                        </div>
+                        <h2><a href="/pages/join/agreement.html" class="js_page_reload">회원가입</a></h2>
                     </div>
                 </div>
-                <div class="content_box">
-                    <div class="member_wrap">
-                        <div class="member_tit">
-                            <h2>회원가입</h2>
-                        </div>
-                        <div class="member_cont">
-                            <div class="join_ok_box">
-                                <div class="join_ok_tit">
-                                    <p class="complete">회원가입이 완료되었습니다.</p>
-                                    <p id="joinMemberId" class="invisible">
-                                        {{memberId}}님 회원가입을 축하합니다. 알차고 실속있는 서비스로 찾아뵙겠습니다.
-                                    </p>
-                                </div>
-                                <div class="btn_member_sec">
-                                    <ul>
-                                        <li>
-                                            <button id="btnHome" type="button">홈으로</button>
-                                        </li>
-                                        <li>
-                                            <button id="btnLogin" class="btn_login" type="button">로그인</button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+
+            <main class="join_ok">
+                <div class="join_step">
+                    <ul>
+                        <li>약관동의</li>
+                        <li>계정생성</li>
+                        <li class="on">가입완료</li>
+                    </ul>
+                </div>
+
+                <div class="join_content">
+                    <p id="joinMemberId" class="tx invisible">
+                        {{memberId}}님<br />
+                        가입을 축하드립니다!
+                    </p>
+                </div>
+
+                <div class="btn">
+                    <button id="btnLogin" class="join_login_btn" type="button">로그인 하기</button>
                 </div>
             </main>
         </div>
-        <aside id="aside"></aside>
         <footer id="footer"></footer>
         <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
         <script src="/js/pages/join/complete.js"></script>

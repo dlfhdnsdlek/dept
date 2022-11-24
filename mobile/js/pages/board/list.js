@@ -3,7 +3,7 @@
  *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  *  @author hyeyeon-park
- *  @since 2021.6.24
+ *  @since 2021.7.26
  */
 
 $(() => {
@@ -27,22 +27,26 @@ $(() => {
     userInfo: null,
     boardInfo: null,
     searchType: 'ALL',
-    keyword: '',
-    backPageNumber: null,
-
+    keyword: shopby.utils.getUrlParam('keyword'),
+    initPageSize: 20,
+    articles: null,
     initiate() {
       window.onpopstate = this.onPopState.bind(this);
-      this.page = new shopby.pagination(this.onPagination.bind(this), '#pagination', 10);
-      Promise.all([this._fetchBoardConfig(), this._getBoardList(this.getCurrentPageNumber()), this._getProfile()]).then(
-        () => {
-          this.initRender();
-          this.bindEvents();
-        },
-      );
+      this.page = new shopby.readMore(this.onReadMore.bind(this), '#boardMoreButton');
+      Promise.all([
+        this._fetchBoardConfig(),
+        this._getBoardList(this.initPageSize, 1, this.rangeCreator()),
+        this._getProfile(),
+      ]).then(() => {
+        this._renderBoardList(this.articles.items, this.articles.totalCount);
+        this.boardNameRender();
+        this.bindEvents();
+      });
+      $('#articlesPage').removeClass('invisible').addClass('visible');
     },
 
-    initRender() {
-      $('#boardTitle').render({ boardName: this.boardInfo.name });
+    boardNameRender() {
+      $('.board_name').render({ boardName: this.boardInfo.name });
     },
 
     async _getProfile() {
@@ -54,26 +58,47 @@ $(() => {
 
     bindEvents() {
       $('#articlesPage')
-        .on('click', '.board_tit', this.getArticleInfo.bind(this))
+        .on('click', '.notice_title', this.getArticleInfo.bind(this))
         .on('click', '#btnArticleWrite', this.openArticleRegister.bind(this));
       $('#btnArticleSearch').on('click', this.search.bind(this)).enterKeyup('#articleKeyword');
     },
 
-    onPopState() {
+    async onPopState() {
       this.searchType = shopby.utils.getUrlParam('searchType');
       this.keyword = shopby.utils.getUrlParam('keyword');
-      this.backPageNumber = shopby.utils.getUrlParam('pageNumber');
-      this._getBoardList();
+      await this._getBoardList(this.initPageSize, 1);
+      this._renderBoardList(this.articles.items, this.articles.totalCount);
     },
 
-    onPagination() {
-      this.backPageNumber = null;
-      this._getBoardList();
+    async onReadMore(pageNumber = this.page.pageNumber) {
+      this.page.pageNumber = this.pageNumberCreator(pageNumber);
+      const boardList = await this._getBoardList(this.page.pageSize, this.page.pageNumber);
+      this._appendArticles();
+      return boardList;
     },
 
+    _appendArticles() {
+      this.page.render(this.articles.totalCount);
+      if (this.articles.items.length === 0) return;
+
+      const compiled = Handlebars.compile($('#articlesTemplate').html());
+      const appendHtml = $(compiled({ articles: this.articles.items })).find('li');
+      $('#boardArticles').append(appendHtml);
+    },
+
+    scrollTo() {
+      const offset = localStorage.getItem('offset');
+      if (!offset) return;
+      $('body, html').animate({ scrollTop: Number(offset) }, 200);
+      localStorage.removeItem('offset');
+    },
+    setOffset(boardItem) {
+      localStorage.setItem('offset', boardItem.offset().top);
+    },
     getArticleInfo(event) {
       const $target = $(event.currentTarget);
-      const setArticleData = value => $target.closest('tr').data(value);
+      const $li = $target.closest('li');
+      const setArticleData = value => $li.data(value);
       const articleInfo = {
         boardId,
         registerType: setArticleData('register-type'),
@@ -82,12 +107,9 @@ $(() => {
         isSecret: setArticleData('secret'),
         articleNo: setArticleData('article-no'),
       };
-      this.setCurrentPage();
-      this._checkSecretArticle(articleInfo, this.userInfo && this.userInfo.memberNo ? this.userInfo.memberNo : 0);
-    },
 
-    setCurrentPage() {
-      localStorage.setItem('pageNumber', this.page.pageNumber);
+      this.setOffset($li);
+      this._checkSecretArticle(articleInfo, this.userInfo && this.userInfo.memberNo ? this.userInfo.memberNo : 0);
     },
 
     _checkSecretArticle(articleInfo, memberNo) {
@@ -119,6 +141,7 @@ $(() => {
     },
 
     _goArticlePage(articleInfo) {
+      localStorage.setItem('pageNumber', this.page.pageNumber);
       location.href = `/pages/board/view.html?boardId=${articleInfo.boardId}&articleNo=${articleInfo.articleNo}&secreted=${articleInfo.isSecret}`;
     },
 
@@ -145,61 +168,58 @@ $(() => {
       this.boardInfo = boardConfigs.find(({ boardId }) => boardId === thisBoardId);
     },
 
-    search() {
-      this.searchType = $('select[name="searchType"] option:selected').val();
-      this.keyword = $('.board_search_box input[name="keyword"]').val();
-      this.backPageNumber = null;
-      this.page.pageNumber = 1;
-      this._getBoardList();
+    async search() {
+      this.keyword = $('.search_input input[name="keyword"]').val();
+      await this._getBoardList(this.initPageSize, 1);
+      this._renderBoardList(this.articles.items, this.articles.totalCount);
+      shopby.utils.pushState({
+        boardId,
+        searchType: this.searchType,
+        keyword: this.keyword,
+      });
     },
-
-    async _getBoardList(pageNumber) {
-      const request = {
+    requestCreator(pageSize, pageNumber) {
+      return {
         pathVariable: { boardNo: boardId },
         queryString: {
           hasTotalCount: true,
           searchType: this.searchType,
           keyword: this.keyword,
           withReplied: false,
-          pageNumber: this.backPageNumber ? this.backPageNumber : pageNumber || this.page.pageNumber,
-          pageSize: this.page.pageSize,
+          pageNumber,
+          pageSize,
         },
       };
+    },
+    async _getBoardList(pageSize, pageNumber = this.page.pageNumber, range) {
+      const request = this.requestCreator(pageSize, pageNumber);
       const { data: boardList } = await shopby.api.manage.getBoardsBoardNoArticles(request);
-      boardList &&
-        this._renderBoardList(
-          boardList.items.map((item, idx) => ({
-            ...item,
-            displayOrder: this.displayOrderCreator(request.queryString.pageNumber, idx),
-          })),
-          boardList.totalCount,
-          request.queryString.pageNumber,
-        );
-      if (this.backPageNumber) return;
-      shopby.utils.pushState({
-        boardId,
-        pageNumber: this.page.pageNumber,
-        searchType: this.searchType,
-        keyword: this.keyword,
-      });
+      this.articles = boardList;
+      range >= 1 && (await this.fetchMoreArticles(range, pageNumber + 1, boardList));
+      return boardList;
     },
-    displayOrderCreator(pageNumber, idx) {
-      return pageNumber * this.page.pageSize + idx + 1 - this.page.pageSize;
-    },
-    getCurrentPageNumber() {
-      const localstoragePageNumber = localStorage.getItem('pageNumber');
-      localStorage.removeItem('pageNumber');
-      return localstoragePageNumber ? Number(localstoragePageNumber) : this.page.pageNumber;
-    },
-    _renderBoardList(articles, totalCount, pageNumber) {
-      this.page.render(totalCount, pageNumber);
 
-      $('#boardArticles').render({
-        articles,
-        boardId,
-        pageNumber: this.backPageNumber ? this.backPageNumber : this.page.pageNumber,
-        pageSize: this.page.pageSize,
+    async fetchMoreArticles(length, initPageNumber, { totalCount, items }) {
+      initPageNumber = this.pageNumberCreator(initPageNumber);
+      const promises = Array.from({ length }, (_, idx) => initPageNumber + idx).map(async pageNumber => {
+        const result = await this.onReadMore(pageNumber);
+        return result.items;
       });
+      await Promise.all(promises).then(res => {
+        this.articles = {
+          totalCount,
+          items: items.concat(res.flatMap(r => r)),
+        };
+
+        this._appendArticles();
+        this.scrollTo();
+      });
+    },
+
+    _renderBoardList(articles, totalCount) {
+      this.page.render(totalCount);
+
+      $('#boardArticles').render({ articles });
       $('#contents').addClass('visible');
     },
 
@@ -219,12 +239,23 @@ $(() => {
         const writer = shopby.logined() ? this.userInfo.memberName : null;
         shopby.popup('board-article', { boardInfo: this.boardInfo, writer }, callback => {
           if (callback.state === 'ok') {
-            this._getBoardList();
+            this._getBoardList(this.initPageSize, 1);
           }
         });
       } catch (e) {
         shopby.alert(e.message);
       }
+    },
+    get defaultPageSize() {
+      return this.initPageSize / 4;
+    },
+    rangeCreator() {
+      const localPageNumber = localStorage.getItem('pageNumber');
+      localStorage.removeItem('pageNumber');
+      return localPageNumber ? Number(localPageNumber) - this.defaultPageSize : 0;
+    },
+    pageNumberCreator(pageNumber) {
+      return pageNumber === 2 ? this.defaultPageSize + pageNumber - 1 : pageNumber;
     },
   };
 

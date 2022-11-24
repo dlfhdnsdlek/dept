@@ -22,19 +22,19 @@
     }
 
     bindEvents() {
-      this.$el.find('#addCouponSubmit').on('click', this.onSubmit.bind(this)).enterKeyup('#couponNumber');
+      this.$el.on('submit', '#form', this.onSubmit.bind(this));
     }
 
     onSubmit(event) {
       event.preventDefault();
 
-      const $input = this.$el.find('#couponNumber');
-      const value = $input.val();
+      const input = event.target.elements['couponNumber'];
+      const value = input.value;
 
       const validate = () => {
         if (!value) {
-          shopby.alert('쿠폰 번호를 입력해주세요.', () => {
-            $input.focus();
+          return shopby.alert('쿠폰 번호를 입력해주세요.', () => {
+            input.focus();
           });
         }
         return !!value;

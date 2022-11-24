@@ -1,28 +1,41 @@
+/*
+ *  © 2021. NHN Commerce Corp. All rights reserved.
+ *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ *  @author hyeyeon-park
+ *  @since 2021.8.24
+ */
+
 $(() => {
   shopby.my.productInquiries = {
-    page: shopby.pagination,
+    page: null,
     productInquiryConfig: shopby.cache.getBoardsConfig().productInquiryConfig,
-    backPageNumber: null,
     searchKeyword: '',
-    searchType: '',
+    initPageSize: 20,
 
     initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
-      window.onpopstate = this.onPopState.bind(this);
-      this.page = new shopby.pagination(this.onPagination.bind(this), '#myInquiryPagination', 20);
+      this.page = new shopby.readMore(this.appendProductInquires.bind(this), '#btnMoreMyInquiries');
       this.renderInit();
       this._getMyProductInquiries();
       this.bindEvents();
+      this.isOpenPopup();
+    },
+
+    isOpenPopup() {
+      const isWrite = shopby.utils.getUrlParam('write');
+      if (isWrite === 'true') {
+        $('.btn_write').click();
+        shopby.utils.replaceState({ write: '' });
+      }
     },
 
     renderInit() {
-      $('#boardTitle').render({ productInquiryConfig: this.productInquiryConfig });
-      $('#myLocation').render({ productInquiryConfig: this.productInquiryConfig });
+      $('.page_top_area').render({ name: this.productInquiryConfig.name });
     },
 
     bindEvents() {
-      $('#btn_write').on('click', this.openProductInquiryPopupWithRegistrationMode.bind(this));
-      $('.btn_board_search').on('click', this.search.bind(this)).enterKeyup('#productInquiryKeyword');
+      $('.btn_write').on('click', this.openProductInquiryPopupWithRegistrationMode.bind(this));
+      $('.board_search_btn').on('click', this.search.bind(this)).enterKeyup('#productInquiryKeyword');
     },
 
     openProductInquiryPopupWithRegistrationMode() {
@@ -32,40 +45,43 @@ $(() => {
         }
       });
     },
-    async search() {
-      this.backPageNumber = null;
-      this.page.pageNumber = 1;
-      const $searchBox = $('.board_search_box');
-      const $keyword = $searchBox.find('input[name=keyword]');
-      this.searchType = $searchBox.find('select[name="searchType"]').val();
-      this.searchKeyword = $keyword.val();
-      await this._getMyProductInquiries();
-      $keyword.val('');
-    },
 
     async _getMyProductInquiries() {
+      const { data: myProductInquiries } = await this.fetchMyProductInquries(this.initPageSize, 1);
+      this.renderInquiries(myProductInquiries);
+    },
+
+    async appendProductInquires() {
+      this.page.pageNumber =
+        this.page.pageNumber === 2 ? this.initPageSize / 4 + this.page.pageNumber - 1 : this.page.pageNumber;
+      const { data: myProductInquiries } = await this.fetchMyProductInquries(this.page.pageSize, this.page.pageNumber);
+      if (myProductInquiries.length === 0) return;
+
+      const compiled = Handlebars.compile($('#myProductInquiriesTemplate').html());
+      const appendHtml = $(compiled({ myProductInquiries: myProductInquiries.items })).find('li');
+      $('#myProductInquiries').append(appendHtml);
+      this.page.render(myProductInquiries.totalCount);
+    },
+
+    fetchMyProductInquries(pageSize, pageNumber = this.page.pageNumber) {
       const request = {
         queryString: {
           hasTotalCount: true,
-          pageNumber: this.backPageNumber ? this.backPageNumber : this.page.pageNumber,
-          pageSize: this.page.pageSize,
+          pageNumber,
+          pageSize,
           searchKeyword: this.searchKeyword,
-          searchType: this.searchType,
+          searchType: 'ALL',
           startYmd: '2020-01-01',
         },
       };
-      const { data: myProductInquiries } = await shopby.api.display.getProfileProductInquiries(request);
-      this.renderProductInquiries(myProductInquiries);
-      if (this.backPageNumber) return;
-      shopby.utils.pushState({
-        pageNumber: this.backPageNumber ? this.backPageNumber : this.page.pageNumber,
-        searchKeyword: this.searchKeyword,
-        searchType: this.searchType,
-      });
+      return shopby.api.display.getProfileProductInquiries(request);
     },
 
-    renderProductInquiries(myProductInquiries) {
+    renderInquiries(myProductInquiries) {
       this.page.render(myProductInquiries.totalCount);
+      if (myProductInquiries.totalCount < this.initPageSize) {
+        $('.more_btn').hide();
+      }
       $('#myProductInquiries').render({
         myProductInquiries: myProductInquiries.items,
         pageNumber: this.backPageNumber ? this.backPageNumber : this.page.pageNumber,
@@ -73,16 +89,13 @@ $(() => {
       });
     },
 
-    onPopState() {
-      this.backPageNumber = shopby.utils.getUrlParam('pageNumber');
-      this.searchKeyword = shopby.utils.getUrlParam('searchKeyword');
-      this.searchType = shopby.utils.getUrlParam('searchType');
-      this._getMyProductInquiries();
-    },
-
-    onPagination() {
-      this.backPageNumber = null;
-      this._getMyProductInquiries();
+    async search() {
+      this.page.pageNumber = 1;
+      const $searchBox = $('.board_search');
+      const $keyword = $searchBox.find('input[name=keyword]');
+      this.searchKeyword = $keyword.val();
+      await this._getMyProductInquiries();
+      $keyword.val('');
     },
   };
 

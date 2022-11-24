@@ -3,7 +3,7 @@
  *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  *  @author hyeyeon-park
- *  @since 2021.7.12
+ *  @since 2021.8.20
  */
 
 (() => {
@@ -19,10 +19,12 @@
         this.dateRange = new shopby.dateRange(
           '#searchOrderProductDateRangePicker',
           this.searchOrderProduct.bind(this),
-          { month: 3, label: '3개월' },
+          '',
+          '',
+          'month3',
         );
       }
-      this.page = new shopby.pagination(this.searchOrderProduct.bind(this), '#searchOrderProductPagination', 10, false);
+      this.page = new shopby.readMore(this.appendOrderProducts.bind(this), '#btnMoreOrderProduct', 10);
       this.init();
     }
 
@@ -32,17 +34,7 @@
         this.bindEvents();
         return;
       }
-      this.initDataRange();
-      this.searchOrderProduct();
       this.bindEvents();
-    }
-
-    initDataRange() {
-      const $btnYear = $('button[name="datePeriodBtn"]:last');
-      if ($btnYear.data('value') === 'year') {
-        $btnYear.hide();
-      }
-      $('#searchDateRange').hide();
     }
 
     bindEvents() {
@@ -56,37 +48,37 @@
         .on('click', '.js_select_confirm', this.selectedData.bind(this));
     }
 
-    selectedData() {
-      const $selected = $('input[name="productNo[]"]:radio:checked');
-      const closest = $selected.closest('tr');
-
-      try {
-        this.validation($selected);
-        this.callback({
-          state: 'ok',
-          selectedProductNo: closest.data('productNo'),
-          selectedProductOptions: {
-            orderOptionNo: closest.data('orderOptionNo'),
-            optionNo: closest.data('optionNo'),
-            optionNameValue: closest.find('.option_name_value')[0].innerText,
-            optionOrderStatus: closest.find('.order_status')[0].innerText,
-          },
-        });
-        this.$el.remove();
-      } catch (e) {
-        shopby.alert(e.message);
-      }
+    selectedData({ currentTarget }) {
+      const closest = $(currentTarget).closest('li');
+      this.callback({
+        state: 'ok',
+        selectedProductNo: closest.data('productNo'),
+        selectedProductOptions: {
+          orderOptionNo: closest.data('orderOptionNo'),
+          optionNo: closest.data('optionNo'),
+          optionNameValue: closest.find('.option')[0].innerText,
+          optionOrderStatus: closest.find('.order_status')[0].innerText,
+        },
+      });
+      this.$el.remove();
     }
 
-    validation($selected) {
-      if ($selected.length === 0) {
-        throw new Error('주문상품을 선택해주세요.');
-      }
+    async appendOrderProducts() {
+      const { data: reviewableProducts } = await shopby.api.display.getProfileOrderOptionsProductReviewable(
+        this.otherOrderProductOptionsRequest,
+      );
+      const { totalCount, items: products } = reviewableProducts;
+      if (totalCount === 0) return;
+
+      const compiled = Handlebars.compile($('#searchResultTemplate').html());
+      const appendHtml = $(compiled({ products })).find('li');
+      $('#searchResult ul').append(appendHtml);
+      this.page.render(totalCount);
     }
 
     searchOrderProduct() {
       const keyword = $('.ly_date_search_list input[name="keyword"]').val();
-      const keywordType = $('select[name="keywordType"] option:selected').val();
+      const keywordType = $('select[name="key"] option:selected').val();
 
       this.productName = '';
       this.orderNo = '';
@@ -117,8 +109,6 @@
           pageNumber: this.page.pageNumber,
           pageSize: this.page.pageSize,
           hasTotalCount: true,
-          startDate: this.dateRange.start,
-          endDate: this.dateRange.end,
           productName: this.productName || '',
           orderNo: this.orderNo || '',
         },

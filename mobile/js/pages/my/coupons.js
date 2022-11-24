@@ -2,6 +2,7 @@
  * © NHN Commerce Corp. All rights reserved.
  * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
+ * @author hyeyeon-park
  * @author JongKeun Kim
  * @since 2021.7.8
  */
@@ -11,7 +12,6 @@ $(() => {
     coupons: null,
     initiate() {
       this.setDefaultState();
-      this.my.initiate();
       this.add.initiate();
       this.search.initiate();
       this.content.initiate();
@@ -19,24 +19,20 @@ $(() => {
       window.onpopstate = this.onPopState.bind(this);
     },
     get usable() {
-      return shopby.utils.getUrlParam('usable') || 'true';
-    },
-    get pageNumber() {
-      return shopby.utils.getUrlParam('pageNumber') || '1';
+      const _usable = shopby.utils.getUrlParam('usable');
+      return _usable ? _usable : 'true';
     },
     setDefaultState() {
       const usableEmpty = !shopby.utils.getUrlParam('usable');
-      const pageNumberEmpty = !shopby.utils.getUrlParam('pageNumber');
 
-      if (usableEmpty && pageNumberEmpty) {
+      if (usableEmpty) {
         shopby.utils.replaceState({
           usable: true,
-          pageNumber: 1,
         });
       }
     },
-    pushState(usable, pageNumber) {
-      shopby.utils.pushState({ usable, pageNumber });
+    pushState(usable) {
+      shopby.utils.pushState({ usable });
       this.changedState();
     },
     changedState() {
@@ -44,47 +40,7 @@ $(() => {
     },
     onPopState() {
       this.content.renderTab();
-      this.search.setCurrentPage();
       this.search.search();
-    },
-
-    /**
-     * @my :  마이페이지 공통 로직
-     */
-    my: {
-      initiate() {
-        shopby.my.menu.init('#myPageLeftMenu');
-        this.summary.initiate().catch(console.error);
-      },
-
-      summary: {
-        async initiate() {
-          const [summary, summaryAmount, likeProduct] = await this._getData();
-          this.render(summary, summaryAmount, likeProduct.totalCount);
-        },
-        async _getData() {
-          return Promise.all([
-            shopby.api.member.getProfileSummary(),
-            shopby.api.order.getProfileOrdersSummaryAmount({
-              queryString: {
-                orderStatusType: 'BUY_CONFIRM',
-                startYmd: shopby.date.lastHalfYear(),
-                endYmd: shopby.date.today(),
-              },
-            }),
-            // summary 찜리스트 totalCount만 받아오기 위해 추가
-            // 전체 카운트만 받아오는 것으로 pageNumber, pageSize는 추가하지 않음
-            shopby.api.product.getProfileLikeProducts({
-              queryString: {
-                hasTotalCount: true,
-              },
-            }),
-          ]).then(res => res.map(({ data }) => data));
-        },
-        render(summary, summaryAmount, likeTotalCount) {
-          shopby.my.summary.init('#myPageSummary', summary, summaryAmount, likeTotalCount);
-        },
-      },
     },
 
     add: {
@@ -92,16 +48,37 @@ $(() => {
         this._bindEvents();
       },
       _bindEvents() {
-        $('#addCoupon').on('click', this.openAddCouponPopup);
+        $('#addCoupon').on('click', this.openAddCouponPopup.bind(this));
       },
-      openAddCouponPopup(event) {
+      async openAddCouponPopup(event) {
         event.preventDefault();
-        shopby.popup('add-coupon', null, ({ state }) => {
-          if (state !== 'ok') return;
-          shopby.alert('쿠폰이 발급되었습니다.');
-          // if shopby.coupons.usable : 사용가능 쿠폰 탭이 아니라면 데이터 갱신 불필요.
-          if (shopby.coupons.usable === 'true') shopby.coupons.search.search.call(shopby.coupons.search);
-        });
+        const $couponNumber = $('#couponNumber');
+        const value = $('#couponNumber').val();
+        const validate = () => {
+          if (!value) {
+            shopby.alert('쿠폰 번호를 입력해주세요.', () => {
+              $couponNumber.focus();
+            });
+          }
+          return !!value;
+        };
+        const isValid = validate();
+        if (isValid) {
+          await this.addCouponCode(value);
+          shopby.alert('쿠폰이 발급되었습니다.', () => {
+            if (shopby.coupons.usable === 'true') shopby.coupons.search.search.call(shopby.coupons.search);
+          });
+        }
+      },
+      async addCouponCode(promotionCode) {
+        const request = {
+          pathVariable: {
+            promotionCode,
+          },
+        };
+
+        const { status } = await shopby.api.promotion.postCouponsRegisterCodePromotionCode(request);
+        if (status !== 204) return;
       },
     },
 
@@ -109,50 +86,38 @@ $(() => {
       dateRange: null,
       pagination: null,
       initiate() {
-        this.renderComponents();
-        this.setCurrentPage();
+        this.renderPagination();
         this.search();
       },
-      renderComponents() {
-        this.renderSearchForm();
-        this.renderPagination();
-      },
-      renderSearchForm() {
-        this.dateRange = new shopby.dateRange('#searchDateRange', this.search.bind(this));
-      },
       renderPagination() {
-        this.pagination = new shopby.pagination(this.changePagination.bind(this), '#pagination', 10);
-      },
-      changePagination() {
-        const usable = shopby.coupons.usable;
-        const { pageNumber } = this.pagination;
-        shopby.coupons.pushState(usable, pageNumber);
+        this.pagination = new shopby.readMore(this.appendCoupons.bind(this), '#btnMoreCoupons', 5);
       },
       search() {
+        this.pagination.pageNumber = 1;
         this.fetchCoupons().then(({ items, totalCount }) => {
           shopby.coupons.content.render(items);
           this.pagination.render(totalCount);
         });
       },
+      appendCoupons() {
+        this.fetchCoupons().then(({ items, totalCount }) => {
+          shopby.coupons.content.appendCoupons(items);
+          this.pagination.render(totalCount);
+        });
+      },
       async fetchCoupons() {
         const { pageSize } = this.pagination;
-        const { start, end } = this.dateRange;
         const usable = shopby.coupons.usable;
-        const pageNumber = shopby.coupons.pageNumber;
+        const pageNumber = this.pagination.pageNumber;
 
         const request = {
           queryString: {
             pageNumber,
             pageSize,
-            startYmd: start,
-            endYmd: end,
             usable,
           },
         };
         return await shopby.api.promotion.getCoupons(request).then(({ data }) => data);
-      },
-      setCurrentPage() {
-        this.pagination.pageNumber = shopby.coupons.pageNumber;
       },
     },
 
@@ -168,10 +133,10 @@ $(() => {
           .on('click', '[data-id="couponDetailHide"]', this.couponDetailHide);
       },
       getTabClassName(usable) {
-        const defaultClassName = 'router-link-active';
-        const activeClassName = 'router-link-active router-link-exact-active on';
+        const defaultClassName = 'tab_btn';
+        const activeClassName = 'tab_btn active';
 
-        const active = usable.toString() === (shopby.coupons.usable || 'true');
+        const active = usable.toString() === (shopby.coupons.usable ? shopby.coupons.usable : 'true');
         return active ? activeClassName : defaultClassName;
       },
       renderTab() {
@@ -194,19 +159,13 @@ $(() => {
 
         this.renderTab();
       },
-      getFormattedProducts(couponTargets, totalCount) {
-        const overMaxCount = couponTargets.length < totalCount;
-        const overMaxCountLabel = overMaxCount ? ' 외 다수' : '';
-
-        return `${couponTargets.join('/')}${overMaxCountLabel}`;
-      },
       async couponDetailToggle(event) {
         event.preventDefault();
 
         const { couponNo, couponTargetType, couponIssueNo } = event.currentTarget.dataset;
         const $detail = $(`#detail${couponNo}`);
         if ($detail.has(`#detail${couponIssueNo}`).length > 0) {
-          $(`#detail${couponNo} *`).remove();
+          $detail.toggle();
           return;
         }
         const request = {
@@ -242,14 +201,13 @@ $(() => {
       couponDetailHide(event) {
         event.preventDefault();
 
-        $(event.currentTarget).parents('[data-id="couponDetailContent"]').remove();
+        $(event.currentTarget).parents('[data-id="couponDetailContent"]').hide();
       },
       changeLocationSearch(queryString) {
         const searchParams = new URLSearchParams(queryString);
         const usable = searchParams.get('usable');
-        const pageNumber = shopby.coupons.pageNumber;
 
-        shopby.coupons.pushState(usable, pageNumber);
+        shopby.coupons.pushState(usable);
       },
       getPlatform(platforms) {
         const nameMap = {
@@ -260,6 +218,12 @@ $(() => {
 
         return platforms.map(platform => nameMap[platform]).join(' / ');
       },
+      getFormattedProducts(couponTargets, totalCount) {
+        const overMaxCount = couponTargets.length < totalCount;
+        const overMaxCountLabel = overMaxCount ? ' 외 다수' : '';
+
+        return `${couponTargets.join('/')}${overMaxCountLabel}`;
+      },
       getRenderData(data) {
         return data.map(coupon => {
           const {
@@ -267,6 +231,7 @@ $(() => {
             useEndYmdt,
             usablePlatforms,
             couponType,
+            used,
             skipsAccumulation,
             cartCouponUsable,
             productCouponUsable,
@@ -282,28 +247,36 @@ $(() => {
 
           const limitCouponTypeLabel = couponType === 'PRODUCT' ? '주문' : '상품';
           const isLimit = skipsAccumulation || !cartCouponUsable || !productCouponUsable;
+          const unusableReason = used ? '사용완료' : !used && !expiration ? '기간만료' : null;
           return {
             ...coupon,
             limitCouponTypeLabel,
             usedYmd,
             expiration,
             platform,
+            unusableReason,
             isLimit,
           };
         });
       },
       render(data) {
         shopby.coupons.coupons = this.getRenderData(data);
-        const response = {
-          coupons: shopby.coupons.coupons,
-          isUseAble: shopby.coupons.usable === 'true' ? true : false,
-        };
 
         const $coupons = $('#coupons');
         const compiled = Handlebars.compile($coupons.html());
-
+        $coupons.find('li').remove();
         $coupons.next().remove();
-        $coupons.parent().append(compiled(response));
+        $coupons.parent().append(compiled(shopby.coupons.coupons));
+      },
+
+      appendCoupons(data) {
+        shopby.coupons.coupons = this.getRenderData(data);
+        const $coupons = $('#coupons');
+        const compiled = Handlebars.compile($coupons.html());
+        $coupons
+          .parent()
+          .find('ul.coupon_bx')
+          .append($(compiled(shopby.coupons.coupons)).find('li'));
       },
     },
   };

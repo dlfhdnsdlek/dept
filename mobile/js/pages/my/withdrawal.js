@@ -11,15 +11,23 @@ $(() => {
   shopby.my.withdrawal = {
     $reason: $('#reason'),
     async initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
+      const isWithdrawalProcess = this.checkIsWithdrawalProcess();
+      if (isWithdrawalProcess) {
+        this.runWithdrawalProcess();
+      }
       await this.render();
       this.bindEvents();
     },
+    checkIsWithdrawalProcess() {
+      const isOauthWithdrawalProcess = shopby.localStorage.getItemWithExpire(
+        shopby.cache.key.member.isOauthWithdrawalProcess,
+      );
+      return Boolean(isOauthWithdrawalProcess);
+    },
     async render() {
-      shopby.my.menu.init('#myPageLeftMenu');
       const { data: userInfo } = await shopby.api.member.getProfile();
       if (userInfo.memberType === 'MALL') {
-        $('#certifyPassword').render({ memberId: userInfo.memberId });
+        this.initiateWithdrawalForm();
       } else {
         $('#certifyOpenId').render({
           providerTypes: userInfo.providerTypes.map(type => type.toLowerCase()),
@@ -28,42 +36,38 @@ $(() => {
       }
     },
     bindEvents() {
-      $('#btnCertifyCancel').on('click', shopby.goHome);
-      $('#btnPwCertify').on('click', this.certifyPassword.bind(this)).enterKeyup('#confirmPassword');
       $('.btnLoginSns').on('click', this.certifyOpenId.bind(this));
-    },
-    async certifyPassword() {
-      const $password = $('#confirmPassword');
-      const password = $password.val().trim();
-
-      try {
-        this._validatePassword(password);
-        await shopby.api.member.postProfileCheckPassword({ requestBody: { password } });
-        $('.my_page_password').hide();
-        await this.initiateWithdrawalForm();
-      } catch (error) {
-        shopby.alert('비밀번호를 정확하게 입력해주세요.', $password.focus);
-      }
     },
     async certifyOpenId(event) {
       event.preventDefault();
       const provider = `ncp_${event.currentTarget.dataset.provider}`;
-      const { oauthIdNo } = shopby.sessionStorage.getItemWithExpire(shopby.cache.dataKey.profile);
-      const customCallback = profileResult => {
-        if (!profileResult) {
-          shopby.alert('간편 인증에 실패하였습니다.');
-          return;
-        }
-        if (profileResult.oauthIdNo !== oauthIdNo) {
-          shopby.alert('현재 로그인 한 간편로그인 계정과 다릅니다. 쇼핑몰 계정과 동일하게 로그인해주세요.');
-          return;
-        }
-        shopby.alert('인증이 완료되었습니다.', this.initiateWithdrawalForm.bind(this));
-      };
-
-      const popup = window.open('about:blank', '간편 로그인', 'width=420px,height=550px,scrollbars=yes');
       const data = await shopby.helper.login.fetchOauthLogin(provider);
-      shopby.helper.login.openLoginPopup(data, provider, customCallback.bind(this), popup);
+      shopby.helper.login.openLoginPopup(data);
+      shopby.localStorage.setItemWithExpire(shopby.cache.key.member.isOauthWithdrawalProcess, true); //탈퇴페이지 인지
+    },
+
+    async runWithdrawalProcess() {
+      const isPrevWithdrawalPage = document.referrer.includes('/pages/my/withdrawal');
+      if (isPrevWithdrawalPage) {
+        shopby.localStorage.removeItem(shopby.cache.key.member.isOauthWithdrawalProcess);
+        return;
+      }
+      const isComparedUserInfo = shopby.localStorage.getItem(shopby.cache.key.member.isOauthWithdrawalCompareInfo);
+
+      const { data } = await shopby.api.member.getProfile();
+      shopby.localStorage.removeItem(shopby.cache.key.member.isOauthWithdrawalProcess);
+
+      if (isComparedUserInfo) {
+        shopby.alert('현재 로그인 한 간편로그인 계정과 다릅니다. 쇼핑몰 계정과 동일하게 로그인해주세요.');
+        shopby.localStorage.removeItem(shopby.cache.key.member.isOauthWithdrawalCompareInfo);
+        return;
+      }
+      if (data) {
+        shopby.alert('인증이 완료되었습니다.', this.initiateWithdrawalForm.bind(this));
+        return;
+      }
+      location.href = '/pages/my/withdrawal.html';
+      shopby.alert('간편 인증에 실패하였습니다.');
     },
 
     async initiateWithdrawalForm() {
@@ -71,7 +75,7 @@ $(() => {
       this.bindEventsWithdrawalForm();
     },
     async renderWithdrawalForm() {
-      $('#certifyPassword,#certifyOpenId').hide();
+      $('#certifyOpenId').hide();
       const {
         data: { withdrawal_guide },
       } = await shopby.api.manage.getTerms({
@@ -82,19 +86,14 @@ $(() => {
     },
     bindEventsWithdrawalForm() {
       this.$reason.on('keyup', this.changeValidInput);
-      $('#btnCancel').on('click', shopby.goHome);
       $('#btnWithdrawal').on('click', this.onClickWithdrawal.bind(this));
     },
     changeValidInput({ target, key }) {
-      const _key = key || '';
-      if (_key.includes('Arrow') || !pattern) return;
+      if (key && key.includes('Arrow')) return;
       const pattern = shopby.regex.noCommonSpecial;
       const value = target.value.replace(pattern, '');
-      const valueLength = value.length;
-      const maxLength = this.getAttribute('maxlength');
 
       $(target).val(value);
-      $(this).siblings('.js_text_length').text(`${valueLength}/${maxLength}`);
     },
     async onClickWithdrawal() {
       try {
@@ -171,6 +170,11 @@ $(() => {
       if (hasProcessOrder) {
         const message =
           '진행중인 주문건이 있습니다. 탈퇴 시 쇼핑몰 접속 및 주문내역 확인이 불가합니다. 탈퇴하시겠습니까?';
+        this._throwCustomNameError(message);
+      }
+      // 진행중주문, 적립금, 쿠폰 없는 경우
+      if (!hasBenefit && !hasProcessOrder) {
+        const message = `탈퇴 시 쇼핑몰에 접속 불가하며 보유중인 적립금 및 쿠폰은 모두 삭제됩니다. 탈퇴하시겠습니까?`;
         this._throwCustomNameError(message);
       }
     },

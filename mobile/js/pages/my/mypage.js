@@ -7,17 +7,16 @@
  */
 $(() => {
   shopby.mypage = {
-    start: 0,
-    pageSize: 4,
     reveiwableProducts: 0,
+
     initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
       this._fetchApis().then(responses => {
         if (responses.some(response => response && response.error)) {
           // @fixme: /malls 도 401로 떨어져서 그냥 에러남.. 망함..
           shopby.alert('인증 정보가 만료되었습니다.', shopby.goLogin);
         } else {
           this.render(responses);
+          this.bindEvent();
         }
       });
     },
@@ -46,10 +45,23 @@ $(() => {
         productInquirySummary: this._getProductInquirySummaryData(progressProductInquiry, answeredProductInquiry),
         productReviewSummary: this._getProductReviewSummary(possibleProductReview, myProductReview),
       });
-
+      $('#contents').removeClass('invisible').addClass('visible');
       this._renderRecentProducts(summary.memberName);
+      $('#onlyOpenId').render({ openIdMember: shopby.localStorage.getItem(shopby.cache.key.member.oauthProvider) });
     },
-
+    bindEvent() {
+      $('#btnWrite').on('click', () => {
+        shopby.popup('inquiry', { type: 'registration' });
+      });
+      $('#btnWriteReview').on('click', () => {
+        if (this.reveiwableProducts === 0) {
+          shopby.alert({ message: '후기를 남길 수 있는 상품이 없습니다.' });
+          return;
+        } else {
+          window.location.replace('/pages/my/product-reviews.html?write=true');
+        }
+      });
+    },
     async _fetchApis() {
       const result = await Promise.all([
         shopby.api.member.getProfileSummary(), // FIXME: API Deprecated
@@ -120,9 +132,9 @@ $(() => {
     _renderRecentProducts(memberName) {
       const MAX_COUNT = 10;
 
-      shopby.cache
-        .getRecentProducts()
-        .then(recentProducts => recentProducts.slice(0, MAX_COUNT))
+      shopby.api.product
+        .getProfileRecentProducts({ queryString: {} })
+        .then(({ data }) => data.slice(0, MAX_COUNT))
         .then(recentProducts => {
           $('#myRecentProducts').render({
             memberName,
@@ -131,48 +143,16 @@ $(() => {
 
           if (recentProducts.length > 2) this.bindFlicking();
         });
-      this.bindEvents();
     },
 
-    openProductReviewPopup() {
-      if (this.reveiwableProducts === 0) {
-        shopby.alert({ message: '후기를 남길 수 있는 상품이 없습니다.' });
-        return;
-      }
-
-      shopby.popup(
-        'product-review',
-        { productReviewConfig: shopby.cache.getBoardsConfig().productReviewConfig },
-        callback => {
-          if (callback.state === 'ok') {
-            location.reload();
-          }
-        },
-      );
-    },
-    openInqueryPopup() {
-      shopby.popup('inquiry', { type: 'registration' }, () => {
-        location.reload();
-      });
-    },
-    openInqueryPrdPopup() {
-      shopby.popup('product-inquiry', null, () => {
-        location.reload();
-      });
-    },
-    bindEvents() {
-      $('#writeReview').on('click', this.openProductReviewPopup.bind(this));
-      $('#writeQuery').on('click', this.openInqueryPopup);
-      $('#writeInqueryPrd').on('click', this.openInqueryPrdPopup);
-    },
     bindFlicking() {
       const SLICK_OPTION = {
         draggable: true,
         autoplay: false,
-        arrows: true,
+        arrows: false,
         infinite: false,
-        slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToShow: 2,
+        slidesToScroll: 1,
         speed: 100,
         touchThreshold: 8, // 민감도. 높을수록 민감해짐
       };
@@ -186,12 +166,13 @@ $(() => {
         used: config.used,
         name: config.name,
         progressCnt: (progressResult && progressResult.totalCount) || 0,
-        answeredCnt: (answeredResult && answeredResult.totalCount) || 0,
+        answeredCnt: answeredResult.totalCount,
       };
     },
 
     _getProductInquirySummaryData(progressResult, answeredResult) {
       const { productInquiryConfig: config } = shopby.cache.getBoardsConfig();
+
       return {
         used: config.used,
         name: config.name,

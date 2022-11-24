@@ -1,11 +1,3 @@
-/*
- *  © 2021. NHN Commerce Corp. All rights reserved.
- *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *  @author hyeyeon-park
- *  @since 2021.9.8
- */
-
 $(() => {
   shopby.service.privacyPolicy = {
     $termsSelectBox: null,
@@ -34,7 +26,7 @@ $(() => {
       this.$termsSelectBox.on('change', this._selectOtherTerms.bind(this));
     },
     _selectOtherTerms({ target }) {
-      location.href = `/pages/service/privacy-policy.html?termsNo=${target.value}`;
+      location.href = `/pages/service/privacy-policy.html?termsTypes=${this.data.termsTypes}&termsNo=${target.value}`;
       $(target).val(target.value).prop('selected', true);
     },
     async _getTermsHistory() {

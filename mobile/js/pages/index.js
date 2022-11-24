@@ -54,7 +54,7 @@
         return shopby.config.skin.bannerGroupCodes.find(value => value === bannerGroupCode);
       },
       setBannerSize({ bannerName, currentBanner }) {
-        const exclusionBanners = ['LOGO0001', 'BANNER08', 'BANNER09'];
+        const exclusionBanners = ['LOGO0001'];
         if (exclusionBanners.includes(bannerName)) return;
 
         const { sizeUnitType, height, width } = currentBanner;
@@ -175,7 +175,7 @@
     sectionProduct: {
       newSectionProduct: null,
       async initiate() {
-        const sectionIds = shopby.config.skin.sections.pc;
+        const sectionIds = shopby.config.skin.sections.mobile;
         const responses = await Promise.all(sectionIds.map(id => this._fetchSectionProducts(id)));
 
         responses
@@ -225,9 +225,7 @@
         const LIST_TYPE_CONVERTOR = {
           GALLERY: 'gallery',
           LIST: 'list',
-          CART: 'basket',
-          SIMPLE_IMAGE: 'simple',
-          PRODUCT_MOVE: 'slide',
+          SWIPE: 'swipe',
         };
         const { displayHeight, displayWidth, displayType } = sectionProduct.displayConfig;
         sectionProduct.pageSize = displayHeight * displayWidth;
@@ -237,24 +235,23 @@
         const sectionProductTemplate = this.getMainSectionProductTemplate(sectionProduct);
         $(`#goodsList-${sectionProduct.sectionId}`).html(sectionProductTemplate).show();
 
-        const { listType, productList } = sectionProduct;
+        const { listType, productList, pageSize, displayConfig } = sectionProduct;
+        const { displayWidth } = displayConfig;
         productList.forEach(product => {
           product.calculatedSalePrice = shopby.utils.getDisplayProductPrice(product);
           product.isSoldOut = this.isSoldOut(product && product.reservationData, product.stockCnt);
-          product.isUnablePurchasing = this.checkUnablePurchasing(product);
           return product;
         });
         const handlebarTemplate = $(`#product-list-type-${listType}`).html();
         const template = Handlebars.compile(handlebarTemplate);
-        const html = template({ productList });
+        const list = listType === 'swipe' ? productList.slice(0, pageSize) : productList;
+        const html = template({ productList: list, displayWidth });
         $(`#productList-${sectionProduct.sectionId}`).html(html);
       },
       bindEvents(sectionProduct) {
         const { sectionId } = sectionProduct;
         $(`#productListPaging-${sectionId}`).on('click', '.moreBtn', this.onClickMoreBtn.bind(this, sectionProduct));
-        $(`#productList-${sectionId}`)
-          .on('click', '#wishBtn', event => this.onClickWishBtn(sectionProduct, event))
-          .on('click', '#cartBtn', this.onClickCartBtn.bind(this));
+        $(`#productList-${sectionId}`).on('click', '#wishBtn', event => this.onClickWishBtn(sectionProduct, event));
       },
       async onClickMoreBtn(sectionProduct) {
         const { sectionId, pageSize, page } = sectionProduct;
@@ -262,7 +259,7 @@
         try {
           const { data } = await this._fetchSectionProducts(sectionId, pageNumber, pageSize);
           const newSectionProduct = { ...sectionProduct };
-          newSectionProduct.productList = newSectionProduct.productList.concat(data.products);
+          newSectionProduct.productList = newSectionProduct.productList.concat(data.products); // this
           newSectionProduct.page = pageNumber;
           this.setSectionProduct(newSectionProduct);
         } catch (e) {
@@ -290,9 +287,7 @@
           console.error(e);
         }
       },
-      onClickCartBtn({ target }) {
-        shopby.popup('cart-product-option', { productNo: $(target).closest('li').data('product-no') });
-      },
+
       async updateSectionProduct(sectionId, sectionProduct) {
         this.newSectionProduct = { ...sectionProduct };
         const { data } = await this._fetchSectionProducts(
@@ -306,25 +301,29 @@
       },
       setPagination(sectionProduct) {
         const { listType, totalCount, pageSize, sectionId } = sectionProduct;
-        if (listType !== 'slide') {
+        if (listType !== 'swipe') {
           sectionProduct.totalPage = Math.ceil(totalCount / pageSize);
           this.drawMoreButton(sectionProduct);
           return;
         }
+
         const SLICK_OPTION = {
           draggable: true,
-          autoplay: true,
+          autoplay: false,
           infinite: true,
-          slidesToShow: pageSize,
-          slidesToScroll: 1,
+          slidesToShow: 1,
+          centerMode: true,
+          arrows: false,
+          variableWidth: true,
         };
-        $(`#productList-${sectionId}`).find('.item_slide_horizontal .slide_horizontal_1').slick(SLICK_OPTION);
+
+        $(`#productList-${sectionId}`).find('.item_swipe_type .slider-wrap').slick(SLICK_OPTION);
       },
       drawMoreButton(sectionProduct) {
         const { totalPage, page, sectionId } = sectionProduct;
         if (page >= totalPage) return;
         const moreBtn = `<div class="btn_goods_down_more">
-                            <button class="btn_goods_view_down_more moreBtn">더보기</button>
+                            <button class="btn_goods_view_down_more moreBtn more_btn">더보기</button>
                          </div>`.trim();
 
         $(`#productListPaging-${sectionId}`).html(moreBtn);
@@ -332,14 +331,16 @@
       getMainSectionProductTemplate(sectionProduct) {
         const { title, sectionId } = sectionProduct;
 
-        return `<div class="goods_list_tit">
+        return `<div class="goods_list goods_display_main">
+              <div class="goods_list_tit">
                     <h3>${title}</h3>
-                    <div class="btn_goods_more">
+                    <div class="btn_goods_more goods_list_box">
                         <a href="/pages/product/list.html?sectionId=${sectionId}" class="btn_goods_view_more">더보기</a>
                     </div>
                  </div>
                 <div class="goods_list_cont" id="productList-${sectionId}" data-section-id="${sectionId}"></div>
-                <div class="paging" id="productListPaging-${sectionId}"></div>`.trim();
+                <div class="paging" id="productListPaging-${sectionId}"></div>
+              </div>`.trim();
       },
       isSoldOut(reservationData, stockCnt) {
         if (shopby.utils.isPreSalePeriod(reservationData)) {
@@ -347,15 +348,6 @@
         } else {
           if (stockCnt === 0) return true;
         }
-      },
-      checkUnablePurchasing({ stockCnt, saleStatusType, reservationData }) {
-        // 판매종료, 판매정지, 판매금지
-        if (['FINISHED', 'STOP', 'PROHIBITION', 'READY'].includes(saleStatusType)) {
-          return true;
-        }
-
-        // 판매중 : 품절 (예약판매 재고, 일반 판매재고)
-        return this.isSoldOut(reservationData, stockCnt);
       },
     },
     instagram: {
@@ -365,7 +357,7 @@
       fetchInstagramContents() {
         const request = {
           queryString: {
-            platform: 'PC',
+            platform: 'MOBILE_WEB',
           },
         };
 
@@ -386,28 +378,21 @@
             : '';
         };
 
-        return `
-         <div class="main_goods_cont instagram_widget">
+        return `<div class="main_goods_cont instagram_widget">
           <header class="instagram_widget_head">
-            <img style="width:84px" src="/assets/img/banner/instagram-logo.png" alt="Instagram" />
+            <img style="width:99px" src="/assets/img/banner/instagram-logo.png" alt="Instagram" />
             ${getUsernameTemplate(contents)}
           </header>
-          <ul class="instagram_widget_contents"> 
+          <ul class="instagram_widget_contents">
             ${contents
               .slice(0, maxLength)
               .map(
-                content => `
-                <li>
-                  <a href="${content.permalink}" target="_blank">
-                    <img src="${content.thumbnail_url ?? content.media_url}" alt="instagram image" />
-                  </a>
-                </li>
-              `,
+                content => `<li><a href="${content.permalink}" target="_blank">
+                <img src="${content.thumbnail_url || content.media_url}" alt="instagram image" /></a></li>`,
               )
               .join('')}
           </ul>
-        </div>
-        `;
+        </div>`;
       },
     },
     ProductsReviewsWidget: {
@@ -519,8 +504,8 @@
             depth1DisplayCategoryNo: 0,
             keyword: '',
             pageNumber: 1,
-            isWidget: true,
             boardType,
+            isWidget: true,
           },
         };
       },
@@ -532,8 +517,10 @@
         const isReviewedProducts = type === 'REVIEWED_PRODUCTS';
         const popupType = isReviewedProducts ? 'productReviews' : 'boards';
         const parameter = isReviewedProducts ? this.getProductReviewsRequest(productNo) : this.getBoardsRequest(type);
-        let totalPage = '';
+        const onlyDisplayedReviews = isReviewedProducts ? false : true;
 
+        //TODO(김동욱): A타입 포토후기팝업
+        let totalPage = '';
         if (type === 'ALL') totalPage = this.allReviewWidgets.length;
         if (type === 'PHOTO') totalPage = this.photoWidgets.length;
         if (type === 'REVIEWED_PRODUCTS') totalPage = this.reviewWidgets.length;
@@ -543,9 +530,9 @@
           productNo,
           hasCloseBtn: true,
           type: popupType,
-          isMain: true,
           parameter,
           totalPage,
+          onlyDisplayedReviews,
         });
       },
     },

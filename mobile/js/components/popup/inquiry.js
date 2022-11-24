@@ -38,7 +38,7 @@
     }
     render() {
       const { name } = shopby.cache.getBoardsConfig().inquiryConfig;
-      $('.boardTitle').text(name);
+      $('.h_tit').text(name);
       this.renderInquiryContents();
       this.originData = this.updateInquiryData();
     }
@@ -50,7 +50,7 @@
         .on('input paste', 'textarea[name="content"], input[name="title"]', this.onInputText)
         .on('change', 'input[type="file"]', this.onChangeAttachments.bind(this))
         .on('click', '#attachmentImage', this.onClickDeleteBtn.bind(this))
-        .on('click', '.btn_box, .ly_close', this.onClickSaveBtn.bind(this));
+        .on('click', '.btn_box, .close_btn', this.onClickSaveBtn.bind(this));
     }
     onChangeAttachments(event) {
       const uploadImageCallback = (data, { name }) => {
@@ -129,10 +129,10 @@
       if (!shopby.utils.isEqual(this.originData, currentData)) {
         shopby.confirm({ message: '변경된 정보를 저장하지 않고 이동하시겠습니까?' }, ({ state }) => {
           if (state !== 'ok') return;
-          this.$el.remove();
+          this.close();
         });
       } else {
-        this.$el.remove();
+        this.close();
       }
     }
     async saveBtnHandler() {
@@ -150,7 +150,7 @@
         this.option.type === 'registration'
           ? await this.postInquiry(data, requestBody)
           : await this.putInquiry(data, requestBody);
-        this.$el.remove();
+        this.close();
       } catch (e) {
         shopby.alert(e.message);
       }

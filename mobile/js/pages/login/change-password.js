@@ -20,7 +20,6 @@ $(() => {
       this.bindEvents();
     },
     render() {
-      $('#contents').css('visibility', 'visible');
       $('#changePasswordTitle').render({
         mallName: shopby.cache.getMall().mall.mallName,
       });

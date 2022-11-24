@@ -2,6 +2,7 @@
  * © NHN Commerce Corp. All rights reserved.
  * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
+ * @author hyeyeon-park
  * @author Bomee Yoon
  * @since 2021.6.24
  */
@@ -16,35 +17,72 @@ $(() => {
   shopby.product.view = {
     async initiate() {
       try {
-        const [product, options, optionImages, coupons] = await this.fetchTopContents();
+        this.addRecentProduct();
+        const [product, options, optionImages, relatedProducts, coupons] = await this.fetchProduct();
+        const [
+          reviewableInfo,
+          reviewableOptions,
+          reviews,
+          reviewsConfigurations,
+          photoReviews,
+          inquires,
+        ] = await this.fetchReviewsAndInquiries();
         shopby.setGlobalVariableBy('PRODUCT', product);
+        const { productInquiryConfig, productReviewConfig } = shopby.cache.getBoardsConfig();
         await this.summary.initiate(generateData.summary(product, options, coupons));
         this.detail.initiate(generateData.detail(product, optionImages, options));
-        this.exchange.initiate(generateData.exchange(product));
-        await this.render(product);
+        this.basic.initiate(generateData.basic(product));
+        this.review.initiate(
+          generateData.review(
+            reviewableInfo,
+            reviewableOptions,
+            reviews,
+            reviewsConfigurations,
+            photoReviews,
+            productReviewConfig,
+          ),
+        );
+        this.inquiry.initiate(generateData.inquiry(inquires, productInquiryConfig));
+        this.renderProductInfo(product);
+        this.renderTabInfo(reviews, inquires);
+        this.renderRelatedProducts(relatedProducts);
+        this.bindEvents();
+        $('.sub_content').removeClass('invisible').addClass('visible');
       } catch (error) {
+        console.log(error);
         this._errorHandler(error);
       }
     },
-    async fetchTopContents() {
+    bindEvents() {
+      $(window).on('scroll', this.onScrollTab.bind(this));
+    },
+
+    async addRecentProduct() {
+      if (shopby.logined()) {
+        await shopby.api.product.postProfileRecentProducts({ requestBody: { productNo } });
+      } else {
+        shopby.localStorage.unshiftItemByOrder('guestRecentProducts', productNo, 60 * 60 * 24 * 1000);
+      }
+    },
+
+    async fetchProduct() {
       const queryString = { includesCartCoupon: true };
       const result = await shopby.utils.allSettled([
         shopby.api.product.getProductsProductNo({ pathVariable }),
         shopby.api.product.getProductsProductNoOptions({ pathVariable }),
         shopby.api.product.getProductsProductNoOptionsImages({ pathVariable }),
+        shopby.api.product.getProductsProductNoRelatedProducts({ pathVariable }),
         shopby.api.promotion.getCouponsProductsProductNoIssuableCoupons({ queryString, pathVariable }),
       ]);
       const hasError = result.some(r => r && r.status === 'rejected');
-
       if (hasError) {
         throw result;
       } else {
         return result.map(({ value }) => value.data);
       }
     },
-    async fetchBottomContents() {
+    async fetchReviewsAndInquiries() {
       const result = await Promise.all([
-        shopby.api.product.getProductsProductNoRelatedProducts({ pathVariable }),
         this.review.fetchReviewableInfo(),
         this.review.fetchProductsProductNoReviewableOptions(),
         this.review.fetchReviews(),
@@ -54,56 +92,65 @@ $(() => {
       ]);
       return result.map(({ data }) => data);
     },
-    async render({ baseInfo, counter, deliveryGuide, refundGuide, afterServiceGuide, exchangeGuide }) {
-      const hasGuide = deliveryGuide || refundGuide || afterServiceGuide || exchangeGuide ? true : false;
-      this.renderTopContents(baseInfo);
-      await this.renderBottomContents(counter, hasGuide);
-    },
-    renderTopContents(baseInfo) {
+    renderProductInfo({ baseInfo }) {
       $container.data('productInfo', {
         productNo: baseInfo.productNo,
         productName: baseInfo.productName,
-        imageUrl: (baseInfo && baseInfo.imageUrls[0]) || '',
+        imageUrl: (baseInfo && baseInfo.imageUrls && baseInfo.imageUrls[0]) || '',
       });
-
-      $('#contents').addClass('visible');
     },
-    async renderBottomContents(counter, hasGuide) {
-      const [
-        relatedProducts,
-        reviewableInfo,
-        reviewableOptions,
+    renderTabInfo(reviews, inquires) {
+      $('#tabInfo').render({
         reviews,
-        reviewsConfigurations,
-        photoReviews,
         inquires,
-      ] = await this.fetchBottomContents();
-      counter.inquiryCnt = inquires.totalCount;
-
-      const { productInquiryConfig, productReviewConfig } = shopby.cache.getBoardsConfig();
-      this.review.initiate(
-        generateData.review(
-          reviewableInfo,
-          reviewableOptions,
-          reviews,
-          reviewsConfigurations,
-          photoReviews,
-          productReviewConfig,
-        ),
-      );
-      this.inquiry.initiate(generateData.inquiry(inquires, relatedProducts, productInquiryConfig));
-
-      this.renderTabs(counter, hasGuide);
+      });
     },
-    renderTabs(counter, hasGuide) {
-      const tabNames = ['detail', 'exchange', 'reviews', 'inquiries'];
-      tabNames.forEach(tabName => $(`#${tabName}Tab`).html(template.tabs(tabName, counter, hasGuide)));
+    renderRelatedProducts(relatedProducts) {
+      displayHelper.toggleRelatedProducts(relatedProducts && relatedProducts.length > 0, relatedProducts);
+    },
+
+    onScrollTab() {
+      const scrollPosition = $(window).scrollTop();
+      this.setTabPosition(scrollPosition);
+      this.setTabMark(scrollPosition);
+    },
+
+    setTabPosition(scrollPosition) {
+      const tabPosition = $('#tabInfo').offset().top;
+      const headerHeight = $('#header').height();
+      const subTopHeight = $('#pageTitleBox').height();
+      const topContentsHeight = $('#summary').height();
+      if (scrollPosition < headerHeight + subTopHeight + topContentsHeight) {
+        $('#tabInfo').removeAttr('style');
+      } else if (scrollPosition >= tabPosition) {
+        $('#tabInfo').css({ position: 'fixed', top: 0 });
+      }
+    },
+
+    setTabMark(scrollPosition) {
+      const $tabInfo = $('#tabInfo');
+
+      $.each($tabInfo.find('a'), (index, el) => {
+        const hash = $(el).attr('href');
+
+        const catchInTheNet = () => {
+          const offset = $(hash).offset();
+          const tabHeight = $('#tabInfo').innerHeight();
+
+          return (
+            scrollPosition + tabHeight > offset.top && scrollPosition + tabHeight < offset.top + $(hash).innerHeight()
+          );
+        };
+
+        if (catchInTheNet()) {
+          this.summary.activeCurrentTab($tabInfo, hash);
+        }
+      });
     },
     async _errorHandler(error) {
       shopby.utils.hideAllContents();
 
       if (error && error.length > 0) {
-        console.log(error);
         const [{ reason: productReason }, { reason: optionReason }, { reason: imageReason }] = error;
         if (productReason.code === 'E0008') {
           await shopby.alert(productReason.message, () => {
@@ -113,9 +160,11 @@ $(() => {
         }
 
         if (optionReason.code === 'SPEC0002' || imageReason.code === 'SPEC0002' || productReason.code === 'PNPE001') {
-          shopby.alert(optionReason.message.replace(/,/g, ''), () => {
-            history.back();
-          });
+          optionReason &&
+            optionReason.message &&
+            shopby.alert(optionReason.message.replace(/,/g, ''), () => {
+              history.back();
+            });
         }
       }
     },
@@ -130,22 +179,18 @@ $(() => {
         this.option = shopby.helper.option(data.options, data.reservationData);
         this.optionUsed = data.options.type !== 'DEFAULT';
         this.render(data);
-        this.bindEvents();
+        this.bindEvents(data.remoteDeliveryAreaFees);
         this.naverPay = await this.generateNaverPay(data);
         this.naverPay &&
           this.naverPay.applyNaverPayButton(this.loadNaverPayOrder.bind(this), this.loadNaverWishlist.bind(this));
       },
       render(data) {
-        this.renderDeliveryFeeArea(data);
         this.renderOptionSelector();
         this.renderLiked(data.liked, true);
         this.$summary.render(data);
-        displayHelper.disabledOptionSelector();
+        $('.detail_buy').render(data); //하단 고정영역 : 찜/장바구니/구매하기
         displayHelper.slickMainImages(data.imageUrls);
         displayHelper.isUnablePurchasing(!data.isUnablePurchasing);
-      },
-      renderDeliveryFeeArea(data) {
-        this.$summary.find('#deliveryFeeArea').render(data).hide();
       },
       renderOptionSelector() {
         this.$summary.find('#optionSelector').render({
@@ -153,13 +198,13 @@ $(() => {
           options: this.option.options,
           textOptions: this.option.textOptions,
           optionUsed: this.optionUsed,
+          showsTotalPriceWithSelectedOptionsArea: this.option.selectedOptions.length > 0,
         });
         this.renderSelectedOptions();
       },
       renderSelectedOptions() {
         this.$summary.find('#selectedOptions').render({
           selectedOptions: this.option.selectedOptions,
-          showsTotalPriceWithSelectedOptionsArea: this.option.selectedOptions.length > 0,
           textOptions: this.option.textOptions,
           optionUsed: this.optionUsed,
         });
@@ -174,7 +219,27 @@ $(() => {
         liked ? $wishBtn.addClass('on') : $wishBtn.removeClass('on');
         displayHelper.fadeOutLikeMessage(liked, init);
       },
-      bindEvents() {
+      activeCurrentTab($wrap, hash) {
+        $wrap.find('.selected').removeClass('selected');
+        $(hash + 'Tab').addClass('selected');
+      },
+      setLocTop(e) {
+        e.preventDefault();
+        const $wrap = $('#tabInfo');
+        const $currentTab = $(e.target);
+        const hash = $currentTab.attr('href');
+        const tabHeight = 60; // tab높이 + 10
+
+        $('body, html').animate(
+          {
+            scrollTop: $(hash).offset().top - tabHeight + 'px',
+          },
+          function () {
+            this.activeCurrentTab($wrap, hash);
+          }.bind(this),
+        );
+      },
+      bindEvents(remoteDeliveryAreaFees) {
         this.$summary
           .on('change', 'select[name="optionSelector"]', this.events.onChangeOptionSelector.bind(this))
           .on('change', 'input[name="orderCnt"]', this.events.onChangeOrderCount.bind(this))
@@ -182,18 +247,25 @@ $(() => {
           .on('keyup', 'input', this.events.onKeyUpTextOptionInput.bind(this))
           .on('click', '#btnToggleTextOptionMode', this.events.onClickTextOptionMode.bind(this))
           .on('click', '#orderCountBtns', this.events.onClickOrderCountBtns.bind(this))
+          .on('click', '#bottomBuyBox', this.events.openPurchaseLayer.bind(this))
           .on('click', '#purchaseBtns', this.events.onClickPurchaseBtns.bind(this))
-          .on('click', '#deleteOption', this.events.onClickDeleteOption.bind(this))
+          .on('click', '.detail_apply_del', this.events.onClickDeleteOption.bind(this))
           .on('click', '#downloadCoupon', this.events.onClickDownloadCoupon.bind(this))
-          .on('click', '#additionalDeliveryFee', this.events.onClickAdditionalDeliveryFee.bind(this));
+          .on('click', '.share_btn_box', this.events.onClickWishOrShare.bind(this))
+          .on('click', '.js_lys_close', this.events.closeShareLayer)
+          .on('click', '.st_buy_close', this.events.closeBuyLayer)
+          .on('click', '#additionalDeliveryFee', () =>
+            displayHelper.onClickAdditionalDeliveryFee(remoteDeliveryAreaFees),
+          );
 
         $('.item_photo_big').on('click', this.events.onClickMainImage.bind(this));
+        $('#tabInfo').on('click', this.setLocTop.bind(this));
       },
       events: {
         onChangeOptionSelector({ target }) {
           const data = $(target).data();
           const selectedDepth = Number(data.depth);
-          const $option = $($('.optionSelector option:selected')[selectedDepth]);
+          const $option = $($('#optionSelector option:selected')[selectedDepth]);
 
           try {
             const currentSelectedOptionCount = this.option.selectedOptions.length;
@@ -206,7 +278,6 @@ $(() => {
             }
 
             this.renderOptionSelector();
-            displayHelper.optionSelector(selectedDepth, selectedOptionIndex);
           } catch (error) {
             util.alertFailMsg(error);
           }
@@ -215,7 +286,7 @@ $(() => {
           const $target = $(target);
           if (!$target.val()) return;
 
-          const optionNo = Number($target.closest('tr').data('option-no'));
+          const optionNo = Number($target.closest('.option_selected').data('option-no'));
           this.option.changeOrderCount('custom', optionNo, Number($target.val()));
           this.renderOptionSelector();
         },
@@ -224,10 +295,9 @@ $(() => {
           const inputMatchingType = $target.data('option-matching-type');
           if (!inputMatchingType) return;
 
-          const inputNo = Number($target.closest('dl').data('text-input-no'));
-          const optionNo = Number($target.closest('dl').data('option-no'));
+          const inputNo = Number($target.attr('name'));
+          const optionNo = Number($target.closest('.option_selected').data('option-no'));
           this.option.changeTextOption(inputMatchingType, optionNo, inputNo, $target.val(), $target.data('index'));
-          this.renderSelectedOptions();
         },
         onKeyUpTextOptionInput({ target }) {
           if (target.value.length > 100) {
@@ -244,14 +314,25 @@ $(() => {
           this.option.drawAmountTextOption(optionNo, textInputNo, orderCnt);
           this.renderSelectedOptions();
         },
-
         onClickOrderCountBtns({ target }) {
           const actionType = util.actionType(target);
-          const optionNo = Number($(target).closest('tr').data('option-no'));
+          const optionNo = Number($(target).closest('.option_selected').data('option-no'));
           if (!actionType) return;
 
           this.option.changeOrderCount(actionType, optionNo);
           this.renderSelectedOptions();
+        },
+        openPurchaseLayer({ target, currentTarget }) {
+          const actionType = util.actionType(target);
+          if (!actionType) return;
+          if (actionType === 'buy' || actionType === 'cart') {
+            $('.st_buy_content').removeClass('hidden');
+            $(currentTarget).addClass('hidden');
+          }
+        },
+        closeBuyLayer({ currentTarget }) {
+          $(currentTarget).closest('.st_buy_content').addClass('hidden');
+          $('#bottomBuyBox').removeClass('hidden');
         },
         onClickPurchaseBtns({ target }) {
           const actionType = util.actionType(target);
@@ -263,15 +344,12 @@ $(() => {
             case 'createOrder':
               this.createOrder();
               break;
-            case 'wish':
-              this.addWishes();
-              break;
             default:
               break;
           }
         },
         onClickDeleteOption({ target }) {
-          const optionNo = Number($(target).closest('tr').data('option-no'));
+          const optionNo = Number($(target).closest('.option_selected').data('option-no'));
           this.option.deleteSelectedOption(optionNo);
           this.renderSelectedOptions();
         },
@@ -283,10 +361,6 @@ $(() => {
             shopby.alert('로그인 후 서비스를 이용하실 수 있습니다.', () => shopby.goLogin(location.href));
           }
         },
-        onClickAdditionalDeliveryFee(event) {
-          event.preventDefault();
-          displayHelper.toggleDeliveryFeeLayer();
-        },
         onClickMainImage(event) {
           event.preventDefault();
           const src = event.target.src;
@@ -294,6 +368,23 @@ $(() => {
             const imageObjectList = [{ imageUrl: src }];
             shopby.popup('slide-images', { imageObjectList });
           }
+        },
+        onClickWishOrShare({ target }) {
+          const actionType = util.actionType(target);
+          if (!actionType) return;
+          switch (actionType) {
+            case 'wish':
+              this.addWish();
+              break;
+            case 'share':
+              this.openShareLayer();
+              break;
+            default:
+              break;
+          }
+        },
+        closeShareLayer() {
+          $('.ly_share').hide();
         },
       },
 
@@ -361,11 +452,11 @@ $(() => {
         try {
           this.option.validate();
           const isSuccess = await shopby.helper.cart.addCart(this.requestForCartAndOrder);
+
           if (!isSuccess) return;
-          await shopby.helper.cart.updateCartCount(true);
+          shopby.helper.cart.updateCartCount(true);
           const confirmOption = {
-            message:
-              '<p style="text-align: center;"><strong>상품이 장바구니에 담겼습니다.</strong></br>바로 확인하시겠습니까?</p>',
+            message: '<strong>상품이 장바구니에 담겼습니다.</strong></br>바로 확인하시겠습니까?',
             iconType: 'cart',
           };
           const afterAdding = ({ state }) => {
@@ -398,34 +489,37 @@ $(() => {
         }
       },
 
-      addWishes() {
+      addWish() {
         shopby.logined() ? this.toggleLiked() : util.confirmGoToLogin();
       },
       async toggleLiked() {
         const requestBody = { productNos: [productNo] };
         const { data } = await shopby.api.product.postProfileLikeProducts({ requestBody });
+        const isLiked = data[0].result;
+        this.renderLiked(isLiked);
+      },
 
-        const $wishBtn = this.$summary.find('#wishBtn');
-        const prevLiked = $wishBtn.hasClass('on');
-        const currLiked = data[0] ? data[0].result : prevLiked;
-
-        this.renderLiked(currLiked);
+      openShareLayer() {
+        $('.ly_share').show();
       },
     },
 
-    // 상품상세/기본정보/정보제공고시
+    // 상품상세 & 정보제공고시
     detail: {
       $detail: $container.find('#detail'),
-      initiate(data) {
-        this.render(data);
+      initiate(detailData) {
+        this.render(detailData);
         this.bindEvents();
       },
-      render(data) {
-        this.$detail.render(data);
+      render(detailData) {
+        //todo showsDetailInfo 옵션 이미지 확인
+        this.$detail.render(detailData);
         displayHelper.slickRelatedProducts();
+        displayHelper.showMoreDetailBtn();
       },
       bindEvents() {
         $('.sb_optionImageItem').on('click', this.onClickImageArea.bind(this));
+        $('.btn_more_detail').on('click', this.onClickMoreDetail.bind(this));
       },
       async onClickImageArea(event) {
         event.preventDefault();
@@ -452,20 +546,42 @@ $(() => {
           value,
         }));
       },
-    },
-
-    // 배송/반품/교환
-    exchange: {
-      $exchange: $container.find('#exchange'),
-      initiate(data) {
-        this.render(data);
-      },
-      render(data) {
-        this.$exchange.render(data);
+      onClickMoreDetail({ currentTarget }) {
+        $('.detail_explain_box').css('height', '100%');
+        $(currentTarget).hide();
       },
     },
 
-    // 상품후기
+    //기본정보 ( 기본정보, 배송/교환/반품 정보)
+    basic: {
+      $basic: $container.find('#basic'),
+      initiate(basicData) {
+        this.render(basicData);
+        this.bindEvents(basicData.remoteDeliveryAreaFees);
+      },
+      render(basicData) {
+        const { deliveryGuide, exchangeGuide, afterServiceGuide, refundGuide } = basicData;
+        const hasGuide = deliveryGuide || exchangeGuide || afterServiceGuide || refundGuide ? true : false;
+        this.$basic.render({ ...basicData, hasGuide });
+      },
+      bindEvents(remoteDeliveryAreaFees) {
+        $('#basic')
+          .on('click', '.openblock_header', this.onClickBasicInfo.bind(this))
+          .on('click', '#additionalDeliveryFee', () =>
+            displayHelper.onClickAdditionalDeliveryFee(remoteDeliveryAreaFees),
+          );
+      },
+      onClickBasicInfo({ currentTarget }) {
+        if ($(currentTarget).hasClass('arrow_down')) {
+          $(currentTarget).siblings('.openblock_content').removeClass('hidden');
+          $(currentTarget).removeClass('arrow_down').addClass('arrow_up');
+        } else {
+          $(currentTarget).siblings('.openblock_content').addClass('hidden');
+          $(currentTarget).removeClass('arrow_up').addClass('arrow_down');
+        }
+      },
+    },
+
     review: {
       $review: $container.find('#review'),
       reviews: [],
@@ -475,15 +591,9 @@ $(() => {
       reviewCommentsInfo: {}, // {reviewNo: { page:1 -> 리뷰더보기 누를 경우 1씩 증가, content: [리뷰 데이터 (페이지 증가 시 데이터 추가)]}}
       photoReviews: {},
       photoReviewParam: {},
-      sortType: {
-        best: 'BEST',
-        register: 'REGISTER',
-        desc: 'DESC',
-        asc: 'ASC',
-        recommend: 'RECOMMEND',
-      },
+      MAX_PHOTO_REVIEW_SIZE: 3,
       initiate(data) {
-        this.reviewPage = new shopby.pagination(this.searchReviews.bind(this), '#reviewPagination', 5, false);
+        this.reviewPage = new shopby.readMore(this.appendReviews.bind(this), '#btnReviewsMore', 5);
         this.reviewable = data.reviewable;
         this.reviewableProducts = data.item;
         this.render(data);
@@ -493,34 +603,32 @@ $(() => {
         $(this.$review.find('#reviewTit')).text(data.config.name);
         this.renderReviews(data);
       },
-
-      async renderReviews(reviews, onlyPhotos, sortType = this.sortType.best) {
+      async renderReviews(reviews, onlyPhotos, selectedOrder) {
         if (!reviews) {
-          const results = await this.fetchReviewDefaultData(onlyPhotos);
+          const results = await this.fetchReviewDefaultData(onlyPhotos, selectedOrder);
           reviews = generateData.review(...results, null, onlyPhotos);
           this.reviewable = reviews.reviewable;
           this.reviewableProducts = reviews.item;
         } else {
           this.reviewableProducts = reviews.item;
+          this.$review.find('#writeReview-wrap').render({ reviewable: reviews.reviewable });
         }
-
-        this.reviewPage.render(reviews.totalCount || 1);
-        this.$review.find('.reviewTotalCount').text(reviews.totalCount);
         this.$review.find('#reviewList').render(reviews);
+        this.reviewPage.render(reviews.totalCount);
+        this.renderTabCount(reviews);
         this.$review.find('#reviewsViewType').render({ onlyPhotos });
-        this.$review.find('#writeReview').toggle(this.reviewable);
-
         if (reviews.photoReviews) {
           this.$review.find('#photoReviews').render(reviews.photoReviews);
-          this.$review.find('#sortReviews').render({ ...reviews.photoReviews, sortType });
+          this.$review.find('#sortReviews').render(reviews.photoReviews);
         }
-
         this.reviews = reviews.items;
         this.photoReviews = reviews.photoReviews;
         this.setReviewCommentsInfo(reviews.items);
-        shopby.product.view.inquiry.updateCounterTab();
       },
-
+      async renderTabCount(reviews) {
+        const { data: inquiries } = await shopby.product.view.inquiry.fetchInquires();
+        shopby.product.view.renderTabInfo(reviews, inquiries);
+      },
       renderComment(commentData, $reviewComment) {
         this.$review.find('#moreComments').remove();
         $reviewComment.find('#reviewComments').render(commentData);
@@ -532,33 +640,19 @@ $(() => {
           ...reviews.map(({ reviewNo }) => ({ [reviewNo]: { page: FIRST_PAGE, contents: [] } })),
         );
       },
-      async searchReviews(event) {
-        event && event.preventDefault();
-        await this.renderReviews();
-        const orderBy = getUrlParam('orderBy');
-        const orderDirection = getUrlParam('orderDirection');
-        const sortBtnArr = this.$review.find('#sortReviews').children();
 
-        for (let i = 0; i < sortBtnArr.length; i = i + 1) {
-          sortBtnArr[i].classList.remove('on');
-          if (sortBtnArr[i].dataset.orderBy === orderBy && sortBtnArr[i].dataset.orderDirection === orderDirection) {
-            sortBtnArr[i].classList.add('on');
-          }
-        }
+      async appendReviews() {
+        const results = await this.fetchReviewDefaultData();
+        const reviews = generateData.review(...results, null);
+        if (reviews.totalCount === 0) return;
+        this.reviewPage.render(reviews.totalCount);
+        const compiled = Handlebars.compile($('#reviewListTemplate').html());
+        const appendHtml = $(compiled({ ...reviews })).find('li');
+        $('#reviewList ul').append(appendHtml);
       },
-      fetchReviews(onlyPhotos) {
-        const request = this.getRequestForReview(onlyPhotos);
+      fetchReviews(onlyPhotos, selectedOrder) {
+        const request = this.getRequestForReview(onlyPhotos, selectedOrder);
         return shopby.api.display.getProductsProductNoProductReviews(request);
-      },
-      fetchReviewsConfigurations() {
-        return shopby.api.display.getProductReviewsConfigurations();
-      },
-      fetchPhotoReviews(maxPhotoReviewSize = 7) {
-        this.photoReviewParam = {
-          pathVariable: { productNo },
-          queryString: { hasTotalCount: true, pageNumber: 1, pageSize: maxPhotoReviewSize },
-        };
-        return shopby.api.display.getProductsProductNoPhotoReviews(this.photoReviewParam);
       },
       fetchReviewableInfo() {
         if (shopby.logined()) {
@@ -575,30 +669,47 @@ $(() => {
           return new Promise(resolve => resolve(guestReviewableInfo));
         }
       },
-      async fetchReviewDefaultData(onlyPhotos) {
+      fetchReviewsConfigurations() {
+        return shopby.api.display.getProductReviewsConfigurations();
+      },
+      fetchPhotoReviews() {
+        this.photoReviewParam = {
+          pathVariable: { productNo },
+          queryString: { hasTotalCount: true, pageNumber: 1, pageSize: this.MAX_PHOTO_REVIEW_SIZE },
+        };
+        return shopby.api.display.getProductsProductNoPhotoReviews(this.photoReviewParam);
+      },
+      async fetchReviewDefaultData(onlyPhotos, selectedOrder) {
         const fetchData = await Promise.all([
           this.fetchReviewableInfo(),
           this.fetchProductsProductNoReviewableOptions(),
-          this.fetchReviews(onlyPhotos),
+          this.fetchReviews(onlyPhotos, selectedOrder),
           this.fetchReviewsConfigurations(),
           this.fetchPhotoReviews(),
         ]);
         return fetchData.map(({ data }) => data);
       },
-      fetchReviewRecommend(reviewNo, isRecommend) {
-        const onlyPhotos = this.$review.find('#filterReviewsByViewType').hasClass('on');
-        const sortType = this.$review.find('#sortReviews').find('.on').data('sort-type');
+      async postReviewRecommend(request) {
+        await shopby.api.display.postProductsProductNoProductReviewsReviewNoRecommend(request);
+      },
+      async deleteReviewRecommend(request) {
+        await shopby.api.display.deleteProductsProductNoProductReviewsReviewNoRecommend(request);
+      },
+      getReview(reviewNo) {
+        return shopby.api.display.getProductsProductNoProductReviewsReviewNo({
+          pathVariable: { productNo, reviewNo },
+        });
+      },
+      async changeReviewRecommendStatus(reviewNo, isRecommend, $target) {
         const request = {
           pathVariable: {
             productNo,
             reviewNo,
           },
         };
-        isRecommend
-          ? shopby.api.display.postProductsProductNoProductReviewsReviewNoRecommend(request)
-          : shopby.api.display.deleteProductsProductNoProductReviewsReviewNoRecommend(request);
-
-        this.renderReviews('', onlyPhotos, sortType);
+        isRecommend ? await this.postReviewRecommend(request) : await this.deleteReviewRecommend(request);
+        const { data } = await this.getReview(reviewNo);
+        $target.find('.recommendCnt').text(data.recommendCnt);
       },
       generateCommentData(contents, totalCount) {
         const hasMoreCommentsBtn = totalCount - contents.length > 0;
@@ -638,6 +749,7 @@ $(() => {
           };
           return new Promise(resolve => resolve(reviewableOptions));
         }
+
         const request = {
           pathVariable: {
             productNo,
@@ -647,11 +759,11 @@ $(() => {
       },
       bindEvents() {
         this.$review
-          .on('click', '#filterReviewsByViewType', this.events.onClickFilterReviewsByViewType.bind(this))
+          .on('click', '#reviewsViewType', this.events.onClickFilterReviewsByViewType.bind(this))
           .on('click', '#writeReview', this.events.onClickWriteReview.bind(this))
-          .on('click', '#sortReviews a', this.events.onClickSortReviews.bind(this))
+          .on('change', '#sortReviews', this.events.onClickSortReviews.bind(this))
           .on('click', '#reviewList', this.events.onClickReviewList.bind(this))
-          .on('click', '#attachImageBox', this.events.onClickAttachImage.bind(this))
+          .on('click', '#attachImage', this.events.viewAttahments.bind(this))
           .on('click', '#reviewThumbs', this.events.onClickReviewThumbs.bind(this));
       },
       events: {
@@ -676,32 +788,32 @@ $(() => {
           helper.review.openReviewLayer.apply(this, [option]);
         },
         async onClickSortReviews(event) {
-          event.preventDefault();
-          const $target = $(event.target);
+          const $target = $(event.target).find('option:selected');
           const orderBy = $target.data('order-by');
           const orderDirection = $target.data('order-direction');
-          shopby.utils.pushState({ productNo, ...$target.data() }, '상품상세');
+          const selectedOrder = { orderBy, orderDirection };
           this.reviewPage.pageNumber = 1;
-          await this.renderReviews();
+          await this.renderReviews(null, null, selectedOrder);
 
           const sortBtnArr = this.$review.find('#sortReviews').children();
           for (let i = 0; i < sortBtnArr.length; i = i + 1) {
-            sortBtnArr[i].classList.remove('on');
             if (sortBtnArr[i].dataset.orderBy === orderBy && sortBtnArr[i].dataset.orderDirection === orderDirection) {
-              sortBtnArr[i].classList.add('on');
+              sortBtnArr[i].selected = true;
+              break;
             }
           }
         },
         onClickReviewList(event) {
+          event.stopPropagation();
           event.preventDefault();
           const $target = $(event.target);
           const actionType = $target.data('action-type') || $target.parents().data('action-type');
           const reviewNo = $target.closest('li').data('review-no');
           const givenAccumulation = $target.closest('li').data('given-accumulation');
-
           switch (actionType) {
             case 'viewMoreReviews':
-              $target.closest('.reviews_list_con').toggleClass('on').find('.txt_more').toggle();
+              $target.closest('li').toggleClass('on').find($target).toggleClass('on');
+              $target.toggleClass('on');
               break;
             case 'modifyReview':
               this.modifyReview(reviewNo);
@@ -710,7 +822,7 @@ $(() => {
               this.deleteReview(reviewNo, givenAccumulation);
               break;
             case 'reviewRecommend':
-              this.recommendReview(reviewNo, $target);
+              this.recommendReview(reviewNo, event, $target);
               break;
             case 'reviewComment':
               this.showComment(reviewNo, $target);
@@ -722,13 +834,23 @@ $(() => {
               break;
           }
         },
-        onClickAttachImage({ target }) {
-          const targetReviewNo = $(target).closest('li').data('review-no');
-          const review = this.reviews.find(({ reviewNo }) => reviewNo === targetReviewNo);
-          const attachImages = review.fileUrls.map(fileUrl => ({
-            imageUrl: fileUrl,
-          }));
-          this.openSlideImagesPopup(attachImages, target);
+
+        async viewAttahments({ target }) {
+          const result = await this.fetchReviews();
+          const { items } = result.data;
+
+          const attachImages = items
+            .find(({ reviewNo }) => reviewNo === $(target).closest('li').data('review-no'))
+            .fileUrls.map(fileUrl => ({
+              imageUrl: fileUrl,
+              originName: '',
+            }));
+
+          shopby.popup('slide-images', {
+            title: '첨부파일',
+            imageObjectList: attachImages,
+            clickedImageIndex: $(target.closest('.uploadFile-item')).data('index'),
+          });
         },
         onClickReviewThumbs({ target }) {
           const $target = $(target);
@@ -757,13 +879,6 @@ $(() => {
         const SECONDS_LENGTH = 3;
         return ydmt.substring(0, ydmt.length - SECONDS_LENGTH);
       },
-      openSlideImagesPopup(attachImages, target) {
-        shopby.popup('slide-images', {
-          title: '첨부파일',
-          imageObjectList: attachImages,
-          clickedImageIndex: $(target).closest('.writer_comment_img').index(),
-        });
-      },
       modifyReview(selectedReviewNo) {
         const review = this.reviews.find(({ reviewNo }) => reviewNo === selectedReviewNo);
         const option = helper.review.generateReviewOptionForUpdatingLayer(review, true);
@@ -781,7 +896,6 @@ $(() => {
           await shopby.api.display.deleteProductsProductNoProductReviewsReviewNo({ pathVariable });
           shopby.alert('삭제되었습니다.', () => this.renderReviews());
         };
-
         if (givenAccumulation === 'Y') {
           shopby.confirm(
             { message: '삭제 시 재작성이 불가하며, 지급된 적립금이 차감됩니다. 삭제하시겠습니까?' },
@@ -797,20 +911,22 @@ $(() => {
       isCheckedElement($target) {
         return $target.hasClass('on');
       },
-      recommendReview(reviewNo, $target) {
+      recommendReview(reviewNo, event, $target) {
         if (!shopby.logined()) {
+          event.preventDefault();
           shopby.alert({ message: '로그인 후 이용할 수 있습니다.' });
           return;
         }
         const $targetParents = $target.closest('#reviewRecommendParents');
         this.toggleElement($targetParents);
         const isRecommend = this.isCheckedElement($targetParents);
-        this.fetchReviewRecommend(reviewNo, isRecommend);
+        $targetParents.closest('label').find('input').attr('checked', isRecommend);
+        this.changeReviewRecommendStatus(reviewNo, isRecommend, $targetParents);
       },
       async showComment(reviewNo, $target) {
-        this.toggleElement($target.parent());
+        this.toggleElement($target);
         const $targetReview = $target.closest('li');
-        const checked = this.isCheckedElement($target.parent());
+        const checked = this.isCheckedElement($target);
         $target.closest('label').find('input').attr('checked', checked);
         if (checked) {
           this.resetCommentsPageInfo(reviewNo);
@@ -832,9 +948,8 @@ $(() => {
           const onlyPhotos = this.$review.find('#filterReviewsByViewType').hasClass('on');
           this.renderReviews('', onlyPhotos);
         };
-        //view페이지 디자인상 pageSize를 7개 하는게 맞으나
-        //팝업을 호출할 시 슬라이드가 계속 넘어가게 해야함으로 9999로 설정함
         this.photoReviewParam.queryString.pageSize = 9999;
+
         shopby.popup(
           'photo-review-detail',
           {
@@ -843,6 +958,9 @@ $(() => {
             hasCloseBtn: true,
             type: 'photoReviews',
             parameter: this.photoReviewParam,
+            productReviewConfig: { name: '상세 후기' },
+            onlyDisplayedReviews: true,
+            totalPage: this.photoReviews.totalCount,
           },
           popupCallback.bind(this),
         );
@@ -850,9 +968,9 @@ $(() => {
       async openPhotoReviewsPopup() {
         shopby.popup('photo-reviews', { productNo });
       },
-      getRequestForReview(hasAttachmentFile = false) {
-        const orderBy = getUrlParam('orderBy') || 'BEST_REVIEW';
-        const orderDirection = getUrlParam('orderDirection') || 'DESC';
+      getRequestForReview(hasAttachmentFile = false, selectedOrder) {
+        const orderBy = (selectedOrder && selectedOrder.orderBy) || 'BEST_REVIEW';
+        const orderDirection = (selectedOrder && selectedOrder.orderDirection) || 'DESC';
         return {
           pathVariable: {
             productNo,
@@ -870,14 +988,11 @@ $(() => {
       },
     },
 
-    // 상품문의
     inquiry: {
       $inquiry: $container.find('#inquiry'),
       inquiryPage: null,
-      totalCount: 0,
       initiate(data) {
-        this.inquiryPage = new shopby.pagination(this.searchInquiries.bind(this), '#inquiryPagination', 5, false);
-        this.totalCount = data.totalCount;
+        this.inquiryPage = new shopby.readMore(this.appendInquiries.bind(this), '#btnInquiriesMore', 5);
         this.render(data);
         this.bindEvents();
       },
@@ -885,26 +1000,28 @@ $(() => {
         return shopby.api.display.getProductsProductNoInquires(this.requestForInquiry);
       },
       render(data) {
-        this.inquiryPage.render(data.totalCount || 1);
+        this.inquiryPage.render(data.totalCount);
 
         $(this.$inquiry.find('#inquiryTit')).text(data.config.name);
         this.$inquiry.data('guestPostingUsed', data.config.guestPostingUsed);
         this.renderInquiries(data);
-
-        displayHelper.toggleRelatedProducts(data.relatedProducts && data.relatedProducts.length > 0, data);
       },
       async renderInquiries(inquiries) {
         if (!inquiries) {
           const { data } = await this.fetchInquires();
           inquiries = {
             totalCount: data.totalCount,
-            inquiries: data.items,
+            items: data.items,
           };
         }
-        this.inquiryPage.render(inquiries.totalCount || 1);
+        this.renderTabCount(inquiries);
+        this.inquiryPage.render(inquiries.totalCount);
         this.$inquiry.find('.inquiryTotalCount').text(inquiries.totalCount);
-        this.$inquiry.find('#inquiriesTable').render(inquiries);
-        this.updateCounterTab();
+        this.$inquiry.find('#inquiries').render(inquiries);
+      },
+      async renderTabCount(inquiries) {
+        const { data: reviews } = await shopby.product.view.review.fetchReviews();
+        shopby.product.view.renderTabInfo(reviews, inquiries);
       },
       bindEvents() {
         this.$inquiry.on('click', '#inquiryContainer', this.events.onClickInquiryTable.bind(this));
@@ -914,10 +1031,9 @@ $(() => {
           event.preventDefault();
           const $target = $(event.target);
           const actionType = $target.data('action-type') || $target.parents().data('action-type');
-
           if (!actionType) return;
 
-          const inquiryNo = $target.closest('tr').data('inquiry-no');
+          const inquiryNo = $target.closest('li').data('inquiry-no');
           switch (actionType) {
             case 'viewMore':
               this.viewMore($target);
@@ -936,30 +1052,15 @@ $(() => {
           }
         },
       },
-      async fetchProducts() {
-        try {
-          const { data } = await shopby.api.product.getProductsProductNo({ pathVariable });
-          return data;
-        } catch (e) {
-          console.error(e);
-        }
-      },
-      async updateCounterTab() {
-        const { counter, deliveryGuide, refundGuide, afterServiceGuide, exchangeGuide } = await this.fetchProducts();
-        const hasGuide = deliveryGuide || refundGuide || afterServiceGuide || exchangeGuide ? true : false;
-
-        counter.inquiryCnt = this.inquiry.totalCount;
-        shopby.product.view.renderTabs(counter, hasGuide);
-      },
       viewMore($target) {
-        const { secreted, myInquiry } = $target.closest('tr').data();
+        const { secreted, myInquiry } = $target.closest('li').data();
 
         if (secreted && !myInquiry) {
           shopby.alert('비밀글 조회 권한이 없습니다');
           return;
         }
-        $target.closest('.inquiry_list_con').toggleClass('on').closest('.answer').toggle();
-        $target.closest('.inquiry_list_con').find('.answer').toggle();
+        $target.closest('li').toggleClass('on').find($target).toggleClass('on');
+        $target.closest('li').find('.answer').toggle();
       },
       afterUpdatingInquiry({ state }) {
         state === 'ok' && this.renderInquiries();
@@ -971,13 +1072,12 @@ $(() => {
           util.confirmGoToLogin();
         } else {
           const option = helper.inquiry.generateInquiryOptionForUpdatingLayer();
-
           shopby.popup('product-inquiry', option, this.afterUpdatingInquiry.bind(this));
         }
       },
       modifyInquiry($target) {
         const openModifyingLayer = ({ state }) => {
-          const data = $target.closest('tr').data();
+          const data = $target.closest('li').data();
           const option = helper.inquiry.generateInquiryOptionForUpdatingLayer(data);
 
           if (state !== 'ok') return;
@@ -997,10 +1097,17 @@ $(() => {
 
         shopby.confirm({ message: '해당 상품문의를 삭제하시겠습니까?' }, deleteInquiry);
       },
-      searchInquiries(event) {
-        event && event.preventDefault();
-        this.renderInquiries();
+      async appendInquiries() {
+        const result = await this.fetchInquires();
+        const { items, totalCount } = result.data;
+        if (totalCount === 0) return;
+
+        this.inquiryPage.render(totalCount);
+        const compiled = Handlebars.compile($('#inquiriesTemplate').html());
+        const appendHtml = $(compiled({ items })).find('li');
+        $('#inquiries ul').append(appendHtml);
       },
+
       get requestForInquiry() {
         const START_YMD = '1000-01-01';
         const END_YMD = '9999-12-30';
@@ -1009,6 +1116,7 @@ $(() => {
             productNo,
           },
           queryString: {
+            productNo,
             pageNumber: (this.inquiryPage && this.inquiryPage.pageNumber) || 1,
             pageSize: (this.inquiryPage && this.inquiryPage.pageSize) || 5,
             hasTotalCount: true,
@@ -1027,11 +1135,10 @@ $(() => {
       const { contentsIfPausing, additionDiscountAmt, immediateDiscountAmt, salePrice: originPrice } = price;
       const totalDiscount = additionDiscountAmt + immediateDiscountAmt;
       const salePrice = originPrice - totalDiscount;
-      const shouldShowContentsIfPausing = status.saleStatusType === 'STOP' && contentsIfPausing;
-
-      const { getCouponRateAndPrice, getDeliveryLabels, checkUnablePurchasing } = helper.summary;
+      const shouldShowContentsIfPausing = status.saleStatusType === 'STOP' && contentsIfPausing !== '';
+      const { getCouponRateAndPrice, getDeliveryLabels, checkUnablePurchasing } = helper.product;
       const { couponRate, priceWithCoupon } = getCouponRateAndPrice(price);
-      const deliveryLabels = getDeliveryLabels.apply(helper.summary, [product.deliveryFee]);
+      const deliveryLabels = getDeliveryLabels.apply(helper.product, [product.deliveryFee]);
       const isUnablePurchasing = checkUnablePurchasing(product, options.flatOptions);
       const { naverPayHandling } = product.limitations;
 
@@ -1059,19 +1166,31 @@ $(() => {
     detail(product, images, option) {
       const { baseInfo } = product;
       const dutyInfo = JSON.parse(baseInfo.dutyInfo);
-      const { showsDetailInfo, showsBasicInfo, showsDutyInfo, optionImages, mapDutyInfoContents } = helper.detail;
+      const { showsDetailInfo, showsDutyInfo, optionImages, mapDutyInfoContents } = helper.product;
       return {
         ...baseInfo,
         dutyInfoContents: mapDutyInfoContents(dutyInfo.contents),
         showsDetailInfo: showsDetailInfo(baseInfo),
-        showsBasicInfo: showsBasicInfo(baseInfo),
         showsDutyInfo: showsDutyInfo(dutyInfo),
         optionImages: optionImages(images, option.flatOptions),
       };
     },
-    exchange(product) {
-      const keys = ['deliveryGuide', 'refundGuide', 'afterServiceGuide', 'exchangeGuide'];
-      return shopby.utils.pickObjectByKeys(product, keys);
+    basic(product) {
+      const { baseInfo, deliveryGuide, exchangeGuide, afterServiceGuide, refundGuide, deliveryFee } = product;
+      const { getDeliveryLabels } = helper.product;
+      const deliveryLabels = getDeliveryLabels.apply(helper.product, [product.deliveryFee]);
+
+      return {
+        ...baseInfo,
+        deliveryGuide,
+        exchangeGuide,
+        afterServiceGuide,
+        refundGuide,
+        remoteDeliveryAreaFees: deliveryFee && deliveryFee.remoteDeliveryAreaFees,
+        deliveryFeeLabel: deliveryLabels && deliveryLabels.deliveryFeeLabel,
+        deliveryLabel: deliveryLabels && deliveryLabels.deliveryLabel,
+        conditionLabel: deliveryLabels && deliveryLabels.conditionLabel,
+      };
     },
     review(
       reviewableInfo,
@@ -1093,18 +1212,17 @@ $(() => {
         isLogin: shopby.logined(),
       };
     },
-    inquiry({ items, totalCount }, relatedProducts, config) {
+    inquiry({ items, totalCount }, config) {
       return {
-        inquiries: items,
+        items,
         totalCount,
-        relatedProducts,
         config,
       };
     },
   };
 
   const helper = {
-    summary: {
+    product: {
       getCouponRateAndPrice(priceInfo) {
         const { salePrice, couponDiscountAmt, immediateDiscountAmt } = priceInfo;
 
@@ -1164,15 +1282,10 @@ $(() => {
 
         return !(options && options.length > 0);
       },
-    },
-    detail: {
       showsDetailInfo({ optionImageViewable, content, contentHeader, contentFooter }) {
         return (
           optionImageViewable || [content, contentHeader, contentFooter].some(content => content && content.length > 0)
         );
-      },
-      showsBasicInfo({ placeOriginLabel, placeOriginEtcLabel, expirationYmdt, manufactureYmdt }) {
-        return (placeOriginLabel && placeOriginEtcLabel) || expirationYmdt || manufactureYmdt;
       },
       showsDutyInfo({ contents }) {
         return contents.length > 0;
@@ -1279,42 +1392,33 @@ $(() => {
   const displayHelper = {
     slickMainImages(imageUrls) {
       const $main = $container.find('.item_photo_big');
-      const $list = $container.find('.slider_goods_nav');
 
       $main.slick({
         slidesToShow: 1,
         slidesToScroll: 1,
         arrows: false,
         fade: true,
-        asNavFor: '.slider_goods_nav',
-      });
-
-      $list.slick({
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        asNavFor: '.item_photo_big',
-        dots: false,
-        centerMode: false,
-        focusOnSelect: true,
-        prevArrow: '.slick_goods_prev',
-        nextArrow: '.slick_goods_next',
+        infinite: true,
+        dots: true,
       });
 
       imageUrls.forEach(url => {
         $main.slick('slickAdd', `<span class="img_photo_big"><a><img src="${url}"/></a></span>`);
-        $list.slick('slickAdd', `<span class="img_photo_small"><img src="${url}"/></span>`);
       });
+
+      //todo : 이미지 영역 사이즈 리사이즈
     },
 
     slickRelatedProducts() {
       $container
-        .find('.item_slide_horizontal .slide_horizontal_1')
+        .find('.item_swipe_type ul.slider-wrap')
         .on('init', function () {})
         .slick({
-          draggable: false,
+          arrows: false,
+          draggable: true,
           autoplay: true,
           infinite: true,
-          slidesToShow: 4,
+          slidesToShow: 2,
           slidesToScroll: 1,
         })
         .on('beforeChange', function () {});
@@ -1342,23 +1446,13 @@ $(() => {
       });
     },
 
-    disabledOptionSelector() {
-      $container
-        .find('#optionSelector')
-        .find('select[name="select-option"] option[data-disabled="disabled"]')
-        .prop('disabled', true);
-    },
-
-    toggleDeliveryFeeLayer() {
-      const $deliveryFeeArea = $container.find('#deliveryFeeArea');
-      $deliveryFeeArea.show();
-
-      $container.find('#closeAdditionalDeliveryFeeLayer').on('click', () => $deliveryFeeArea.hide());
+    onClickAdditionalDeliveryFee(remoteDeliveryAreaFees) {
+      shopby.popup('additional-delivery-fee', { remoteDeliveryAreaFees });
     },
 
     toggleRelatedProducts(viewable, data) {
       if (viewable) {
-        $container.find('#relatedProducts').render(data);
+        $container.find('#relatedProducts').render({ relatedProducts: data });
         this.slickRelatedProducts();
       } else {
         $container.find('#relatedProductsTit').hide().siblings().hide();
@@ -1368,6 +1462,14 @@ $(() => {
     isUnablePurchasing(viewable) {
       if (viewable) return;
       $container.find('.item_choice_list, .item_add_option_box').hide();
+    },
+
+    showMoreDetailBtn() {
+      const $detailArea = $('.detail_explain_box');
+      if ($detailArea.height() > 500) {
+        $detailArea.css('height', '500px');
+        $('.btn_more_detail').show();
+      }
     },
   };
 
@@ -1395,26 +1497,6 @@ $(() => {
       } else {
         util.alertFailMsg(error);
       }
-    },
-  };
-
-  const template = {
-    tabs(tabName, counter, hasGuide) {
-      const className = hash => (hash === tabName ? 'on' : '');
-      const { reviewCnt, inquiryCnt } = counter;
-      const guideTab = hasGuide
-        ? `<li class="${className('exchange')}"><a href="#exchangeTab">배송/반품/교환안내</a></li>`
-        : '';
-      return `
-        <li class="${className('detail')}"><a href="#detailTab">상품상세정보</a></li>
-        ${guideTab}
-        <li class="${className(
-          'reviews',
-        )}"><a href="#reviewsTab">상품후기 <strong>(<span class="reviewTotalCount">${reviewCnt}</span>)</strong></a></li>
-        <li class="${className(
-          'inquiries',
-        )}"><a href="#inquiriesTab">상품문의 <strong>(<span class="inquiryTotalCount">${inquiryCnt}</span>)</strong></a></li>
-        `;
     },
   };
 

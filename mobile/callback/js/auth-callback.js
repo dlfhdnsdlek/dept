@@ -1,6 +1,4 @@
 $(() => {
-  const { shopOauthCallback } = window.opener;
-
   shopby.member.auth = {
     async initiate() {
       await this.processAuthCallback();
@@ -10,8 +8,10 @@ $(() => {
       const code = shopby.utils.getUrlParam('code');
       const redirectedToken = shopby.localStorage.getItem(shopby.cache.key.member.oauthToken);
       const redirectedProvider = shopby.localStorage.getItem(shopby.cache.key.member.oauthProvider);
+
       if (!code || !redirectedToken || !redirectedProvider) {
         shopby.alert({ message: '인증 정보가 만료되었습니다.' });
+        shopby.goHome();
         return;
       }
 
@@ -26,20 +26,32 @@ $(() => {
           },
         });
         shopby.cache.setAccessToken(openIdTokenResult.accessToken, openIdTokenResult.expireIn);
-        const { data: profileResult } = await shopby.api.member.getProfile();
-        shopOauthCallback && shopOauthCallback(profileResult);
+
+        const { data: userInfo } = await shopby.api.member.getProfile();
+
+        // isOauthWithdrawalProcess : 회원탈퇴인지 아닌지에 대한 식별자
+        const isOauthWithdrawalProcess = shopby.localStorage.getItemWithExpire(
+          shopby.cache.key.member.isOauthWithdrawalProcess,
+        );
+        if (isOauthWithdrawalProcess) {
+          const { oauthIdNo } = shopby.sessionStorage.getItemWithExpire(shopby.cache.dataKey.profile);
+          if (userInfo.oauthIdNo !== oauthIdNo) {
+            shopby.localStorage.setItem(shopby.cache.key.member.isOauthWithdrawalCompareInfo, true);
+          }
+          window.location.replace('/pages/my/withdrawal.html');
+          return;
+        }
+        shopby.helper.login._openIdAuthCallback(userInfo);
       } catch (error) {
         console.error(error);
-        if (shopOauthCallback) {
-          if (error.code === 'M0020') {
-            shopOauthCallback(null, true);
-          } else {
-            shopby.cache.removeAccessToken();
-            shopOauthCallback();
-          }
+        if (error.code === 'M0020') {
+          //휴면회원
+          shopby.helper.login._openIdAuthCallback(null, true);
+        } else {
+          shopby.cache.removeAccessToken();
+          shopby.helper.login._openIdAuthCallback();
         }
       }
-      window.close();
     },
   };
 

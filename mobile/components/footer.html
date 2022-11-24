@@ -6,41 +6,45 @@
   ~  @since 2021.6.29
   -->
 
-<div id="footer_wrap">
+<div id="footer_wrap" class="invisible">
     <div class="content_info_wrap">
         <div class="content_info">
-            {{#with top}} {{#if boardList.used}}
-            <div class="notice_list" id="footerBoardList">
-                <h3><a href="/pages/board/list.html?boardId={{boardList.boardId}}">{{boardList.name}}</a></h3>
-                <ul>
-                    {{#each articles}}
-                    <li>
-                        <a href="/pages/board/view.html?boardId={{../boardList.boardId}}&articleNo={{articleNo}}&secreted={{secreted}}">{{title}}</a>
-                    </li>
-                    {{/each}}
-                </ul>
-            </div>
-            {{/if}}
-
-            <div class="bank_info">
-                <h3>BANK INFO</h3>
-                {{#if bankAccountInfos}} {{#each bankAccountInfos}}
-                <p>
-                    <span>{{bankName}}</span>
-                    {{bankAccount}}(예금주: {{bankDepositorName}})
-                </p>
-                {{/each}} {{else}}
-                <p>-</p>
+            {{#with top}}
+            <div class="ft_top_con">
+                {{#if boardList.used}}
+                <div class="ft_notice" id="footerBoardList">
+                    <h3><a href="/pages/board/list.html?boardId={{boardList.boardId}}">{{boardList.name}}</a></h3>
+                    <ul>
+                        {{#each articles}}
+                        <li>
+                            <a href="/pages/board/view.html?boardId={{../boardList.boardId}}&articleNo={{articleNo}}&secreted={{secreted}}">{{title}}</a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
                 {{/if}}
-            </div>
-            <div class="cs_center">
-                <h3>CS CENTER</h3>
-                {{#if mall.serviceCenter}}
-                <p>{{mall.serviceCenter.phoneNo}}</p>
-                <p>{{mall.serviceCenter.email}}</p>
-                {{else}}
-                <p>-</p>
-                {{/if}}
+                <div class="ft_slide">
+                    <div class="bank_info">
+                        <h3>BANK INFO</h3>
+                        {{#if bankAccountInfos}} {{#each bankAccountInfos}}
+                        <p>
+                            <span>{{bankName}}</span>
+                            {{bankAccount}}(예금주: {{bankDepositorName}})
+                        </p>
+                        {{/each}} {{else}}
+                        <p>-</p>
+                        {{/if}}
+                    </div>
+                    <div class="cs_center">
+                        <h3>CS CENTER</h3>
+                        {{#if mall.serviceCenter}}
+                        <p>{{mall.serviceCenter.phoneNo}}</p>
+                        <p>{{mall.serviceCenter.email}}</p>
+                        {{else}}
+                        <p>-</p>
+                        {{/if}}
+                    </div>
+                </div>
             </div>
             {{/with}}
         </div>
@@ -49,95 +53,11 @@
         <div class="footer_content">
             <div>
                 {{#with bottom}}
-                <div class="footer_left">
-                    <div class="foot_list">
-                        <ul>
-                            <li>
-                                <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
-                            </li>
-                            <li>
-                                <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- //foot_list -->
-                    <div class="foot_cont">
-                        {{#with business}}
-                        <div class="foot_info">
-                            <p>{{serviceBasicInfo.companyName}} {{serviceBasicInfo.address}} {{ serviceBasicInfo.addressDetail }}</p>
-                            <div class="foot_info_list">
-                                <dl>
-                                    <dt>대표 :</dt>
-                                    <dd>{{serviceBasicInfo.representativeName}}</dd>
-                                </dl>
-                                <dl>
-                                    <dt>사업자등록번호 :</dt>
-                                    <dd>
-                                        {{businessRegistration.no}}
-                                        <a href="{{businessRegistration.url}}" class="btn_licensee_info" target="_blank">사업자번호조회</a>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>통신판매업신고번호 :</dt>
-                                    <dd>{{serviceBasicInfo.onlineMarketingBusinessDeclarationNo}}</dd>
-                                </dl>
-                                <dl>
-                                    <dt>개인정보처리책임자 :</dt>
-                                    <dd>{{serviceBasicInfo.privacyManagerName}}</dd>
-                                </dl>
-                            </div>
-                            <div class="foot_info_list">
-                                <dl>
-                                    <dt>대표번호 :</dt>
-                                    <dd><strong>{{serviceBasicInfo.representPhoneNo}}</strong></dd>
-                                </dl>
-                                <dl>
-                                    <dt>팩스번호 :</dt>
-                                    <dd>{{serviceBasicInfo.faxNo}}</dd>
-                                </dl>
-                                <dl>
-                                    <dt>메일 :</dt>
-                                    <dd>
-                                        <a href="mailto:{{serviceBasicInfo.representEmail}}" class="btn_email">{{serviceBasicInfo.representEmail}}</a>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt></dt>
-                                    <dd>호스트제공 : 엔에이치엔커머스(주)</dd>
-                                </dl>
-                            </div>
-                            <!-- // -->
-                            {{#if since}}
-                            <p class="copyright">Copyright {{since}} {{companyName}} all rights reserved.</p>
-                            {{/if}}
-                        </div>
-                        <div class="foot_certify">
-                            {{#if termsConfig}} {{img termsConfig.fairLogoUrl}} {{/if}} {{#ifEq orderConfig.pgType "INICIS"}} {{{orderConfig.escrow.logo}}}
-                            {{/ifEq}} {{#ifEq orderConfig.pgType "TOSS_PAYMENTS"}}
-                            <a
-                                class="payment_toss"
-                                href="https://pgweb.uplus.co.kr/ms/escrow/s_escrowYn.do?mertid={{orderConfig.escrow.escrowInfoKey}}"
-                                target="_blank"
-                            >
-                                <img src="/assets/img/payments/toss.png" alt="토스" />
-                                <span class="bar"></span>
-                                <img src="/assets/img/payments/escrow.png" alt="에스크로" />
-                            </a>
-                            {{/ifEq}} {{#ifEq orderConfig.pgType "KCP"}}
-                            <a href="https://admin.kcp.co.kr/Modules/escrow/kcp_pop.jsp?site_cd={{orderConfig.escrow.escrowInfoKey}}" target="_blank">
-                                <img src="/assets/img/payments/kcp.png" alt="kcp" />
-                            </a>
-                            {{/ifEq}} {{#if mallSSLSeal}} {{{mallSSLSeal}}} {{/if}}
-                        </div>
-                        {{/with}}
-                    </div>
-                </div>
-                <div class="footer_right">
+                <div class="ft_mid_con">
                     {{#with menu}}
-
-                    <div class="foot_info2">
+                    <div>
                         {{#if about.length}}
-                        <p>ABOUT</p>
+                        <a href="#">ABOUT</a>
                         <ul>
                             {{#each about}} {{#if used}}
                             <li>
@@ -147,9 +67,8 @@
                         </ul>
                         {{/if}}
                     </div>
-
-                    <div class="foot_info2">
-                        <p>MY ACCOUNT</p>
+                    <div>
+                        <a a href="#">MY ACCOUNT</a>
                         <ul>
                             <li>
                                 <a href="/pages/my/modify-member.html">회원정보수정</a>
@@ -162,8 +81,8 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="foot_info2">
-                        <p>MY ORDER</p>
+                    <div>
+                        <a a href="#">MY ORDER</a>
                         <ul>
                             <li>
                                 <a href="/pages/my/orders.html">주문/배송</a>
@@ -176,8 +95,8 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="foot_info2">
-                        <p>HELP</p>
+                    <div>
+                        <a href="#">HELP</a>
                         <ul>
                             {{#if boardsConfig.inquiryConfig.used}}
                             <li>
@@ -199,6 +118,62 @@
                         </ul>
                     </div>
                     {{/with}}
+                </div>
+                <div class="ft_info2_box">
+                    <div class="foot_list">
+                        <ul class="ft_menu">
+                            <li>
+                                <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
+                            </li>
+                            <li>
+                                <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- //foot_list -->
+                    <div class="foot_cont">
+                        {{#with business}}
+                        <div class="ft_address">
+                            대표 : {{serviceBasicInfo.representativeName}} <br />
+                            {{serviceBasicInfo.companyName}} {{serviceBasicInfo.address}} {{serviceBasicInfo.addressDetail}} <br />
+                            사업자등록번호 : {{businessRegistration.no}}
+                            <a href="{{businessRegistration.url}}" class="btn_licensee_info" target="_blank">사업자번호조회</a>
+                            <br />
+                            통신판매업신고번호 : {{serviceBasicInfo.onlineMarketingBusinessDeclarationNo}} <br />
+                            개인정보처리책임자 : {{serviceBasicInfo.privacyManagerName}} <br />
+                            대표번호 : {{serviceBasicInfo.representPhoneNo}} <br />
+                            팩스번호 : {{serviceBasicInfo.faxNo}} <br />
+                            메일 :
+                            <a href="mailto:{{serviceBasicInfo.representEmail}}" class="btn_email">{{serviceBasicInfo.representEmail}}</a>
+                            <br />
+                            호스트제공 : 엔에이치엔커머스(주) <br />
+                        </div>
+                        {{#if since}}
+                        <address class="ft_copy">Copyright {{since}} {{companyName}} all rights reserved.</address>
+                        {{/if}}
+                        <div class="foot_certify">
+                            {{#if termsConfig}} {{img termsConfig.fairLogoUrl}} {{/if}} {{#ifEq orderConfig.pgType "INICIS"}} {{{orderConfig.escrow.logo}}}
+                            {{/ifEq}} {{#ifEq orderConfig.pgType "TOSS_PAYMENTS"}}
+                            <a
+                                class="payment_toss"
+                                href="https://pgweb.uplus.co.kr/ms/escrow/s_escrowYn.do?mertid={{orderConfig.escrow.escrowInfoKey}}"
+                                target="_blank"
+                            >
+                                <img src="/assets/img/payments/toss.png" alt="토스" />
+                                <span class="bar"></span>
+                                <img src="/assets/img/payments/escrow.png" alt="에스크로" />
+                            </a>
+                            {{/ifEq}} {{#ifEq orderConfig.pgType "KCP"}}
+                            <a href="https://admin.kcp.co.kr/Modules/escrow/kcp_pop.jsp?site_cd={{orderConfig.escrow.escrowInfoKey}}" target="_blank">
+                                <img src="/assets/img/payments/kcp.png" alt="kcp" />
+                            </a>
+                            {{/ifEq}} {{#if mallSSLSeal}} {{{mallSSLSeal}}} {{/if}}
+                        </div>
+                        {{/with}}
+                    </div>
+                    <div class="foot_wrap_shortcut">
+                        <button class="foot_shortcut">{{ business.mall.mallName }} 바로가기 아이콘 추가</button>
+                    </div>
                 </div>
                 {{/with}}
             </div>

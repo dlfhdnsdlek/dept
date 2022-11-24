@@ -3,7 +3,7 @@
  *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  *  @author hyeyeon-park
- *  @since 2021.7.2
+ *  @since 2021.7.29
  */
 
 (() => {
@@ -25,7 +25,7 @@
     }
 
     bindEvents() {
-      this.$el.on('click', '.btn_confirm', this.checkPassword.bind(this)).on('keyup', 'input[name="password"]', key => {
+      this.$el.on('click', '#btnConfirm', this.checkPassword.bind(this)).on('keyup', 'input[name="password"]', key => {
         if (key.code === 'Enter') {
           this.checkPassword();
         }

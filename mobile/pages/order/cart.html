@@ -1,8 +1,16 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~ @author JongKeun Kim
+  ~ @since 2021.8.6
+  -->
+
 <!DOCTYPE html>
 <html lang="ko">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
         <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
@@ -18,299 +26,253 @@
     <body>
         <script id="cartOptionsTemplate" type="text/x-handlebars-template">
             {{#each options}}
-            <dl data-depth="{{@index}}" name="optionSelectBox">
-                <dt>{{safeString label}}</dt>
-                <dd>
-                    <select can-change-option="true" data-selected-index="{{selectedIndex}}">
+                <div class="inp_sel" data-id="optionSelectBox">
+                    <label>{{safeString label}}</label>
+                    <select class="check_option_inner" data-can-change-option="true" data-selected-index="{{selectedIndex}}" data-depth="{{@index}}" >
                         {{#each optionValues}}
                             <option value="{{value}}" {{#ifEq ../selectedIndex @index}}selected{{/ifEq}} {{disabled}}>{{safeString value}}</option>
                         {{/each}}
                     </select>
-                </dd>
-            </dl>
+                </div>
             {{/each}}
         </script>
         <script id="cartTextOptionsTemplate" type="text/x-handlebars-template">
             {{#each textOptions}}
                 {{#ifEq inputMatchingType 'PRODUCT'}}
-                <dl>
-                    <dt>{{safeString inputLabel}}</dt>
-                    <dd>
-                        <input type="text" can-change-option="true" name="textOptionItem" data-text-input-no="{{inputNo}}"  data-label="{{inputLabel}}" data-reqired="{{#if required}}yes{{/if}}"  maxlength="101" value="{{safeString value}}" />
-                    </dd>
-                </dl>
+                <div class="inp_sel">
+                    <label for="productTextOption">{{safeString inputLabel}}</label>
+                    <input type="text" id="productTextOption" data-can-change-option="true" name="textOptionItem"  data-text-input-no="{{inputNo}}" data-label="{{inputLabel}}" data-reqired="{{#if required}}yes{{/if}}" maxlength="101" value="{{value}}" />
+                </div>
                 {{/ifEq}}
             {{/each}}
             {{#each optionalTextOptions}}
-                <dl>
-                    <dt>{{safeString inputLabel}}</dt>
-                    <dd>
-                        <input type="text" can-change-option="true" name="textOptionItem" data-text-input-no="{{inputNo}}"  data-label="{{inputLabel}}" data-reqired="{{#if required}}yes{{/if}}"  maxlength="101" value="{{safeString value}}" />
-                    </dd>
-                </dl>
+            <div class="inp_sel">
+                <label for="optionalTextOption">{{safeString inputLabel}}</label>
+                <input type="text" id="optionalTextOption" data-can-change-option="true" name="textOptionItem"  data-text-input-no="{{inputNo}}" data-label="{{inputLabel}}" data-reqired="{{#if required}}yes{{/if}}" maxlength="101" value="{{value}}" />
+            </div>
             {{/each}}
         </script>
-        <script id="cartContentsTemplate" type="text/x-handlebars-template">
-            <div class="order_cart_tit"></div>
-            {{#if carts}}
-                <div class="order_table_type">
-                    <table>
-                        <colgroup>
-                            <col style="width:3%">
-                            <!-- 체크박스 -->
-                            <col>
-                            <!-- 상품명/옵션 -->
-                            <col style="width:10%">
-                            <!-- 수량 -->
-                            <col style="width:10%">
-                            <!-- 상품금액 -->
-                            <col style="width:13%">
-                            <!-- 할인/적립 -->
-                            <col style="width:10%">
-                            <!-- 합계금액 -->
-                            <col style="width:10%">
-                            <!-- 배송비 -->
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>
-                                <div class="form_element">
-                                    <input type="checkbox" id="allChecked" name="all" checked>
-                                    <label for="allChecked" class="check_s"></label>
-                                </div>
-                            </th>
-                            <th>
-                                상품/옵션 정보
-                            </th>
-                            <th>
-                                수량
-                            </th>
-                            <th>
-                                상품금액
-                            </th>
-                            <th>
-                                할인/적립
-                            </th>
-                            <th>
-                                합계금액
-                            </th>
-                            <th>
-                                배송비
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody >
-                        {{#each carts}}
-                            <tr data-product-no="{{product.productNo}}" data-cart-no="{{option.cartNo}}" data-option-no="{{option.optionNo}}" data-option-used={{product.optionUsed}} data-order-cnt="{{option.orderCnt}}" data-stock-cnt="{{option.stockCnt}}" style="height: 79px;">
-                                <td class="td_chk">
-                                    <div class="form_element">
+
+        <header id="header"></header>
+        <div id="contents">
+            <main class="contents_wrap">
+                <div class="page_top_area">
+                    <div class="navi_g">
+                        <ul>
+                            <li>홈</li>
+                            <li>장바구니</li>
+                        </ul>
+                    </div>
+                    <div class="sub_top">
+                        <div class="sub_top_left">
+                            <a id="goBack"></a>
+                        </div>
+                        <h2><a href="/pages/order/cart.html">장바구니</a></h2>
+                    </div>
+                </div>
+                <div class="cart">
+                    <div class="cart_content_box">
+                        <div class="allchk">
+                            <div class="inp_chk">
+                                <input type="checkbox" id="allChecked" name="all" class="sp gd_select_all_goods" checked="checked" />
+                                <label for="allChecked">전체선택</label>
+                            </div>
+                            <div class="btn_left_box" id="selectRemoveArea">
+                                <button class="btn_cart_del btn_order_choice_del">선택삭제</button>
+                            </div>
+                        </div>
+
+                        <!-- carts -->
+                        <div id="cart">
+                            <div id="cartContents" data-template-id="cartContentsTemplate"></div>
+                        </div>
+                    </div>
+
+                    <div id="cartPriceArea" class="price_sum invisible">
+                        <div class="my_buy">
+                            <dl>
+                                <dt>상품금액</dt>
+                                <dd>
+                                    <strong><span>{{{toCurrencyString price.standardAmt}}}</span>원</strong>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>총 할인금액</dt>
+                                <dd>
+                                    <strong><span>(-) {{toCurrencyString price.discountAmt}}</span>원</strong>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>배송비</dt>
+                                <dd>
+                                    <strong><span>(+) {{toCurrencyString price.totalPrePaidDeliveryAmt}}</span>원</strong>
+                                </dd>
+                            </dl>
+                            {{#ifGt price.accumulationAmtWhenBuyConfirm 0}}
+                            <dl>
+                                <dt>예상 적립금</dt>
+                                <dd>
+                                    <strong><span>(+) {{toCurrencyString price.accumulationAmtWhenBuyConfirm}}</span>{{accumulationUnit}}</strong><br />
+                                    {{#ifLogined}}{{else}}(로그인 시 적립 가능){{/ifLogined}}
+                                </dd>
+                            </dl>
+                            {{/ifGt}}
+                            <dl class="total">
+                                <dt><strong>총 합계금액</strong></dt>
+                                <dd>
+                                    <strong><span id="totalSettlePrice">{{toCurrencyString price.totalAmt}}</span>원<br /><small></small></strong>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="naver_pay" id="naverPay"></div>
+
+                    <div id="cartSubmitArea" class="order_box_area invisible">
+                        {{#if hasProducts}}
+                        <div class="btn_wish_bx order_box_area">
+                            <button type="button" class="cart_all_order_btn btn_order">
+                                선택 주문하기 <span>({{toCurrencyString price.totalAmt}}원)</span>
+                            </button>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                <script id="cartContentsOptionsTemplate" type="text/x-handlebars-template">
+                    {{#ifNe options.length 1}}<option value="">{{safeString label}} 을(를) 선택하세요.</option>{{/ifNe}}
+                    {{#each options}}
+                    <option value="{{safeString value}}" data-add-price="{{addPrice}}" {{#ifEq stockCnt 0}}disabled{{/ifEq}} {{#ifEq value selectedValue}}selected{{/ifEq}}>
+                        {{safeString value}}
+                    </option>
+                    {{/each}}
+                </script>
+                <script id="cartContentsTemplate" type="text/x-handlebars-template">
+                    <div id="cartContents" class="cart_cont_list">
+                        {{#if carts}}
+                        <ul class="my_goods">
+                            {{#each carts}}
+                            <li data-product-no="{{product.productNo}}" data-cart-no="{{option.cartNo}}" data-option-no="{{option.optionNo}}" data-option-used={{product.optionUsed}} data-order-cnt="{{option.orderCnt}}" data-stock-cnt="{{option.stockCnt}}">
+                                <div class="btn_list">
+                                    <div class="inp_chk">
                                         <input type="checkbox" name="checked" id="check-{{option.cartNo}}" checked>
                                         <label for="check-{{option.cartNo}}" class="check_s"></label>
                                     </div>
-                                </td>
-                                <td class="td_left">
-                                    <div class="pick_add_cont">
-                                                <span class="pick_add_img">
-                                                    <a href="/pages/product/view.html?productNo={{product.productNo}}">
-                                                        <img src="{{product.imageUrl}}" alt="{{product.productName}}" title="{{product.productName}}" class="middle">
-                                                    </a>
-                                                    {{#if valid}}
-                                                        <div>
-                                                       <span class="btn_left_box">
-                                                           <button type="button" class="btnChangeOption" data-edit-status="complete">옵션/수량 변경</button>
-                                                       </span>
-                                                    </div>
-                                                    {{/if}}
-                                                </span>
-                                        <div class="pick_add_info">
+                                    <div class="select_del_box">
+                                        <a href="#" class="btn_cart_del btn_order_choice_del" data-action="deleteItem" data-cart-no="{{option.cartNo}}">삭제</a> <!-- TODO : 구현안됨 -->
+                                    </div>
+                                </div>
+
+                                <div class="mid_box">
+                                    <div class="right_box">
+                                        <div class="info">
                                             {{#if valid}}
                                                 {{#if isDuplicateCart}}<div class="icon_exclamationmark">중복상품</div>{{/if}}
                                             {{else}}
                                                 <div class="icon_exclamationmark">구매제한 상품</div>
                                             {{/if}}
+                                                <div>
+                                                    <a href="/pages/product/view.html?productNo={{product.productNo}}">
+                                                    <div class="itemhead">
+                                                        <div class="thmb_box">
+                                                            <div class="thmb">
+                                                                <img src="{{product.imageUrl}}" alt="{{product.productName}}" title="{{product.productName}}" class="middle">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="itembody">
+                                                        <p class="name">{{safeString product.productName}}</p>
+                                                        <div>
+                                                            <strong class="prc">{{totalPriceHtml}} <del>{{priceHtml}}</del></strong>
+                                                        </div>
+                                                    </div>
+                                                    </a>
+                                                </div>
 
-                                            <em><a class="cart_type" href="/pages/product/view.html?productNo={{product.productNo}}">{{safeString product.productName}}</a></em>
+                                                <div class="cart_option_modi_area">
+                                                    <div class="cart_option_modi_top">
+                                                        <div class="cart_option_length_modi">
+                                                            <span class="count">
+                                                                <span class="goods_qty">
+                                                                    <button type="button" class="goods_cnt down" data-type="decrease" title="감소" data-can-change-option="true" disabled value="dn^|^0">
+                                                                        감소
+                                                                    </button>
+                                                                    <input type="text" name="orderCnt" class="text" title="수량" disabled value="{{option.orderCnt}}" data-can-change-option='true'>
+                                                                    <button type="button" class="goods_cnt up" data-type="increase" title="증가" data-can-change-option="true" disabled value="up^|^0">
+                                                                        증가
+                                                                    </button>
+                                                                </span>
+                                                            </span>
+                                                        </div>
 
-                                            {{#if product.optionUsed}}
-                                                {{#ifEq product.selectType 'MULTI'}}
-                                                {{#each option.options}}
-                                                    <dl data-depth="{{@index}}" name="optionSelectBox" origin="true">
-                                                        <dt>{{safeString name}}</dt>
-                                                        <dd>
-                                                            <select can-change-option="true" disabled data-selected-value="{{value}}">
-                                                                {{#if @last}}
-                                                                    <option value="{{value}}" selected>{{safeString value}} (+{{toCurrencyString ../option.price.addPrice}} 원) / 재고 : {{../option.stockCnt}}개</option>
-                                                                {{else}}
-                                                                    <option value="{{value}}" selected>{{safeString value}}</option>
-                                                                {{/if}}
-                                                            </select>
-                                                        </dd>
-                                                    </dl>
-                                                {{/each}}
-                                                {{/ifEq}}
-                                                {{#ifEq product.selectType 'FLAT'}}
-                                                    <dl data-depth="0" name="optionSelectBox" origin="true">
-                                                        <dt>{{safeString option.optionName}}</dt>
-                                                        <dd>
-                                                            <select can-change-option="true" disabled data-selected-value="{{option.optionValue}}">
-                                                                <option value="{{option.optionValue}}" selected>{{safeString option.optionValue}} (+{{toCurrencyString option.price.addPrice}} 원) / 재고 : {{option.stockCnt}}개</option>                                                            </select>
-                                                        </dd>
-                                                    </dl>
-                                                {{/ifEq}}
-                                                {{/if}}
-                                            {{#each option.optionInputs}}
-                                                <dl>
-                                                    <dt>{{safeString inputLabel}}</dt>
-                                                    <dd>
-                                                        <input type="text" can-change-option="true" name="textOptionItem" data-label="{{inputLabel}}" data-reqired="{{#if required}}yes{{/if}}" value="{{safeString inputValue}}" disabled />
-                                                    </dd>
-                                                </dl>
-                                            {{/each}}
+                                                        {{#if valid}}
+                                                            <button type="button" class="btn_cart_option_modi btnChangeOption" data-edit-status="complete">
+                                                                옵션/수량 변경
+                                                            </button>
+                                                        {{/if}}
 
+                                                    </div>
+                                                    <div class="cart_options_area">
+                                                        <div data-id="cartOptionsArea">
+                                                            {{#if product.optionUsed}}
+                                                                {{#ifEq product.selectType 'MULTI'}}
+                                                                    {{#each option.options}}
+                                                                    <div class="inp_sel">
+                                                                        <label for="{{name}}">{{safeString name}}</label>
+                                                                        <select
+                                                                            id="{{name}}"
+                                                                            data-can-change-option="true" disabled data-selected-value="{{value}}"
+                                                                        >
+                                                                            {{#if @last}}
+                                                                                <option value="{{value}}" selected>{{safeString value}} (+{{toCurrencyString ../option.price.addPrice}} 원) / 재고 : {{../option.stockCnt}}개</option>
+                                                                            {{else}}
+                                                                                <option value="{{value}}" selected>{{safeString value}}</option>
+                                                                            {{/if}}
+                                                                        </select>
+                                                                    </div>
+                                                                {{/each}}
+                                                                {{/ifEq}}
+                                                                {{#ifEq product.selectType 'FLAT'}}
+                                                                    <div class="inp_sel">
+                                                                        <label for="{{name}}">{{safeString option.optionName}}</label>
+                                                                        <select
+                                                                                id="{{option.optionName}}"
+                                                                                data-can-change-option="true" disabled data-selected-value="{{option.optionValue}}"
+                                                                        >
+                                                                            <option value="{{option.optionValue}}" selected>{{safeString option.optionValue}} (+{{toCurrencyString option.price.addPrice}} 원) / 재고 : {{option.stockCnt}}개</option>
+                                                                        </select>
+                                                                    </div>
+                                                                {{/ifEq}}
+                                                            {{/if}}
+                                                                {{#each option.optionInputs}}
+                                                                    <div class="inp_sel">
+                                                                        <label>{{safeString inputLabel}}</label>
+                                                                        <input type="text" data-can-change-option="true" name="textOptionItem" data-label="{{inputLabel}}" data-reqired="{{#if required}}yes{{/if}}" value="{{inputValue}}" disabled />
+                                                                    </div>
+                                                                {{/each}}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                         </div>
                                     </div>
-                                </td>
-                                <td class="td_order_amount">
-                                            <span class="count">
-                                                <span class="goods_qty">
-                                                    <input type="text" can-change-option="true" name="orderCnt" class="text" title="수량" disabled value="{{option.orderCnt}}"/>
-                                                        <span>
-                                                            <button type="button" class="goods_cnt up" data-type="increase" title="증가" can-change-option="true" disabled value="up^|^0">증가</button>
-                                                            <button type="button" class="goods_cnt down" data-type="decrease" title="감소" can-change-option="true" disabled value="dn^|^0">감소</button>
-                                                        </span>
-                                                </span>
-                                            </span>
-                                </td>
-                                <td>
-                                    <strong class="order_sum_txt price">{{{priceHtml}}}</strong>
-                                    <p class="add_currency"></p>
-                                </td>
-                                <td class="td_benefit">
-                                    <ul class="benefit_list">
-                                        {{#if discountHtml}}
-                                            <li class="benefit_sale">
-                                                <em>할인</em><strong> : {{discountHtml}}</strong>
-                                            </li>
-                                        {{/if}}
-                                        {{#if accumulationAmtHtml}}
-                                            <li class="benefit_mileage">
-                                                <em>적립</em><strong> : {{accumulationAmtHtml}}</strong><br>
-                                                {{#ifLogined}}{{else}}(로그인 시 적립 가능){{/ifLogined}}
-                                            </li>
-                                        {{/if}}
-                                    </ul>
-                                </td>
-                                <td>
-                                    <strong class="order_sum_txt">{{{totalPriceHtml}}}</strong>
-                                    <p class="add_currency"></p>
-                                </td>
-                                {{#if deliveryRowSpan}}
-                                    <td class="td_delivery" rowspan="{{deliveryRowSpan}}">
-                                        {{{deliveryHtml}}}
-                                    </td>
-                                {{/if}}
-                            </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            {{else}}
-                <p class="no_data">장바구니에 담겨있는 상품이 없습니다.</p>
-            {{/if}}
-        </script>
-
-        <header id="header"></header>
-        <div id="contents" class="visible">
-            <main class="sub_content">
-                <div class="location_wrap">
-                    <div class="location_cont">
-                        <em><a href="/" class="local_home">HOME</a> &gt; 장바구니</em>
-                    </div>
-                </div>
-                <div class="content_box">
-                    <div class="order_wrap">
-                        <div class="order_tit">
-                            <h2>장바구니</h2>
-                            <ol>
-                                <li class="page_on">
-                                    <span>01</span> 장바구니
-                                    <span><img src="/assets/img/member/icon_join_step_on.png" alt="" /></span>
-                                </li>
-                                <li>
-                                    <span>02</span> 주문서작성/결제<span><img src="/assets/img/member/icon_join_step_off.png" alt="" /></span>
-                                </li>
-                                <li><span>03</span> 주문완료</li>
-                            </ol>
-                        </div>
-
-                        <div class="cart_cont">
-                            <div class="cart_cont_list">
-                                <div id="cartContents" data-template-id="cartContentsTemplate"></div>
-                            </div>
-
-                            <div class="btn_left_box" id="removeButtonArea">
-                                {{#if hasProducts}}
-                                <button type="button" class="btn_order_choice_del">선택 삭제</button>
-                                {{/if}}
-                            </div>
-                            <div class="price_sum invisible" id="cartPriceArea">
-                                <div class="price_sum_cont">
-                                    <div class="price_sum_list">
-                                        <dl>
-                                            <dt>총 <strong>{{checkedCount}}</strong> 개의 상품금액</dt>
-                                            <dd><strong>{{toCurrencyString price.standardAmt}}</strong>원</dd>
-                                        </dl>
-                                        <span><img src="/assets/img/order/order_price_minus.png" alt="뺀다" /></span>
-                                        <dl>
-                                            <dt>총 할인금액</dt>
-                                            <dd><strong>{{toCurrencyString price.discountAmt}}</strong>원</dd>
-                                        </dl>
-                                        <span><img src="/assets/img/order/order_price_plus.png" alt="더하기" /></span>
-                                        <dl>
-                                            <dt>배송비</dt>
-                                            <dd><strong>{{toCurrencyString price.totalPrePaidDeliveryAmt}}</strong>원</dd>
-                                        </dl>
-                                        <span><img src="/assets/img/order/order_price_total.png" alt="합계" /></span>
-                                        <dl class="price_total">
-                                            <dt>합계</dt>
-                                            <dd><strong>{{toCurrencyString price.totalAmt}}</strong>원</dd>
-                                        </dl>
-                                    </div>
-                                    {{#ifGt price.accumulationAmtWhenBuyConfirm 0}}
-                                    <em class="tobe_mileage"><strong>예상 적립금</strong> : {{toCurrencyString price.accumulationAmtWhenBuyConfirm}}원</em>
-                                    {{/ifGt}}
-                                    <em class="tobe_mileage"></em>
                                 </div>
-                            </div>
-                            <div class="order_box_area" id="orderBoxArea">
-                                {{#if hasProducts}}
-                                <div class="btn_order_box">
-                                    <span class="btn_right_box">
-                                        <button type="button" class="btn_order btn_order_choice_buy" data-order-type="part">
-                                            선택 상품 주문
-                                        </button>
-                                        <button type="button" class="btn_order btn_order_whole_buy" data-order-type="all">
-                                            전체 상품 주문
-                                        </button>
-                                    </span>
-                                    <!-- 결제수단-->
-                                    <div id="purchasePayment" class="pay_box">
-                                        <div class="payco_pay"></div>
-                                        <div class="naver_pay" id="naverPay"></div>
-                                    </div>
-                                </div>
-                                <em class="chk_none">주문서 작성단계에서 할인/마일리지 적용을 하실 수 있습니다.</em>
+                                {{#if deliveryHtml}}
+                                    <p class="delivery_money" rowspan="{{deliveryRowSpan}}">
+                                        배송비 {{{deliveryHtml}}}
+                                    </p>
                                 {{/if}}
-                            </div>
-                        </div>
+                            </li>
+                            {{/each}}
+                        </ul>
+                        {{else}}
+                        <p class="no_data">장바구니에 담겨있는 상품이 없습니다.</p>
+                        {{/if}}
                     </div>
-                </div>
+                </script>
             </main>
         </div>
-        <aside id="aside"></aside>
         <footer id="footer"></footer>
         <div id="popups-area"></div>
-
         <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
         <script src="/js/pages/order/cart.js"></script>
     </body>

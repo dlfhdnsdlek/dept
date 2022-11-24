@@ -1,136 +1,119 @@
 <script id="photoReviewDetailTemplate" type="text/x-handlebars-template">
-    <div class='layer_wrap dimed'>
-          <div class='box common_popup_body'>
-            <div class='p-layer {{#ifEq expandedReviewConfig.photoReviewDisplayType "SECOND_TYPE"}}p-layer--vertical{{/ifEq}}' id="photoReviewDetail">
-              <div class='p-layer-inner' id='photoReviewDetailContent' data-template-id='photoReviewDetailContentTemplate'>
-              </div>
-              <button class='p-layer-arrow p-layer-prev' data-action-type="prevReview">
-                <span class='hidden'>
-                  이전
-                </span>
-              </button>
-              <button class='p-layer-arrow p-layer-next' data-action-type="nextReview">
-                <span class='hidden'>
-                  다음
-                </span>
-              </button>
-              {{#if hasCloseBtn}}
-              <a href='#close' class='ly_close btnClosePopup' data-action-type='negative'>
-                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
-              </a>
-              {{else}}
-              <button class='p-layer-show-all em' data-action-type='openPhotoReviews'>
-                전체보기
-              </button>
-              {{/if}}
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='ly_wrap wrap-scroll'>
+            <div class='layer_common_wrapper layer_shipping_address_regist' id='photoReviewDetail'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        {{productReviewConfig.name}}
+                    </h1>
+                </div>
+                <div data-template-id='photoReviewDetailContentTemplate' id='photoReviewDetailContent'></div>
             </div>
-          </div>
+            <div class='close_btn'>
+                <button type='button' class='lys_close_btn ly_btn_close' data-action-type='closePopup'>
+                    닫기
+                </button>
+            </div>
+        </div>
     </div>
 </script>
 
 <script id="photoReviewDetailContentTemplate" type="text/x-handlebars-template">
-    <div id='photoReviewDetailContent' data-template-id='photoReviewDetailContentTemplate'>
-      <div class="p-layer-inner">
-        <!-- left -->
-        <div class='p-layer-imgs'>
-          <span id="selectedImage" data-template-id='selectedImageTemplate'></span>
-          <div class="p-layer-slide">
-            <div class='p-layer-thumbs'>
-              {{#each fileUrls}}
-                <button type='button' class='img-frame img-frame--sm {{#ifEq @index 0}}on{{/ifEq}}' data-action-type='reviewImages' data-image-no='{{ @index }}'>
-                  {{img this}}
-                </button>
-              {{/each}}
-            </div>
-          </div>
+    <div id='photoReviewDetailContent' data-template-id='photoReviewDetailContentTemplate' class='scroll_box ly_content'>
+        <div class='p-layer-top'>
+          <span class='rating'>
+            <span style="width:calc({{rate}} * 20%);"></span>
+          </span>
+          <span class='p-date'>
+            {{substring registerYmdt 0 10}}
+          </span>
         </div>
-        <!-- // left -->
-        <!-- right -->
-        <div class="p-layer-con">
-          <div class='p-layer-info'>
-            <span class='rating'>
-              <span style='width: calc({{rate}} * 20%)'></span>
-            </span>
-            <span>
-              <span class='em'>
-                {{registerName}}
-              </span>
-              <span class='date'>
-                {{substring registerYmdt 0 10}}
-              </span>
-            </span>
-          </div>
-          <div class='p-layer-data'>
-            <div class='p-layer-comment'>
-              <div class='p-layer-option'>
-                <span>
-                  {{getOptionNameAndValue orderedOption.optionName orderedOption.optionValue}}
+        <div class='p-layer-img'>
+            {{#each fileUrls}}
+            <span class="img-frame img-frame--normal">
+              {{#ifEq @index 0}}
+              <button class='p-layer-arrow p-layer-arrow-prev' data-action-type="prevReview">
+                <span class='hidden'>
+                  prev
                 </span>
-              </div>
-              <div class='p-layer-txt'>
-                {{#ifEq bestReviewYn "Y"}}<img src="/assets/img/icon/goods_icon/good_icon_best.gif" />{{/ifEq}}
-                <pre>{{content}}</pre>
-              </div>
-              <div class='p-layer-likes'>
-                {{#if expandedReviewConfig.useReviewRecommend}}
-                  <label class='user-trigger user-trigger--like'>
-                    <input type='checkbox' />
-                    <span id="reviewRecommendParents" class='user-trigger__txt review-recommend {{#if isLogin}}{{#ifEq recommendable false}}on{{/ifEq}}{{/if}}' data-action-type='reviewRecommend'>
-                      <span id="reviewRecommend">
-                        {{recommendCnt}}
-                      </span>
-                    </span>
-                  </label>
+              </button>
+              <button class='p-layer-arrow p-layer-arrow-next' data-action-type="nextReview">
+                <span class='hidden'>
+                  next
+                </span>
+              </button>
+              {{/ifEq}}
+              <img data-action-type='reviewImages' data-image-no='{{ @index }}' src="{{this}}" alt="상품 후기 이미지">
+            </span>
+            {{/each}}
+
+        </div>
+
+        <em class='em'>
+          {{registerName}}
+        </em>
+        <div class='p-layer-option'>
+          <span>
+            {{getOptionNameAndValue orderedOption.optionName orderedOption.optionValue}}
+          </span>
+        </div>
+        <!-- 글 -->
+        <div class='p-comment'>
+          {{#ifEq bestReviewYn "Y"}}
+          <img src='/assets/img/goods_icon/good_icon_best.png' />
+          {{/ifEq}}
+          <pre>{{content}}</pre>
+          <!-- 좋아요 -->
+          <div class='p-layer-likes'>
+            {{#if expandedReviewConfig.useReviewRecommend}}
+            <label class='user-trigger user-trigger--like'>
+              <input type='checkbox' />
+              <span id="reviewRecommendParents" class='user-trigger__txt {{#if isLogin}}{{#ifEq recommendable false}}on{{/ifEq}}{{/if}}' data-action-type='reviewRecommend'>
+                <span id="recommendCnt">
+                  {{recommendCnt}}
+                </span>
+              </span>
+            </label>
                 {{/if}}
                 {{#if canComment}}
-                  {{#ifNe commentCount 0}}
-                    <label class='user-trigger user-trigger--cmt'>
-                      <input type='checkbox' />
-                      <span class='user-trigger__txt' data-action-type='showComments'>
-                      <span>
-                        댓글 {{commentCount}}
-                      </span>
+                {{#ifNe commentCount 0}}
+                <label class='user-trigger user-trigger--cmt'>
+                  <input type='checkbox' />
+                  <span class='user-trigger__txt' data-action-type='showComments'>
+                    <span>
+                      댓글 {{commentCount}}
                     </span>
-                    </label>
-                  {{/ifNe}}
-                {{/if}}
-              </div>
-            </div>
-            <!-- comments -->
-            <div data-template-id="commentTemplate" id='reviewComment'></div>
-            <!-- // comments -->
+                  </span>
+            </label>
+            {{/ifNe}}
+            {{/if}}
           </div>
-
-          <!-- // right -->
+          <!-- // 좋아요 -->
         </div>
-      </div>
-</script>
+        <!-- reply -->
+        <div data-template-id="commentTemplate" id='reviewComment'></div>
+        <!-- // reply -->
 
-<script id="selectedImageTemplate" type="text/x-handlebars-template">
-    <span id='selectedImage' class='img-frame img-frame--lg' data-template-id='selectedImageTemplate'>
-        {{img selectedImageUrl}}
-    </span>
+    </div>
 </script>
 
 <script id="commentTemplate" type="text/x-handlebars-template">
     <div id='reviewComment' data-template-id='commentTemplate'>
         {{#each contents}}
-            <div class='p-layer-reply'>
-                <div class='p-layer-info'>
+            <div class='reply'>
+                <p class='reply-user'>
                     <span class='em'>
                         관리자
                     </span>
-                    <span class='date'>
+                    <span class='p-date'>
                         {{date}}
                     </span>
-                </div>
-                <div>
-                    {{content}}
-                </div>
+                </p>
+                {{content}}
             </div>
         {{/each}}
         {{#if hasMoreCommentsBtn}}
-            <button class='more' data-action-type='moreComments'>
+            <button class='p-more' data-action-type='moreComments'>
                 댓글 더보기
             </button>
         {{/if}}

@@ -2,6 +2,7 @@
  * © NHN Commerce Corp. All rights reserved.
  * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
+ * @author hyeyeon-park
  * @author Eunbi Kim
  * @since 2021-7-12
  */
@@ -16,37 +17,85 @@ $(() => {
     inquiryList: null,
 
     async initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
-      this.page = new shopby.pagination(this.fetchInquires.bind(this), '#pagination', 20);
+      this.maskingNameMap = this._maskingNameMap();
+      this.page = new shopby.readMore(this.appendInquiries.bind(this), '#btnMoreMyInquiries', 20);
       this.render();
-      await this.fetchInquires();
+      await this.getInquiries();
       this.bindEvents();
+      this.isOpenPopup();
     },
+
+    isOpenPopup() {
+      const isWrite = shopby.utils.getUrlParam('write');
+      if (isWrite === 'true') {
+        $('#btnWrite').click();
+        shopby.utils.replaceState({ write: '' });
+      }
+    },
+
     dataRangeCallback() {
       this.page.pageNumber = 1;
-      this.fetchInquires();
+      this.getInquiries();
+    },
+
+    async appendInquiries() {
+      await this.fetchInquires();
+      this.page.render(this.inquiryList.totalCount);
+
+      const { pageNumber, pageSize } = this.page;
+      const inquiriesData = { ...this.inquiryList, pageNumber, pageSize };
+      const $inquiries = $('#myInquiries');
+      const compiled = Handlebars.compile($inquiries.html());
+      $inquiries.parent().append(compiled(inquiriesData));
+    },
+
+    async getInquiries() {
+      await this.fetchInquires();
+      this.page.render(this.inquiryList.totalCount);
+      this.renderInquiryList();
+    },
+    _maskingNameMap() {
+      const conditionMap = new Map();
+      conditionMap.set('1', name => `${name}*`);
+      conditionMap.set('2', name => `${name.substring(0, 1)}*`);
+      conditionMap.set('3', (name, size) =>
+        name
+          .split('')
+          .map((s, i) => (i === 0 || i === size - 1 ? s : '*'))
+          .join(''),
+      );
+      return conditionMap;
+    },
+    maskingName(name) {
+      const { length } = name;
+      const mappingKey = length < 3 ? length : 3;
+      const maskingNameMap = this.maskingNameMap.get(mappingKey.toString());
+      return maskingNameMap(name, length);
     },
     async fetchInquires() {
       const { pageNumber, pageSize } = this.page;
-      shopby.utils.pushState({ pageNumber });
-      try {
-        const queryString = {
-          pageNumber,
-          pageSize,
-          hasTotalCount: true,
-          keyword: this.keyword,
-          searchType: this.searchType,
-        };
-        const { data } = await shopby.api.manage.getInquiries({ queryString });
-        this.inquiryList = data;
-        this.page.render(data.totalCount || 1);
-        this.renderInquiryList();
-      } catch (e) {
-        console.error(e);
-      }
+      const queryString = {
+        pageNumber,
+        pageSize,
+        hasTotalCount: true,
+        keyword: this.keyword,
+        searchType: this.searchType,
+      };
+      const { data } = await shopby.api.manage.getInquiries({ queryString });
+      const { totalCount, items } = data;
+
+      this.inquiryList = {
+        totalCount,
+        items: items
+          ? items.map(item => ({
+              ...item,
+              issuerName: this.maskingName(item.issuerName),
+            }))
+          : null,
+      };
     },
     render() {
-      $('.inquiriesName').render({ name: this.inquiryConfig.name });
+      $('#inquiriesName').render({ name: this.inquiryConfig.name });
     },
     renderInquiryList() {
       const { pageNumber, pageSize } = this.page;
@@ -57,21 +106,22 @@ $(() => {
       $inquiries.parent().append(compiled(data));
     },
     bindEvents() {
-      $('.btn_board_search').on('click', this.searchKeyword.bind(this)).enterKeyup('#inquiryKeyword');
-      $('#btn_write').on('click', this.openInquiryPopup.bind(this));
+      $('.board_search_btn').on('click', this.searchKeyword.bind(this)).enterKeyup('#inquiryKeyword');
+      $('#btnWrite').on('click', this.openInquiryPopup.bind(this));
     },
     searchKeyword() {
-      const $searchBox = $('.board_search_box');
+      this.page.pageNumber = 1;
+      const $searchBox = $('.board_search');
       const $keyword = $searchBox.find('input[name=keyword]');
-      this.searchType = $searchBox.find('select[name="searchType"]').val();
       this.keyword = $keyword.val();
-      this.fetchInquires();
+      $('#myInquiries').next().remove();
+      this.getInquiries();
       $keyword.val('');
     },
     openInquiryPopup() {
       shopby.popup('inquiry', { type: 'registration' }, data => {
         if (data && data.state === 'close') return;
-        this.fetchInquires();
+        this.getInquiries();
       });
     },
   };

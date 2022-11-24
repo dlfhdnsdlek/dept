@@ -24,7 +24,7 @@
     }
 
     moveSliderImages() {
-      $('.layer_add_file_slide').slick({
+      $('.layer_img_slide .slider-wrap').slick({
         infinite: true,
         speed: 500,
         initialSlide: this.option.clickedImageIndex ? this.option.clickedImageIndex : 0,

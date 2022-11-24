@@ -16,14 +16,14 @@ $(() => {
     async initiate() {
       await this.render();
       this.bindEvents();
+      this.initJoinTermsAgreements();
 
       if (this.isAuthPhoneConfig) {
-        window.shopKcpCallback = async result => {
-          if (!result) {
+        const shopKcpCallback = async result => {
+          if (!result || (result && result.fail)) {
             shopby.alert('본인 인증에 실패하였습니다.');
             return;
           }
-
           const { data: checkCI } = await shopby.api.member.getProfileCiExists({ queryString: { ci: result.ci } });
           if (checkCI && checkCI.exist) {
             const messageType = checkCI.status === 'WITHDRAWN' ? 'kcpWithdrawn' : 'kcpExistMember';
@@ -34,10 +34,11 @@ $(() => {
             this.onClickNextButton();
           }
         };
+        const kcpProfile = shopby.localStorage.getItemWithExpire(shopby.cache.key.member.kcpAuth);
+        kcpProfile && (await shopKcpCallback(kcpProfile));
       } else {
         shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
       }
-      this.initJoinTermsAgreements();
     },
     initJoinTermsAgreements() {
       this.joinTermsAgreements
@@ -66,19 +67,26 @@ $(() => {
     bindEvents() {
       $('#allAgree').on('change', this.onChangeAllAgreed.bind(this));
       $('input:checkbox[name="termItem"]').on('change', this.onChangeTermItem.bind(this));
-      $('.btnAuthKCP').on('click', shopby.helper.member.openKcpCallback);
       $('.agreement_detail').on('click', this.onClickAgreementDetail.bind(this));
-      $('#prevStepBtn').on('click', () => history.back());
       $('#nextStepBtn').on('click', this.onClickNextButton.bind(this));
+      $('#btnAuthKCP').on('click', this.moveKcpCertify.bind(this))
+    },
+    moveKcpCertify(e) {
+      e.preventDefault()
+      location.href = shopby.helper.member.getKcpCallbackUrl()
     },
     onChangeAllAgreed({ target }) {
       $('input:checkbox[name="termItem"]').prop('checked', $(target).prop('checked'));
+      this.onChangeTermItem();
     },
     onChangeTermItem() {
+      window.history.pushState(null, document.title, `/pages/join/agreement.html?${this._checkedTerms()}`);
       const checked = this.agreements.length + 1 === $('input[name=termItem]:checked').length;
       $('#allAgree').prop('checked', checked);
     },
-    onClickAgreementDetail({ target }) {
+    onClickAgreementDetail(event) {
+      event.stopPropagation();
+      const target = event.target;
       const termKey = $(target).data('term-id');
       const title = $(`label[for=agreeCheckbox-${termKey}]`).text();
       const contents = this.agreements.find(({ key }) => key === termKey).contents;
@@ -86,6 +94,7 @@ $(() => {
       shopby.popup('terms', { title, contents }, data => {
         if (data.state === 'ok') {
           $(`input:checkbox[id=agreeCheckbox-${termKey}]`).prop('checked', true);
+          this.onChangeTermItem();
         }
       });
     },
@@ -104,6 +113,10 @@ $(() => {
       }
 
       if (!this._validateTerms()) return;
+      location.replace(`/pages/join/join.html?${this._checkedTerms()}`);
+    },
+
+    _checkedTerms() {
       const checkedTerms = $('input:checkbox[name="termItem"]:checked')
         .map(function () {
           return $(this).data('term-id');
@@ -112,7 +125,7 @@ $(() => {
         .join();
       const params = new URLSearchParams();
       params.set('terms', checkedTerms);
-      location.replace(`/pages/join/join.html?${params.toString()}`);
+      return params.toString();
     },
 
     /**
@@ -124,7 +137,7 @@ $(() => {
       const checkPossibleAge = $('#agreeCheckbox-JOIN_POSSIBLE_AGE').is(':checked');
 
       const requiredAgreementSuccess = checkRequired && checkPossibleAge;
-      const mustCheckMessage = $('.important_check_box');
+      const mustCheckMessage = $('.join_certify_box');
       requiredAgreementSuccess ? mustCheckMessage.hide() : mustCheckMessage.show();
       return requiredAgreementSuccess;
     },

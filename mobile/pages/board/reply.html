@@ -2,7 +2,7 @@
 <html lang="ko">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
         <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
@@ -17,118 +17,78 @@
     <body>
         <header id="header"></header>
         <div id="contents">
-            <main class="sub_content">
-                <div class="content">
-                    <div id="boardViewPage" class="board_zone_sec">
-                        <div class="board_zone_tit" id="board-title">
-                            <h2>{{boardName}}</h2>
-                        </div>
-                        <div class="board_zone_cont">
-                            <div class="board_zone_view" id="template-board-view">
-                                <div class="board_view_tit">
-                                    <h3>{{#if articles.notice}}<img src="/assets/img/icon/board/icon_board_notice.png" />{{/if}} {{articles.title}}</h3>
-                                </div>
-                                <div class="board_view_info">
-                                    <span class="view_info_idip">
-                                        <strong>{{articles.registerName}}</strong>
-                                    </span>
-                                    <span class="view_info_day">
-                                        <em>{{articles.registerYmdt}}</em>
-                                    </span>
-                                    <span class="view_info_hits"> <strong>조회</strong> {{articles.viewCnt}} </span>
-                                </div>
-                                <!-- //board_view_info -->
-                                <div class="board_view_content">
-                                    <!-- //view_goods_select -->
-                                    <div class="seem_cont">
-                                        <div style="margin: 10px 0 10px 0;">
-                                            <p>{{{articles.content}}}</p>
-                                            {{#if articles.imageUrl}}
-                                            <div style="margin: 10px 0 10px 0;">
-                                                {{img articles.imageUrl '' '' '' 'max-width: 700px;'}}
-                                            </div>
-                                            {{/if}}
-                                        </div>
-                                    </div>
-                                    {{#if articles.attachments}}
-                                    <div class="add_file_area">
-                                        <ul>
-                                            {{#each articles.attachments}}
-                                            <li class="vis_mode">
-                                                <div>
-                                                    {{img uploadedFileName '' '' fileName}}
-                                                    <span class="zoom"><img src="/assets/img/board/icon_view_add_file.png" alt="보기" /></span>
-                                                </div>
-                                            </li>
-                                            {{/each}}
-                                        </ul>
-                                    </div>
-                                    {{/if}}
-                                </div>
-                            </div>
-                            <div class="btn_right_box">
-                                <button type="button" class="btn_board_list btn_board" data-mode="view">
-                                    <strong>본문으로 가기</strong>
-                                </button>
-                                <button type="button" class="btn_board_list btn_board" data-mode="list">
-                                    <strong>목록</strong>
-                                </button>
-                            </div>
-                        </div>
+            <div class="page_top_area">
+                <div class="sub_top invisible">
+                    <div class="sub_top_left">
+                        <a id="goBack"></a>
                     </div>
-                    <div id="boardReplyDetail" class="board_zone_sec">
-                        <div class="board_zone_tit">
-                            <h2>답글 보기</h2>
-                        </div>
-                        <div class="board_zone_cont">
-                            <div class="board_zone_view template-board-view">
-                                <div class="board_view_tit">
-                                    <h3>{{title}}</h3>
+                    <h2>
+                        <a href="#" class="js_page_reload"><span class="board_name">{{boardName}}</span></a>
+                    </h2>
+                    <div class="sub_top_right">
+                        <a href="/pages/board/list.html?boardId={{boardId}}" class="btn_board_list">목록</a>
+                    </div>
+                </div>
+            </div>
+            <div id="boardViewPage" class="invisible">
+                <div class="view_default notice_view">
+                    <div class="goods_area">
+                        <h3 class="boardContent">{{articles.title}}</h3>
+                        <div id="boardContent" class="boardContent view_wrap">
+                            <div class="view_box">
+                                <div class="view_info_box">
+                                    <div class="view_info">
+                                        <span class="writer">{{articles.registerName}}</span>
+                                        <span class="date">{{articles.registerYmdt}}</span>
+                                    </div>
                                 </div>
-                                <div class="board_view_info">
-                                    <span class="view_info_idip">
-                                        <strong>{{registerName}}</strong>
-                                    </span>
-                                    <span class="view_info_day">
-                                        <em>{{registerYmdt}}</em>
-                                    </span>
-                                    <span class="view_info_hits"> <strong>조회</strong> {{viewCnt}} </span>
+                                <div class="view_body"></div>
+                                <div class="contents_holder">
+                                    <p>{{{articles.content}}}</p>
                                 </div>
-                                <!-- //board_view_info -->
-                                <div class="board_view_content">
-                                    <!-- //view_goods_select -->
-                                    <div class="seem_cont">
-                                        <div style="margin: 10px 0 10px 0;">
-                                            <p>{{{content}}}</p>
-                                            {{#if imageUrl}}
-                                            <div style="margin: 10px 0 10px 0;">
-                                                {{img imageUrl '' '' '' 'max-width: 700px;'}}
-                                            </div>
-                                            {{/if}}
+                                <ul class="add_file_area">
+                                    {{#each articles.attachments}}
+                                    <li class="vis_mode">
+                                        <div>
+                                            {{img uploadedFileName}}
+                                            <span class="zoom"> <img src="/assets/img/icon/icon_view_add_file.png" alt="보기" /></span>
                                         </div>
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
+                        <button class="openBoard up">본문 닫기<img class="board-arrow_up" src="/assets/img/icon/icon_arrow_next1.png" /></button>
+                        <h3>{{reply.title}}</h3>
+                        <div id="replyContent" class="view_wrap">
+                            <div class="view_box">
+                                <div class="view_info_box">
+                                    <div class="view_info">
+                                        <span class="writer">{{reply.registerName}}</span>
+                                        <span class="date">{{reply.registerYmdt}}</span>
                                     </div>
-                                    {{#if attachments}}
-                                    <div class="add_file_area">
-                                        <ul>
-                                            {{#each attachments}}
-                                            <li class="vis_mode">
-                                                <div>
-                                                    {{img uploadedFileName '' '' fileName}}
-                                                    <span class="zoom"><img src="/assets/img/board/icon_view_add_file.png" alt="보기" /></span>
-                                                </div>
-                                            </li>
-                                            {{/each}}
-                                        </ul>
-                                    </div>
-                                    {{/if}}
                                 </div>
+                                <div class="view_body"></div>
+                                <div class="contents_holder">
+                                    <p>{{{reply.content}}}</p>
+                                </div>
+                                <ul class="add_file_area">
+                                    {{#each reply.attachments}}
+                                    <li class="vis_mode">
+                                        <div>
+                                            {{img uploadedFileName}}
+                                            <span class="zoom"> <img src="/assets/img/icon/icon_view_add_file.png" alt="보기" /></span>
+                                        </div>
+                                    </li>
+                                    {{/each}}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
-        <aside id="aside"></aside>
+
         <footer id="footer"></footer>
         <div id="popups-area"></div>
         <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>

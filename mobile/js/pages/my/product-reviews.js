@@ -8,17 +8,14 @@
 
 $(() => {
   shopby.my.productReviews = {
-    page: shopby.pagination,
+    page: null,
     productReviewConfig: shopby.cache.getBoardsConfig().productReviewConfig,
     possibleProductReviewList: null,
-    backPageNumber: null,
-    searchType: '',
     searchKeyword: '',
+    initPageSize: 20,
 
     initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
-      window.onpopstate = this.onPopState.bind(this);
-      this.page = new shopby.pagination(this.onPagination.bind(this), '#productReviewsPagination', 20);
+      this.page = new shopby.readMore(this.appendReviews.bind(this), '#btnMoreReviews');
 
       Promise.all([
         this._getMyProductReviews(),
@@ -27,45 +24,58 @@ $(() => {
       ]).then(() => {
         this.renderInit();
         this.bindEvents();
+        this.isOpenPopup();
+        $('#contents').removeClass('invisible').addClass('visible');
       });
+    },
+
+    isOpenPopup() {
+      const isWrite = shopby.utils.getUrlParam('write');
+      if (isWrite === 'true') {
+        $('#btnWriteReviewableProduct').click();
+        shopby.utils.replaceState({ write: '' });
+      }
     },
 
     renderInit() {
       $('#boardTitle').render({ productReviewConfig: this.productReviewConfig });
-      $('#myLocation').render({ productReviewConfig: this.productReviewConfig });
       $('#btnWriteReviewableProduct').render({ totalCount: this.reviewableProducts.totalCount });
       $('#btnReviewRewardNotice-wrap').render({ reviewRewardNoticeText: this.reviewRewardNoticeText });
     },
 
     bindEvents() {
       $('#btnWriteReviewableProduct').on('click', this.openProductReviewPopup.bind(this));
-      $('.btn_board_search').on('click', this.search.bind(this)).enterKeyup('#reviewKeyword');
+      $('.board_search_btn').on('click', this.search.bind(this)).enterKeyup('#reviewKeyword');
       $('.btn-benefit-info').on('click', () => this.toggleBenefitModal(true));
-      $('.btn-sidebar-modal').on('click', () => this.toggleBenefitModal(false));
+      $('.btn-modal-benefit-info').on('click', () => this.toggleBenefitModal(false));
       $('#btnReviewRewardNotice').on('click', () => this.toggleReviewRewardModal(true));
-      $('#reviewRewardPopupCloseBtn').on('click', () => this.toggleReviewRewardModal(false));
     },
 
     toggleBenefitModal(isVisible) {
-      const $modal = $('.sidebar-modal');
+      const $modal = $('.modal-benefit-info');
       isVisible ? $modal.addClass('on') : $modal.removeClass('on');
     },
 
-    toggleReviewRewardModal(isVisible) {
-      const $modal = $('#reviewRewardPopup');
-      isVisible ? $modal.addClass('on') : $modal.removeClass('on');
+    async appendReviews() {
+      this.page.pageNumber =
+        this.page.pageNumber === 2 ? this.initPageSize / 4 + this.page.pageNumber - 1 : this.page.pageNumber;
+      const result = await this.fetchReviews(this.page.pageSize, this.page.pageNumber);
+      const { items, totalCount } = result.data;
+      if (totalCount === 0) return;
+
+      this.page.render(totalCount);
+      const compiled = Handlebars.compile($('#reviewsTemplate').html());
+      const appendHtml = $(compiled({ items })).find('li');
+      $('#productReviews ul').append(appendHtml);
     },
 
-    onPopState() {
-      this.backPageNumber = shopby.utils.getUrlParam('pageNumber');
-      this.searchType = shopby.utils.getUrlParam('searchType');
-      this.searchKeyword = shopby.utils.getUrlParam('searchKeyword');
-      this._getMyProductReviews();
-    },
-
-    onPagination() {
-      this.backPageNumber = null;
-      this._getMyProductReviews();
+    async search() {
+      this.page.pageNumber = 1;
+      const $searchBox = $('.board_search');
+      const $keyword = $searchBox.find('input[name=keyword]');
+      this.searchKeyword = $keyword.val();
+      await this._getMyProductReviews();
+      $keyword.val('');
     },
 
     openProductReviewPopup() {
@@ -73,6 +83,8 @@ $(() => {
         'product-review',
         {
           productReviewConfig: this.productReviewConfig,
+          writingReviewNoticeText: this.writingReviewNoticeText,
+          accumulationRewardNoticeText: this.accumulationRewardNoticeText,
         },
         callback => {
           if (callback.state === 'ok') {
@@ -82,47 +94,36 @@ $(() => {
       );
     },
 
-    async search() {
-      this.backPageNumber = null;
-      this.page.pageNumber = 1;
-      const $searchBox = $('.board_search_box');
-      const $keyword = $searchBox.find('input[name=keyword]');
-      this.searchType = $searchBox.find('select[name="searchType"]').val();
-      this.searchKeyword = $keyword.val();
-      await this._getMyProductReviews();
-      $keyword.val('');
-    },
-
-    async _getMyProductReviews() {
+    fetchReviews(pageSize, pageNumber = this.page.pageNumber) {
       const request = {
         queryString: {
-          pageNumber: this.backPageNumber ? this.backPageNumber : this.page.pageNumber,
-          pageSize: this.page.pageSize,
+          pageNumber,
+          pageSize,
           hasTotalCount: true,
-          searchType: this.searchType,
           searchKeyword: this.searchKeyword,
+          searchType: 'ALL',
           startYmd: '2020-01-01',
         },
       };
-      const { data: myProductReviews } = await shopby.api.display.getProfileProductReviews(request);
+      return shopby.api.display.getProfileProductReviews(request);
+    },
+
+    async _getMyProductReviews() {
+      const { data: myProductReviews } = await this.fetchReviews(this.initPageSize, 1);
       myProductReviews.items = myProductReviews.items.map(item => ({
         ...item,
         contentLine: item.content.includes('\n') ? 1 : 2,
       }));
-
       this._renderReviews(myProductReviews);
-      if (this.backPageNumber) return;
-      shopby.utils.pushState({
-        pageNumber: this.backPageNumber ? this.backPageNumber : this.page.pageNumber,
-        searchKeyword: this.searchKeyword,
-        searchType: this.searchType,
-      });
     },
 
     _renderReviews(myProductReviews) {
-      const { totalCount } = myProductReviews;
+      const { items, totalCount } = myProductReviews;
       this.page.render(totalCount);
-      $('#productReviews').render({ myProductReviews: myProductReviews });
+      if (myProductReviews.totalCount < this.initPageSize) {
+        $('.more_btn').hide();
+      }
+      $('#productReviews').render({ items });
     },
 
     async _getPossibleWriteProductReviews() {
@@ -134,11 +135,13 @@ $(() => {
     async _getReviewRewardNoticeText() {
       const {
         data: {
-          expandedReviewConfig: { reviewRewardNoticeText },
+          expandedReviewConfig: { reviewRewardNoticeText, writingReviewNoticeText, accumulationRewardNoticeText },
         },
       } = await shopby.api.display.getProductReviewsConfigurations();
 
       this.reviewRewardNoticeText = reviewRewardNoticeText;
+      this.writingReviewNoticeText = writingReviewNoticeText;
+      this.accumulationRewardNoticeText = accumulationRewardNoticeText;
     },
   };
 

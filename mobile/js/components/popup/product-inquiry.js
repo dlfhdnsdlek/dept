@@ -1,9 +1,10 @@
 /*
- * © NHN Commerce Corp. All rights reserved.
- * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *  © 2021. NHN Commerce Corp. All rights reserved.
+ *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
- * @author Bomee Yoon
- * @since 2021.7.21
+ *  @author hyeyeon-park
+ *  @author Bomee Yoon
+ *  @since 2021.8.20
  */
 
 (() => {
@@ -20,7 +21,7 @@
       this.initiate();
     }
     get modeFlag() {
-      const mode = (this.option && this.option.mode) || null;
+      const mode = this.option && this.option.mode ? this.option.mode : null;
       const isEditMode = mode === 'modification';
       return {
         isEditMode,
@@ -38,7 +39,7 @@
       this.contentData = this._generateProductInquiryContent(secretPostingUsed, guestPostingUsed);
     }
     render(name) {
-      $('.boardTitle').text(name);
+      $('.h_tit').text(name);
       this._renderInquiryContent();
       this.originData = this._getUpdatedProductInquiryContent();
     }
@@ -60,7 +61,7 @@
       const maxLength = this.getAttribute('maxlength');
 
       $(target).val(value);
-      $(this).siblings('.text_length').text(`${valueLength}/${maxLength}`);
+      $(this).siblings('.textarea_box_length').text(`${valueLength}/${maxLength}`);
     }
     _onClickHandler({ target }) {
       const $target = $(target);
@@ -84,7 +85,6 @@
     _openSearchProductLayer() {
       const afterSearchingProducts = result => {
         if (result.state !== 'ok') return;
-
         const imageUrl = result.data.imageUrls && result.data.imageUrls.length > 0 ? result.data.imageUrls.shift() : '';
         this._renderInquiryContent({
           ...result.data,
@@ -124,6 +124,7 @@
     async _putProductInquiry(requestBody) {
       requestBody.content =
         this.contentData && this.contentData.replied ? this.contentData.content || '' : requestBody.content;
+
       return await shopby.api.display.putProductsInquiresInquiryNo({
         pathVariable: { inquiryNo: requestBody.inquiryNo },
         requestBody,

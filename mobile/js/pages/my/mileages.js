@@ -2,6 +2,7 @@
  * © NHN Commerce Corp. All rights reserved.
  * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
+ * @author HyeYeon Park
  * @author JongKeun Kim
  * @since 2021.7.13
  */
@@ -9,72 +10,41 @@
 $(() => {
   shopby.mileages = {
     initiate() {
-      this.setDefaultState();
       this.my.initiate();
       this.search.initiate();
 
       window.onpopstate = this.onPopState.bind(this);
     },
-    get pageNumber() {
-      return shopby.utils.getUrlParam('pageNumber') || '1';
-    },
-    setDefaultState() {
-      const pageNumberEmpty = !shopby.utils.getUrlParam('pageNumber');
 
-      if (pageNumberEmpty) {
-        shopby.utils.replaceState({
-          pageNumber: 1,
-        });
-      }
+    get accumulationConfig() {
+      return shopby.cache.getMall().accumulationConfig;
     },
-    pushState(pageNumber) {
-      shopby.utils.pushState({ pageNumber });
-      this.changedState();
-    },
-    changedState() {
-      this.search.search();
-    },
+
     onPopState() {
-      this.content.renderTab();
-      this.search.setCurrentPage();
       this.search.search();
     },
 
-    /**
-     * @my :  마이페이지 공통 로직
-     */
     my: {
       initiate() {
-        shopby.my.menu.init('#myPageLeftMenu');
-        this.summary.initiate().catch(console.error);
+        this.accumulations.initiate().catch(console.error);
       },
 
-      summary: {
+      accumulations: {
         async initiate() {
-          const [summary, summaryAmount, likeProduct] = await this._getData();
-          this.render(summary, summaryAmount, likeProduct.totalCount);
+          const summary = await this._getData();
+          const {
+            accumulations: { totalAmt },
+          } = summary;
+          const accumulationConfig = shopby.mileages.accumulationConfig;
+          this.render(totalAmt, accumulationConfig);
         },
         async _getData() {
-          return Promise.all([
-            shopby.api.member.getProfileSummary(),
-            shopby.api.order.getProfileOrdersSummaryAmount({
-              queryString: {
-                orderStatusType: 'BUY_CONFIRM',
-                startYmd: shopby.date.lastHalfYear(),
-                endYmd: shopby.date.today(),
-              },
-            }),
-            // summary 찜리스트 totalCount만 받아오기 위해 추가
-            // 전체 카운트만 받아오는 것으로 pageNumber, pageSize는 추가하지 않음
-            shopby.api.product.getProfileLikeProducts({
-              queryString: {
-                hasTotalCount: true,
-              },
-            }),
-          ]).then(res => res.map(({ data }) => data));
+          return shopby.api.member.getProfileSummary().then(({ data }) => data);
         },
-        render(summary, summaryAmount, totalCount) {
-          shopby.my.summary.init('#myPageSummary', summary, summaryAmount, totalCount);
+        render(totalAmt, accumulationConfig) {
+          const { accumulationUnit, accumulationName } = accumulationConfig;
+          $('.accumulation_top_box').render({ totalAmt, accumulationUnit, accumulationName });
+          $('#accumulationTitle').render({ accumulationName });
         },
       },
     },
@@ -84,7 +54,6 @@ $(() => {
       pagination: null,
       initiate() {
         this.renderComponents();
-        this.setCurrentPage();
         this.search();
       },
       renderComponents() {
@@ -92,16 +61,14 @@ $(() => {
         this.renderPagination();
       },
       renderSearchForm() {
-        this.dateRange = new shopby.dateRange('#searchDateRange', this.search.bind(this));
+        this.dateRange = new shopby.dateRange('#dateSelector', this.search.bind(this, true));
       },
       renderPagination() {
-        this.pagination = new shopby.pagination(this.changePagination.bind(this), '#pagination', 10);
+        this.pagination = new shopby.readMore(this.appendMileages.bind(this), '#btnMoreMileages', 5);
       },
-      changePagination() {
-        const { pageNumber } = this.pagination;
-        shopby.mileages.pushState(pageNumber);
-      },
+
       search() {
+        this.pagination.pageNumber = 1;
         this.fetchMileages().then(data => {
           const { totalCount } = data;
           shopby.mileages.content.render(data);
@@ -109,9 +76,8 @@ $(() => {
         });
       },
       async fetchMileages() {
-        const { pageSize } = this.pagination;
+        const { pageSize, pageNumber } = this.pagination;
         const { start, end } = this.dateRange;
-        const pageNumber = shopby.mileages.pageNumber;
 
         const request = {
           queryString: {
@@ -125,22 +91,28 @@ $(() => {
 
         return shopby.api.manage.getProfileAccumulations(request).then(({ data }) => data);
       },
-      setCurrentPage() {
-        this.pagination.pageNumber = shopby.mileages.pageNumber;
+      async appendMileages() {
+        const { items, totalCount } = await this.fetchMileages();
+        const mileages = shopby.mileages.content.getMileages(items);
+        const $mileages = $('#mileages');
+        const compiled = Handlebars.compile($mileages.html());
+        $mileages
+          .parent()
+          .find('tbody')
+          .append($(compiled(mileages)).find('tr'));
+        this.pagination.render(totalCount);
       },
     },
 
     content: {
       render(data) {
         const { items } = data;
-        const title = shopby.cache.getMall().accumulationConfig.accumulationName;
         const res = this.getMileages(items);
         const mileages = res.map(mileage => ({
           ...mileage,
           isNoExpirationDate: this.isNoExpirationDate(mileage.expireYmdt),
         }));
         this.renderMileages(mileages);
-        this.renderTitle(title);
       },
       get operatorEnum() {
         return {
@@ -151,13 +123,8 @@ $(() => {
         };
       },
       getMileages(items) {
-        const {
-          accumulationConfig: { accumulationUnit },
-        } = shopby.cache.getMall();
-
         return items.map(items => ({
           ...items,
-          accumulationUnit, // admin config unit : string
           operator: this.operatorEnum[items.accumulationStatus], // '+'|'-'
         }));
       },
@@ -166,9 +133,6 @@ $(() => {
         const compiled = Handlebars.compile($mileages.html());
         $mileages.next().remove();
         $mileages.parent().append(compiled(data));
-      },
-      renderTitle(data) {
-        $('[data-attach="title"]').text(data);
       },
       isNoExpirationDate(expireYmdt) {
         return expireYmdt && expireYmdt.split('-')[0] === '9999';

@@ -3,7 +3,7 @@
  *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  *  @author hyeyeon-park
- *  @since 2021.7.6
+ *  @since 2021.7.27
  */
 
 (() => {
@@ -16,7 +16,7 @@
       this.attachedImages = [];
       this.originData = null;
       $parent.append(this.$el);
-      this.render($parent, option);
+      this.render(option);
       this.bindEvents();
     }
 
@@ -35,7 +35,7 @@
       };
     }
 
-    async render($parent, option) {
+    async render(option) {
       await this._getGuestTerms();
       if (option.articles) {
         this._fetchAttachImages(option.articles);
@@ -57,11 +57,12 @@
 
     bindEvents() {
       this.$el
-        .on('paste input', 'textarea[name="content"], input[type="text"]', this.onInputText)
+        .on('paste input', 'textarea[name="content"]', this.onInputText)
+        .on('paste input', 'input[name="title"]', this.onInputTitle)
         .on('change', 'input[type="file"]', this.openAttachment.bind(this))
         .on('click', '#deleteAttachImage', this.deleteAttachment.bind(this))
         .on('click', '#btnWriteArticle', this.writeArticle.bind(this))
-        .on('click', '.ly_close,.btn_cancel', this.closeButton.bind(this));
+        .on('click', '.ly_btn_close', this.closeButton.bind(this));
     }
 
     async _getGuestTerms() {
@@ -86,7 +87,13 @@
             originName: articleAttachment.fileName,
           }));
     }
-
+    onInputTitle({ target }) {
+      const pattern = shopby.regex.noCommonSpecial;
+      const { value } = target;
+      if (value.match(pattern)) {
+        $(target).val(value.replace(pattern, ''));
+      }
+    }
     onInputText({ target }) {
       const pattern = shopby.regex.noCommonSpecial;
       const { value } = target;
@@ -132,13 +139,12 @@
     }
 
     closeButton() {
-      const isNotChanged = !this.originData || shopby.utils.isEqual(this.originData, this.articleData);
-      if (isNotChanged) {
-        this.$el.remove();
+      if (!this.originData || shopby.utils.isEqual(this.originData, this.articleData)) {
+        this.close();
       } else {
         shopby.confirm({ message: '변경된 정보를 저장하지 않고 이동하시겠습니까?' }, callback => {
           if (callback.state === 'close') return;
-          this.$el.remove();
+          this.close();
         });
       }
     }
@@ -147,7 +153,7 @@
       await this._addArticleApi(articleData);
       shopby.alert('게시물이 등록되었습니다.', () => {
         this.callback({ state: 'ok' });
-        this.$el.remove();
+        this.close();
       });
     }
 
@@ -171,7 +177,7 @@
       await this._modifyArticleApi(articleData);
       shopby.alert('게시물이 수정되었습니다.', () => {
         this.callback({ state: 'ok' });
-        this.$el.remove();
+        this.close();
       });
     }
 

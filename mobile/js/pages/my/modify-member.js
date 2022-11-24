@@ -8,23 +8,30 @@
  */
 
 $(() => {
+  const kcpProfile = shopby.localStorage.getItemWithExpire(shopby.cache.key.member.kcpAuth);
   shopby.my.modifyMember = {
     smsTimer: null,
     emailTimer: null,
     mallJoinConfig: shopby.cache.getMall().mallJoinConfig,
     agreements: null,
-    captcha: shopby.helper.captcha(),
-    emailCaptcha: shopby.helper.captcha('emailCaptcha'),
-    smsCaptcha: shopby.helper.captcha('smsCaptcha'),
+    captcha: shopby.helper.captcha('captcha'),
+    emailCaptcha: shopby.helper.captcha('captcha'),
+    smsCaptcha: shopby.helper.captcha('captcha'),
     async initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
       await this.render();
       this.bindEvents();
     },
     async render() {
-      shopby.my.menu.init('#myPageLeftMenu');
+      $('.sub_top h2').text('회원 비밀번호 검증');
       $('#certifyPassword').render(await this.getMemberId());
-      this.captcha = this.captcha || shopby.helper.captcha();
+
+      if (kcpProfile) {
+        $('.my_page_password').hide();
+        $('.sub_top h2').text('회원정보변경');
+        const userInfo = shopby.localStorage.getItemWithExpire('USER_INFO');
+        await this.initiateModifyForm(userInfo);
+      }
+      this.captcha && this.captcha.render();
     },
     async getMemberId() {
       const profile = await shopby.api.member.getProfile();
@@ -41,7 +48,7 @@ $(() => {
       try {
         this._validatePassword(password);
       } catch (error) {
-        shopby.alert({ message: '비밀번호를 정확하게 입력해주세요.' }, () => $password.focus());
+        shopby.alert({ message: error.message }, () => $password.focus());
         return;
       }
       const request = { requestBody: { password } };
@@ -49,6 +56,7 @@ $(() => {
         await this.captcha.submitCode(true);
         await shopby.api.member.postProfileCheckPassword(request);
         $('.my_page_password').hide();
+        $('.sub_top h2').text('회원정보변경');
         this.captcha.reset();
       } catch (e) {
         const isInvalidCode = e.code === 'M0306' || e.code === 'CP9001';
@@ -60,6 +68,7 @@ $(() => {
       }
       const userInfo = await shopby.api.member.postProfileNonMasking(request);
       await this.initiateModifyForm(userInfo.data);
+      shopby.localStorage.setItemWithExpire('USER_INFO', userInfo.data);
     },
 
     async initiateModifyForm(userInfo) {
@@ -76,22 +85,27 @@ $(() => {
       this.bindFormEvents();
 
       if (this.mallJoinConfig.authenticationType === 'AUTHENTICATION_BY_PHONE') {
-        window.shopKcpCallback = async (result, key) => {
+        const shopKcpCallback = async (result, key) => {
           if (!result) {
             shopby.alert('본인 인증에 실패하였습니다.');
             return;
           }
 
-          const { data: checkCI } = await shopby.api.member.getProfileCiExists({ queryString: { ci: result.ci } });
-          if (checkCI && checkCI.exist) {
+          const { data: checkCI } =
+            (await shopby.api.member.getProfileCiExists({ queryString: { ci: result.ci } })) || {};
+          if (checkCI.exist) {
             const messageType = checkCI.status === 'WITHDRAWN' ? 'kcpWithdrawn' : 'kcpExistMember';
-            shopby.alert(shopby.message[messageType], shopby.goLogin);
-          } else if (!checkCI || !checkCI.exist) {
-            shopby.localStorage.setItemWithExpire(shopby.cache.key.member.kcpAuth, result);
+            shopby.alert(shopby.message[messageType], () => {
+              shopby.goLogin();
+              shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
+            });
+          } else if (!checkCI.exist) {
             this.authKey = key;
             this.updateKcpInfo(result);
+            shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
           }
         };
+        kcpProfile && (await shopKcpCallback(kcpProfile, shopby.utils.getUrlParam('key')));
       } else {
         shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
       }
@@ -124,6 +138,7 @@ $(() => {
           month: dayFormatter('M'),
           day: dayFormatter('D'),
         },
+        openIdMember: shopby.localStorage.getItem(shopby.cache.key.member.oauthProvider),
       };
     },
     bindFormEvents() {
@@ -133,9 +148,11 @@ $(() => {
         .on('keyup', 'input', this.changeValidInput.bind(this))
         .on('blur', 'input', this.blurValidInput.bind(this))
         .on('change', 'select', shopby.helper.member.changeSelectedBirth)
-        .on('click', '#mobileReAuth', shopby.helper.member.openKcpCallback)
         .on('click', 'button[name="sendAuth"]', this.sendAuthentication.bind(this))
         .on('click', 'button[name="confirmAuth"]', this.confirmAuthentication.bind(this));
+
+      $('#mobileReAuth').attr('href', shopby.helper.member.getKcpCallbackUrl());
+
       $('#btnPostcode').on('click', this.findAddress.bind(this));
 
       // terms
@@ -143,7 +160,9 @@ $(() => {
       $('input:checkbox[name="termItem"]').on('change', this.onChangeTermItem.bind(this));
       $('.agreement_detail').on('click', this.onClickAgreementDetail.bind(this));
 
-      $('#btnCancel').on('click', () => history.back());
+      $('#btnCancel').on('click', () => {
+        window.history.back();
+      });
       $('#btnModify').on('click', this.modifyMember.bind(this));
     },
     updateKcpInfo({ name, ci, phone, sexCode, birthday }) {
@@ -185,12 +204,13 @@ $(() => {
     },
     async blurValidInput({ target }) {
       const $target = $(target);
-      const $warnMessage = $target.closest('.member_warning').find('.warning_message');
+      const $warnMessage = $target.closest('.input_content').find('.warning_message');
       const { name, value, dataset } = target;
-      const resultMessage = await this._validateForm(name, value, dataset.userInfo || null);
+      if (!value) return;
+      const resultMessage = await this._validateForm(name, value, dataset.userInfo ? dataset.userInfo : null);
       shopby.regex.mobileNo.lastIndex = 0; // test 사용시 lastIndex를 기억하기 때문에 초기화 해줘야 이후 실행이 잘 됨.
       const successValidation = resultMessage.includes('success') || resultMessage === '';
-      const errorInput = $target.closest('.member_warning').find('input');
+      const errorInput = $target.closest('.input_content').find('input');
 
       if (name.includes('email') && !resultMessage.includes('success')) {
         $warnMessage.hide();
@@ -218,10 +238,11 @@ $(() => {
     },
     async sendAuthentication({ target }) {
       const $target = $(target);
-      const $warnMessage = $target.closest('.member_warning').find('.warning_message');
+      const $warnMessage = $target.parents('.input_wrap').find('.warning_message');
       const authType = $target.data('authType');
-      const { value, errorMessage, key } = shopby.helper.member.getCurrentAuth(authType);
-      const $invalidInput = $target.parents('.member_warning').find(`input[name=${key}]`);
+      const currentAuth = shopby.helper.member.getCurrentAuth(authType);
+      const { value, key, errorMessage } = currentAuth;
+      const $invalidInput = $target.parents('.input_wrap').find(`input[name=${key}]`);
 
       if (value.length === 0 || value === '@') {
         $warnMessage.text(errorMessage).show();
@@ -229,15 +250,15 @@ $(() => {
         shopby.alert(errorMessage);
         return;
       }
+      if ($invalidInput.attr('class').includes('fail_valid')) {
+        shopby.alert($warnMessage.text().split('.')[0]);
+        return;
+      }
       const $sendButton = $(`.btn_send_${authType}`);
       if ($sendButton.text() === '재인증') {
         $(`.${authType}_box, .auth_${authType}`).find('input').val('');
         $(`input[name="${key}"], input[name="auth_${authType}"]`).attr('disabled', false);
         $sendButton.text('인증번호 발송');
-        return;
-      }
-      if ($invalidInput.attr('class').includes('fail_valid')) {
-        shopby.alert($warnMessage.text().split('.')[0]);
         return;
       }
       const usable = $warnMessage.data('usable') || value;
@@ -267,14 +288,15 @@ $(() => {
       const authType = $(target).data('authType');
       const captcha = this[`${authType}Captcha`];
       const certificatedNumber = $(`input[name="auth_${authType}"]`).val();
+
       if (authType === 'email') {
-        this.emailCaptcha = this.emailCaptcha || shopby.helper.captcha('emailCaptcha');
+        this.emailCaptcha = this.emailCaptcha ? this.emailCaptcha : shopby.helper.captcha('emailCaptcha');
       } else if (authType === 'sms') {
-        this.smsCaptcha = this.smsCaptcha || shopby.helper.captcha('smsCaptcha');
+        this.smsCaptcha = this.smsCaptcha ? this.smsCaptcha : shopby.helper.captcha('smsCaptcha');
       }
       try {
         const { value } = shopby.helper.member.getCurrentAuth(authType);
-        (await captcha) && captcha.submitCode(true);
+        await captcha.submitCode(true);
         await shopby.api.auth.getAuthentications({
           queryString: {
             notiAccount: value,
@@ -286,7 +308,7 @@ $(() => {
 
         const targetTimer = authType === 'sms' ? this.smsTimer : this.emailTimer;
         targetTimer.clear();
-        captcha && captcha.reset();
+        captcha.reset();
         $(`.btn_send_${authType}`).show();
       } catch (e) {
         console.error(e);
@@ -295,8 +317,8 @@ $(() => {
         } else {
           $(`.auth_${authType} .warning_message`).text('올바른 인증번호가 아닙니다.').show();
           if (e.code === 'E0008' || e.code === 'CP9001') {
-            captcha && captcha.retry();
-            captcha && captcha.errorHandler(e);
+            captcha.retry(e.key);
+            captcha.errorHandler(e);
           }
         }
       }
@@ -331,10 +353,9 @@ $(() => {
       });
     },
     async modifyMember() {
-      const inputWaringMessage = $('.member_warning').find('.warning_message');
+      const inputWaringMessage = $('.input_wrap').find('.warning_message');
       const isValid = shopby.helper.member.checkValidInput(inputWaringMessage);
       const failValidInput = $('.fail_valid').siblings('.warning_message').html();
-
       try {
         if (!isValid) {
           shopby.alert(failValidInput);
@@ -342,7 +363,7 @@ $(() => {
         }
         shopby.helper.member.submitValidation();
       } catch (error) {
-        shopby.alert({ message: error.message });
+        shopby.alert(error.message);
         return;
       }
       await shopby.api.member.putProfile({ requestBody: this._memberInfo });

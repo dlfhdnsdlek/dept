@@ -13,8 +13,9 @@ $(() => {
     emailTimer: null,
     joinTermsAgreements: shopby.utils.getUrlParam('terms'),
     kcpAuthInfo: shopby.localStorage.getItemWithExpire(shopby.cache.key.member.kcpAuth),
-    emailCaptcha: shopby.helper.captcha('emailCaptcha'),
-    smsCaptcha: shopby.helper.captcha('smsCaptcha'),
+    emailCaptcha: shopby.helper.captcha('captcha'),
+    smsCaptcha: shopby.helper.captcha('captcha'),
+    countryCode: shopby.cache.getMall() ? shopby.cache.getMall().mall.countryCode : 'KR',
     initiate() {
       const {
         mallJoinConfig: { authenticationTimeType, authenticationType },
@@ -83,13 +84,14 @@ $(() => {
         })
         .on('click', 'button[name="confirmAuth"]', this.confirmAuthentication.bind(this));
       $('#btnPostcode').on('click', this.findAddress.bind(this));
-      $('#btnCancel').on('click', this.onClickPrevBtn.bind(this));
-      $('.js_btn_join').on('click', this.joinMember.bind(this));
+      $('.join_prev_btn').on('click', this.onClickPrevBtn.bind(this));
+      $('#join_submit').on('click', this.joinMember.bind(this));
       $('input[name="memberId"]').focus();
     },
     changeValidInput({ key, target }) {
       const { pattern } = target.dataset;
-      if ((key && key.includes('Arrow')) || !pattern) return;
+      const _key = key || '';
+      if (_key.includes('Arrow') || !pattern) return;
 
       const { value } = target;
       let validInput = value.replace(shopby.regex[pattern], '');
@@ -102,14 +104,13 @@ $(() => {
     },
     async blurValidInput({ target }) {
       const $target = $(target);
-      const $warnMessage = $target.closest('.member_warning').find('.warning_message');
+      const $warnMessage = $target.closest('.input_wrap').find('.warning_message');
       const { name, value, dataset } = target;
       if (!value) return;
-      const errorInput = $target.closest('.member_warning').find('input');
       const resultMessage = await this._validateForm(name, value, dataset.userInfo || null);
-      shopby.regex.mobileNo.lastIndex = 0; // test 사용시 lastIndex를 기억하기 때문에 초기화 해줘야 이후 실행이 잘 됨.
-
+      shopby.regex.mobileNo.lastIndex = 0;
       const successValidation = resultMessage.includes('success') || resultMessage === '';
+      const errorInput = $target.closest('.input_wrap').find('input');
 
       if (name.includes('email') && !resultMessage.includes('success')) {
         $warnMessage.hide();
@@ -137,10 +138,11 @@ $(() => {
     },
     async sendAuthentication({ target }) {
       const $target = $(target);
-      const $warnMessage = $target.closest('.member_warning').find('.warning_message');
+      const $warnMessage = $target.parents('.input_wrap').find('.warning_message');
       const authType = $target.data('authType');
-      const { value, errorMessage, key } = shopby.helper.member.getCurrentAuth(authType);
-      const $invalidInput = $target.parents('.member_warning').find(`input[name=${key}]`);
+      const currentAuth = shopby.helper.member.getCurrentAuth(authType);
+      const { value, key, errorMessage } = currentAuth;
+      const $invalidInput = $target.parents('.input_wrap').find(`input[name=${key}]`);
 
       if (value.length === 0 || value === '@') {
         $warnMessage.text(errorMessage).show();
@@ -150,6 +152,7 @@ $(() => {
       }
       if ($invalidInput.attr('class').includes('fail_valid')) {
         shopby.alert($warnMessage.text().split('.')[0]);
+        //NOTE: 에러 메세지 중복으로 split 이용
         return;
       }
 
@@ -183,6 +186,7 @@ $(() => {
       $(`.auth_${authType}`).show();
       $(`.auth_${authType} .warning_message`).hide();
     },
+
     async confirmAuthentication({ target }) {
       const authType = $(target).data('authType');
       const captcha = this[`${authType}Captcha`];
@@ -196,7 +200,7 @@ $(() => {
 
       try {
         const { value } = shopby.helper.member.getCurrentAuth(authType);
-        (await captcha) && captcha.submitCode(true);
+        await captcha.submitCode(true);
         await shopby.api.auth.getAuthentications({
           queryString: {
             notiAccount: value,
@@ -208,7 +212,7 @@ $(() => {
 
         const targetTimer = authType === 'sms' ? this.smsTimer : this.emailTimer;
         targetTimer.clear();
-        captcha && captcha.reset();
+        captcha.reset();
         $(`.btn_send_${authType}`).show();
       } catch (e) {
         console.error(e);
@@ -217,8 +221,8 @@ $(() => {
         } else {
           $(`.auth_${authType} .warning_message`).text('올바른 인증번호가 아닙니다.').show();
           if (e.code === 'E0008' || e.code === 'CP9001') {
-            captcha && captcha.retry();
-            captcha && captcha.errorHandler(e);
+            captcha.retry();
+            captcha.errorHandler(e);
           }
         }
       }
@@ -233,31 +237,31 @@ $(() => {
         shopby.alert('상세주소를 입력해주시기 바랍니다.', () => $('input[name="detailAddress"]').focus());
       });
     },
+    onClickPrevBtn() {
+      const params = new URLSearchParams();
+      params.set('terms', this.joinTermsAgreements);
+      location.replace(`/pages/join/agreement.html?${params.toString()}`);
+    },
     async joinMember() {
-      const inputWaringMessage = $('.member_warning').find('.warning_message');
-      const isValid = shopby.helper.member.checkValidInput(inputWaringMessage);
+      const inputWaringMessage = $('.input_wrap').find('.warning_message');
       const failValidInput = $('.fail_valid').siblings('.warning_message').html();
-
+      const isValid = shopby.helper.member.checkValidInput(inputWaringMessage);
       try {
         if (!isValid) {
           shopby.alert(failValidInput);
           return;
         }
         shopby.helper.member.submitValidation();
-        await shopby.api.member.postProfile({ requestBody: this._memberInfo });
+        await shopby.api.member.postProfile({ requestBody: this.getMemberInfo() });
         shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
         const params = new URLSearchParams();
+
         params.set('memberId', $('input[name="memberId"]').val());
         location.replace(`/pages/join/complete.html?${params.toString()}`);
       } catch (error) {
+        console.log(error);
         shopby.alert(error.message);
       }
-    },
-
-    onClickPrevBtn() {
-      const params = new URLSearchParams();
-      params.set('terms', this.joinTermsAgreements);
-      location.replace(`/pages/join/agreement.html?${params.toString()}`);
     },
 
     _validateForm(type, value) {
@@ -282,7 +286,9 @@ $(() => {
           return '';
       }
     },
-    get _memberInfo() {
+    getMemberInfo() {
+      console.log(this.countryCode);
+
       const certificated = !!($('#authSMS').val() || $('#authEmail').val() || $('#ci').val());
 
       return {
@@ -303,7 +309,7 @@ $(() => {
         jibunDetailAddress: $('input[name="detailAddress"]').val(), //지번 상세주소
         sex: $('input[name="sex"]:checked').val(), //성별
         birthday: this._birthday, //생일 예.19981209
-        countryCd: shopby.cache.getMall().mall.countryCode, //국적
+        countryCd: this.countryCode, //국적
         joinTermsAgreements: this.joinTermsAgreements.split(','), //약관동의 array
         recommenderId: $('input[name="recommenderId"]').val(), //추천인 아이디
         ci: $('input[name="ci"]').val(), //본인인증 후 가입시 필요한 식별 번호
@@ -328,8 +334,7 @@ $(() => {
     _onTimerEnded(authType) {
       return () => {
         $(`.auth_${authType} .timer`).html('시간초과');
-        $(`.auth_${authType} .timer`)
-          .closest('div')
+        $(`.auth_${authType}`)
           .find('.warning_message')
           .text('유효시간이 초과되었습니다. 다시 [인증번호 발송] 클릭하여 발급된 인증번호를 입력해주세요.')
           .show();

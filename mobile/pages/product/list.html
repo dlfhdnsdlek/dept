@@ -2,7 +2,7 @@
 <html lang="ko">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
         <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
@@ -18,40 +18,45 @@
     <body>
         <div id="wrap">
             <header id="header"></header>
-            <div id="contents">
-                <main class="sub_content">
+            <div id="contents" class="goods_list">
+                <main id="productsPage" class="sub_content goods_list_content invisible">
                     <div class="location_wrap">
                         <div class="location_cont">
-                            <em class="visible"><a href="/" class="local_home">HOME</a> &nbsp;</em>
-                            <div id="categorySelector">
-                                {{#if categories}}
-                                <!-- // do nothing -->
-                                {{#each categories}}
-                                <span>&nbsp;&gt;&nbsp;</span>
-                                <div class="location_select">
-                                    <div class="location_tit">
-                                        <a href="#"><span>{{selectedLabel}}</span></a>
-                                    </div>
-                                    <ul style="display: none;">
-                                        {{#each children}}
-                                        <li>
-                                            <a href="/pages/product/list.html?depth={{depth}}&categoryNo={{categoryNo}}"><span>{{label}}</span></a>
-                                        </li>
-                                        {{/each}}
-                                    </ul>
+                            <div class="navi_g">
+                                <ul id="categorySelector" style="display: none;">
+                                    <li><a href="/">HOME</a></li>
+                                    {{#each categories}} {{#if @last}}
+                                    <li>
+                                        <select class="navi_g__select">
+                                            {{#each children}}{{#ifEq ../selectedLabel label}}
+                                            <option value="{{label}}" selected="selected" data-category-no="{{categoryNo}}">
+                                                <span>{{label}}</span>
+                                            </option>
+                                            {{else}}
+                                            <option value="{{label}}" data-category-no="{{categoryNo}}"><span>{{label}}</span> </option>
+                                            {{/ifEq}} {{/each}}
+                                        </select>
+                                    </li>
+                                    {{else}} {{#each children}} {{#ifEq ../selectedLabel label}} {{#if isParent}}
+                                    <li><a href="/pages/product/list.html?categoryNo={{categoryNo}}">{{../selectedLabel}}</a></li>
+                                    {{else}} {{#if @../first}}
+                                    <li><span>...</span></li>
+                                    {{/if}} {{/if}} {{/ifEq}} {{/each}} {{/if}} {{/each}}
+                                </ul>
+                            </div>
+                            <div class="sub_top">
+                                <div class="sub_top_left">
+                                    <a id="goBack"></a>
                                 </div>
-                                {{/each}}
-                                <!-- // do nothing -->
-                                {{/if}}
+                                <h2 id="selectedCategoryTit">
+                                    <a href="#" class="js_page_reload">{{selectedCategoryTit}}</a>
+                                </h2>
                             </div>
                         </div>
                     </div>
                     <div class="content_box">
-                        <div class="goods_list_item">
-                            <div class="goods_list_item_tit" id="selectedCategoryTit">
-                                <h2>{{ selectedCategoryTit }}</h2>
-                            </div>
-                            <div class="list_item_category" id="searchBoxOrCategoryBoxArea">
+                        <div class="goods_list_box">
+                            <div class="goods_list_category" id="searchBoxOrCategoryBoxArea">
                                 {{#if selectedChildCategories}}
                                 <ul>
                                     {{#each selectedChildCategories}}
@@ -67,125 +72,175 @@
                                 </ul>
                                 {{/if}}
                             </div>
-                            <div class="goods_pick_list" id="searchResult">
+                            <div class="goods_top_box" id="searchResult">
                                 {{#if keyword}}
-                                <span class="pick_list_num"><span>{{searchWord}}</span> 검색결과 <strong>{{totalCount}}</strong>개 </span>
-                                {{else}}
-                                <span class="pick_list_num">상품 <strong>{{totalCount}}</strong>개 </span>
+                                <div class="pick_list_num"><span>{{searchWord}}</span> 검색결과 <strong>{{totalCount}}</strong>개</div>
                                 {{/if}}
-                                <div id="productSorting">
+                                <div>
                                     <div id="sort-ui" name="sort-ui">
-                                        <div class="pick_list_box">
-                                            <ul class="pick_list">
-                                                <li>
-                                                    <input type="radio" id="sort-sale_cnt" class="radio" name="sort" value="sale_cnt" />
-                                                    <label for="sort-sale_cnt">판매량순</label>
-                                                </li>
-                                                <li>
-                                                    <input type="radio" id="sort-price_asc" class="radio" name="sort" value="price_asc" />
-                                                    <label for="sort-price_asc">낮은가격순</label>
-                                                </li>
-                                                <li>
-                                                    <input type="radio" id="sort-price_dsc" class="radio" name="sort" value="price_dsc" />
-                                                    <label for="sort-price_dsc">높은가격순</label>
-                                                </li>
-                                                <li>
-                                                    <input type="radio" id="sort-review" class="radio" name="sort" value="review" />
-                                                    <label for="sort-review">상품후기순</label>
-                                                </li>
-                                                <li>
-                                                    <input type="radio" id="sort-date" class="radio" name="sort" value="register" />
-                                                    <label for="sort-date">등록일순</label>
-                                                </li>
-                                            </ul>
-                                            <div class="choice_num_view">
-                                                <select class="chosen-select" name="pageSize">
-                                                    <option value="20">20개씩보기</option>
-                                                    <option value="40">40개씩보기</option>
-                                                    <option value="60">60개씩보기</option>
-                                                    <option value="80">80개씩보기</option>
-                                                </select>
+                                        <div class="goods_arr_box">
+                                            <div class="goods_sort">
+                                                <div class="inp_sel">
+                                                    <select name="goods_sort" id="productSorting">
+                                                        {{#if sectionId}}
+                                                        <option value="ranking">랭킹순</option
+                                                        >{{/if}}
+                                                        <option value="sale_cnt">판매량순</option>
+                                                        <option value="price_asc">낮은가격순</option>
+                                                        <option value="price_dsc">높은가격순</option>
+                                                        <option value="review">상품후기순</option>
+                                                        <option value="date">등록일순</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="goods_view_type">
+                                                <ul>
+                                                    <li>
+                                                        <button type="button" id="displayType" class="on">list</button>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="goods_list" id="productList">
+                            <div class="goods_list">
                                 <div class="goods_list_cont">
-                                    <div class="item_gallery_type">
-                                        <ul>
-                                            {{#each productList}}
-                                            <li data-product-no="{{productNo}}" style="width: 25%;">
-                                                <div class="item_cont">
-                                                    <div class="item_photo_box">
-                                                        <a href="/pages/product/view.html?productNo={{productNo}}" class="{{#if adult}}item_adult{{/if}}">
-                                                            {{img listImageUrls 180 180 productName 'middle'}} {{#if adult}}
-                                                            <strong
-                                                                class="item_adult_bg"
-                                                                style="background-image: url('/assets/img/icon/goods_icon/only_adult_pc.png'); display: block;"
-                                                                >19금</strong
-                                                            >
-                                                            {{/if}} {{#ifLe stockCnt 0}}
-                                                            <strong
-                                                                class="item_soldout_bg"
-                                                                style="background-image: url('/assets/img/icon/goods_icon/soldout.png'); display: block;"
-                                                                >SOLD OUT</strong
-                                                            >
-                                                            {{/ifLe}} {{#ifEq saleStatusType 'READY'}}
-                                                            <div class="item_sell_ing"><span>판매임박</span></div>
-                                                            {{/ifEq}} {{#ifEq saleStatusType 'FINISHED'}}
-                                                            <div class="item_sell_ing"><span>판매종료</span></div>
-                                                            {{/ifEq}}
-                                                        </a>
-                                                        {{#ifGt stockCnt 0}}
-                                                        <a class="item_wish {{#if liked}}on{{/if}}" id="wishBtn" href="#"></a>
-                                                        {{/ifGt}}
-                                                    </div>
-                                                    <div class="item_info_cont">
-                                                        <div class="item_tit_box">
-                                                            {{#if brandName}}
-                                                            <span class="item_brand">
-                                                                <strong>{{brandName}}</strong>
-                                                            </span>
-                                                            {{else}}
-                                                            <span class="item_brand">
-                                                                <strong>{{brandNameEn}}</strong>
-                                                            </span>
-                                                            {{/if}}
-                                                            <a href="/pages/product/view.html?productNo={{productNo}}">
-                                                                <strong class="item_name">{{safeString productName}}</strong>
-                                                                {{#if promotionText}}
-                                                                <span class="item_name_explain">{{promotionText}}</span>
-                                                                {{/if}}
-                                                            </a>
-                                                        </div>
-                                                        <div class="item_money_box">
-                                                            {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                                                            <del>{{toCurrencyString salePrice}}원</del>
-                                                            {{/ifHasDiscount}}
-                                                            <strong class="item_price"> <b>{{toCurrencyString calculatedSalePrice}}</b>원 </strong>
-                                                        </div>
-                                                        <div class="item_icon_box">
-                                                            {{#each stickerInfos}} {{#ifEq type 'TEXT'}}
-                                                            <span>{{label}}</span>
-                                                            {{else}} {{img label}} {{/ifEq}} {{/each}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            {{else}}
-                                            <div class="goods_no_data"><strong>{{message}}</strong></div>
-                                            {{/each}}
-                                        </ul>
+                                    <div class="item_list_type">
+                                        <ul class="goods_product_list" id="productList" data-template-id="product-list-type-list"></ul>
                                     </div>
+                                    <div id="productsMoreButton"></div>
                                 </div>
                             </div>
-                            <div id="pagination" class="pagination"></div>
                         </div>
                     </div>
                 </main>
+                <!-- 1. 갤러리형 -->
+                <script id="product-list-type-gallery" type="text/x-handlebars-template">
+                    <ul class="goods_product_list" id="productList">
+                        {{#each productList}}
+                            <li class="product_item goods_prd_item2 list_num_2" data-product-no="{{productNo}}">
+                                <div class="goods_prd_item2_box">
+                                    <div class="goods_prd_img">
+                                        <div class="img_box">
+                                            <a href="/pages/product/view.html?productNo={{productNo}}"
+                                            class="{{#if adult}}item_adult{{/if}}">
+                                            {{#if listImageUrls}}{{img listImageUrls '' '' productName 'middle' 'width:100%;height:auto'}}{{/if}}
+                                            {{#if adult}}
+                                                <strong class="adult_img" style="background-image:url(/assets/img/goods_icon/only_adult_pc.png);">19금</strong>
+                                            {{/if}}
+                                            {{#ifLe stockCnt 0}}
+                                                <strong class="soldout_img"
+                                                        style="background-image:url('/assets/img/icon/soldout.png'); display:block;"
+                                                >SOLD OUT</strong>
+                                            {{/ifLe}}
+                                            {{#ifEq saleStatusType 'READY'}}
+                                                <div class="item_sell_ing"><span>판매<br>임박</span></div>
+                                            {{/ifEq}}
+                                            {{#ifEq saleStatusType 'FINISHED'}}
+                                                <div class="item_sell_ing"><span>판매<br>종료</span></div>
+                                            {{/ifEq}}
+                                            </a>
+                                            <a class="goods_wish {{#if liked}}on{{/if}}" id="wishBtn" href="#"></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="goods_prd_content">
+                                        <div class="goods_list_info">
+                                            <a href="/pages/product/view.html?productNo={{productNo}}">
+                                            <ul class="goods_info_list">
+                                                <li class="prd_name">{{safeString productName}}</li>
+                                                {{#if promotionText}}
+                                                    <li class="short_des">{{promotionText}}</li>
+                                                {{/if}}
+                                                <li class="price">
+                                                    {{toCurrencyString calculatedSalePrice}}원
+                                                    {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                                                        <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                                                    {{/ifHasDiscount}}
+                                                </li>
+                                                <li class="sticker">
+                                                {{#each stickerInfos}}
+                                                    {{#ifEq type 'TEXT'}}{{label}}
+                                                    {{else ifEq type 'IMAGE'}}{{img label '' '' name '' ''}}
+                                                    {{/ifEq}}
+                                                {{/each}}
+                                                </li>
+                                            </ul>
+                                            </a>
+                                        </div>
+                                    </div>
+                            </li>
+                        {{else}}
+                            {{#if message}}
+                                <div class="goods_no_data"><strong>{{message}}</strong></div>
+                            {{else}}
+                                <div class="goods_no_data"><strong>상품이 존재하지 않습니다.</strong></div>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
+                </script>
+
+                <!-- 2. 리스트형 -->
+                <script id="product-list-type-list" type="text/x-handlebars-template">
+                    <ul class="goods_product_list" id="productList">
+                    {{#each productList}}
+                        <li class="product_item items goods_prd_item" data-product-no="{{productNo}}">
+                            <div class="goods_prd_img">
+                                <div class="img_box">
+                                    <a href="/pages/product/view.html?productNo={{productNo}}" {{#if adult}}class="item_adult"{{/if}}>
+                                    {{#if listImageUrls}}{{img listImageUrls '' '' productName 'middle' 'width:100%;height:auto'}}{{/if}}
+                                    {{#if adult}}
+                                        <strong class="adult_img" style="background-image:url(/assets/img/goods_icon/only_adult_pc.png);">19금</strong>
+                                    {{/if}}
+                                    {{#ifLe stockCnt 0}}
+                                        <strong class="soldout_img" style="background-image:url('/assets/img/icon/soldout.png');">SOLD OUT</strong>
+                                    {{/ifLe}}
+                                    {{#ifEq saleStatusType 'READY'}}<div class="goods_selling"><span>판매<br>임박</span></div>{{/ifEq}}
+                                    {{#ifEq saleStatusType 'FINISHED'}}<div class="goods_selling"><span>판매<br>종료</span></div>{{/ifEq}}
+                                    </a>
+                                    <a class="goods_wish {{#if liked}}on{{/if}}" id="wishBtn" href="#">찜하기</a>
+                                </div>
+                            </div>
+
+                            <div class="goods_prd_content">
+                                <div class="goods_list_info">
+                                    <a href="/pages/product/view.html?productNo={{productNo}}">
+                                    <ul class="goods_info_list">
+                                        <li class="prd_name">{{safeString productName}}</li>
+                                        {{#if promotionText}}
+                                            <li class="short_des">{{promotionText}}</li>
+                                        {{/if}}
+                                        <li class="price">
+                                            <span class="c_price">
+                                              {{toCurrencyString calculatedSalePrice}}원
+                                                {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                                                    <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                                                {{/ifHasDiscount}}
+                                            </span>
+                                        </li>
+                                        <li class="sticker">
+                                        {{#each stickerInfos}}
+                                            {{#ifEq type 'TEXT'}}{{label}}
+                                            {{else ifEq type 'IMAGE'}}{{img label '' '' name '' ''}}
+                                            {{/ifEq}}
+                                        {{/each}}
+                                        </li>
+                                    </ul>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    {{else}}
+                        {{#if message}}
+                            <div class="goods_no_data"><strong>{{message}}</strong></div>
+                        {{else}}
+                            <div class="goods_no_data"><strong>상품이 존재하지 않습니다.</strong></div>
+                        {{/if}}
+                    {{/each}}
+                    </div>
+                </script>
             </div>
-            <aside id="aside"></aside>
             <footer id="footer"></footer>
             <div id="popups-area"></div>
         </div>

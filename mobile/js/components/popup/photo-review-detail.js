@@ -3,7 +3,7 @@
  *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  *  @author Eunbi Kim
- *  @since 2022.6.8
+ *  @since 2022.6.17
  *
  */
 
@@ -12,20 +12,22 @@
   class PhotoReviewDetail {
     constructor($parent, option, callback) {
       this.$el = $parent;
-      this.option = option; //{reviewNo, productNo, hasCloseBtn, type : 'photoReviews || 'productReviews' || 'boards', parameter, totalPage, isMain}
+      this.option = option;
       this.callback = callback;
       this.reviewComment = { page: 1, contents: [] };
       this.review = {};
-      this.reviewsInfo = { currentReviewNoIndex: 0, reviewNos: [], maxPageNumber: 0 };
-      this.totalCount = 0;
+      this.reviewsInfo = { currentReviewIndex: 0, reviewNos: [], maxPageNumber: 0 };
       this.isFirstRequest = true;
+      this.touchCoordinate = {
+        touchstartX: 0,
+        touchendX: 0,
+      };
       this.initiate($parent, option);
     }
 
     async initiate($parent, option) {
-      await this.setData();
-      await this.setPrevAndNextReviewData(true);
       await this.render($parent, option);
+      this.setPrevAndNextReviewData(true);
       this.bindEvents();
     }
 
@@ -55,14 +57,14 @@
     }
 
     getMaxPageNumber(totalCount) {
-      if (this.option.type === 'boards' || this.option.isView) return this.option.totalPage;
-      return totalCount;
+      if (this.option.onlyDisplayedReviews) return this.option.totalPage;
+      if (this.option.type === 'productReviews') return totalCount;
+      return Math.ceil(totalCount / this.option.parameter.queryString.pageSize);
     }
 
     setReviewsInfo(reviews, totalCount) {
       this.reviewsInfo.reviewNos = this.getReviewNos(reviews);
-      this.reviewsInfo.currentReviewNoIndex = this.findCurrentReviewIndex;
-      this.totalCount = totalCount;
+      this.reviewsInfo.currentReviewIndex = this.findCurrentReviewIndex;
       if (this.isFirstRequest) this.reviewsInfo.maxPageNumber = this.getMaxPageNumber(totalCount);
     }
 
@@ -96,27 +98,18 @@
       }
     }
 
-    get renderData() {
-      return { ...this.option, ...this.review, totalCount: this.totalCount };
-    }
-
-    async render($parent) {
+    async render($parent, option) {
       const compiled = Handlebars.compile($('#photoReviewDetailTemplate').html());
-      this.$el = $(compiled(this.renderData));
+      this.$el = $(compiled(option));
       $parent.append(this.$el);
-      await this.renderReviewContent(false);
+      await this.renderReviewContent();
     }
 
-    async renderReviewContent(isSetData = true) {
-      const FIRST_IMAGE_INDEX = 0;
-      isSetData && (await this.setData());
-      this.$el.find('#photoReviewDetailContent').render(this.renderData);
-      this.renderSelectedImage(FIRST_IMAGE_INDEX);
-      this.setSlider();
-    }
-
-    renderSelectedImage(selectedImageIndex) {
-      this.$el.find('#selectedImage').render({ selectedImageUrl: this.review.fileUrls[selectedImageIndex] });
+    async renderReviewContent() {
+      await this.setData();
+      const data = { ...this.option, ...this.review };
+      if (data.fileUrls.length === 0) data.fileUrls = ['//rlyfaazj0.toastcdn.net/no_img.png'];
+      this.$el.find('#photoReviewDetailContent').render(data);
     }
 
     async renderComment() {
@@ -125,16 +118,30 @@
       this.$el.find('#reviewComment').render(commentData);
     }
 
-    setSlider() {
-      $('.p-layer-thumbs').slick({
-        slidesToShow: 5,
-        speed: 500,
-        vertical: this.review.expandedReviewConfig.photoReviewDisplayType === 'SECOND_TYPE',
-      });
-    }
-
     bindEvents() {
       this.$el.on('click', this.handlePhotoReviewDetailClick.bind(this));
+      this.$el.on('touchstart', this.handleTouchstart.bind(this));
+      this.$el.on('touchend', this.handleTouchend.bind(this));
+    }
+
+    checkDirection() {
+      const startX = this.touchCoordinate.touchstartX;
+      const endX = this.touchCoordinate.touchendX;
+      const num = startX - endX < 0 ? (startX - endX) * -1 : startX - endX;
+
+      if (num > 60) {
+        if (endX < startX) this.handleNextReviewClick();
+        if (endX > startX) this.handlePrevReviewClick();
+      }
+    }
+
+    handleTouchstart(event) {
+      this.touchCoordinate.touchstartX = event.changedTouches[0].screenX;
+    }
+
+    handleTouchend(event) {
+      this.touchCoordinate.touchendX = event.changedTouches[0].screenX;
+      this.checkDirection();
     }
 
     handlePhotoReviewDetailClick({ target }) {
@@ -150,11 +157,8 @@
         case 'reviewRecommend':
           this.handleReviewRecommendClick($target);
           break;
-        case 'reviewImages':
-          this.handleReviewImagesClick($target, $target.closest('button').data('imageNo'));
-          break;
-        case 'openPhotoReviews':
-          this.handleOpenPhotoReviewsClick();
+        case 'closePopup':
+          this.option.hasCloseBtn ? this.close() : this.handleOpenPhotoReviewsClick();
           break;
         case 'prevReview':
           this.handlePrevReviewClick();
@@ -185,7 +189,7 @@
       };
       isRecommend ? await this.postReviewRecommend(request) : await this.deleteReviewRecommend(request);
       const { data } = await this.getReview();
-      this.$el.find('#reviewRecommend').text(data.recommendCnt);
+      this.$el.find('#recommendCnt').text(data.recommendCnt);
     }
 
     removeSecondFromYdmt(ydmt) {
@@ -239,8 +243,8 @@
 
     showComments($target) {
       this.$el.find('#reviewComment').toggle();
-      $target.parent().toggleClass('on');
-      const checked = this.isCheckedElement($target.parent());
+      $target.toggleClass('on');
+      const checked = this.isCheckedElement($target);
       if (!checked) return;
       this.resetReviewComments();
       this.renderComment();
@@ -251,16 +255,11 @@
         shopby.alert({ message: '로그인 후 이용할 수 있습니다.' });
         return;
       }
+
       const $targetParents = $target.closest('#reviewRecommendParents');
-      $target.closest('#reviewRecommendParents').toggleClass('on');
+      $targetParents.closest('#reviewRecommendParents').toggleClass('on');
       const isRecommend = this.isCheckedElement($targetParents);
       this.changeReviewRecommendStatus(isRecommend);
-    }
-
-    handleReviewImagesClick($target, imageNo) {
-      $target.closest('button').siblings().removeClass('on');
-      $target.addClass('on');
-      this.renderSelectedImage(imageNo);
     }
 
     async handleOpenPhotoReviewsClick() {
@@ -270,42 +269,42 @@
       this.close();
     }
 
-    updateCurrentReview(currentReviewNoIndex) {
-      this.reviewsInfo.currentReviewNoIndex = currentReviewNoIndex;
-      this.option.reviewNo = this.reviewsInfo.reviewNos[this.reviewsInfo.currentReviewNoIndex];
+    updateCurrentReviewNo(currentReviewIndex) {
+      this.reviewsInfo.currentReviewIndex = currentReviewIndex;
+      this.option.reviewNo = this.reviewsInfo.reviewNos[this.reviewsInfo.currentReviewIndex];
       this.renderReviewContent();
     }
 
     async handlePrevReviewClick() {
-      const isFirstReview = this.reviewsInfo.currentReviewNoIndex === 0;
+      const isFirstReview = this.reviewsInfo.currentReviewIndex === 0;
       const isFirstPageNumber = this.option.parameter.queryString.pageNumber === 1;
+
       if (isFirstReview && isFirstPageNumber) return;
       if (isFirstReview) {
         this.option.parameter.queryString.pageNumber -= 1;
         await this.setPrevAndNextReviewData();
-        this.updateCurrentReview(this.reviewsInfo.reviewNos.length - 1);
+        this.updateCurrentReviewNo(this.reviewsInfo.reviewNos.length - 1);
       } else {
-        this.updateCurrentReview((this.reviewsInfo.currentReviewNoIndex -= 1));
+        this.updateCurrentReviewNo((this.reviewsInfo.currentReviewIndex -= 1));
       }
     }
 
     async handleNextReviewClick() {
-      if (this.option.type === 'boards' && this.option.isMain !== true) {
-        const isLastReview = this.reviewsInfo.currentReviewNoIndex === this.reviewsInfo.reviewNos.length - 1;
+      if (this.option.type === 'boards' && this.option.onlyDisplayedReviews !== true) {
+        const isLastReview = this.reviewsInfo.currentReviewIndex === this.reviewsInfo.reviewNos.length - 1;
         const isLastPageNumber = this.option.parameter.queryString.pageNumber >= this.reviewsInfo.maxPageNumber;
-
         if (isLastReview && isLastPageNumber) return;
         if (isLastReview) {
           this.option.parameter.queryString.pageNumber += 1;
           await this.setPrevAndNextReviewData();
-          this.updateCurrentReview(0);
+          this.updateCurrentReviewNo(0);
         } else {
-          this.updateCurrentReview((this.reviewsInfo.currentReviewNoIndex += 1));
+          this.updateCurrentReviewNo((this.reviewsInfo.currentReviewIndex += 1));
         }
       } else {
-        const isLastReview = this.reviewsInfo.maxPageNumber === this.reviewsInfo.currentReviewNoIndex + 1;
+        const isLastReview = this.reviewsInfo.maxPageNumber === this.reviewsInfo.currentReviewIndex + 1;
         if (isLastReview) return;
-        this.updateCurrentReview((this.reviewsInfo.currentReviewNoIndex += 1));
+        this.updateCurrentReviewNo((this.reviewsInfo.currentReviewIndex += 1));
       }
     }
   }

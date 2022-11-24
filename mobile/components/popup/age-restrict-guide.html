@@ -3,13 +3,13 @@
   ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
   ~
   ~  @author choisohyun
-  ~  @since 2021.7.14
+  ~  @since 2021.8.17
   ~
   -->
 
 <script id="ageRestrictGuideTemplate" type="text/x-handlebars-template">
-    <div class='layer_wrap dimed'>
-        <div class='box common_popup_body' style='width: auto'>
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='ly_wrap'>
             <div class='cert_warning'>
                 <h2>
                     가입불가 안내
@@ -28,14 +28,20 @@
                             관련법규 전문보기
                         </a>
                     </p>
-                    <a href='javascript:void(0)' class='btn_member_black btnClosePopup' data-action-type='negative'>
-                        확인
-                    </a>
+                    <ul class='btn_box'>
+                        <li>
+                            <button type='button' class='address_cancel_btn btnClosePopup' data-action-type='negative'>
+                                확 인
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <a href='javascript:void(0)' class='ly_close btnClosePopup' data-action-type='negative'>
-                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
-            </a>
+            <div class='close_btn'>
+                <button type='button' class='lys_close_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                    닫기
+                </button>
+            </div>
         </div>
     </div>
 </script>

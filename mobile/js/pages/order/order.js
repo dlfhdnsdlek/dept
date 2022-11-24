@@ -21,7 +21,6 @@ $(() => {
   });
 
   const $orderProductsTable = $('#orderProductsTable');
-  const $priceSum = $('#priceSum');
   const $ordererInfo = $('#ordererInfo');
   const $tempPasswordContainer = $('#tempPasswordContainer');
   const $shippingInfo = $('#shippingInfo');
@@ -30,14 +29,14 @@ $(() => {
   const $payMethodList = $('#payMethodList');
   const $accountDetailInfo = $('#accountDetailInfo');
   const $termsChecks = $('#termsChecks');
-  const $totalSettlePriceView = $('#totalSettlePriceView');
   const $paymentProgressList = $('#paymentProgressList');
   const $escrow = $('#escrow');
+  // const $paymentFinal = $('#paymentFinal');
 
   shopby.order = {
     data: {
       orderSheetResponse: null,
-      orderProductInfos: [], // 주문상품 상세
+      deliveryGroups: [], // 주문상품 상세
       ordererInfo: null, // 주문자 정보
       orderSheetAddress: {
         addressNo: null,
@@ -84,7 +83,7 @@ $(() => {
       shopby.setGlobalVariableBy('ORDER', orderSheetResponse.data);
       await this.setAgreementList(termsResponse.data);
       this.setOrderSheetResponse(orderSheetResponse.data);
-      this.setOrderProductInfos(orderSheetResponse.data.deliveryGroups);
+      this.setDeliveryGroups(orderSheetResponse.data.deliveryGroups);
       this.setOrdererInfo(orderSheetResponse.data.ordererContact);
       this.setOrderSheetAddress(orderSheetResponse.data.orderSheetAddress);
       this.setPaymentInfo(orderSheetResponse.data.paymentInfo);
@@ -99,18 +98,20 @@ $(() => {
       this.data.orderSheetResponse = orderSheetResponse;
     },
 
-    setOrderProductInfos(deliveryGroups) {
-      const orderProductInfos = deliveryGroups.flatMap(deliveryGroup => this.makeOrderProductInfo(deliveryGroup));
-      this.data.orderProductInfos = orderProductInfos;
+    setDeliveryGroups(deliveryGroups) {
+      this.data.deliveryGroups = deliveryGroups.map(deliveryGroup => ({
+        deliveryAmt: deliveryGroup.deliveryAmt,
+        deliveryPayType: deliveryGroup.deliveryPayType === 'PAY_ON_DELIVERY' ? '착불' : '선결제',
+        orderProducts: this.makeDeliveryGroups(deliveryGroup),
+        deliveryInternational: deliveryGroup.orderProducts[0].deliveryInternational,
+      }));
     },
 
     // 배송그룹(deliveryGroups) -> 주문상품 정보 데이터로 바꿔야함
-    makeOrderProductInfo(deliveryGroup) {
+    makeDeliveryGroups(deliveryGroup) {
       const REPRESENTATIVE_PRODUCT = 0;
 
       const mall = shopby.cache.getMall().mall;
-      const { deliveryAmt, deliveryPayType } = deliveryGroup;
-
       return deliveryGroup.orderProducts
         .flatMap(({ orderProductOptions, imageUrl, productName }) => {
           orderProductOptions[REPRESENTATIVE_PRODUCT].imagesUrl = imageUrl;
@@ -119,11 +120,9 @@ $(() => {
           });
           return orderProductOptions;
         })
-        .map((orderProductOption, _, orderProductOptions) => ({
+        .map(orderProductOption => ({
           imageUrl: orderProductOption.imageUrl,
           productName: orderProductOption.productName,
-          deliveryAmt,
-          deliveryPayType: deliveryPayType === 'PAY_ON_DELIVERY' ? '착불' : '선결제',
           productNo: orderProductOption.productNo,
           optionTitle: orderProductOption.optionTitle,
           optionInputs: orderProductOption.optionInputs,
@@ -133,8 +132,6 @@ $(() => {
           accumulationUnit: (mall.accumulationConfig && mall.accumulationConfig.accumulationUnit) || '원',
           discountAmt: shopby.utils.getDiscountAmt(orderProductOption.price, orderProductOption.orderCnt),
           productTotalAmt: shopby.utils.getProductTotalAmt(orderProductOption.price, orderProductOption.orderCnt), // 합계금액
-          rowSpan: orderProductOptions.indexOf(orderProductOption) !== 0 ? 0 : orderProductOptions.length,
-          deliveryInternational: deliveryGroup.orderProducts[0].deliveryInternational,
         }));
     },
 
@@ -170,7 +167,7 @@ $(() => {
               return { payType: 'PAYCO', pgType: 'PAYCO', title: '페이코 간편 결제' };
             }
             if (pgType === 'KCP') {
-              return { payType: 'PAYCO', pgType: 'KCP', title: 'KCP 페이코 간편 결제' };
+              return { payType: 'KCP-PAYCO', pgType: 'PAYCO', title: 'KCP 페이코 간편 결제' };
             }
           });
         },
@@ -228,7 +225,6 @@ $(() => {
     render() {
       const paymentInfo = this._getPaymentInfo();
       $orderProductsTable.render(this._getOrderProductsTable());
-      $priceSum.render(this._getPriceSum());
       $ordererInfo.render(this._getOrdererInfo());
       $tempPasswordContainer.render();
       $shippingInfo.render(this._getShippingInfo());
@@ -237,15 +233,14 @@ $(() => {
       $escrow.render(this._isEscrow());
       $termsChecks.render({
         agreementList: this.data.agreementList,
-        deliveryInternational: this.data.orderProductInfos[0].deliveryInternational,
+        deliveryInternational: this.data.deliveryGroups[0].deliveryInternational,
       });
-      $totalSettlePriceView.render(this.paymentAmt);
       $('input:radio[name=payType]:first').attr('checked', true);
+      $('#orderForm').removeClass('invisible').addClass('visible');
 
       this.initAccount();
       this.paymentDisplay();
     },
-
     renderPayment(paymentInfo) {
       paymentInfo = paymentInfo || this._getPaymentInfo();
       $paymentInfo.render(paymentInfo);
@@ -259,7 +254,14 @@ $(() => {
     bindEvents() {
       $shippingInfo
         .on('click', '#manageShippingAddressBtn', this.events.onOpenMyShippingList.bind(this))
-        .on('change', "input:radio[name='shipping']", this.events.onCheckShippingArea.bind(this))
+        .on('change', "input:radio[name='shipping']", this.events.onCheckShippingArea.bind(this)) // 배송 탭
+        .on('change', '#shippingSameCheck', this.events.onCheckSameShipping.bind(this))
+        .on(
+          'change',
+          'input[name="receiverName"]',
+          'input[name="receiverContact1"]',
+          this.events.onChangeSameShippingBindInput.bind(this),
+        )
         .on('click', '#postSearch', this.events.onOpenFindAddress.bind(this));
       $orderBuy.on('click', this.events.onOrderBuy.bind(this));
       $('#orderForm')
@@ -270,6 +272,7 @@ $(() => {
       $paymentProgressList.on('change', '.paymethods', this.events.onChangePayMethods.bind(this));
       $('#tempPasswordTable').on('blur', 'input', this.events.onBlurTempPassword.bind(this));
       $('.agreement_detail').on('click', this.events.onOpenTerm.bind(this));
+      $('.js-order_tit').on('click', this.events.toggleContent.bind(this));
     },
 
     events: {
@@ -278,7 +281,6 @@ $(() => {
         if ((key && key.includes('Arrow')) || !pattern) return;
 
         const { value } = target;
-
         let validInput =
           pattern === 'customsId' ? this.events.validateCustomId(value) : value.replace(shopby.regex[pattern], '');
 
@@ -288,7 +290,6 @@ $(() => {
 
         $(target).val(validInput);
       },
-
       validateCustomId(value) {
         const regLetter = /[^p|P]/;
         const firstLetter = value[0];
@@ -298,7 +299,6 @@ $(() => {
 
         return firstLetter + numbers.replace(shopby.regex.notNumber, '');
       },
-
       async onBlurAccumulation(e) {
         const { removeComma } = shopby.utils;
         const { availableMaxAccumulationAmt, minAccumulationLimit } = this.data.paymentInfo;
@@ -315,7 +315,6 @@ $(() => {
 
         await this._postCalculate();
         this.renderPayment();
-        $totalSettlePriceView.render(this.paymentAmt);
       },
 
       onOrderBuy() {
@@ -324,20 +323,21 @@ $(() => {
         const isAccount = $('input:radio[name="payType"]:checked').val() === 'ACCOUNT';
         const lessNaverEasyPay = this.data.paymentInfo.paymentAmt < 100;
         const isNaverEasyPay = $('input:radio[name="payType"]:checked').val() === 'NAVER_EASY_PAY';
-
         try {
           this.validateForm();
+
           if (isNaverEasyPay && lessNaverEasyPay) {
             shopby.alert('네이버페이 결제는 결제 금액이 100원 이상부터 가능합니다');
             return;
           }
           //무통장결제가 아니고 0원 결제가 아닌경우 : 결제레이어창 띄우기
           if (!isAccount && !notPay) shopby.popup('pay-process', { orderSheetNo });
+
           window.NCPPay.setConfiguration({
             clientId: shopby.config.skin.clientId,
             accessToken: shopby.cache.getAccessToken(),
             confirmUrl: `${location.origin}/pages/order/order-complete.html`,
-            platform: 'PC',
+            platform: 'MOBILE_WEB',
           });
 
           window.NCPPay.reservation(requestBody);
@@ -347,56 +347,44 @@ $(() => {
         }
       },
       async onCheckShippingArea(e) {
-        const SELECTED_AREA = e.target.value;
-        const RECENT_ADDRESS = 0;
+        const SELECTED_AREA = e.target.value; // 'default'|'shipping-list'|'new'
 
-        if (shopby.logined()) {
-          const { mainAddress, recentAddresses } = this.data.orderSheetResponse.orderSheetAddress;
-
-          const shippingArea = {
-            default: { ...mainAddress },
-            recent: { ...recentAddresses[RECENT_ADDRESS] },
-            new: { ...mainAddress },
-          };
-
-          this.setShippingInfoForm({ address: shippingArea[SELECTED_AREA], setAllNull: SELECTED_AREA === 'new' });
-        } else {
-          const ordererName = $('input[name="ordererName"]').val();
-          const ordererContact1 = $('input[name="ordererContact1"]').val();
-          const ordererContact2 = $('input[name="ordererContact2"]').val();
-
-          switch (SELECTED_AREA) {
-            case 'new':
-              $('input[name="receiverName"]').val('');
-              $('input[name="receiverContact1"]').val('');
-              $('input[name="receiverContact2"]').val('');
-              break;
-
-            case 'orderer':
-              $('input[name="receiverName"]').val(ordererName);
-              $('input[name="receiverContact1"]').val(ordererContact1);
-              $('input[name="receiverContact2"]').val(ordererContact2);
-              break;
-          }
+        if (SELECTED_AREA === 'shipping-list') {
+          this.events.onOpenMyShippingList.call(this);
+          return;
         }
 
-        await this._postCalculate();
+        const { mainAddress } = this.data.orderSheetResponse.orderSheetAddress; // mainAddress 메인배송지, 최근배송지
+
+        this.setShippingInfoForm({ address: { ...mainAddress }, setAllNull: SELECTED_AREA === 'new' });
+
+        await this._postCalculate(); // 제주도, 특수지역 배송비 계산 : PaymentInfo 수정 발생
         this.renderPayment();
       },
-      async onOpenMyShippingList(e) {
+
+      async onCheckSameShipping({ currentTarget: { checked } }) {
+        if (!checked) return;
+
+        const ordererName = $('input[name="ordererName"]').val();
+        const ordererContact1 = $('input[name="ordererContact1"]').val();
+        const ordererContact2 = $('input[name="ordererContact2"]').val();
+
+        $('input[name="receiverName"]').val(ordererName);
+        $('input[name="receiverContact1"]').val(ordererContact1);
+        $('input[name="receiverContact2"]').val(ordererContact2);
+
+        await this._postCalculate(); // 제주도, 특수지역 배송비 계산 : PaymentInfo 수정 발생
+        this.renderPayment();
+      },
+
+      onChangeSameShippingBindInput() {
+        $('#shippingSameCheck').prop('checked', false);
+      },
+
+      onOpenMyShippingList(e) {
         e && e.preventDefault();
         shopby.popup('my-shipping-list', null, async data => {
           if (data.state === 'close') return;
-
-          if (data.state === 'updated') {
-            this.setOrderSheetResponse(
-              (
-                await shopby.api.order.getOrderSheetsOrderSheetNo({
-                  pathVariable: { orderSheetNo },
-                })
-              ).data,
-            );
-          }
 
           if (!data.selectedAddress) {
             return;
@@ -418,6 +406,7 @@ $(() => {
         shopby.popup('find-address', {}, async data => {
           $('body').removeClass('popup-open');
           if (data.state === 'close') return;
+
           const { zipCode, address, jibunAddress } = data;
           this.setShippingInfoForm({
             address: {
@@ -434,10 +423,10 @@ $(() => {
             receiverJibunAddress: jibunAddress,
             receiverDetailAddress: null,
           };
+
           await this._postCalculate();
 
           this.renderPayment();
-          $totalSettlePriceView.render(this.paymentAmt);
         });
       },
       onChangePayMethods(e) {
@@ -477,7 +466,7 @@ $(() => {
         }
       },
       onOpenApplyCoupon(e) {
-        if (e) e.preventDefault(); // TODO. test code
+        e && e.preventDefault();
 
         shopby.popup('apply-coupon', this.data.coupon, async ({ state, data }) => {
           try {
@@ -486,7 +475,6 @@ $(() => {
 
             await this._postCalculate();
             this.renderPayment();
-            $totalSettlePriceView.render(this.paymentAmt);
           } catch (e) {
             if (e.code === 'ODSH0010') {
               shopby.alert(
@@ -495,7 +483,6 @@ $(() => {
                   $('#accumulation').val(0);
                   await this._postCalculate();
                   this.renderPayment();
-                  $totalSettlePriceView.render(this.paymentAmt);
                 },
               );
             }
@@ -521,7 +508,9 @@ $(() => {
 
         await this._postCalculate();
         this.renderPayment();
-        $totalSettlePriceView.render(this.paymentAmt);
+      },
+      toggleContent(e) {
+        e.target.classList.toggle('on');
       },
     },
 
@@ -555,11 +544,12 @@ $(() => {
       this.setPaymentInfo(res.data.paymentInfo);
       this.paymentDisplay();
     },
+
     paymentDisplay() {
       if (this.data.paymentInfo.paymentAmt === 0) {
-        $('.payment_box').hide();
+        $('#paymentProgressList').hide();
       } else {
-        $('.payment_box').show();
+        $('#paymentProgressList').show();
       }
     },
 
@@ -609,27 +599,7 @@ $(() => {
 
     _getOrderProductsTable() {
       return {
-        orderProductInfos: this.data.orderProductInfos,
-      };
-    },
-
-    _getPriceSum() {
-      const { orderProductInfos, orderSheetResponse } = this.data;
-      const { getTotal } = shopby.utils;
-
-      const totalOrderCnt = getTotal(orderProductInfos, 'orderCnt');
-      const totalStandardAmt = getTotal(orderProductInfos, 'standardAmt');
-      const totalDiscountAmt = getTotal(orderProductInfos, 'discountAmt');
-      const totalAccumulation = getTotal(orderProductInfos, 'accumulationAmtWhenBuyConfirm');
-      const totalDeliveryAmt = getTotal(orderSheetResponse.deliveryGroups, 'deliveryAmt');
-
-      return {
-        totalOrderCnt,
-        totalStandardAmt,
-        totalDiscountAmt,
-        totalDeliveryAmt,
-        totalAccumulation,
-        totalOrderAmt: totalStandardAmt - totalDiscountAmt + totalDeliveryAmt,
+        deliveryGroups: this.data.deliveryGroups,
       };
     },
 
@@ -650,7 +620,6 @@ $(() => {
     _getPaymentInfo() {
       const { paymentInfo } = this.data;
       const mall = shopby.cache.getMall();
-
       return {
         totalStandardAmt: paymentInfo.totalStandardAmt,
         deliveryAmt: paymentInfo.deliveryAmt,
@@ -679,19 +648,19 @@ $(() => {
         payMethods: this.data.payMethods,
       };
     },
+
     _isEscrow() {
       return {
         isEscrow: this.data.payMethods.some(({ payType }) => payType.includes('ESCROW')),
       };
     },
+
     _getAccountDetailInfo() {
       return {
         accountBankList: this.data.orderSheetResponse.tradeBankAccountInfos,
       };
     },
-    get paymentAmt() {
-      return { paymentAmt: this.data.paymentInfo.paymentAmt };
-    },
+
     _getOrderBuyFormData() {
       const RPRESENTATIVE_PRODUCT = 0;
       const { productName } = this.data.orderSheetResponse.deliveryGroups[RPRESENTATIVE_PRODUCT].orderProducts[

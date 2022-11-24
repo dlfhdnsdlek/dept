@@ -30,12 +30,15 @@ $(() => {
       const mallInfo = shopby.cache.getMall();
       return mallInfo.openIdJoinConfig.providers
         .sort((a, b) => b.charCodeAt(0) - a.charCodeAt(0))
-        .map(provider => ({ provider, url: `/assets/img/etc/pc_${provider}.png`, title: `${provider} 아이디 로그인` }));
+        .map(provider => ({
+          provider,
+          url: `/assets/img/etc/txt_mo_${provider}.png`,
+          title: `${provider} 아이디 로그인`,
+        }));
     },
     bindEvents() {
       $('button[name="member-login-btn"]').on('click', this.memberLogin.bind(this)).enterKeyup($password);
-      $('.btn_login_box').on('click', 'button', this.movePage);
-      $('.btn_login_sns').on('click', shopby.helper.login.openIdLogin.bind(shopby.helper.login));
+      $('.btnLoginSns').on('click', shopby.helper.login.openIdLogin.bind(shopby.helper.login));
     },
     async memberLogin() {
       const memberId = $memberId.val().trim();
@@ -56,15 +59,6 @@ $(() => {
           shopby.platform === 'PC' ? '.member_login_box .js_caution_msg1' : '.login_box .js_caution_msg1';
         $(selector).show();
       }
-    },
-    movePage(event) {
-      const type = event.target.dataset.action;
-      const pages = {
-        joinMethod: '/pages/join/method.html',
-        findId: '/pages/find-id/find-id.html',
-        findPwd: '/pages/find-password/find-password.html',
-      };
-      location.href = pages[type];
     },
 
     _validateLoginForm() {

@@ -9,8 +9,8 @@
 
 $(() => {
   shopby.intro.noAccess = {
-    initiate() {
-      this.render();
+    async initiate() {
+      await this.render();
     },
     render() {
       $('#noAccess').render({

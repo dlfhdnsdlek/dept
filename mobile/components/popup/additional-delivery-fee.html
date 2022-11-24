@@ -1,0 +1,44 @@
+<script id="deliveryFeeAreaTemplate" type="text/x-handlebars-template">
+    <div id='deliveryFeeArea' class='ly_pop ly_effect_3 ly_show dimed'>
+        <div class='ly_wrap'>
+            <div class='layer_common_wrapper layer_coupon_down'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        추가배송비 안내
+                    </h1>
+                </div>
+                <div class='close_btn'>
+                    <button type='button' class='lys_close_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                        닫기
+                    </button>
+                </div>
+                <div class='ly_content layer_simple_join join_agreement' style='padding: 15px;'>
+                    <p class='delivery_txt'>
+                        본 상품을 주문하실 때 아래 표기 된 지역으로 배송하실 경우 추가배송비가 부과됩니다.
+                    </p>
+                    <div class='join_form_box'>
+                        <table class='table_style3'>
+                            <colgroup>
+                                <col style='width:75%' />
+                                <col style='width:25%' />
+                            </colgroup>
+                            <tbody>
+                                {{#each remoteDeliveryAreaFees}}
+                                    <tr>
+                                        <td>
+                                            {{address}}
+                                        </td>
+                                        <td>
+                                            {{toCurrencyString extraDeliveryAmt}}원
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="/js/components/popup/additional-delivery-fee.js"></script>

@@ -1,119 +1,140 @@
+<!--
+  ~ © NHN Commerce Corp. All rights reserved.
+  ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  ~ @author JongKeun Kim
+  ~ @since 2021.8.20
+  -->
+
 <script id="myShippingRegisterPopupTemplate" type="text/x-handlebars-template">
-    <div class='layer_wrap dimed'>
-        <div class='box common_popup_body' style='width: 640px;'>
-            <div class='view' style='text-align: left;'>
-                <h2>
-                    나의 배송지 관리
-                </h2>
-                <div class='scroll_box order_table_type AddAddress_box'>
-                    <h3>
-                        배송지 등록
-                    </h3>
-                    <table class='left_table_type address_info_table'>
-                        <colgroup>
-                            <col style='width: 20%;' />
-                            <col style='width: 80%;' />
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <th scope='row'>
-                                    배송지 이름
-                                </th>
-                                <td>
-                                    <input type='text' name='addressName' maxlength='20' />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope='row'>
-                                    <span class='important'>
-                                        받으실 분
-                                    </span>
-                                </th>
-                                <td>
-                                    <input type='text' name='receiverName' maxlength='20' />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope='row'>
-                                    <span class='important'>
-                                        주소
-                                    </span>
-                                </th>
-                                <td class='member_address'>
-                                    <div class='address_postcode'>
-                                        <input type='text' name='receiverZipCd' readonly='readonly' />
-                                        <button type='button' class='btn_post_search' id='postSearch'>
-                                            주소찾기
-                                        </button>
-                                    </div>
-                                    <div class='address_input'>
-                                        <input type='text' name='receiverAddress' readonly='readonly' />
-                                        <input type='text' name='receiverDetailAddress' />
-                                        <input type='hidden' name='receiverJibunAddress' />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope='row'>
-                                    <span class='important'>
-                                        휴대폰번호
-                                    </span>
-                                </th>
-                                <td>
-                                    <input
-                                        type='text'
-                                        name='receiverContact1'
-                                        placeholder='-없이 숫자만 입력'
-                                        data-inputmask="'mask': '99999999999'"
-                                        inputmode='text'
-                                        data-pattern='notNumber'
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope='row'>
-                                    전화번호
-                                </th>
-                                <td>
-                                    <input
-                                        type='text'
-                                        name='receiverContact2'
-                                        placeholder='-없이 숫자만 입력'
-                                        data-inputmask="'mask': '99999999999'"
-                                        inputmode='text'
-                                        data-pattern='notNumber'
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan='2' class='common_delivery_check'>
-                                    <div class='form_element'>
-                                        <input type='checkbox' id='defaultYn' name='defaultYn' />
-                                        <label for='defaultYn' class='check_s'>
-                                            기본 배송지로 설정합니다.
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='ly_wrap'>
+            <div class='layer_common_wrapper layer_shipping_address_regist'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        나의 배송지 관리
+                    </h1>
                 </div>
-                <div class='btn_box'>
-                    <button type='button' class='btn_cancel btnClosePopup' data-action-type='negative'>
-                        <span>
-                            취소
-                        </span>
-                    </button>
-                    <button type='button' class='btn_confirm' id='saveButton' data-action-type='positive'>
-                        <span>
-                            저장
-                        </span>
-                    </button>
+                <div class='order ly_content'>
+                    <div class='order_box'>
+                        <div class='table_box order_table_type'>
+                            <table class='left_table_type address_info_table table_style2'>
+                                <colgroup>
+                                    <col style='width:30%' />
+                                    <col style='width:70%' />
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <th scope='row'>
+                                            배송지 이름
+                                        </th>
+                                        <td>
+                                            <input type='text' name='addressName' maxlength='20' />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope='row'>
+                                            <span class='important'>
+                                                받으실 분
+                                            </span>
+                                        </th>
+                                        <td>
+                                            <input type='text' name='receiverName' maxlength='20' />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope='row'>
+                                            <span class='important'>
+                                                주소
+                                            </span>
+                                        </th>
+                                        <td class='member_address'>
+                                            <div class='zipcode_box'>
+                                                <div class='zipcode_top'>
+                                                    <div class='zipcode_num'>
+                                                        <input type='text' name='receiverZipCd' readonly='readonly' />
+                                                    </div>
+                                                    <div class='zipcode_btn_box'>
+                                                        <button type='button' class='btn_post_search zipcode_btn1' id='postSearch'>
+                                                            주소찾기
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <input type='text' name='receiverAddress' readonly='readonly' />
+                                                <input type='text' name='receiverDetailAddress' />
+                                                <input type='hidden' name='receiverJibunAddress' />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope='row'>
+                                            <span class='important'>
+                                                휴대폰번호
+                                            </span>
+                                        </th>
+                                        <td>
+                                            <input
+                                                type='text'
+                                                name='receiverContact1'
+                                                placeholder='-없이 숫자만 입력'
+                                                data-inputmask="'mask': '99999999999'"
+                                                inputmode='text'
+                                                data-pattern='notNumber'
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope='row'>
+                                            전화번호
+                                        </th>
+                                        <td>
+                                            <input
+                                                type='text'
+                                                name='receiverContact2'
+                                                placeholder='-없이 숫자만 입력'
+                                                data-inputmask="'mask': '99999999999'"
+                                                inputmode='text'
+                                                data-pattern='notNumber'
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan='2'>
+                                            <div class='inp_chk' style='margin-top:10px'>
+                                                <input type='checkbox' id='defaultYn' name='defaultYn' />
+                                                <label for='defaultYn' class='check_s'>
+                                                    기본 배송지로 설정합니다.
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+                <ul class='btn_box'>
+                    <li>
+                        <button type='button' class='btn_cancel btnClosePopup' data-action-type='negative'>
+                            <span>
+                                취소
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type='button' class='btn_confirm' id='saveButton' data-action-type='positive'>
+                            <span>
+                                저장
+                            </span>
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <a href='#close' class='ly_close btnClosePopup'>
-                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
-            </a>
+            <div class='close_btn'>
+                <button type='button' class='lys_close_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                    닫기
+                </button>
+            </div>
         </div>
     </div>
 </script>

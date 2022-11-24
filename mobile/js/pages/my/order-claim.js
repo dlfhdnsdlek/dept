@@ -17,7 +17,6 @@ $(() => {
     returnType: 'SELLER_COLLECT',
     shippingData: null,
     async initiate() {
-      this.my.initiate();
       await this.fetchPossibleClaims();
       this.bindEvents();
     },
@@ -48,6 +47,7 @@ $(() => {
     generateOrderInfo(item) {
       this.setDefaultValues(item); // render 되기 전에 데이터가 set 되어야 해서 여기 넣었어요. to 은비님
       const isNaverPayOrder = this.payType === 'NAVER_PAY';
+
       this.claims = isNaverPayOrder ? [item.originalOption] : [item.originalOption].concat(item.claimableOptions);
       const data = this.claims.flatMap(claim => ({
         orderYmd: claim.orderStatusDate.registerYmdt.split(' ')[0],
@@ -63,6 +63,8 @@ $(() => {
         orderOptionNo: claim.orderOptionNo,
         payType: claim.payType,
         isEscrow: this.isEscrow,
+        claimType: this.claimTitle,
+        showAllCheckbox: this.claimType !== 'EXCHANGE',
       }));
       this.renderOrderTable(data);
     },
@@ -127,8 +129,8 @@ $(() => {
     },
     renderClaimForm(data) {
       $('#claimInfo').render(data);
-      $('.claimType').text(`${this.claimTitle}수량`);
-      $('#claimTitle').text(`${this.claimTitle}신청`);
+      $('[data-bind="claimTitle"]').text(`${this.claimTitle}신청`);
+      this.activateClaimForm();
     },
     renderShippingForm(data) {
       const $shippingInfo = $('#shippingInfo');
@@ -146,19 +148,31 @@ $(() => {
     get isEscrow() {
       return ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'].includes(this.payType);
     },
+    activateClaimForm() {
+      const { orderNo } = shopby.utils.getUrlParams('orderNo');
+      const checkbox = $(`.order-claim-info__order-cnt[data-order-no=${orderNo}]`).find(
+        '.cancel-toggle > [type="checkbox"]',
+      )[0];
+      checkbox.checked = true;
+      this.onHandleToggleClaimCount({ target: checkbox });
+    },
+    onHandleToggleClaimCount({ target }) {
+      const $count = $('.count');
+      target.checked ? $count.addClass('is-active') : $count.removeClass('is-active');
+    },
     bindEvents() {
       $('#orderClaimTemplate')
         .on('change', '#allChecked', this.onChangeAllCheckBox.bind(this))
         .on('change', 'input[name=optionItem]:checkbox', this.onChangeCheckBox.bind(this))
         .on('change', '#imageAttachments', this.onChangeAttachments.bind(this))
         .on('click', '#attachedImages', this.onClickDeleteBtn.bind(this))
-        .on('input', '.valueValidation', this.onInputValidation.bind(this))
+        .on('keyup', 'input', this.onInputValidation.bind(this))
         .on('click', '.btn_post_search', this.onClickFindAddress.bind(this))
         .on('change', 'input[name=returnType]', this.onChangeReturnType.bind(this))
         .on('click', '.btn_claim_ok', this.onClickSaveButton.bind(this))
         .on('click', '.openShippingAddressManager', this.onClickShippingAddressPopup.bind(this));
-
-      $('.goods_cnt').on('click', this.onClickClaimCount.bind(this));
+      $('.order-claim-info__order-cnt').on('click', this.onClickClaimCount.bind(this));
+      $('.cancel-toggle').on('change', this.onHandleToggleClaimCount);
       $('input[name=claimCount]').on('change', this.onChangeClaimCount.bind(this));
     },
     onChangeAllCheckBox({ target }) {
@@ -185,37 +199,46 @@ $(() => {
       const $checkbox = $(`input:checkbox[name='${name}']`);
       isTrigger ? $checkbox.prop('checked', isChecked).trigger('change') : $checkbox.prop('checked', isChecked);
     },
-    onClickClaimCount({ target }) {
+    onClickClaimCount: function ({ target, currentTarget }) {
       if (this.payType === 'NAVER_PAY') {
         alert('네이버페이 주문형 주문은 수량을 나누어 취소/반품할 수 없습니다.\n 전체 수량을 선택 후 신청해 주세요');
         return;
       }
 
-      const currentOrderOptionNo = Number($(target).closest('tr').data('order-option-no'));
-      const orderOption = this.claims.find(({ orderOptionNo }) => currentOrderOptionNo === orderOptionNo);
-      const calcType = $(target).data('type');
-      const $currentTr = $(target).closest('tr');
-      const maxClaimCnt = orderOption.orderCnt;
-      let claimCount = Number($currentTr.find('input[name=claimCount]').val());
+      const currentCnt = {
+        table: {
+          up: (prdCnt, currCnt) => (currCnt < prdCnt ? currCnt + 1 : prdCnt),
+          down: (prdCnt, currCnt) => (currCnt > 1 ? currCnt - 1 : 1),
+        },
+        calcVal(type, prdCnt, currCnt) {
+          return this.table[type] ? this.table[type](prdCnt, currCnt) : null;
+        },
+      };
 
-      if (calcType === 'increase' && claimCount < maxClaimCnt) {
-        claimCount += 1;
-      } else if (calcType === 'decrease' && claimCount > 1) {
-        claimCount -= 1;
-      }
-      $currentTr.find('input[name=claimCount]').val(claimCount);
+      const nodeName = target.nodeName.toLowerCase();
+      if (nodeName !== 'button') return;
+
+      const currentBtnType = target.dataset.actionType;
+      const claimInputEl = currentTarget.querySelector('[type="number"]');
+      const prdCnt = Number(currentTarget.dataset.productCount);
+      const currentPrdOrderNum = currentTarget.dataset.orderNo;
+      let claimCnt = Number(claimInputEl.value);
+
+      claimCnt = currentCnt.calcVal(currentBtnType, prdCnt, claimCnt);
+      claimInputEl.value = claimCnt;
+
+      $(`.inp_chk[data-order-no="${currentPrdOrderNum}"]`).attr('data-product-count', claimCnt);
     },
     onChangeClaimCount({ target }) {
       const $el = $(target);
       let count = Number($el.val());
 
-      const currentOrderOptionNo = Number($el.closest('tr').data('order-option-no'));
-      const orderOption = this.claims.find(({ orderOptionNo }) => currentOrderOptionNo === orderOptionNo);
+      const productCount = Number($el.parents('.order-claim-info__order-cnt').data('productCount'));
 
       if (!count || count < 0) {
         count = 1;
-      } else if (count > orderOption.orderCnt) {
-        count = orderOption.orderCnt;
+      } else if (count > productCount) {
+        count = productCount;
       }
 
       $el.val(count);
@@ -295,11 +318,11 @@ $(() => {
       this.returnType = target.value;
       this.shippingData.returnType = this.returnType;
       this.shippingData.logined = shopby.logined();
-
       this.renderShippingForm(this.shippingData);
     },
     async onClickSaveButton() {
       const claimInfoData = this.getClaimInfoData();
+
       if (this.validateClaim(claimInfoData) === false) return;
       if (this.validateBank(claimInfoData) === false) return;
 
@@ -324,7 +347,9 @@ $(() => {
         default:
           throw new Error('Unknown claim type');
       }
+
       if (!isSuccess) return;
+
       shopby.alert(
         `${this.claimTitle}신청이 완료되었습니다.</br>${this.claimTitle}관련 정보는 마이페이지 취소/반품/교환 내역에서 확인 가능합니다.`,
         () => (location.href = document.referrer === '' ? '/pages/my/orders.html' : document.referrer),
@@ -353,6 +378,9 @@ $(() => {
         } else {
           shopby.alert('취소상품을 하나 이상 선택해주세요.');
         }
+        return false;
+      } else if (!claimedProductOptions[0].productCnt) {
+        shopby.alert('상품을 하나 이상 선택해주세요.');
         return false;
       }
       return true;
@@ -406,6 +434,7 @@ $(() => {
           return false;
         }
       }
+
       return true;
     },
     validateExchange(getExchangeInfo) {
@@ -434,15 +463,13 @@ $(() => {
       }
 
       const exchangeCustomsIdNo = getExchangeInfo('exchangeCustomsIdNo');
-
       if (exchangeCustomsIdNo === undefined) return;
       if (exchangeCustomsIdNo === '') {
         shopby.alert('개인통관부호를 입력해주세요.', () => getExchangeInfo('exchangeCustomsIdNo', 'focus'));
         return false;
       }
       if (!shopby.regex.customsId.test(exchangeCustomsIdNo)) {
-        shopby.alert('개인통관부호가 유효하지 않습니다.', () => getExchangeInfo('exchangeCustomsIdNo', 'focus'));
-
+        shopby.alert('개인통관고유부호가 유효하지 않습니다.', () => getExchangeInfo('exchangeCustomsIdNo', 'focus'));
         return false;
       }
       return true;
@@ -595,6 +622,7 @@ $(() => {
     },
     getClaimInfoData() {
       const $claimInfo = $('.order_view_info_main');
+
       const claimInfoData = {
         claimedProductOptions: this.checkedClaimProductInfo,
         responsibilityTarget: this.isEscrow ? 'SELLER' : $claimInfo.find('select[name=responsibilityTarget]').val(), //귀책 대상
@@ -610,6 +638,7 @@ $(() => {
         claimInfoData.claimReasonType = 'CHANGE_MIND';
         claimInfoData.responsibilityTarget = 'BUYER';
       }
+
       return claimInfoData;
     },
     getExchangeInfoFunc() {
@@ -650,10 +679,13 @@ $(() => {
     },
     get checkedClaimProductInfo() {
       return Array.from($('input[name=optionItem]:checked')).map(productInfo => {
-        const $tr = $(productInfo).closest('tr');
+        const $el = $(productInfo).parent('.inp_chk');
+        const orderProductOptionNo = $el[0].dataset.orderOptionNo;
+        const productCnt = Number($el[0].dataset.productCount);
+
         return {
-          orderProductOptionNo: $tr.attr('data-order-option-no'),
-          productCnt: Number($tr.find('input[name=claimCount]').val()),
+          orderProductOptionNo,
+          productCnt,
         };
       });
     },
@@ -676,40 +708,6 @@ $(() => {
             </a>
           </div>
         </li>`.trim();
-    },
-
-    /**
-     * @my :  마이페이지 공통 로직
-     */
-    my: {
-      initiate() {
-        shopby.my.menu.init('#myPageLeftMenu');
-        if (shopby.logined()) {
-          this.summary.initiate().catch(console.error);
-        }
-      },
-
-      summary: {
-        async initiate() {
-          const [summary, summaryAmount] = await this._getData();
-          this.render(summary, summaryAmount);
-        },
-        async _getData() {
-          return Promise.all([
-            shopby.api.member.getProfileSummary(),
-            shopby.api.order.getProfileOrdersSummaryAmount({
-              queryString: {
-                orderStatusType: 'BUY_CONFIRM',
-                startYmd: shopby.date.lastHalfYear(),
-                endYmd: shopby.date.today(),
-              },
-            }),
-          ]).then(res => res.map(({ data }) => data));
-        },
-        render(summary, summaryAmount) {
-          shopby.my.summary.init('#myPageSummary', summary, summaryAmount);
-        },
-      },
     },
   };
 

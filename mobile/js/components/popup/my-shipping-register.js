@@ -8,6 +8,7 @@
 
 (() => {
   class MyShippingRegister {
+    // TODO: 요청을 여기서 보낼 수 있도록 option에다 api 함수들을 넘겨야하나?
     constructor($parent, option, callback) {
       this.addresses = option.addresses;
       this.isDefaultAddress = option.isDefaultAddress;
@@ -20,7 +21,6 @@
       const compiled = Handlebars.compile($('#myShippingRegisterPopupTemplate').html());
       this.$el = $(compiled(option));
       $parent.append(this.$el);
-
       this.setDefaultValues();
       this.bindEvents();
     }
@@ -32,7 +32,6 @@
       if (!this.addresses) {
         return;
       }
-
       Object.keys(this.addresses).forEach(key => {
         if (key === 'defaultYn' && this.addresses[key] === 'Y') {
           this.$el.find(`input[name=${key}]`).prop('checked', true);
@@ -71,9 +70,9 @@
 
         this.callback({
           address: {
-            addressNo: (this.addresses && this.addresses.addressNo) || 0,
-            addressType: (this.addresses && this.addresses.addressType) || null,
-            customsIdNumber: (this.addresses && this.addresses.customsIdNumber) || 0,
+            addressNo: this.addresses && this.addresses.addressNo,
+            addressType: this.addresses && this.addresses.addressType,
+            customsIdNumber: this.addresses && this.addresses.customsIdNumber,
             addressName: this.$el.find('input[name=addressName]').val(),
             receiverName: this.$el.find('input[name=receiverName]').val(),
             receiverZipCd: this.$el.find('input[name=receiverZipCd]').val(),

@@ -22,7 +22,7 @@ $(() => {
         .sort((a, b) => b.charCodeAt(0) - a.charCodeAt(0))
         .map(provider => ({
           provider,
-          url: `/assets/img/etc/pc_${provider}_join.png`,
+          url: `/assets/img/etc/txt_mo_${provider}_join.png`,
           title: `${provider} 아이디 회원가입`,
         }));
     },

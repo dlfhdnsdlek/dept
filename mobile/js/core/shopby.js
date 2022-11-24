@@ -1,63 +1,60 @@
-/* eslint-disable no-undef */
-window['shopby'] = window.shopby || {
-  localStorage: null,
-  sessionStorage: null,
-  utils: null,
-  logined: null,
-  goHome: null,
-  config: {
-    skin: null,
-    pay: null,
-  },
-  platform: null,
-  api: null,
-  start: {
-    initiate: null,
-    entries: [],
-  },
-  cash: null,
-  regex: null,
-  message: null,
-  designPopup: null,
+window['shopby'] = window.shopby
+  ? window.shopby
+  : {
+      localStorage: null,
+      utils: null,
+      logined: null,
+      goHome: null,
+      config: {
+        skin: null,
+        pay: null,
+      },
+      platform: null,
+      api: null,
+      start: {
+        initiate: null,
+        entries: [],
+      },
+      cash: null,
+      regex: null,
+      message: null,
+      designPopup: null,
 
-  // page global object
-  home: null,
-  intro: {
-    noAccess: null,
-    memberOnly: null,
-    adultCertification: null,
-  },
-  product: {
-    view: null,
-  },
-  order: null,
-  cart: null,
-  member: {
-    login: null,
-    auth: null,
-  },
-  board: {
-    list: null,
-    reply: null,
-  },
-  my: null,
-  service: {
-    agreement: null,
-  },
-  helper: {
-    cart: null,
-    timer: null,
-    option: null,
-    login: null,
-    captcha: null,
-  },
-  support: null,
-  /**
-   * @param {'MAIN'|'PRODUCT'|'PRODUCT_SEARCH'|'PRODUCT_LIST'|'DISPLAY_SECTION'|'CART'|'ORDER'|'ORDER_COMPLETE'|'ORDER_DETAIL'|'MEMBER_JOIN_COMPLETE'} key
-   * @param {object} payload
-   */
-  setGlobalVariableBy: () => {},
-};
+      // page global object
+      home: null,
+      intro: {
+        noAccess: null,
+        memberOnly: null,
+        adultCertification: null,
+      },
+      product: {
+        view: null,
+      },
+      order: null,
+      cart: null,
+      member: {
+        login: null,
+        auth: null,
+      },
+      board: {
+        list: null,
+      },
+      my: null,
+      service: {
+        agreement: null,
+      },
+      helper: {
+        cart: null,
+        timer: null,
+        option: null,
+        login: null,
+      },
+      /**
+       * @param {'MAIN'|'PRODUCT'|'PRODUCT_SEARCH'|'PRODUCT_LIST'|'DISPLAY_SECTION'|'CART'|'ORDER'|'ORDER_COMPLETE'|'ORDER_DETAIL'|'MEMBER_JOIN_COMPLETE'} key
+       * @param {object} payload
+       */
+      setGlobalVariableBy: () => {},
+    };
 
 /**
  * 전역 객체 생성.
@@ -69,7 +66,8 @@ window['shopby'] = window.shopby || {
    */
   shopby.logined = function () {
     const token = shopby.cache.getAccessToken();
-    const isDormant = shopby.localStorage.getItem(shopby.cache.key.member.dormant) || false;
+    const dormant = shopby.localStorage.getItem(shopby.cache.key.member.dormant);
+    const isDormant = dormant ? dormant : false;
     return token && token !== '' && !isDormant;
   };
 
@@ -253,6 +251,7 @@ window['shopby'] = window.shopby || {
 
     getItem(name) {
       if (!name) return null;
+
       try {
         return JSON.parse(window.sessionStorage.getItem(name));
       } catch (err) {
@@ -317,7 +316,7 @@ window['shopby'] = window.shopby || {
     email: /[_A-Za-z0-9-\\+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$/,
     mobileNo: /(\d{11,12})/g,
     birthday: /^(19[0-9][0-9]|20\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$/,
-    customsId: /^[p|P][1-6]{1}[0-9]{11}$/, // 개인통관고유번호 (숫자, 영어 p가 아닌 영어, p + 영어, 한글, p+특수문자 제외)
+    customsId: /^[p|P][1-6]{1}[0-9]{11}$/, // 개인통관고유번호
     engNumber: /[^0-9a-zA-Z]/g, //영문, 숫자만 가능
     imageExtension: /.(bmp|png|jpg|jpeg|gif)$/i,
     bankDepositorName: /[^a-zA-Zㄱ-힣!@#$%^&+=\-_.()]/g, //한글,영문대소문자,특수문자 : ! @ # $ % ^ & + = - _ . ( ) 만 사용 가능
@@ -645,7 +644,7 @@ window['shopby'] = window.shopby || {
       profile: null,
       clientId: null,
       osType: 'WEB',
-      platform: 'PC',
+      platform: 'MOBILE_WEB',
       mallName: null,
       sections: {
         pc: ['SCPC0001', 'SCPC0002', 'SCPC0003', 'SCPC0004', 'SCPC0005'],
@@ -714,17 +713,20 @@ window['shopby'] = window.shopby || {
         if (location.origin.includes('localhost')) return;
         const href = window.location.href.split('://')[1];
         const search = window.location.search;
+        const isTempDomain = window.location.origin.includes('shopby.co.kr');
+        const prefix = isTempDomain ? 'm-' : 'm.';
 
-        if (search.includes('pc') || search.includes('mobile')) return;
+        if (search.includes('mobile')) {
+          window.location.href = `https://${href.replace(prefix, '')}`;
+          return;
+        }
 
         const accessedFromMobileWithoutMobileDomain =
           shopby.utils.getPlatform() === 'MOBILE_WEB' && !(href.includes('m-') || href.includes('m.'));
 
         if (!accessedFromMobileWithoutMobileDomain) return;
 
-        const isTempDomain = window.location.origin.includes('shopby.co.kr');
-        const prefix = isTempDomain ? 'm-' : 'm.';
-        window.location.href = `//${prefix}${href.replace('www.', '')}`;
+        window.location.href = `//${prefix}${href}`;
       },
       setPlatform() {
         const platformClassification = {
@@ -880,7 +882,7 @@ window['shopby'] = window.shopby || {
             method,
             headers: {
               //'Content-Type': 'application/json; charset=utf-8',
-              platform: 'PC',
+              platform: 'MOBILE_WEB',
               clientId: shopby.config.skin.clientId,
               Version: version,
             },
@@ -988,6 +990,8 @@ window['shopby'] = window.shopby || {
           oauthToken: 'SHOPBYPRO_OAUTH_CSRF',
           kcpAuth: 'SHOPBYPRO_KCP_AUTH',
           dormant: 'SHOPBYPRO_DORMANT',
+          isOauthWithdrawalProcess: 'IS_OAUTH_WITHDRAWAL_PROCESS',
+          isOauthWithdrawalCompareInfo: 'IS_OAUTH_WITHDRAWAL_COMPARE_INFO',
         },
         product: {
           recent: 'RECENT-PRODUCTS',
@@ -1024,17 +1028,18 @@ window['shopby'] = window.shopby || {
       },
       fetchMalls() {
         const { profile, clientId } = shopby.config.skin;
+        const dataKey = this.dataKey.mall;
+
         const cdnUri = encodeURI(
           `https://rlgkd0v7e.toastcdn.net/mall-configurations/${profile}/${encodeURIComponent(clientId)}/mallInfo.js`,
         );
-        const dataKey = this.dataKey.mall;
 
         const deferred = $.Deferred();
 
         // jsonp 데이터타입은 fetch 에서 제공하지 않기 때문에 jquery 를 사용함.
         $.ajax({
           url: cdnUri,
-          jsonpCallback: 'getMalls', // api 담당자와 협의된 이름입니다. 변경이 필요한 경우 BE 운영관리팀에 문의 후 변경해주세요.
+          jsonpCallback: 'getMalls', // api 담당자와 협의된 이름입니다.. 변경이 필요한 경우 BE 운영관리팀에 문의 후 변경해주세요.
           dataType: 'jsonp',
           success: function (malls) {
             // getMalls api 를 호출하기 전에 cdn 에 해당 몰의 설정이 존재하는지 먼저 확인
@@ -1232,6 +1237,34 @@ window['shopby'] = window.shopby || {
 
         return products;
       },
+
+      getRecentKeyword() {
+        return shopby.localStorage.getItemWithExpire(shopby.cache.key.recentlyKeyword) || [];
+      },
+
+      setRecentKeyword(keyword) {
+        const cacheKey = shopby.cache.key.recentlyKeyword;
+        let recentKeywords = shopby.localStorage.getItemWithExpire(cacheKey) || [];
+        if (recentKeywords.length > 0) {
+          recentKeywords = recentKeywords.filter(item => item.word !== keyword);
+        }
+        recentKeywords.unshift({
+          word: keyword,
+          date: dayjs().format('YYYY-MM-DD'),
+        });
+
+        if (recentKeywords.length > 10) {
+          recentKeywords = recentKeywords.filter((item, index) => index < 10);
+        }
+        shopby.localStorage.setItemWithExpire(cacheKey, recentKeywords, 24 * 60 * 60 * 1000); //하루
+      },
+
+      removeRecentKeyword(keyword) {
+        const cacheKey = shopby.cache.key.recentlyKeyword;
+        let recentKeywords = shopby.localStorage.getItemWithExpire(cacheKey) || [];
+        recentKeywords = recentKeywords.filter(item => item.word !== keyword);
+        shopby.localStorage.setItemWithExpire(cacheKey, recentKeywords, 24 * 60 * 60 * 1000); //하루
+      },
     };
   })();
 })();
@@ -1259,7 +1292,7 @@ window['shopby'] = window.shopby || {
 
       this.renderGlobalPartials();
       this.startEntries();
-      await this.redirectIntro();
+      this.renderAfterInitiate();
     },
 
     async environmentInfo() {
@@ -1308,6 +1341,7 @@ window['shopby'] = window.shopby || {
       shopby.config.skin.skinCode = skinGroup.skinCode;
       shopby.config.skin.platformType = skinGroup.platformType;
       shopby.config.skin.bannerGroups = skinGroup.bannerGroups;
+      shopby.config.skin.appIcon = skinGroup.appIcon;
       for (const banner of skinGroup.bannerGroups) {
         shopby.config.skin.bannerGroupCodes.push(banner.groupCode);
       }
@@ -1331,7 +1365,7 @@ window['shopby'] = window.shopby || {
     },
     setOgInfo() {
       const image = new Image();
-      image.src = '/assets/img/banner/top-logo.png';
+      image.src = '/assets/img/banner/header-logo.png';
 
       $("meta[property='og:title']").prop('content', this.mallName);
       $("meta[property='og:url']").prop('content', location.href);
@@ -1376,10 +1410,10 @@ window['shopby'] = window.shopby || {
       const externalScripts = shopby.cache.getExternalScripts() || []; // 외부 앱 스크립트
       const pageScripts = [...adminPageScripts, ...externalScripts];
       const commonHeadScripts = pageScripts.filter(
-        ({ pageType, deviceType }) => pageType === 'COMMON_HEAD' && deviceType === 'PC',
+        ({ pageType, deviceType }) => pageType === 'COMMON_HEAD' && deviceType === 'MOBILE',
       );
       const commonFooterScripts = pageScripts.filter(
-        ({ pageType, deviceType }) => pageType === 'COMMON_FOOTER' && deviceType === 'PC',
+        ({ pageType, deviceType }) => pageType === 'COMMON_FOOTER' && deviceType === 'MOBILE',
       );
 
       commonHeadScripts.forEach(script => $(document.head).append(script.content));
@@ -1401,17 +1435,22 @@ window['shopby'] = window.shopby || {
       if (shopby.logined()) {
         entries.push(shopby.cache.checkProfileSession());
       }
+
       await Promise.all(entries);
     },
 
     renderGlobalPartials() {
       $('#header').load('/components/header.html');
       $('#footer').load('/components/footer.html');
-      $('#aside').load('/components/aside.html');
     },
 
     startEntries() {
       shopby.start.entries.forEach(initiate => initiate());
+    },
+
+    renderAfterInitiate() {
+      this.setGoBackButton();
+      this.redirectIntro();
     },
 
     setGlobalVariableNamespace() {
@@ -1429,7 +1468,7 @@ window['shopby'] = window.shopby || {
      * @param {'MAIN'|'PRODUCT'|'PRODUCT_SEARCH'|'PRODUCT_LIST'|'DISPLAY_SECTION'|'CART'|'ORDER'|'ORDER_COMPLETE'|'ORDER_DETAIL'} key
      * @param {object} payload
      */
-    setGlobalVariableBy(key, payload) {
+    setGlobalVariableBy(key, payload = null) {
       const pageVariableNameMap = {
         MAIN: 'main',
         PRODUCT: 'product',
@@ -1462,10 +1501,36 @@ window['shopby'] = window.shopby || {
       const adminPageScripts = shopby.cache.getPageScripts();
       const externalScripts = shopby.cache.getExternalScripts();
 
-      const platform = 'PC';
+      const platform = 'MOBILE';
       return [...adminPageScripts, ...externalScripts].filter(
         ({ pageType, deviceType }) => pageType === key && deviceType === platform,
       );
+    },
+
+    setGoBackButton() {
+      const anchor = document.getElementById('goBack');
+
+      if (!anchor) return;
+
+      const referrer = document.referrer;
+      const noReferrer = !referrer;
+
+      if (noReferrer) {
+        anchor.remove();
+        return;
+      }
+
+      anchor.classList.add('all_page_prev');
+
+      $('#goBack').on('click', () => history.back());
+      //BFCache( Back-Foward-Cache )
+      window.onpageshow = event => {
+        //back 이벤트 일 경우
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+          core.initiate();
+          location.reload();
+        }
+      };
     },
 
     async redirectIntro() {
@@ -1512,8 +1577,6 @@ window['shopby'] = window.shopby || {
 
       if (introType === 'ONLY_ADULT') {
         shopby.localStorage.setItem(shopby.cache.key.accessNotIntroPath, true);
-
-        // WARN : /pages/intro/adult-certification.html 리다이렉트 하면안되는 페이지도 잡아 챌 수 있음.
         if (!shopby.logined() && !isIntroPage) {
           location.href = '/pages/intro/adult-certification.html';
           return;
@@ -1524,7 +1587,6 @@ window['shopby'] = window.shopby || {
         const today = dayjs();
         const overdue = today.diff(adultCertificatedYmdt, 'year', true) > 1;
         const allCertificated = memberInfo && memberInfo.data && memberInfo.data.adultCertificated && !overdue;
-
         if (allCertificated && isIntroPage) {
           shopby.goHome();
         } else if (!allCertificated && !isIntroPage) {
@@ -1533,6 +1595,14 @@ window['shopby'] = window.shopby || {
         shopby.localStorage.removeItem(shopby.cache.key.accessNotIntroPath);
       }
     },
+  };
+
+  //BFCache( Back-Foward-Cache )
+  window.onpageshow = event => {
+    //back 이벤트 일 경우
+    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+      core.initiate();
+    }
   };
 
   shopby.start.initiate = core.initiate.bind(core);
@@ -1715,6 +1785,9 @@ window['shopby'] = window.shopby || {
       const resultValue = actualValue && typeof actualValue === 'string' ? actualValue : value;
       return `value=${resultValue} ${checkedValue === value ? 'checked' : ''}`;
     },
+    calculateSalePrice(salePrice, discountAmt) {
+      return shopby.utils.toCurrencyString(salePrice - discountAmt);
+    },
     sum(...nums) {
       return nums.filter(num => typeof num === 'number').reduce((a, b) => a + b);
     },
@@ -1849,7 +1922,6 @@ window['shopby'] = window.shopby || {
         resolve(child[name]);
         return;
       }
-
       $('#popups-area').append(
         $('<div />').load(`/components/popup/${name}.html`, () => {
           resolve(child[name]);
@@ -1863,6 +1935,7 @@ window['shopby'] = window.shopby || {
     $('body').removeClass('popup-open');
 
     status = status || { state: 'close' };
+
     if (this.callback) {
       this.callback(status);
     }
@@ -1870,17 +1943,8 @@ window['shopby'] = window.shopby || {
 
   const closeButtonEvent = function (event) {
     const actionType = $(event.currentTarget).data('action-type') || 'negative';
-    let status;
-    switch (actionType) {
-      case 'positive':
-        status = { state: 'ok', result: true };
-        break;
-      case 'updated':
-        status = { state: 'updated' };
-        break;
-      default:
-        status = undefined;
-    }
+    const status = actionType === 'positive' ? { state: 'ok', result: true } : undefined;
+
     this.close(status);
   };
 
@@ -1968,143 +2032,71 @@ window['shopby'] = window.shopby || {
 })();
 
 (() => {
-  class Pagination {
-    constructor(callback, selector, pageSize = 10, scrollToTop = true) {
-      this.pageNumber = 1;
+  /**
+   * @ReadMore
+   *
+   * @author JongKeun Kim
+   * @render 인스턴스 생성 후 데이터 갱신될때 render 호출하면 됩니다.
+   */
+  class ReadMore {
+    constructor(callback, selector, pageSize = 4) {
+      this.callback = callback; // search logic
+      this.selector = selector;
+      this._pageNumber = 1;
       this.pageSize = pageSize;
-      this.totalCount = 0;
-      this.callback = callback;
-      this.scrollToTop = scrollToTop;
-      this.$page = $(selector);
-      this.$page.append(this.template);
-      this.bindEvents();
       this.totalPage = 0;
+      this.bindEvents();
     }
 
-    render(totalCount = 0, pageNumber) {
-      this.pageNumber = pageNumber || this.pageNumber;
-      this.totalCount = totalCount;
+    get pageNumber() {
+      return this._pageNumber;
+    }
+
+    set pageNumber(number) {
+      this._pageNumber = number;
+    }
+
+    canLoad(totalCount) {
+      return this._pageNumber * this.pageSize < totalCount;
+    }
+
+    render(totalCount = 0) {
+      this.canLoad(totalCount) ? $(this.selector).html(this.template) : $(this.selector).html('');
       this.totalPage = this.getTotalPage();
-      this.renderPageNumber();
-      this.$page.addClass('visible');
-    }
-
-    bindEvents() {
-      this.$page.on('click', 'li:not(.on)', this.onClickPage.bind(this));
-    }
-
-    onClickPage(e) {
-      e.preventDefault();
-
-      const dataset = e.currentTarget.dataset;
-
-      switch (dataset.type) {
-        case 'page': {
-          this.pageNumber = Number(dataset.pageNumber);
-          break;
-        }
-        case 'nextPage': {
-          if (this.pageNumber < this.totalPage) {
-            this.pageNumber += 1;
-          }
-          break;
-        }
-        case 'prevPage': {
-          if (this.pageNumber > 1) {
-            this.pageNumber -= 1;
-          }
-
-          break;
-        }
-        case 'firstPage': {
-          const canPrev = this.pageNumber !== 1;
-
-          if (canPrev) {
-            // this.pageNumber = (Math.floor(this.pageNumber / this.pageSize) - 1) * this.pageSize + 1;
-            //
-            // if (this.pageNumber <= 0) {
-            //   this.pageNumber = 1;
-            // }
-            this.pageNumber = 1;
-          }
-
-          break;
-        }
-        case 'lastPage': {
-          const end = this.totalPage;
-          const canNext = this.pageNumber !== end;
-
-          if (canNext) {
-            // this.pageNumber = Math.ceil(this.pageNumber / this.pageSize) * this.pageSize + 1;
-            //
-            // if (this.pageNumber > end) {
-            //   this.pageNumber = end;
-            // }
-            this.pageNumber = end;
-          }
-
-          break;
-        }
-
-        default:
-          return;
-      }
-
-      this.scrollToTop && window.scrollTo(0, 0);
-      this.callback();
-    }
-
-    renderPageNumber() {
-      const PAGE_LIMIT = 10;
-      const getStartNumber = () => parseInt((this.pageNumber - 1) / PAGE_LIMIT) * PAGE_LIMIT + 1;
-      const range = (length, num) => Array.from({ length }, (_, i) => i + num);
-
-      const pageBtnHtml = range(PAGE_LIMIT, getStartNumber()).map(item => {
-        const className = item === this.pageNumber ? 'on' : '';
-        if (item > this.totalPage) return;
-        return `<li class="${className}" style="cursor: pointer;" data-type="page" data-page-number="${item}">${item}</li>`;
-      });
-
-      this.$page.find('li[data-type=page]').remove();
-      this.$page.find('li.btn_page_prev').after(pageBtnHtml);
-    }
-
-    get template() {
-      return `
-              <ul>
-                  <li class="btn_page btn_page_first" data-type="firstPage" style="cursor: pointer;"><a aria-label="First">처음페이지</a></li>
-                  <li class="btn_page btn_page_prev" data-type="prevPage" style="cursor: pointer;"><a aria-label="Previous">이전페이지</a></li>
-                  <li class="on" data-type="page">1</li>
-                  <li class="btn_page btn_page_next" data-type="nextPage" style="cursor: pointer;"><a href="#" aria-label="Next">다음페이지</a></li>
-                  <li class="btn_page btn_page_last" data-type="lastPage" style="cursor: pointer;"><a href="#" aria-label="Last">마지막페이지</a></li>
-              </ul>
-             `.trim();
     }
 
     getTotalPage() {
       return Math.ceil(this.totalCount / this.pageSize) || 1;
     }
+
+    bindEvents() {
+      const throttleMore = shopby.utils.throttle(this.load.bind(this), 500);
+      $(document.body).on('click', this.selector, throttleMore);
+    }
+
+    unBindEvents() {
+      $(document.body).off('click', this.selector);
+    }
+
+    load() {
+      this._pageNumber += 1;
+      this.callback();
+    }
+
+    get template() {
+      return '<div class="btn_goods_down_more"><button id=`${this.selector.replace("#","")}` class="more_btn">더보기</button></div>';
+    }
   }
 
-  shopby.pagination = Pagination;
+  shopby.readMore = ReadMore;
 })();
 
 $(() => {
-  class DateRangePicker {
-    constructor(
-      selector,
-      searchCallBack,
-      maxRange = null,
-      start = this.start,
-      end = this.end,
-      rangeKeyword = this.rangeKeyword,
-    ) {
-      this.selector = selector;
-      this.rangePicker = {};
-      this.maxMonth = maxRange && maxRange.month;
-      this.maxLabel = maxRange && maxRange.label;
-      this.prevStart = '';
-      this.prevEnd = '';
+  class DateSelector {
+    constructor(selector, searchCallBack, start = this.start, end = this.end, rangeKeyword = this.rangeKeyword) {
+      this.$parent = $(selector);
+      this.callback = searchCallBack;
+
       const isDefault = !(this.start || this.end || this.rangeKeyword);
       if (isDefault) {
         this.dateQueryInit(shopby.date.beforeToday(7), shopby.date.today(), 'week');
@@ -2112,10 +2104,8 @@ $(() => {
         this.dateQueryInit(start, end, rangeKeyword);
       }
 
-      // this.validate(start, end);
       this.render();
-      this.createDatePicker();
-      this.bindEvents(searchCallBack);
+      this.bindEvents();
     }
 
     get start() {
@@ -2191,186 +2181,96 @@ $(() => {
     }
 
     render() {
-      $(this.selector).append(getRow()).find('.date_check_list').append(this._makeDateButtonHtml());
-      $(this.selector).addClass('visible');
-    }
-
-    bindEvents(searchCallBack) {
-      // 조회기간 버튼 이벤트
-      $(this.selector).on('click', 'button[name="datePeriodBtn"][data-value]', event => {
-        this._setDateWithButton(event.target.dataset.value);
-        $(event.target).addClass('on').siblings().removeClass('on');
-      });
-
-      const throttleSearch = shopby.utils.throttle(searchCallBack, 500);
-
-      $(this.selector).on('click', '#searchDateRange', throttleSearch);
-    }
-
-    createDatePicker() {
-      const $startInput = $(this.selector).find('input[name=startDate]');
-      const $endInput = $(this.selector).find('input[name=endDate]');
-
-      const rangePicker = new tui.DatePicker.createRangePicker({
-        startpicker: {
-          input: $startInput[0],
-          container: $startInput.next()[0],
-          date: dayjs(this.start).toDate(),
-        },
-        endpicker: {
-          input: $endInput[0],
-          container: $endInput.next()[0],
-          date: dayjs(this.end).toDate(),
-        },
-        type: 'date',
-        format: 'yyyy-MM-dd',
-        language: 'ko',
-      });
-
-      this.rangePicker = rangePicker;
-
-      rangePicker.on('change:start', this._onChangeDatePicker.bind(this));
-      rangePicker.on('change:end', this._onChangeDatePicker.bind(this));
-
-      this._onChangeDatePicker(false);
-    }
-
-    _onChangeDatePicker(resetKeyword = true) {
-      const startDate = this.rangePicker.getStartDate();
-      const endDate = this.rangePicker.getEndDate();
-
-      let start = shopby.date.yymmdd(startDate);
-      let end = shopby.date.yymmdd(endDate);
-
-      const afterMonth = dayjs(start).add(this.maxMonth, 'month').format();
-      const diff = dayjs(afterMonth).diff(dayjs(end), 'day');
-
-      if (this.maxMonth !== null && diff < 0) {
-        alert(`조회기간은 최대 ${this.maxLabel} 까지 가능합니다.`);
-        start = this.prevStart;
-        end = this.prevEnd;
-      }
-
-      this.prevStart = start;
-      this.prevEnd = end;
-
-      this.setStart(start);
-      this.setEnd(end);
-
-      if (resetKeyword) {
-        $('button[name="datePeriodBtn"]').removeClass('on');
-        this.removeRangeKeyword();
-      }
-
-      this._setDatePicker(this.start, this.end);
-    }
-
-    _setDatePicker(startDate, endDate, isSetRange = true) {
-      const YEAR_LIMIT = 5; // 몇 년 까지 선택되게 할지에 대한 상수. 추후 필요하다면 constructor 인자로 승격
-      const startRange = [[dayjs(endDate).add(-YEAR_LIMIT, 'year'), endDate]];
-      const endRange = [[startDate, dayjs()]];
-
-      if (isSetRange === true) {
-        this.rangePicker.getStartpicker().setRanges(startRange);
-        this.rangePicker.getEndpicker().setRanges(endRange);
-      }
-
-      this.rangePicker.setEndDate(dayjs(endDate).toDate());
-      this.rangePicker.setStartDate(dayjs(startDate).toDate());
-
-      shopby.utils.pushState({
-        pageNumber: 1,
-      });
-
-      this.drawInputValue();
-    }
-
-    // 선택된 버튼의 값에 의하여 시작, 종료일을 셋팅한다.
-    _setDateWithButton(rangeKeyword) {
-      this.setRangeKeyword(rangeKeyword);
-      const { value, unit } = this.DATE_BUTTONS[rangeKeyword];
-      const today = shopby.date.today();
-      this.setStart(dayjs(today).add(value, unit).format('YYYY-MM-DD'));
-      this.setEnd(today);
-      this._setDatePicker(this.start, this.end, false);
-    }
-
-    // 시작일, 종료일 input에 value 저장
-    drawInputValue() {
-      const $el = $(this.selector);
-      $el.find('input[name=startDate]').val(this.start);
-      $el.find('input[name=endDate]').val(this.end);
-    }
-
-    // once
-    _makeDateButtonHtml() {
-      let btnHtml = '';
-      for (const key in this.DATE_BUTTONS) {
-        const className = key === this.rangeKeyword ? 'on' : '';
-
-        btnHtml += `<button type="button" name="datePeriodBtn" data-value="${key}" class="${className}">${this.DATE_BUTTONS[key].label}</button>`;
-      }
-
-      return btnHtml;
-    }
-
-    validate() {
-      if (!Object.prototype.hasOwnProperty.call(this.DATE_BUTTONS, this.rangeKeyword)) {
-        throw new Error(
-          `기본 버튼값의 입력이 잘못되었습니다.\n 입력 버튼값 : [${Object.keys(this.DATE_BUTTONS).join(
-            ',',
-          )}], 잘못된 값 : ${this.rangeKeyword}`,
-        );
-      }
+      const el = this.createSelectOption();
+      this.$parent.append(el);
+      this.$parent.addClass('visible');
     }
 
     getClaimOrderRequestType() {
-      const claimOrderRequestType = $(this.selector).find('.claim-category input:checked').data('orderRequestType');
+      const claimOrderRequestType = this.$parent.find('.claim-category').val();
 
       return claimOrderRequestType
         ? claimOrderRequestType
         : 'CANCEL_DONE,CANCEL_PROCESSING,RETURN_DONE,RETURN_PROCESSING,EXCHANGE_DONE,EXCHANGE_PROCESSING';
     }
+
+    createSelectOption() {
+      const container = document.createElement('div');
+      const select = document.createElement('select');
+
+      if (location.href.includes('claims.html')) {
+        const selectClaimEl = document.createElement('select');
+        const claimList = [
+          {
+            key: 'all',
+            name: '전체',
+            value: 'CANCEL_DONE,CANCEL_PROCESSING,RETURN_DONE,RETURN_PROCESSING,EXCHANGE_DONE,EXCHANGE_PROCESSING',
+          },
+          { key: 'cancel', name: '취소', value: 'CANCEL_DONE,CANCEL_PROCESSING' },
+          { key: 'change', name: '교환', value: 'EXCHANGE_DONE,EXCHANGE_PROCESSING' },
+          { key: 'return', name: '반품', value: 'RETURN_DONE,RETURN_PROCESSING' },
+        ];
+        const fragment = new DocumentFragment();
+
+        container.appendChild(selectClaimEl);
+        selectClaimEl.classList.add('claim-category');
+
+        claimList.forEach(data => {
+          const option = document.createElement('option');
+          option.key = data.key;
+          option.value = data.value;
+          option.textContent = data.name;
+
+          fragment.appendChild(option);
+        });
+
+        selectClaimEl.appendChild(fragment);
+      }
+
+      container.appendChild(select);
+      container.classList.add('date_selector', 'inp_sel');
+      select.classList.add('check_option_inner');
+
+      Object.entries(this.DATE_BUTTONS)
+        .map(([key, { label }]) => {
+          const el = document.createElement('option');
+          const textNode = document.createTextNode(label);
+
+          el.value = key;
+          if (key === this.rangeKeyword) el.setAttribute('selected', 'selected');
+          el.appendChild(textNode);
+
+          return el;
+        })
+        .forEach(el => select.appendChild(el));
+
+      return container;
+    }
+
+    bindEvents() {
+      this.$parent.on('change', 'select', this.onChangeSelect.bind(this));
+    }
+
+    onChangeSelect(e) {
+      const $el = $(e.target);
+
+      if (!$el.hasClass('claim-category')) {
+        this.setRangeKeyword($el.val());
+        this.setDateWithKeyword($el.val());
+      }
+
+      this.callback();
+    }
+
+    setDateWithKeyword(rangeKeyword) {
+      const { value, unit } = this.DATE_BUTTONS[rangeKeyword];
+
+      this.setStart(dayjs(this.end).add(value, unit).format('YYYY-MM-DD'));
+      this.setEnd(shopby.date.today());
+    }
   }
 
-  const getRow = () => {
-    return `
-      <div class="date_check_box">
-        <div>
-          <h3> 조회기간 </h3>
-          <div class="date_check_list"></div>
-          <div class="date_check_calendar">
-              <div class="date_input_wrapper">
-                  <input type="text" name="startDate" readonly="readonly"/>
-                  <div></div>
-              </div>
-              ~
-              <div class="date_input_wrapper">
-                  <input type="text" name="endDate" readonly="readonly"/>
-                  <div></div>
-              </div>
-          </div>
-      
-          <button id="searchDateRange" class="btn_date_check"><em>조회</em></button>
-        </div>
-        ${
-          location.href.includes('claims.html')
-            ? `<div class="claim-category">
-                <span class="claim-category__tit">클레임 구분</span>
-                <p class="claim-category__item">
-                  <label><input type="radio" name="claim" data-order-request-type='CANCEL_DONE,CANCEL_PROCESSING,RETURN_DONE,RETURN_PROCESSING,EXCHANGE_DONE,EXCHANGE_PROCESSING' checked><span>전체</span></label>
-                  <label><input type="radio" name="claim" data-order-request-type='CANCEL_DONE,CANCEL_PROCESSING'><span>취소</span></label>
-                  <label><input type="radio" name="claim" data-order-request-type='EXCHANGE_DONE,EXCHANGE_PROCESSING'><span>교환</span></label>
-                  <label><input type="radio" name="claim" data-order-request-type='RETURN_DONE,RETURN_PROCESSING'><span>반품</span></label>
-                </p>
-              </div>`
-            : ''
-        }
-      </div>
-    `.trim();
-  };
-
-  shopby.dateRange = DateRangePicker;
+  shopby.dateRange = DateSelector;
 });
 
 (() => {
@@ -2398,8 +2298,8 @@ $(() => {
     yymmdd(date) {
       return dayjs(date).format(_YYYYMMDD);
     },
-    isBefore(comparisonYmd, asOfYmd = null) {
-      return dayjs(asOfYmd ? asOfYmd : this.today()).isBefore(dayjs(comparisonYmd).format(_YYYYMMDD));
+    isBefore(comparisonYmd, asOfYmd) {
+      return dayjs(asOfYmd).isBefore(dayjs(comparisonYmd).format(_YYYYMMDD));
     },
   };
 })();
@@ -2501,7 +2401,7 @@ $(() => {
   const _getCartDeliveryHtml = cart => {
     let deliveryHtml = '-';
 
-    if (cart.deliveryRowSpan && cart.product.deliverable && cart.valid) {
+    if (cart.product.deliverable && cart.valid) {
       if (cart.delivery.deliveryAmt > 0) {
         deliveryHtml = `${shopby.utils.toCurrencyString(cart.delivery.deliveryAmt)}원`;
 
@@ -2588,9 +2488,11 @@ $(() => {
 
           // 배송지 정보
           cart.deliveryHtml = _getCartDeliveryHtml(cart);
+
           return cart;
         });
     }
+
     return list;
   };
 
@@ -2629,9 +2531,9 @@ $(() => {
         }
       }
 
-      shopby.setGlobalVariableBy('CART', data);
       // data 가 유효하면 converting
       if (data) {
+        shopby.setGlobalVariableBy('CART', data);
         cartData = {
           list: _convertCarts(data),
           price: data.price,
@@ -2642,6 +2544,7 @@ $(() => {
           price: null,
         };
       }
+
       return cartData;
     },
 
@@ -2977,8 +2880,10 @@ $(() => {
 
         const cumulativeSelectOption = getSelectedMultiOption(index);
         const cumulativeSelectOptionIndex = cumulativeSelectOption.selectedIndex;
+
         return cumulativeSelectOption.values[cumulativeSelectOptionIndex];
       };
+
       return this._selectOptions.map((_, index) => mapSelectedValues(index));
     }
     _setSelectOptions(values) {
@@ -3106,7 +3011,7 @@ $(() => {
     get totalPrice() {
       if (!this._selectedOptions.length) return 0;
       return this._selectedOptions.reduce((totalPrice, { priceWithOptions }) => {
-        const currPrice = priceWithOptions.replace(/,/g, '');
+        const currPrice = priceWithOptions ? priceWithOptions.replace(/,/g, '') : '';
         totalPrice += parseInt(currPrice, 10);
         return totalPrice;
       }, 0);
@@ -3179,26 +3084,28 @@ $(() => {
         }
       });
     }
-
     changeTextOptionByOptionOrAmount(inputMatchingType, targetInputNo, value, targetOptionNo, amountIndex) {
       if (targetOptionNo > 0) {
-        const selectedTextOptions = this._selectedOptions
-          .filter(({ optionNo }) => optionNo === targetOptionNo)
-          .flatMap(({ textOptions }) => textOptions);
         switch (inputMatchingType) {
           case 'OPTION':
-            selectedTextOptions.forEach(textOption => {
-              if (textOption.inputNo === targetInputNo) {
-                textOption.value = value;
-              }
-            });
+            this._selectedOptions
+              .filter(({ optionNo }) => optionNo === targetOptionNo)
+              .flatMap(({ textOptions }) => textOptions)
+              .forEach(textOption => {
+                if (textOption.inputNo === targetInputNo) {
+                  textOption.value = value;
+                }
+              });
             break;
           case 'AMOUNT':
-            selectedTextOptions.forEach(textOption => {
-              if (textOption.inputNo === targetInputNo) {
-                textOption.amountValues[amountIndex].value = value;
-              }
-            });
+            this._selectedOptions
+              .filter(({ optionNo }) => optionNo === targetOptionNo)
+              .flatMap(({ textOptions }) => textOptions)
+              .forEach(textOption => {
+                if (textOption.inputNo === targetInputNo) {
+                  textOption.amountValues[amountIndex].value = value;
+                }
+              });
             break;
           default:
             throw new Error('INVALID_TEXT_OPTION_MATCHING_TYPE');
@@ -3268,7 +3175,6 @@ $(() => {
   const isLastOptionSoldOut = option => {
     //마지막 뎁스 옵션인 경우
     if (!option.children) return option.forcedSoldOut || option.saleType === 'SOLDOUT';
-
     return option.children.every(child => isLastOptionSoldOut(child));
   };
 
@@ -3293,8 +3199,11 @@ $(() => {
     const needsLastDepthCustomLabels = isSelectedPrevDepthOption && labels.length - 1 === depth;
     const hasOnlyOneOption = currentDepthData.length === 1;
     const nextDepth = depth + 1;
+
     const nextSelectOption = createNextInitialSelectOption(depth, labels[depth]);
+
     nextSelectOption.values.push(getSelectOptionMessage(isSelectedPrevDepthOption, labels, depth));
+
     nextSelectOption.optionValues.push({
       disabled: 'disabled',
       value: getSelectOptionMessage(isSelectedPrevDepthOption, labels, depth),
@@ -3308,9 +3217,6 @@ $(() => {
 
       if (needsLastDepthCustomLabels || selectType === 'FLAT') {
         const { priceLabel, stockStatus } = { ...getLabels({ ...rest }, reservationData) };
-        //label은 재고, 옵션가처럼 상품 뒤에 따라오는 부연 텍스트들을 모아놓은 변수입니다.
-        //옵션명과 겹치지 않고 언제든지 커스텀 할 수 있게 따로 전역변수로 설정을 했습니다.
-        //만약 '옵션가, 재고'가 옵션에 포함이 안되더라도 빈값으로('') 반환됩니다.
         label = `${priceLabel} / ${stockStatus.stockStatusLabel}`;
         const customValue = `${value} ${label}`;
         const detail = {
@@ -3341,9 +3247,6 @@ $(() => {
       const isSoldOut = forcedSoldOut || saleType === 'SOLDOUT';
 
       const selectedOptionValues = ((value, selectedValue) => {
-        //selectedValue는 내가 선택한 옵션 텍스트이고
-        //value는 실제 데이터 값(string)입니다
-        //처음 랜더링 시에는 selectedValue가 undefined로 할당이 되서 분기문으로 처리를 했습니다.
         if (selectedValue) {
           return selectedValue.replace(label, '').trim() === value.trim();
         }
@@ -3523,7 +3426,6 @@ $(() => {
   const convertTextOptionsBy = (textOptions, type) =>
     textOptions.reduce((acc, curr) => {
       const { value: inputValue, inputMatchingType, amountValues } = curr;
-
       if (!type || (type && inputMatchingType === type)) {
         acc.push({ ...curr, inputValue });
       }
@@ -3571,14 +3473,8 @@ $(() => {
           return { ...terms[termKey], label, required, key, checked: checkedAgreements.includes(key) };
         });
     },
-    openKcpCallback(event) {
-      event.preventDefault();
-      const WIDTH = 410;
-      const HEIGHT = 500;
-      const leftpos = screen.width / 2 - WIDTH / 2;
-      const toppos = screen.height / 2 - HEIGHT / 2;
-      const popupOption = `width=${WIDTH},height=${HEIGHT},left=${leftpos},top=${toppos},toolbar=no,status=no,statusbar=no,menubar=no,scrollbars=no,resizable=no`;
-      window.open(location.origin + '/callback/kcp-auth-callback.html', 'auth_popup', popupOption);
+    getKcpCallbackUrl() {
+      return `${location.origin}/callback/kcp-auth-callback.html?returnUrl=${location.href}`;
     },
     get emailValue() {
       const email = $('input[name="email"]')
@@ -3839,16 +3735,8 @@ $(() => {
     async openIdLogin(event) {
       event.preventDefault();
       const provider = `ncp_${event.currentTarget.dataset.provider}`;
-
-      if (this.popup && !this.popup.closed) {
-        this.popup.close();
-        this.popup = null;
-      }
-      this.popup = window.open('about:blank', '간편 로그인', 'width=420px,height=550px,scrollbars=yes');
-      this.popup.focus();
       const data = await this.fetchOauthLogin(provider);
-
-      this.openLoginPopup(data, provider);
+      this.openLoginPopup(data);
     },
     async fetchOauthLogin(provider) {
       const oauthToken = this.generateRandomString();
@@ -3878,13 +3766,10 @@ $(() => {
         return prev + availableChar.charAt(Math.floor(Math.random() * availableChar.length));
       }, '');
     },
-    openLoginPopup(result, provider, customCallback, popup = this.popup) {
-      window.shopOauthCallback = customCallback || this._openIdAuthCallback.bind(this);
-
-      popup.location.href = result.loginUrl;
+    openLoginPopup(result) {
+      location.href = `${result.loginUrl}`;
     },
     _openIdAuthCallback(profileResult = null, isDormant = false) {
-      window.shopOauthCallback = null;
       if (isDormant === true) {
         shopby.confirm({ message: '휴면해제가 필요합니다.' }, function (e) {
           if (e.state === 'ok') {
@@ -3902,19 +3787,17 @@ $(() => {
       if (profileResult.memberStatus === 'WAITING') {
         shopby.popup('join-open-id', { profile: profileResult }, this._joinOpenId);
       } else {
-        shopby.alert('로그인이 완료 되었습니다.', shopby.helper.login.goNextUrl);
+        //NOTE : 무조건 메인페이지로 : shopby.helper.login.goNextUrl 경우 이전페이지를 각 간편로그인 계정페이지로 이동함.
+        shopby.alert('로그인이 완료 되었습니다.', shopby.goHome);
       }
     },
     async _joinOpenId(data) {
-      if (data.state !== 'ok') {
-        shopby.cache.removeAccessToken();
-        return;
-      }
       try {
         await shopby.api.member.postProfileOpenId({
           requestBody: { joinTermsAgreements: data.agreedTerms },
         });
-        shopby.alert({ message: '회원가입이 완료 되었습니다.' }, shopby.helper.login.goNextUrl);
+        //NOTE : 무조건 메인페이지로 : shopby.helper.login.goNextUrl 경우 이전페이지를 각 간편로그인 계정페이지로 이동함.
+        shopby.alert('회원가입이 완료 되었습니다.', shopby.goHome);
       } catch (e) {
         shopby.goHome();
       }
@@ -4183,7 +4066,7 @@ $(() => {
       this.BUTTON_KEY = BUTTON_KEY; // 네이버페이 버튼 키
       this.BUTTON_COUNT = BUTTON_COUNT; // 버튼 개수 설정. 구매하기 버튼만 있으면 1, 찜하기 버튼도 있으면 2를 입력.
       this.ENABLE = ENABLE; //
-      this.BUTTON_TYPE = 'A';
+      this.BUTTON_TYPE = 'MA';
     }
 
     applyNaverPayButton(naverPayOrderHandler, naverWishlistHandler) {
@@ -4211,7 +4094,7 @@ $(() => {
       window.NCPPay.setConfiguration({
         clientId: shopby.config.skin.clientId,
         accessToken: shopby.cache.getAccessToken() || '',
-        platform: 'PC',
+        platform: 'MOBILE_WEB',
       });
 
       window.NCPPay.requestNaverPayOrder(
@@ -4242,7 +4125,7 @@ $(() => {
 
       window.NCPPay.setConfiguration({
         clientId: shopby.config.skin.clientId,
-        platform: 'PC',
+        platform: shopby.platform.toUpperCase(),
       });
 
       window.NCPPay.requestNaverPayWishList({
@@ -4342,7 +4225,11 @@ $(() => {
       this._validate(code);
 
       try {
-        await shopby.api.auth.postCaptchaVerify();
+        await shopby.api.auth.postCaptchaVerify({
+          queryString: {
+            code,
+          },
+        });
       } catch (e) {
         throw new Error(e.message);
       }
@@ -4369,34 +4256,27 @@ $(() => {
       await this._display(this._requiredAuth);
     }
     async _fetchImage() {
-      const { data } = await shopby.api.auth.getCaptchaImage({
-        queryString: {
-          key: this.errorKey,
-        },
-      });
+      const { data } = await shopby.api.auth.getCaptchaImage();
       return data.url;
     }
     _getTemplate(url) {
       return `
       <div class="capcha_box">
-        <div>자동 입력 방지를 위해 아래 이미지의 문자 및 숫자를 순서대로 정확히 입력해주세요.</div>
         <div>
-          <div class="capcha">
-              <div class="capcha_img">
+          <div class="captcha">
+              <div class="captcha_img">
                   <img id="captcha-img" src=${url} align="absmiddle" />
               </div>
-              <div class="capcha_txt">
-                  <span class="btn_gray_list">
-                      <button type="button" id="refreshCaptcha" class="btn_gray_small">
-                          <span><img src="/assets/img/icon/etc/icon_reset.png" alt="" />이미지 새로고침</span>
-                      </button>
-                  </span>
+              <button type="button" id="refreshCaptcha" class="captcha_reset">
+                  <span>이미지 새로고침</span>
+              </button>
+              <div class="captcha_txt">
                   <input
                       type="text"
                       id='captchaCode'
                       class="text captcha"
                       name="captchaKey"
-                      placeholder="순서대로 숫자 및 문자를 모두 입력해주세요."
+                      placeholder="보이는 순서대로 숫자 및 문자를 모두 입력해주세요."
                   />
               </div>
           </div>

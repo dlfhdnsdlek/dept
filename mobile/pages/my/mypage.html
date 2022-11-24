@@ -2,300 +2,230 @@
 <html lang="ko">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
+        <link type="text/css" rel="stylesheet" href="/lib/slick/slick.css" />
         <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
         <title>마이페이지</title>
     </head>
     <body>
         <header id="header"></header>
-
-        <!-- @fixme: 갑자기 상품후기, 문의가 안나옴 haekyu-->
-        <div id="contents" style="visibility: hidden;">
-            <main class="sub_content">
-                <div class="content_box">
-                    <div class="location_wrap">
-                        <div class="location_cont">
-                            <em><a href="/" class="local_home">HOME</a> &gt; 마이페이지</em>
+        <div id="contents" class="invisible">
+            <main class="contents_wrap">
+                <div class="page_top_area">
+                    <div class="navi_g">
+                        <ul>
+                            <li>홈</li>
+                            <li>마이페이지</li>
+                        </ul>
+                    </div>
+                    <div class="sub_top">
+                        <div class="sub_top_left">
+                            <a id="goBack"></a>
                         </div>
+                        <h2><a href="/pages/my/mypage.html">마이페이지</a></h2>
                     </div>
                 </div>
 
-                <!-- mypage 왼쪽 메뉴 -->
-                <div id="myPageLeftMenu" class="side_cont"></div>
-
                 <!-- mypage 본문 -->
-                <div class="content">
-                    <div class="mypage_main">
+                <div class="my-main">
+                    <div class="my-question-info">
                         <!-- 마이페이지 > 쇼핑정보, 혜택관리 공통으로 쓰이는 summary -->
                         <div id="myPageSummary"></div>
                         <!-- 밑에 밑줄....-->
                         <div class="mypage_top_info"></div>
 
                         <!-- 나의 주문현황 summary-->
-                        <div class="mypage_order_info">
-                            <div class="mypage_zone_tit">
-                                <h3>나의 주문현황<span>최근 6개월 기준</span></h3>
+                        <div class="member_summary_info_box member_summary_info_3">
+                            <div class="meber_order_state_tit">
+                                <p>나의 주문현황<span>최근 6개월 기준</span></p>
+                                <a href="/pages/my/orders.html">더보기</a>
                             </div>
-                            <div class="mypage_order_info_cont_new">
-                                <div id="myOrderLastHalfYear" data-template-id="myOrderLastHalfYearTemplate"></div>
-                            </div>
-                            <script id="myOrderLastHalfYearTemplate" type="text/x-handlebars-template">
-                                <ol>
-                                    <li>
-                                        <p>
-                                            미입금
-                                        </p>
-                                        <p>
-                                            <a href='/pages/my/orders.html?orderRequestTypes=DEPOSIT_WAIT'>
-                                                {{depositWaitCnt}}
-                                            </a>
-                                            건
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p>
-                                            출고대기
-                                        </p>
-                                        <p>
-                                            <a href='/pages/my/orders.html?orderRequestTypes=PAY_DONE,PRODUCT_PREPARE,DELIVERY_PREPARE'>
-                                                {{sum payDoneCnt productPrepareCnt deliveryPrepareCnt}}
-                                            </a>
-                                            건
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p>
-                                            배송중
-                                        </p>
-                                        <p>
-                                            <a href='/pages/my/orders.html?orderRequestTypes=DELIVERY_ING'>
-                                                {{deliveryIngCnt}}
-                                            </a>
-                                            건
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p>
-                                            배송완료
-                                        </p>
-                                        <p>
-                                            <a href='/pages/my/orders.html?orderRequestTypes=DELIVERY_DONE'>
-                                                {{deliveryDoneCnt}}
-                                            </a>
-                                            건
-                                        </p>
-                                    </li>
-                                </ol>
-                                <div class='order_case_list'>
+                            <div id="myOrderLastHalfYear">
+                                <div class="meber_order_state_list">
                                     <ul>
                                         <li>
-                                            <p>
-                                                취소/교환/반품
-                                            </p>
-                                            <p>
-                                                <a href='/pages/my/claims.html'>
-                                                    {{
-                                                        sum
-                                                        cancelDoneCnt
-                                                        cancelProcessingCnt
-                                                        exchangeDoneCnt
-                                                        exchangeProcessingCnt
-                                                        returnDoneCnt
-                                                        returnProcessingCnt
-                                                    }}
-                                                </a>
-                                                건
-                                            </p>
+                                            <a href="/pages/my/orders.html?orderRequestTypes=DEPOSIT_WAIT">
+                                                <div>
+                                                    {{depositWaitCnt}}
+                                                </div>
+                                                <p>미입금</p>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/pages/my/orders.html?orderRequestTypes=PAY_DONE,PRODUCT_PREPARE,DELIVERY_PREPARE">
+                                                <div>
+                                                    {{sum payDoneCnt productPrepareCnt deliveryPrepareCnt}}
+                                                </div>
+                                                <p>출고대기</p>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/pages/my/orders.html?orderRequestTypes=DELIVERY_ING">
+                                                <div>
+                                                    {{deliveryIngCnt}}
+                                                </div>
+                                                <p>배송중</p>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/pages/my/orders.html?orderRequestTypes=DELIVERY_DONE">
+                                                <div>
+                                                    {{deliveryDoneCnt}}
+                                                </div>
+                                                <p>배송완료</p>
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
-                            </script>
-                            <a href="/pages/my/orders.html" class="btn_board_more">더보기</a>
+                                <div class="meber_order_state_etc">
+                                    <a href="/pages/my/claims.html">
+                                        <dl>
+                                            <dt>취소 / 교환 / 반품</dt>
+                                            <dd>
+                                                {{sum cancelDoneCnt cancelProcessingCnt exchangeDoneCnt exchangeProcessingCnt returnDoneCnt
+                                                returnProcessingCnt}}
+                                            </dd>
+                                        </dl>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 나의 게시글 summary-->
-                        <div class="mypage_order_info">
-                            <div class="mypage_order_info_cont_new2">
-                                <div id="myBoardSummary" data-template-id="myBoardSummaryTemplate"></div>
+                        <div id="myBoardSummary" class="mypage_index">
+                            {{#if inquirySummary.used}}
+                            <div class="mypage_menu">
+                                <h3 class="tit">{{inquirySummary.name}}</h3>
+                                <a href="/pages/my/inquiries.html" class="btn_board_more">더보기</a>
+                                <div>
+                                    <dl>
+                                        <dt>답변대기</dt>
+                                        <dd>
+                                            {{inquirySummary.progressCnt}}
+                                            <span>건</span>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>답변완료</dt>
+                                        <dd>
+                                            {{inquirySummary.answeredCnt}}
+                                            <span>건</span>
+                                        </dd>
+                                    </dl>
+                                    <a id="btnWrite" href="/pages/my/inquiries.html?write=true">
+                                        <span>1:1문의하기</span>
+                                    </a>
+                                </div>
                             </div>
-                            <script id="myBoardSummaryTemplate" type="text/x-handlebars-template">
-                                {{#if inquirySummary.used}}
-                                    <div class='new2_box'>
-                                        <div>
-                                            <p class='sb_p_inquiry_name'>
-                                                {{inquirySummary.name}}
-                                            </p>
-                                            <a href='/pages/my/inquiries.html' class='btn_board_more'>
-                                                더보기
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <dl>
-                                                <dt>
-                                                    답변대기
-                                                </dt>
-                                                <dd>
-                                                    <span class='sb_span_wait_answer'>
-                                                        {{inquirySummary.progressCnt}}
-                                                    </span>
-                                                    건
-                                                </dd>
-                                            </dl>
-                                            <dl>
-                                                <dt>
-                                                    답변완료
-                                                </dt>
-                                                <dd>
-                                                    <span class='sb_span_complete_answer'>
-                                                        {{inquirySummary.answeredCnt}}
-                                                    </span>
-                                                    건
-                                                </dd>
-                                            </dl>
-                                            <button type='button' id='writeQuery' class='btn_new2_box_more'>
-                                                1:1문의하기
-                                            </button>
-                                        </div>
-                                    </div>
-                                {{/if}}
-
-                                {{#if productInquirySummary.used}}
-                                    <div class='new2_box'>
-                                        <div>
-                                            <p class='sb_p_goods_inquiry_name'>
-                                                {{productInquirySummary.name}}
-                                            </p>
-                                            <a href='/pages/my/product-inquiries.html' class='btn_board_more'>
-                                                더보기
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <dl>
-                                                <dt>
-                                                    답변대기
-                                                </dt>
-                                                <dd>
-                                                    <span class='sb_span_wait_my_inquiry'>
-                                                        {{productInquirySummary.progressCnt}}
-                                                    </span>
-                                                    건
-                                                </dd>
-                                            </dl>
-                                            <dl>
-                                                <dt>
-                                                    답변완료
-                                                </dt>
-                                                <dd>
-                                                    <span class='sb_span_complete_my_inquiry'>
-                                                        {{productInquirySummary.answeredCnt}}
-                                                    </span>
-                                                    건
-                                                </dd>
-                                            </dl>
-                                            <button type='button' id='writeInqueryPrd' class='btn_new2_box_more'>
-                                                상품문의하기
-                                            </button>
-                                        </div>
-                                    </div>
-                                {{/if}}
-
-                                {{#if productReviewSummary.used}}
-                                    <div class='new2_box'>
-                                        <div>
-                                            <p class='sb_p_goods_review_name'>
-                                                {{productReviewSummary.name}}
-                                            </p>
-                                            <a href='/pages/my/product-reviews.html' class='btn_board_more'>
-                                                더보기
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <dl>
-                                                <dt>
-                                                    작성가능 후기
-                                                </dt>
-                                                <dd>
-                                                    <span class='sb_span_wait_review'>
-                                                        {{productReviewSummary.availableCnt}}
-                                                    </span>
-                                                    건
-                                                </dd>
-                                            </dl>
-                                            <dl>
-                                                <dt>
-                                                    작성완료 후기
-                                                </dt>
-                                                <dd>
-                                                    <span class='sb_span_review'>
-                                                        {{productReviewSummary.completedCnt}}
-                                                    </span>
-                                                    건
-                                                </dd>
-                                            </dl>
-                                            <button type='button' class='btn_new2_box_more' id='writeReview'>
-                                                후기작성하기
-                                            </button>
-                                        </div>
-                                    </div>
-                                {{/if}}
-                            </script>
+                            {{/if}} {{#if productInquirySummary.used}}
+                            <div class="mypage_menu">
+                                <h3 class="tit">{{productInquirySummary.name}}</h3>
+                                <a href="/pages/my/product-inquiries.html" class="btn_board_more">더보기</a>
+                                <div>
+                                    <dl>
+                                        <dt>답변대기</dt>
+                                        <dd>
+                                            {{productInquirySummary.progressCnt}}
+                                            <span>건</span>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>답변완료</dt>
+                                        <dd>
+                                            {{productInquirySummary.answeredCnt}}
+                                            <span>건</span>
+                                        </dd>
+                                    </dl>
+                                    <a href="/pages/my/product-inquiries.html?write=true">
+                                        <span>상품문의하기</span>
+                                    </a>
+                                </div>
+                            </div>
+                            {{/if}} {{#if productReviewSummary.used}}
+                            <div class="mypage_menu">
+                                <h3 class="tit">{{productReviewSummary.name}}</h3>
+                                <a href="/pages/my/product-reviews.html" class="btn_board_more">더보기</a>
+                                <div>
+                                    <dl>
+                                        <dt>작성가능 후기</dt>
+                                        <dd>
+                                            {{productReviewSummary.availableCnt}}
+                                            <span>건</span>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>작성완료 후기</dt>
+                                        <dd>
+                                            {{productReviewSummary.completedCnt}}
+                                            <span>건</span>
+                                        </dd>
+                                    </dl>
+                                    <a href="javascript:void[0]" id="btnWriteReview">
+                                        <span>후기작성하기</span>
+                                    </a>
+                                </div>
+                            </div>
+                            {{/if}}
                         </div>
 
                         <!-- 최근 본 상품 -->
-                        <div id="myRecentProducts" class="mypage_lately_goods" data-template-id="myRecentProductsTemplate"></div>
-                        <script id="myRecentProductsTemplate" type="text/x-handlebars-template">
-                            <div class='mypage_zone_tit'>
-                                <h3>
-                                    최근 본 상품
-                                </h3>
-                                <span>
-                                    {{memberName}}님께서 본 최근 상품입니다.
-                                </span>
-                            </div>
-                            <div class='goods_list_cont'>
-                                <div id='recent_product_list_info'>
-                                    <div class='item_slide_horizontal'>
-                                        <ul id='flicking'>
+                        <div id="myRecentProducts" class="mypage_index mypage_lately_goods">
+                            <div class="mypage_menu">
+                                <h3 class="tit">최근 본 상품</h3>
+                                <dl style="padding: 15px 0 15px 20px;">
+                                    <dt>
+                                        {{#ifEq recentProducts.length 0}}
+                                        <span>최근 본 상품이 없습니다.</span>
+                                        {{/ifEq}} {{#ifNe recentProducts.length 0}}
+                                        <span>{{memberName}}님께서 본 최근 상품입니다.</span>
+                                        {{/ifNe}}
+                                    </dt>
+                                    <dd class="flicking-track">
+                                        <div id="flicking" class="goods_product_list">
                                             {{#each recentProducts}}
-                                                <li style='width: 25%;'>
-                                                    <div class='item_cont'>
-                                                        <div class='item_photo_box'>
+                                            <div class="goods_prd_item2">
+                                                <div class="goods_prd_item2_box">
+                                                    <div class="goods_prd_img">
+                                                        <div class="img_box">
                                                             <a href="/pages/product/view.html?productNo={{productNo}}">
-                                                                {{img listImageUrls 180 180 productName 'middle'}}
+                                                                <div class="img">
+                                                                    {{img listImageUrls 180 180 productName "middle"}}
+                                                                </div>
                                                             </a>
                                                         </div>
-                                                        <div class='item_info_cont'>
-                                                            <div class='item_tit_box'>
-                                                                <a href='/'>
-                                                                    <strong class='item_name'>
-                                                                        {{safeString productName}}
-                                                                    </strong>
-                                                                </a>
-                                                            </div>
-                                                            <div class='item_money_box'>
-                                                                <strong class='item_price'>
-                                                                    <span style=''>
+                                                    </div>
+                                                    <div class="goods_prd_content">
+                                                        <div class="goods_list_info">
+                                                            <a href="/pages/product/view.html?productNo={{productNo}}">
+                                                                <ul class="goods_info_list">
+                                                                    <li class="prd_name">{{safeString productName}}</li>
+                                                                    <li class="price">
                                                                         {{toCurrencyString salePrice}}원
-                                                                    </span>
-                                                                </strong>
-                                                            </div>
-                                                            <div class='item_icon_box'></div>
+                                                                    </li>
+                                                                </ul>
+                                                            </a>
                                                         </div>
                                                     </div>
-                                                </li>
+                                                </div>
+                                            </div>
                                             {{/each}}
-                                        </ul>
-                                    </div>
-                                </div>
+                                        </div>
+                                    </dd>
+                                </dl>
                             </div>
-                        </script>
+                        </div>
+
+                        <div id="onlyOpenId" class="mypage_index">
+                            {{#if openIdMember}}
+                            <a href="/pages/my/withdrawal.html" class="go_dropout">회원탈퇴 &gt;</a>
+                            {{/if}}
+                        </div>
                     </div>
                 </div>
             </main>
         </div>
-        <aside id="aside"></aside>
         <footer id="footer"></footer>
         <div id="popups-area"></div>
 

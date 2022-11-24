@@ -13,7 +13,6 @@ $(() => {
     productReviewConfig: shopby.cache.getBoardsConfig().productReviewConfig,
     myProductReview: null,
     initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
       this._getMyProductReview().then(() => {
         this.render();
       });
@@ -21,16 +20,19 @@ $(() => {
     },
 
     render() {
-      $('#myProductReviewPage').render({
-        productReviewConfig: this.productReviewConfig,
-        myProductReview: this.myProductReview,
+      $('#reviewName').render({ productReviewConfig: this.productReviewConfig });
+      $('#boardViewPage').render({
+        myProductReview: {
+          ...this.myProductReview,
+          content: this.myProductReview.content.replace(shopby.regex.space, '<br />'),
+        },
       });
     },
 
     bindEvents() {
       $('#myProductReviewPage')
         .on('click', '.add_file_area', this.mapAttachments.bind(this))
-        .on('click', '.btn_right_box', this.delOrEditBtn.bind(this));
+        .on('click', '.btn_bx', this.delOrEditBtn.bind(this));
     },
 
     mapAttachments({ target }) {

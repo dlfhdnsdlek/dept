@@ -2,120 +2,104 @@
   ~ © NHN Commerce Corp. All rights reserved.
   ~ NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
   ~
-  ~ @author Bomee Yoon
-  ~ @since 2021.7.21
+  ~  @author hyeyeon-park
+  ~  @since 2021.8.24
   -->
 
-<script id="categorySelectorTemplate" type="text/x-handlebars-template">
-    <div class="select_box" id="categorySelector" data-template-id="categorySelectorTemplate">
-        <div class="select_box">
-            {{#each this}}
-                <select id="categorySelector{{depth}}Depth" name="cateGoods" data-depth="{{ depth }}">
-                    <option value="">=카테고리선택=</option>
-                    {{#each categories}}
-                        {{option categoryNo label ../selectedCategoryNo ''}}
-                    {{/each}}
-                </select>
-            {{/each}}
+<script id="selectProductPopupTemplate" type="text/x-handlebars-template">
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='ly_wrap layer_goods_select' style='text-align: left;'>
+            <div class='ly_head'>
+                <h1 class='h_tit'>
+                    상품 선택
+                </h1>
+            </div>
+            <div class='write_wrap'>
+                <div class='view' style='text-align: left;'>
+                    <div class='scroll_box'>
+                        <div class='ly_cont'>
+                            <div class='ly_buy_info'>
+                                <div class='search_box js_singel_option'>
+                                    <div class='search_filter'>
+                                        <div class='inp_sel'>
+                                            <select id='filterSelector'>
+                                                <option value='KEYWORDS'>
+                                                    키워드
+                                                </option>
+                                                <option value='PRODUCT_NO'>
+                                                    상품번호
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class='search_text ly_date_search_list'>
+                                        <input type='text' name='keyword' maxlength='20' placeholder='검색어를 입력해주세요.' />
+                                    </div>
+                                </div>
+                                <div class='btn_box' style='width:auto;position:relative'>
+                                    <button class='ly_select_search_btn' type='button' id='searchProduct'>
+                                        검색
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class='top_table_type'>
+                                    <ul id='searchedProducts' class='ly_loop product_list' data-template-id='searchedProductsTemplate'>
+                                    </ul>
+                                    <div id='btnMoreProduct'></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='close_btn'>
+                    <button type='button' class='lys_close_btn ly_btn_close' data-action-type='negative'>
+                        닫기
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </script>
 
 <script id="searchedProductsTemplate" type="text/x-handlebars-template">
-    <table id="searchedProducts" data-template-id="searchedProductsTemplate">
-        <colgroup>
-            <col style="width:100px">
-            <col>
-            <col style="width:137px">
-        </colgroup>
-        <thead>
-        <tr>
-            <th>선택</th>
-            <th>상품명</th>
-            <th>상품금액</th>
-        </tr>
-        </thead>
-        <tbody class="product_list">
-        {{#unless this}}
-            <tr>
-                <td colspan="4" class="no_data">검색된 상품이 없습니다.</td>
-            </tr>
-        {{else}}
-            {{#each this}}
-                <tr id="tbl_add_1000000012">
-                    <td colspan="2" class="td_left">
-                        <div class="form_element">
-                            <input type="radio" id="{{productNo}}" name="productNo" class="radio" value="{{productNo}}">
-                            <label class="choice_s" for="{{productNo}}">
-                                <div class="pick_add_cont">
-                            <span class="pick_add_img" style="float: left;">
-                                {{#each imageUrls}}
-                                    {{#if @first}}<img src="{{this}}" alt="{{../productName}}" style="width: 40px;height: auto;">{{/if}}
-                                {{/each}}
-                            </span>
-                                    <div class="pick_add_info" style="float: left;text-align: left;margin-left: 5px; width:calc(100% - 45px);">
-                                        <em>{{safeString productName}}</em>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </td>
-                    <td class="js_item_price">
-                        <strong>{{toCurrencyString salePrice}}</strong>원
-                    </td>
-                </tr>
-            {{/each}}
-        {{/unless}}
-        </tbody>
-    </table>
-</script>
-
-<script id="searchProductPopupTemplate" type="text/x-handlebars-template">
-    <div class="layer_wrap dimed" id="searchProductPopupTemplate">
-
-        <div class="box common_popup_body" style="width:950px;">
-            <div class="view" style="text-align: left;">
-                <h2>상품선택</h2>
-                <div class="scroll_box" style="max-height:594px;">
-                    <div class="ly_cont" style="padding-bottom: 0;">
-                        <div class="ly_date_list_box" style="margin:0; padding-bottom:0;">
-                            <div class="ly_date_select_list">
-                                <h5>카테고리</h5>
-                                <div class="select_box" id="categorySelector" data-template-id="categorySelectorTemplate">
-
-                                </div>
-                                <div class="ly_date_search_list">
-                                    <h5>검색어</h5>
-                                    <select id="filterSelector">
-                                        <option value="KEYWORDS">키워드</option>
-                                        <option value="PRODUCT_NO">상품번호</option>
-                                    </select>
-                                    <input type="text" name="keyword" maxlength="20" placeholder="검색어를 입력해주세요.">
-                                </div>
-                            </div>
-                            <div class="btn_center_box">
-                                <button type="button" class="btn_ly_date_check" data-action-type="searchProduct"><em>조회</em></button>
-                            </div>
-                            <div class="scroll_box" style="height:calc(600px - 249px); max-heihgt:unset;">
-                                <div class="top_table_type">
-                                    <span class="pick_list_num">상품 <strong id="totalCount">0</strong> 건</span>
-                                    <table id="searchedProducts" data-template-id="searchedProductsTemplate">
-
-
-                                    </table>
-                                </div>
-                                <div id="searchProductPagination" class="pagination"></div>
-                            </div>
-                            <div class="btn_center_box">
-                                <button type="button" class="btn_ly_cancel layer_close btnClosePopup" data-action-type="negative"><strong>취소</strong></button>
-                                <button type="button" class="btn_ly_ok js_select_confirm" data-action-type="positive"><strong>확인</strong></button>
-                            </div>
+    <ul id='searchedProducts' class='ly_loop product_list' data-template-id='searchedProductsTemplate'>
+        {{#each products}}
+            <li class='my_goods' data-product-no="{{productNo}}">
+                <div class='info'>
+                    <div class='itemhead'>
+                        <div class='thmb img'>
+                            <img src="{{listImageUrls}}" alt='{productName}}' />
                         </div>
                     </div>
+                    <div class='itembody'>
+                        <p class='name'>
+                            {{safeString productName}}
+                        </p>
+                        <p class='prc'>
+                            상품금액 :
+                            <span class='goods_price'>
+                                {{toCurrencyString salePrice}}원
+                            </span>
+                        </p>
+                    </div>
+                    <div class='btn_bx'>
+                        <button id='selectProduct' class='ly_select_search_btn1 js_select_confirm'>
+                            선택
+                        </button>
+                    </div>
                 </div>
-                <a href="#close" class="ly_close btnClosePopup" data-action-type="negative"><img
-                    src="/assets/img/mypage/icon-layer-close.png" alt="닫기"></a>
+            </li>
+        {{else}}
+            <div class='itemselect' style='background-color: #fff;'>
+                <div class='itemselect_comment' style='display: block;text-align:center'>
+                    검색된 상품이 없습니다.
+                </div>
             </div>
-        </div>
+        {{/each}}
+    </ul>
 </script>
+
 <script src="/js/components/popup/select-product.js"></script>

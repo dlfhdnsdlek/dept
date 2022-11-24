@@ -3,7 +3,6 @@
  *  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
  *  @author choisohyun
- *  @author hyeyeon-park
  *  @since 2021.7.2
  *
  */
@@ -32,11 +31,17 @@ $(() => {
     },
     captcha: shopby.helper.captcha('captcha'),
     timer: null,
-    initiate() {
+    async initiate() {
       this.bindEvents();
+      await this.isShopKcpCallback();
     },
     bindEvents() {
       $('#btnMemberCertify').on('click', this.checkId.bind(this));
+      this.bindKcpHref()
+    },
+    bindKcpHref() {
+      const btnAuthKCP = document.getElementById('btnMemberCertifyConfirm')
+      btnAuthKCP.href = shopby.helper.member.getKcpCallbackUrl()
     },
     renderUserCertification() {
       $('#userIdForm').hide();
@@ -56,7 +61,7 @@ $(() => {
       this.bindUserCertificationConfirmEvents();
     },
     renderChangePassword() {
-      $('#userCertificationConfirm, #userCertification').hide();
+      $('#userIdForm,#userCertificationConfirm,#userCertification').hide();
       shopby.utils.changeBreadcrumb('비밀번호 새로 등록');
       $('#userPasswordChange').render(this.data.userPasswordChange);
       this.bindChangePasswordEvents();
@@ -77,40 +82,47 @@ $(() => {
     },
     bindChangePasswordEvents() {
       $('#passwordForm')
-      .on('keyup', 'input', this.changeValidInput.bind(this))
-      .on('blur', 'input', this.blurValidInput.bind(this));
+        .on('keyup', 'input', this.changeValidInput.bind(this))
+        .on('blur', 'input', this.blurValidInput.bind(this));
       $('#btnChangePassword').on('click', this.changePassword.bind(this));
     },
     bindCompleteEvents() {
       $('#goLogin').on('click', shopby.goLogin);
     },
+
     selectCertificationType(e) {
       const authType = $('input[name="authType"]:checked').val();
       switch (authType) {
         case 'MOBILE':
-          shopby.helper.member.openKcpCallback(e);
-          this.isShopKcpCallback();
+          e.preventDefault()
+          shopby.utils.pushState({ isAuthPhoneConfig: true });
+          window.location.href = shopby.helper.member.getKcpCallbackUrl();
           break;
         case 'SMS':
         case 'EMAIL':
+          e.preventDefault()
           this.sendAuthentication();
           break;
         default:
           break;
       }
     },
-    isShopKcpCallback() {
-      if (this.data.isAuthPhoneConfig) {
-        window.shopKcpCallback = async (result, key) => {
-          if (!result) {
+    async isShopKcpCallback() {
+      const isAuthPhoneConfig = shopby.utils.getUrlParam('isAuthPhoneConfig') === 'true';
+      if (isAuthPhoneConfig) {
+        const shopKcpCallback = async (result, key) => {
+          if (!result || (result && result.fail)) {
             shopby.alert('본인 인증에 실패하였습니다.');
             return;
           }
           this.data.userCertificationConfirm.authType = 'MOBILE';
           this.data.kcpKey = key;
-          shopby.localStorage.setItemWithExpire(shopby.cache.key.member.kcpAuth, result);
           this.renderChangePassword();
+          shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
+          window.history.pushState(null, document.title, location.pathname);
         };
+        const kcpProfile = shopby.localStorage.getItemWithExpire(shopby.cache.key.member.kcpAuth);
+        kcpProfile && (await shopKcpCallback(kcpProfile, shopby.utils.getUrlParam('key')));
       } else {
         shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
       }
@@ -132,11 +144,10 @@ $(() => {
         const { authenticationTimeType, authenticationType } = shopby.cache.getMall().mallJoinConfig;
         this.data.isAuthPhoneConfig =
           authenticationTimeType === 'JOIN_TIME' &&
-          authenticationType === 'AUTHENTICATION_BY_PHONE' &&
-          accountResult.hasCI;
+          authenticationType === 'AUTHENTICATION_BY_PHONE';
         this.data.userCertification = {
           ...accountResult,
-          isCertification: !!(accountResult.email || accountResult.mobileNo || this.data.isAuthPhoneConfig),
+          isCertification: !!(accountResult.email || accountResult.mobileNo),
           memberId,
           isAuthPhoneConfig: this.data.isAuthPhoneConfig,
         };
@@ -155,11 +166,15 @@ $(() => {
           this.renderUserCertification();
         }
       } catch (error) {
+        if (!error.code && error.message) {
+          alert(error.message);
+        }
+
         if (error.code === 'M0010') {
           $('input[name="memberId"]')
-          .siblings('.warning_message')
-          .html(`<strong>회원정보를 찾을 수 없습니다.</strong>`)
-          .show();
+            .siblings('.warning_message')
+            .html(`<strong>회원정보를 찾을 수 없습니다.</strong>`)
+            .show();
         }
       }
     },
@@ -193,7 +208,6 @@ $(() => {
     },
     async resetPassword() {
       const certifyCode = $('input[name="inputCertify"]').val();
-
       const validateCertifyCode = () => {
         if (certifyCode.length === 0) {
           throw new Error('인증번호를 입력해주세요');
@@ -218,7 +232,6 @@ $(() => {
             certificatedNumber: certifyCode,
           },
         });
-
         shopby.alert('인증되었습니다.', () => {
           this.data.userPasswordChange.certificationNumber = certifyCode;
           this.renderChangePassword();
@@ -229,14 +242,14 @@ $(() => {
         if (error && error.status === 401 && error.path.includes('authentications')) {
           shopby.alert(error.message);
         }
-        if (error.code === 'E0008' || error.code === 'CP9001') {
+        if (error && (error.code === 'E0008' || error.code === 'CP9001')) {
           this.captcha.retry();
           this.captcha.errorHandler(error);
         }
       }
     },
     initCaptcha() {
-      this.captcha = this.captcha || shopby.helper.captcha('captcha');
+      this.captcha = this.captcha ? this.captcha : shopby.helper.captcha('captcha');
     },
     changeValidInput({ key, target }) {
       const { pattern } = target.dataset;
@@ -247,33 +260,19 @@ $(() => {
     },
     blurValidInput({ target }) {
       const $target = $(target);
-      const $warnMessage = $target.closest('.member_warning').find('.warning_message');
+      const $warnMessage = $target.closest('.inp_tx').find('.warning_message');
       const { name, value } = $target[0];
       const { member } = shopby.helper;
-      let resultMessage = '';
-
-      switch (name) {
-        case 'password':
-          resultMessage = member.passwordValidation(value);
-          break;
-        case 'passwordChk':
-          resultMessage = member.passwordChkValidation(value);
-          break;
-        default:
-          resultMessage = '';
-      }
+      const resultMessage = member[`${name}Validation`](value);
       const successValidation = resultMessage.includes('success') || resultMessage === '';
-      // if (!successValidation) {
-      //   $target[0].focus();
-      // }
+
       resultMessage.length > 0 ? $warnMessage.text(shopby.message[resultMessage]).show() : $warnMessage.hide();
       $warnMessage.data('usable', successValidation);
     },
     async changePassword() {
       const password = $('input[name="password"]').val();
-      const inputWaringMessage = $('.member_warning').find('.warning_message');
+      const inputWaringMessage = $('.inp_tx').find('.warning_message');
       const isValid = shopby.helper.member.checkValidInput(inputWaringMessage);
-
       try {
         this.checkPasswordValidation(password);
         if (!isValid) return;
@@ -281,6 +280,7 @@ $(() => {
         shopby.alert(error.message);
         return;
       }
+
       const request = {
         requestBody: {
           findMethod: this.data.userCertificationConfirm.authType,
@@ -290,7 +290,9 @@ $(() => {
           key: this.data.kcpKey,
         },
       };
+
       await shopby.api.member.postProfileChangePasswordAfterCert(request);
+
       if (this.data.userCertification.status === 'DORMANT' || this.data.userCertification.status === 'FREEZE') {
         await shopby.api.member.putProfileDormancy({ requestBody: { authType: 'NONE' } });
       }
@@ -310,7 +312,7 @@ $(() => {
       $('.timer').html(time);
     },
     _onTimerEnded() {
-      $('.timer').html('경과되었습니다.[인증번호 다시받기]를 클릭하여 발급된 인증번호를 입력해 주세요.');
+      $('.timer').html('경과되었습니다.[인증번호 다시받기]를 클릭하여 발급된 인증번호를 입력해 주세요');
       $('#guideMsg').show();
     },
   };

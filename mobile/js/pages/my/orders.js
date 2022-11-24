@@ -1,71 +1,107 @@
 /*
  * © NHN Commerce Corp. All rights reserved.
- * NHN Commerce Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
- * @author Haekyu Cho
- * @since 2021-06-27
+ * @author JongKeun Kim
+ * @since 2021.8.3
  */
+
 $(() => {
   // window.history.pushState({ data: 'some data' },'Some history entry title', '/some-path')
   // 페이지 리프래쉬 없이 주소만 변경하는 방법..
-  const $ordersResult = $('#ordersResult');
+  const $orderResults = $('#orderResults');
+  const $orderResultsTemplate = $('#orderResultsTemplate');
 
   shopby.orders = {
-    dateRange: {},
-    page: {},
+    page: null,
+    dateRange: null,
     initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
-      this.dateRange = new shopby.dateRange('#myOrdersDateRangePicker', this.onClickSearchBtn.bind(this));
-      this.page = new shopby.pagination(this.onClickSearchBtn.bind(this), '#pagination', 5);
-
-      this._fetchApis().then(responses => {
-        if (responses.some(response => response && response.error)) {
-          // @fixme: /malls 도 401로 떨어져서 그냥 에러남.. 망함..
-          shopby.alert('인증 정보가 만료되었습니다.', shopby.goLogin);
-        } else {
-          this.onClickSearchBtn();
-          this.render(responses);
-        }
-      });
+      this.renderDateSelector();
+      this.initReadMore();
+      this.search();
     },
-    render(responses) {
-      const [summary, summaryAmount, orders, likeProduct] = responses;
-      shopby.my.summary.init('#myPageSummary', summary, summaryAmount, likeProduct.totalCount);
-
-      this._renderOrders(orders);
+    renderDateSelector() {
+      this.dateRange = new shopby.dateRange('#dateSelector', this.search.bind(this, true));
     },
-    _renderOrders(orders) {
-      const data = orders.items.flatMap(order =>
-        order.orderOptions.flatMap(orderOption => {
-          const hasEscrowClaim = order.escrow && order.orderOptions.map(o => o.claimNo).every(v => v !== null);
+    initReadMore() {
+      const REQUEST_COUNT = 5;
+      this.page = new shopby.readMore(this.search.bind(this), '#readMore', REQUEST_COUNT);
+    },
+    _renderOrders(orders, resetData) {
+      const data = orders.items
+        .flatMap(order =>
+          order.orderOptions.map(orderOption => {
+            const hasEscrowClaim = order.escrow && order.orderOptions.map(o => o.claimNo).every(v => v !== null);
+
+            return {
+              orderYmdt: order.orderYmdt.substr(0, 10),
+              orderNo: order.orderNo,
+              productNo: orderOption.productNo,
+              orderOptionNo: orderOption.orderOptionNo,
+              optionNo: orderOption.optionNo,
+              rowSpan: order.orderOptions.indexOf(orderOption) !== 0 ? 0 : order.orderOptions.length,
+              claimNos: order.orderOptions.map(o => o.claimNo).join(','),
+              imageUrl: orderOption.imageUrl,
+              productName: orderOption.productName,
+              optionTextInfo: shopby.utils.createOptionText(orderOption),
+              orderCnt: orderOption.orderCnt,
+              buyAmt: orderOption.price.buyAmt,
+              orderStatusText: this._createOrderStatusText(orderOption),
+              nextActionText:
+                !hasEscrowClaim &&
+                ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'].includes(order.payType)
+                  ? this._createNextActionText(order, orderOption.orderStatusType)
+                  : this._createNextActionText(orderOption),
+              orderStatusType: orderOption.orderStatusType,
+              orderStatusTypeLabel: orderOption.orderStatusTypeLabel,
+              payType: order.payType,
+              pgType: order.pgType,
+            };
+          }),
+        )
+        .reduce((separatedByDate, order) => {
+          const ymd = order.orderYmdt.substr(0, 10);
+          const index = separatedByDate.findIndex(dateGroup => dateGroup.ymd === ymd);
+          if (index === -1) {
+            separatedByDate = [
+              ...separatedByDate,
+              {
+                ymd,
+                orders: [order],
+              },
+            ];
+            return separatedByDate;
+          }
+
+          separatedByDate[index].orders.push(order);
+          return separatedByDate;
+        }, [])
+        .map(separatedByDate => {
           return {
-            orderYmdt: order.orderYmdt.substr(0, 10),
-            orderNo: order.orderNo,
-            productNo: orderOption.productNo,
-            orderOptionNo: orderOption.orderOptionNo,
-            optionNo: orderOption.optionNo,
-            rowSpan: order.orderOptions.indexOf(orderOption) !== 0 ? 0 : order.orderOptions.length,
-            claimNos: order.orderOptions.map(o => o.claimNo).join(','),
-            imageUrl: orderOption.imageUrl,
-            productName: shopby.utils.substrWithPostFix(orderOption.productName),
-            optionTextInfo: shopby.utils.createOptionText(orderOption),
-            orderCnt: orderOption.orderCnt,
-            buyAmt: orderOption.price.buyAmt,
-            orderStatusText: this._createOrderStatusText(orderOption),
-            nextActionText:
-              !hasEscrowClaim && ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'].includes(order.payType)
-                ? this._createNextActionText(order, orderOption.orderStatusType)
-                : this._createNextActionText(orderOption),
-            orderStatusType: orderOption.orderStatusType,
-            orderStatusTypeLabel: orderOption.orderStatusTypeLabel,
-            payType: order.payType,
-            pgType: order.pgType,
+            ...separatedByDate,
+            orders: separatedByDate.orders.reduce((separatedByOrderNo, item) => {
+              const { orderNo } = item;
+              const index = separatedByOrderNo.findIndex(item => item.orderNo === orderNo);
+              if (index === -1) {
+                separatedByOrderNo = [
+                  ...separatedByOrderNo,
+                  {
+                    orderNo,
+                    items: [item],
+                  },
+                ];
+                return separatedByOrderNo;
+              }
+
+              separatedByOrderNo[index].items.push(item);
+              return separatedByOrderNo;
+            }, []),
           };
-        }),
-      );
-      const compiled = Handlebars.compile($ordersResult.html());
-      $ordersResult.next().remove();
-      $ordersResult.parent().append(compiled(data));
+        });
+
+      const compiled = Handlebars.compile($orderResultsTemplate.html());
+      if (resetData) $orderResults.html('');
+      $orderResults.append(compiled(data));
       $('#totalcount').text(orders.totalCount);
 
       this._bindEvents();
@@ -127,16 +163,16 @@ $(() => {
       window.open(actionUri, '_blank', 'toolbar=yes,location=yes,menubar=yes');
     },
 
-    _confirmOrder(target, actionUri) {
-      const $targetTr = $(target).parents('tr');
-      const orderNo = $targetTr.data('orderNo');
-      const payType = $targetTr.data('payType');
+    async _confirmOrder(target, actionUri) {
+      const $targetLi = $(target).parents('li.order_product');
+      const orderNo = $targetLi.data('orderNo');
+      const payType = $targetLi.data('payType');
 
-      const $arrTr = $.makeArray($('.order_table_body tr')).filter(tr => $(tr).data('orderNo') === orderNo);
+      const $arrLi = $.makeArray($('.my_goods li.order_product')).filter(li => $(li).data('orderNo') === orderNo);
 
       if (['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'].includes(payType)) {
         // 1. 일부 옵션이 구매 확정 불가능한 경우 - 근데 어차피 어드민에서 에스크로 결제의 경우 부분 배송처리가 안되기 때문에 노출 안될듯
-        if ($arrTr.filter(tr => $(tr).data('orderStatusType') !== 'DELIVERY_ING').length > 0) {
+        if ($arrLi.filter(tr => $(tr).data('orderStatusType') !== 'DELIVERY_ING').length > 0) {
           shopby.alert('에스크로 결제 건은 모든 상품이 구매확정이 가능한 경우에만 구매확정처리가 가능합니다.');
           return;
         }
@@ -170,21 +206,21 @@ $(() => {
 
       try {
         await Promise.all(arrFetch);
-        shopby.alert('구매확정 처리되었습니다.', this.onClickSearchBtn.bind(this));
+        shopby.alert('구매확정 처리되었습니다.', this.search.bind(this));
       } catch (e) {
-        this.onClickSearchBtn();
+        this.search(true);
       }
     },
 
     _getReviewOption(target) {
       const { actionUri } = target.dataset;
-      const $product = $(target).closest('tr');
-      const { optionNo, orderOptionNo, orderStatusType } = target.closest('tr').dataset;
+      const $product = $(target).closest('li.order_product');
+      const { optionNo, orderOptionNo, orderStatusType } = target.closest('li.order_product').dataset;
       const product = {
         productNo: actionUri.split('/')[2],
-        productName: $product.find('.productName').text().trim(),
+        productName: $product.find('.product_name').text().trim(),
         imageUrls: $product.find('img').attr('src'),
-        optionText: $product.find('.goods_option').text().trim(),
+        optionText: $product.find('.prd_option').text().trim(),
         orderStatusType,
       };
       return {
@@ -197,9 +233,9 @@ $(() => {
     },
 
     _writeReview(target) {
-      const $targetTr = $(target).parents('tr');
-      const payType = $targetTr.data('payType');
-      const orderStatusType = $targetTr.data('orderStatusType');
+      const $targetLi = $(target).parents('li.order_product');
+      const payType = $targetLi.data('payType');
+      const orderStatusType = $targetLi.data('orderStatusType');
 
       if (
         ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'].includes(payType) &&
@@ -211,93 +247,17 @@ $(() => {
 
       try {
         const { action } = target.dataset;
-        const { orderStatusType, payType } = target.closest('tr').dataset;
+        const { orderStatusType, payType } = target.closest('li').dataset;
         this.validateNaverPay(orderStatusType, payType, action);
-
         const registerReview = () => {
           shopby.popup('product-review', this._getReviewOption(target), ({ state }) => {
             if (state !== 'ok') return;
-            this.onClickSearchBtn();
+            location.reload();
           });
         };
+
         registerReview();
       } catch (e) {
-        alert(e.message);
-      }
-    },
-
-    _registerClaim(target) {
-      try {
-        const { action } = target.dataset;
-        const { orderNo, orderStatusType, orderOptionNo, payType } = target.closest('tr').dataset;
-        const escrowOrderTypes = ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'];
-
-        this.validateNaverPay(orderStatusType, payType, action); // error thrower. 네페 아니면 무조건 throw 안함. 네이버 페이이고 해당 케이스가 아니면 불가 메시지 throw 함
-        // 네이버 페이 validate 통과 후
-        //결제완료 이후
-        if (orderStatusType !== 'DEPOSIT_WAIT') {
-          //에스크로 : 결제완료 이후 주문건이 있는 경우
-          if (action === 'NO_CANCEL' && escrowOrderTypes.includes(payType)) {
-            shopby.alert(
-              '에스크로 결제 건은 모든 상품이 결제완료 상태에서만 취소신청이 가능합니다.<br>취소신청은 1:1문의를 통해 문의해주세요.',
-            );
-            return;
-          }
-
-          if (action === 'EXCHANGE' && escrowOrderTypes.includes(payType)) {
-            shopby.alert('에스크로 결제 건은 교환 신청이 불가합니다.<br>취소/반품 후 재주문으로 처리해 주세요');
-            return;
-          }
-
-          if (action === 'RETURN' && escrowOrderTypes.includes(payType)) {
-            shopby.alert(
-              '에스크로 결제 건은 결제업체에서 발송한 이메일에서만<br>반품신청이 가능합니다. 이메일 수신함을 확인해주세요',
-              () => (window.location.href = '/pages/my/orders.html'),
-            );
-            return;
-          }
-
-          //에스크로 : 결제완료건
-          if (escrowOrderTypes.includes(payType) && orderStatusType === 'PAY_DONE') {
-            shopby.confirm(
-              { message: `에스크로 결제 건은 전체 취소신청만 가능합니다.<br>모두 취소신청 하시겠습니까?` },
-              ({ state }) => {
-                if (state !== 'ok') return;
-                this._goClaimPage(action, orderOptionNo, orderNo);
-              },
-            );
-            return;
-          }
-
-          //일반 주문건은 클레임 신청페이지로
-          this._goClaimPage(action, orderOptionNo, orderNo);
-          return;
-        }
-
-        //무통장입금 결제건
-        if (payType === 'ACCOUNT') {
-          shopby.popup('cancel-message', null, ({ state, result }) => {
-            if (state !== 'ok') return;
-            result === 'all' ? this._cancelAllOrder(orderNo) : this._goClaimPage(action, orderOptionNo, orderNo);
-          });
-          return;
-        }
-
-        //에스크로 결제건 또는 가상계좌건
-        if (escrowOrderTypes.includes(payType) || payType === 'VIRTUAL_ACCOUNT') {
-          const payTypeLabel = escrowOrderTypes.includes(payType) ? '에스크로' : '가상계좌';
-
-          shopby.confirm(
-            { message: `${payTypeLabel} 결제 건은 전체 취소신청만 가능합니다.<br>모두 취소신청 하시겠습니까?` },
-            ({ state }) => {
-              if (state !== 'ok') return;
-              this._cancelAllOrder(orderNo);
-            },
-          );
-          return;
-        }
-      } catch (e) {
-        console.error(e);
         alert(e.message);
       }
     },
@@ -334,6 +294,77 @@ $(() => {
       }
     },
 
+    _registerClaim(target) {
+      const { action } = target.dataset;
+      const { orderNo, orderStatusType, orderOptionNo, payType } = target.closest('li').dataset;
+      const escrowOrderTypes = ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'];
+
+      this.validateNaverPay(orderStatusType, payType, action); // error thrower. 네페 아니면 무조건 throw 안함. 네이버 페이이고 해당 케이스가 아니면 불가 메시지 throw 함
+      // 네이버 페이 validate 통과 후
+      //결제완료 이후
+      if (orderStatusType !== 'DEPOSIT_WAIT') {
+        //에스크로 : 결제완료 이후 주문건이 있는 경우
+        if (action === 'NO_CANCEL' && escrowOrderTypes.includes(payType)) {
+          shopby.alert(
+            '에스크로 결제 건은 모든 상품이 결제완료 상태에서만 취소신청이 가능합니다.<br>취소신청은 1:1문의를 통해 문의해주세요.',
+          );
+          return;
+        }
+
+        if (action === 'EXCHANGE' && escrowOrderTypes.includes(payType)) {
+          shopby.alert('에스크로 결제 건은 교환 신청이 불가합니다.<br>취소/반품 후 재주문으로 처리해 주세요');
+          return;
+        }
+
+        if (action === 'RETURN' && escrowOrderTypes.includes(payType)) {
+          shopby.alert(
+            '에스크로 결제 건은 결제업체에서 발송한 이메일에서만<br>반품신청이 가능합니다. 이메일 수신함을 확인해주세요',
+            () => (window.location.href = '/pages/my/orders.html'),
+          );
+          return;
+        }
+
+        //에스크로 : 결제완료건
+        if (escrowOrderTypes.includes(payType) && orderStatusType === 'PAY_DONE') {
+          shopby.confirm(
+            { message: `에스크로 결제 건은 전체 취소신청만 가능합니다.<br>모두 취소신청 하시겠습니까?` },
+            ({ state }) => {
+              if (state !== 'ok') return;
+              this._goClaimPage(action, orderOptionNo, orderNo);
+            },
+          );
+          return;
+        }
+
+        //일반 주문건은 클레임 신청페이지로
+        this._goClaimPage(action, orderOptionNo, orderNo);
+        return;
+      }
+
+      //무통장입금 결제건
+      if (payType === 'ACCOUNT') {
+        shopby.popup('cancel-message', null, ({ state, result }) => {
+          if (state !== 'ok') return;
+          result === 'all' ? this._cancelAllOrder(orderNo) : this._goClaimPage(action, orderOptionNo, orderNo);
+        });
+        return;
+      }
+
+      //에스크로 결제건 또는 가상계좌건
+      if (escrowOrderTypes.includes(payType) || payType === 'VIRTUAL_ACCOUNT') {
+        const payTypeLabel = escrowOrderTypes.includes(payType) ? '에스크로' : '가상계좌';
+
+        shopby.confirm(
+          { message: `${payTypeLabel} 결제 건은 전체 취소신청만 가능합니다.<br>모두 취소신청 하시겠습니까?` },
+          ({ state }) => {
+            if (state !== 'ok') return;
+            this._cancelAllOrder(orderNo);
+          },
+        );
+        return;
+      }
+    },
+
     async _cancelAllOrder(orderNo) {
       try {
         const postClaimsCancel = shopby.logined()
@@ -344,9 +375,9 @@ $(() => {
           pathVariable: { orderNo },
           requestBody: { orderNo },
         });
-        shopby.alert('주문취소가 완료되었습니다.', this.onClickSearchBtn.bind(this));
+        shopby.alert('주문취소가 완료되었습니다.', this.search.bind(this));
       } catch (e) {
-        this.onClickSearchBtn();
+        this.search(true);
       }
     },
 
@@ -365,7 +396,7 @@ $(() => {
         WITHDRAW_EXCHANGE: '교환',
         WITHDRAW_RETURN: '반품',
       }[action];
-      const claimNos = target.closest('tr').dataset.claimNos.split(',');
+      const claimNos = target.closest('li').dataset.claimNos.split(',');
       const checkClaimNo = claimNos.some(claimNo => Number(claimNo) > currentClaimNo);
       const message = checkClaimNo
         ? '철회 시 후순위 클레임의 결제/환불 금액이 변동됩니다.<br>클레임을 철회하시겠습니까?.'
@@ -376,35 +407,35 @@ $(() => {
         try {
           const pathVariable = { claimNo: currentClaimNo };
           await shopby.api.claim.putProfileClaimsClaimNoWithdraw({ pathVariable });
-          shopby.alert(`${actionType}신청철회가 완료되었습니다.`, this.onClickSearchBtn.bind(this));
+          shopby.alert(`${actionType}신청철회가 완료되었습니다.`, this.search.bind(this));
         } catch (e) {
           console.error(e);
-          this.onClickSearchBtn();
+          this.search(true);
         }
       });
     },
 
     _createOrderStatusText(orderOption) {
       const statusText = orderOption.claimStatusType
-        ? `<a href="javascript:;" style="text-decoration:underline;" data-action="cancel" data-claim-no="${orderOption.claimNo}" class="claimStatusBtn">${orderOption.claimStatusTypeLabel}</a>`
-        : orderOption.orderStatusTypeLabel;
+        ? `<a href="javascript:;" data-action="cancel" data-claim-no="${orderOption.claimNo}" class="order_btn claimStatusBtn">${orderOption.claimStatusTypeLabel}</a>`
+        : `<a class="order_ok_btn" style="opacity:0.5">${orderOption.orderStatusTypeLabel}</a>`;
 
       const orderStatusTypes = ['VIEW_DELIVERY', 'CONFIRM_ORDER', 'WRITE_REVIEW'];
       const statusButton = orderOption.nextActions
         .filter(({ nextActionType }) => orderStatusTypes.includes(nextActionType))
         .sort((_, { nextActionType }) => (nextActionType === 'WRITE_REVIEW' ? -1 : 1))
         .map(({ nextActionType, uri }) => {
-          const buttonClass = nextActionType === 'WRITE_REVIEW' ? 'btn_gray' : 'btn_black';
-          return `<a href="javascript:;" class="${buttonClass} statusNextAction"
-                    data-action="${nextActionType}" data-action-uri="${uri}"
-                    data-delivery-type="${orderOption.delivery.deliveryType}"
-                  >
+          return `<a href="javascript:;" class="order_btn statusNextAction"  data-action="${nextActionType}" data-action-uri="${uri}"  data-delivery-type="${
+            orderOption.delivery.deliveryType
+          }">
                       ${this._getNextActionLabel(nextActionType)}
                   </a>`;
-        })
-        .join('');
+        });
 
-      return statusText + statusButton;
+      return [statusText, ...statusButton]
+        .filter(Boolean)
+        .map(template => `<li>${template}</li>`)
+        .join('');
     },
 
     _createNextActionText(orderOption, orderStatusType = null) {
@@ -413,28 +444,30 @@ $(() => {
         orderOption.nextActions && orderOption.nextActions.some(({ nextActionType }) => nextActionType === 'RETURN');
       //에스크로 : 결제완료 이후 주문건이 있는 경우
       if (orderOption.escrow && orderOption.nextActions.length === 0) {
+        orderOption.nextActions.push({
+          nextActionType: 'NO_CANCEL',
+        });
+
         const deliveryDoneTypes = ['DELIVERY_ING', 'DELIVERY_DONE', 'BUY_CONFIRM'];
         if (deliveryDoneTypes.includes(orderStatusType)) {
           canClaims = true;
-          orderOption.nextActions.push({
-            nextActionType: 'RETURN',
-            uri: '',
-          });
+          orderOption.nextActions = [{ nextActionType: 'RETURN', uri: '' }];
         } else {
-          orderOption.nextActions.push(
+          orderOption.nextActions = [
             {
               nextActionType: 'NO_CANCEL',
             },
             { nextActionType: 'EXCHANGE', uri: '' },
-          );
+          ];
         }
       }
+
       return (
         orderOption.nextActions
           .concat(canClaims ? [] : [{ nextActionType: 'NONE' }])
           .filter(({ nextActionType }) => !notClaimAction.includes(nextActionType))
           .map(({ nextActionType, uri }) => {
-            return `<a href="javascript:;" class="btn_white nextActionBtn" data-action="${nextActionType}"
+            return `<a href="javascript:;" class="order_btn nextActionBtn"  data-action="${nextActionType}"
                     data-action-uri="${uri}" data-claim-no="${orderOption.claimNo}">
                       ${this._getNextActionLabel(nextActionType)}
                     </a>`;
@@ -460,50 +493,26 @@ $(() => {
       return nextActionLabel[nextActionType];
     },
 
-    async onClickSearchBtn() {
-      const { start, end } = this.dateRange;
-      const { pageNumber } = this.page;
-      shopby.utils.pushState({ start, end, pageNumber });
-
-      const { data: orders } = await this.fetchOrders();
-      this.page.render(orders.totalCount);
-      this._renderOrders(orders);
+    async search(resetData = false) {
+      const data = await this.fetchOrders();
+      this._renderOrders(data, resetData);
+      this.page.render(data.totalCount);
     },
-    async _fetchApis() {
-      const result = await Promise.all([
-        shopby.api.member.getProfileSummary(), // FIXME: API Deprecated
-        shopby.api.order.getProfileOrdersSummaryAmount({
-          queryString: {
-            orderStatusType: 'BUY_CONFIRM',
-            startYmd: shopby.date.lastHalfYear(),
-            endYmd: shopby.date.today(),
-          },
-        }),
-        this.fetchOrders(),
-        // summary 찜리스트 totalCount만 받아오기 위해 추가
-        // 전체 카운트만 받아오는 것으로 pageNumber, pageSize는 추가하지 않음
-        shopby.api.product.getProfileLikeProducts({
-          queryString: {
-            hasTotalCount: true,
-          },
-        }),
-      ]);
-      return result.map(({ data }) => data);
-    },
-
     fetchOrders() {
-      return shopby.api.order.getProfileOrders({
-        queryString: {
-          pageNumber: this.page.pageNumber,
-          pageSize: this.page.pageSize,
-          startYmd: this.dateRange.start,
-          endYmd: this.dateRange.end,
-          hasTotalCount: true,
-          orderRequestTypes:
-            shopby.utils.getUrlParam('orderRequestTypes') ||
-            'DEPOSIT_WAIT,PAY_DONE,PRODUCT_PREPARE,DELIVERY_PREPARE,DELIVERY_ING,DELIVERY_DONE,BUY_CONFIRM,CANCEL_DONE,CANCEL_PROCESSING,RETURN_DONE,RETURN_PROCESSING,EXCHANGE_DONE,EXCHANGE_PROCESSING',
-        },
-      });
+      return shopby.api.order
+        .getProfileOrders({
+          queryString: {
+            pageNumber: this.page.pageNumber,
+            pageSize: this.page.pageSize,
+            startYmd: this.dateRange.start,
+            endYmd: this.dateRange.end,
+            hasTotalCount: true,
+            orderRequestTypes:
+              shopby.utils.getUrlParam('orderRequestTypes') ||
+              'DEPOSIT_WAIT,PAY_DONE,PRODUCT_PREPARE,DELIVERY_PREPARE,DELIVERY_ING,DELIVERY_DONE,BUY_CONFIRM,CANCEL_DONE,CANCEL_PROCESSING,RETURN_DONE,RETURN_PROCESSING,EXCHANGE_DONE,EXCHANGE_PROCESSING',
+          },
+        })
+        .then(({ data }) => data);
     },
   };
 

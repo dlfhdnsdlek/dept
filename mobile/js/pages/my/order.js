@@ -11,13 +11,13 @@ $(() => {
   shopby.my.order = {
     orderNo: shopby.utils.getUrlParam('orderNo'),
     claimImages: null,
-    claimDatas: null,
+    refundInfos: null,
+    additionalPayInfos: null,
     isMember: false,
     async initiate() {
       if (!this.orderNo) {
         location.href = '/pages/my/orders.html';
       }
-      this.my.initiate();
       await this.render();
       this.bindEvents();
     },
@@ -25,10 +25,9 @@ $(() => {
     async render() {
       $('.spanOrderNo').text(this.orderNo);
       const { orderProductInfo, ordererInfo, shippingAddressInfo, paymentInfo, claimInfo } = await this.getOrderData();
-
-      this.claimDatas = claimInfo.refundInfos;
-
-      $('#orderDetailTable').render(orderProductInfo);
+      this.refundInfos = claimInfo.refundInfos;
+      this.additionalPayInfos = claimInfo.additionalPayInfos;
+      $('#orderDetailTable').render({ ...orderProductInfo, logined: shopby.logined() });
       $('#orderMemberInfo').render(ordererInfo);
       $('#shippingAddressInfo').render(shippingAddressInfo);
       $('#paymentInfo').render(paymentInfo);
@@ -37,51 +36,57 @@ $(() => {
         $('#writeButton').render();
       }
     },
-    toggleRefundData(e) {
-      if (e.target.className !== 'my-refund__toggle') return;
-      $(e.currentTarget).toggleClass('is-active');
-      $(e.currentTarget).find('.toggle').toggle();
-    },
-    displayCallout(e) {
-      const target = e.target;
+    displayCallOut({ target }) {
+      const claimType = $(target).data('claim-type');
       const refundIndex = $(target).data('refund-index');
-
-      if (target.className === 'claimInfo__callout' || target.contains(target.querySelector('.claimInfo__callout'))) {
-        return;
-      }
-
-      const calloutEl = datas => {
-        const findData = datas.find((data, index) => index == target.dataset.index);
-        const getItem = ({ title, value }) => `<li>${title} : ${value}</li>`;
-        const getTextOption = ({ inputLabel, inputValue }) => `<li>- ${inputLabel} : ${inputValue}</li>`;
-
-        return `
-          <div class="claimInfo__callout">
-            <p><em>(환불 수량 ${findData.orderCnt}개) ${findData.productName}</em></p>
-            <ul>
-                ${findData.options.map(getItem).join('')}
-                ${findData.textOptions.map(getTextOption).join('')}
-            </ul>
-        </div>`;
+      const removeCallout = ({ target, currentTarget }) => {
+        if (target.nodeName.toLowerCase() !== 'button') return;
+        currentTarget.parentNode.removeChild(currentTarget);
       };
+      const calloutEl = (() => {
+        let item, getItem, getTextOption, claimHtml;
+        switch (claimType) {
+          case 'refund':
+            item = this.refundInfos[refundIndex].claimPopupData.find((data, index) => index == target.dataset.index);
+            getItem = ({ title, value }) => `<li>${title} : ${value}</li>`;
+            getTextOption = ({ inputLabel, inputValue }) => `<li>- ${inputLabel} : ${inputValue}</li>`;
+            claimHtml = `<p><em>(환불수량 ${item.orderCnt}개) ${item.productName}</em></p>
+                <ul>
+                    ${item.options.map(getItem).join('')}
+                    ${item.textOptions.map(getTextOption).join('')}
+                </ul>`;
+            break;
+          case 'exchange':
+            item = this.additionalPayInfos
+              ? this.additionalPayInfos[refundIndex].exchangeOrderOption
+              : this.refundInfos[refundIndex].exchangeOrderOption;
+            claimHtml = `<p><em>(수량 ${item.orderCnt}개) ${item.productName}</em></p>
+                        <p>${item.optionName} : ${item.optionValue}</p>
+                        <p>${item.userInputTextStr ? item.userInputTextStr : ''}</p>
+                        `;
+            break;
+          default:
+            break;
+        }
+        return `
+        <div class="claimInfo-callout">
+            <div class="claimInfo-callout__inner">
+                ${claimHtml}
+                <button>확인</button>
+            </div>
+        </div>
+      `;
+      })();
 
-      target.insertAdjacentHTML('beforeend', calloutEl(this.claimDatas[refundIndex].calloutData));
-    },
-    removeCallout(e) {
-      const target = e.target;
-      const calloutEl = target.querySelector('.claimInfo__callout');
-
-      if (!target.contains(calloutEl)) return;
-      target.removeChild(calloutEl);
+      $('body').append(calloutEl);
+      $('.claimInfo-callout').on('click', removeCallout);
     },
     bindEvents() {
       $('.vis_mode').on('click', this.openSlideImagesPopup.bind(this));
-      $('.exchangeOrderImage').on('mouseover mouseleave', this.toggleClaimProductText);
       $('.claimStatusBtn').on('click', this.onClickClaimStatusBtn.bind(this));
       $('.statusNextAction,.nextActionBtn').on('click', this.onClickStatusNextAction.bind(this));
-      $('#btn_write').on('click', this.onClickInquiryBtn);
-      $('.my-refund').on('click', this.toggleRefundData);
-      $('.claimInfo__img').on('mouseenter', this.displayCallout.bind(this)).on('mouseleave', this.removeCallout);
+      $('.order_goods_list').on('click', '#btn_write', this.onClickInquiryBtn);
+      $('.claimInfo__btn').on('mouseenter, click', this.displayCallOut.bind(this));
     },
 
     openSlideImagesPopup({ currentTarget }) {
@@ -97,10 +102,6 @@ $(() => {
         imageObjectList: attachImages,
         clickedImageIndex: $currentTarget.index(),
       });
-    },
-
-    toggleClaimProductText() {
-      $('.exchangeOrderText').toggle();
     },
 
     onClickClaimStatusBtn({ target }) {
@@ -153,16 +154,16 @@ $(() => {
       window.open(actionUri, '_blank', 'toolbar=yes,location=yes,menubar=yes');
     },
 
-    _confirmOrder(target, actionUri) {
-      const $targetTr = $(target).parents('tr');
-      const orderNo = $targetTr.data('orderNo');
-      const payType = $targetTr.data('payType');
+    async _confirmOrder(target, actionUri) {
+      const $targetLi = $(target).parents('li.order_product');
+      const orderNo = $targetLi.data('orderNo');
+      const payType = $targetLi.data('payType');
 
-      const $arrTr = $.makeArray($('.order_table_body tr')).filter(tr => $(tr).data('orderNo') === orderNo);
+      const $arrLi = $.makeArray($('.my_goods li.order_product')).filter(li => $(li).data('orderNo') === orderNo);
 
       if (['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'].includes(payType)) {
         // 1. 일부 옵션이 구매 확정 불가능한 경우 - 근데 어차피 어드민에서 에스크로 결제의 경우 부분 배송처리가 안되기 때문에 노출 안될듯
-        if ($arrTr.filter(tr => $(tr).data('orderStatusType') !== 'DELIVERY_ING').length > 0) {
+        if ($arrLi.filter(tr => $(tr).data('orderStatusType') !== 'DELIVERY_ING').length > 0) {
           shopby.alert('에스크로 결제 건은 모든 상품이 구매확정이 가능한 경우에만 구매확정처리가 가능합니다.');
           return;
         }
@@ -208,13 +209,13 @@ $(() => {
 
     _getReviewOption(target) {
       const { actionUri } = target.dataset;
-      const $product = $(target).closest('tr');
-      const { optionNo, orderOptionNo, orderStatusType } = target.closest('tr').dataset;
+      const $product = $(target).closest('li.order_product');
+      const { optionNo, orderOptionNo, orderStatusType } = target.closest('li.order_product').dataset;
       const product = {
         productNo: actionUri.split('/')[2],
-        productName: $product.find('.productName').text().trim(),
+        productName: $product.find('.product_name').text().trim(),
         imageUrls: $product.find('img').attr('src'),
-        optionText: $product.find('.goods_option').text().trim(),
+        optionText: $product.find('.prd_option').text().trim(),
         orderStatusType,
       };
       return {
@@ -227,9 +228,9 @@ $(() => {
     },
 
     _writeReview(target) {
-      const $targetTr = $(target).parents('tr');
-      const payType = $targetTr.data('payType');
-      const orderStatusType = $targetTr.data('orderStatusType');
+      const $targetLi = $(target).parents('li.order_product');
+      const payType = $targetLi.data('payType');
+      const orderStatusType = $targetLi.data('orderStatusType');
 
       if (!this.isMember) {
         shopby.alert('선택하신 상품은 후기를 작성하실 수 없습니다.');
@@ -245,10 +246,14 @@ $(() => {
       }
 
       const registerReview = () => {
-        shopby.popup('product-review', this._getReviewOption(target), ({ state }) => {
-          if (state !== 'ok') return;
-          location.reload();
-        });
+        try {
+          shopby.popup('product-review', this._getReviewOption(target), ({ state }) => {
+            if (state !== 'ok') return;
+            location.reload();
+          });
+        } catch (err) {
+          console.log(err);
+        }
       };
       registerReview();
     },
@@ -256,7 +261,7 @@ $(() => {
     _registerClaim(target) {
       try {
         const { action } = target.dataset;
-        const { orderNo, orderStatusType, orderOptionNo, payType } = target.closest('tr').dataset;
+        const { orderNo, orderStatusType, orderOptionNo, payType } = target.closest('li').dataset;
         const escrowOrderTypes = ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'];
 
         this.validateNaverPay(orderStatusType, payType, action);
@@ -325,7 +330,7 @@ $(() => {
         }
       } catch (e) {
         console.error(e);
-        alert(e.message);
+        shopby.alert(e.message);
       }
     },
 
@@ -370,7 +375,8 @@ $(() => {
           location.reload();
         });
       } catch (e) {
-        location.reload();
+        console.error(e);
+        shopby.alert(e.message);
       }
     },
 
@@ -384,7 +390,7 @@ $(() => {
       const currentClaimNo = Number(claimNo);
       const actionType = { WITHDRAW_CANCEL: '취소', WITHDRAW_EXCHANGE: '교환', WITHDRAW_RETURN: '반품' }[action];
 
-      const claimNos = target.closest('tr').dataset.claimNos.split(',');
+      const claimNos = target.closest('li').dataset.claimNos.split(',');
       const checkClaimNo = claimNos.some(claimNo => Number(claimNo) > currentClaimNo);
       const message = checkClaimNo
         ? '철회 시 후순위 클레임의 결제/환불 금액이 변동됩니다.<br>클레임을 철회하시겠습니까?'
@@ -408,14 +414,15 @@ $(() => {
         }
       });
     },
+
     async getOrderData() {
       const request = { pathVariable: { orderNo: this.orderNo } };
       const { data } = shopby.logined()
         ? await shopby.api.order.getProfileOrdersOrderNo(request)
         : await shopby.api.order.getGuestOrdersOrderNo(request);
-
       shopby.setGlobalVariableBy('ORDER_DETAIL', data);
-      this.claimImages = data.refundInfos && data.refundInfos.map(({ claimImageUrls }) => claimImageUrls);
+      this.claimImages = (data.refundInfos && data.refundInfos.map(({ claimImageUrls }) => claimImageUrls)) || null;
+
       return {
         orderProductInfo: this._orderProductInfo(data),
         ordererInfo: this._ordererInfo(data),
@@ -426,34 +433,38 @@ $(() => {
     },
 
     _orderProductInfo(order) {
-      const orderOptions = order.orderOptionsGroupByPartner
-        .flatMap(({ orderOptionsGroupByDelivery }) => orderOptionsGroupByDelivery)
-        .flatMap(({ orderOptions }) => orderOptions);
+      const orderOptionsGroupByDelivery = order.orderOptionsGroupByPartner.flatMap(
+        ({ orderOptionsGroupByDelivery }) => orderOptionsGroupByDelivery,
+      );
 
-      return orderOptions.flatMap(orderOption => {
-        const hasEscrowClaim = order.escrow && orderOptions.map(o => o.claimNo).every(v => v !== null);
+      return orderOptionsGroupByDelivery.map(orderOptionGroupByDelivery => {
+        const hasEscrowClaim = order.escrow && orderOptionsGroupByDelivery.map(o => o.claimNo).every(v => v !== null);
+        const orderOptions = orderOptionGroupByDelivery.orderOptions || [];
+
         return {
           orderYmdt: order.orderYmdt.substr(0, 10),
           orderNo: order.orderNo,
-          productNo: orderOption.productNo,
-          orderOptionNo: orderOption.orderOptionNo,
-          optionNo: orderOption.optionNo,
-          rowSpan: orderOptions.indexOf(orderOption) !== 0 ? 0 : orderOptions.length,
-          claimNos: orderOptions.map(({ claimNo }) => claimNo).join(','),
-          imageUrl: orderOption.imageUrl,
-          productName: shopby.utils.substrWithPostFix(orderOption.productName),
-          optionTextInfo: shopby.utils.createOptionText(orderOption),
-          orderCnt: orderOption.orderCnt,
-          buyAmt: orderOption.price.buyAmt,
-          orderStatusText: this._createOrderStatusText(orderOption),
-          nextActionText:
-            !hasEscrowClaim && ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'].includes(order.payType)
-              ? this._createNextActionText(order, orderOption.orderStatusType)
-              : this._createNextActionText(orderOption),
-          orderStatusType: orderOption.orderStatusType,
-          orderStatusTypeLabel: orderOption.orderStatusTypeLabel,
-          payType: order.payType,
-          pgType: order.pgType,
+          orderOption: orderOptionGroupByDelivery.orderOptions.map(orderOption => ({
+            productNo: orderOption.productNo,
+            orderOptionNo: orderOption.orderOptionNo,
+            optionNo: orderOption.optionNo,
+            claimNos: orderOptions.map(({ claimNo }) => claimNo).join(','),
+            claimNo: orderOption.claimNo,
+            imageUrl: orderOption.imageUrl,
+            productName: shopby.utils.substrWithPostFix(orderOption.productName),
+            optionTextInfo: shopby.utils.createOptionText(orderOption),
+            orderCnt: orderOption.orderCnt,
+            buyAmt: orderOption.price.buyAmt,
+            orderStatusText: this._createOrderStatusText(orderOption),
+            nextActionText:
+              hasEscrowClaim && ['ESCROW_REALTIME_ACCOUNT_TRANSFER', 'ESCROW_VIRTUAL_ACCOUNT'].includes(order.payType)
+                ? this._createNextActionText(order, orderOption.orderStatusType)
+                : this._createNextActionText(orderOption),
+            orderStatusType: orderOption.orderStatusType,
+            orderStatusTypeLabel: orderOption.orderStatusTypeLabel,
+            payType: order.payType,
+            pgType: order.pgType,
+          })),
         };
       });
     },
@@ -526,20 +537,18 @@ $(() => {
       return {
         refundInfos:
           order.refundInfos &&
-          order.refundInfos.map(refundInfo => {
-            return {
-              ...refundInfo,
-              claimClassType: refundInfo.claimClassType === 'ORDER_CANCEL' ? false : true,
-              refundAccountInfo: this._createRefundAccountText(refundInfo),
-              returnWayLabel: refundInfo.returnWayType === 'SELLER_COLLECT' ? '판매자수거요청' : '구매자직접반품',
-              refundMethod: this._createRefundMethod(refundInfo),
-              exchangeOrderOption: {
-                ...refundInfo.exchangeOrderOption,
-                productOptionText: this._createClaimOptionText(refundInfo.exchangeOrderOption),
-              },
-              calloutData: getClaimDatas(refundInfo.claimNo),
-            }; // return
-          }),
+          order.refundInfos.map(refundInfo => ({
+            ...refundInfo,
+            claimClassType: refundInfo.claimClassType === 'ORDER_CANCEL' ? false : true,
+            refundAccountInfo: this._createRefundAccountText(refundInfo),
+            returnWayLabel: refundInfo.returnWayType === 'SELLER_COLLECT' ? '판매자수거요청' : '구매자직접반품',
+            refundMethod: this._createRefundMethod(refundInfo),
+            exchangeOrderOption: {
+              ...refundInfo.exchangeOrderOption,
+              productOptionText: this._createClaimOptionText(refundInfo.exchangeOrderOption),
+            },
+            claimPopupData: getClaimDatas(refundInfo.claimNo),
+          })),
         additionalPayInfos:
           order.additionalPayInfos &&
           order.additionalPayInfos.map(payInfo => {
@@ -561,8 +570,8 @@ $(() => {
     _createOrderStatusText(orderOption) {
       this.isMember = orderOption.member;
       const statusText = orderOption.claimStatusType
-        ? `<a href="javascript:;" style="text-decoration:underline;" data-action="cancel" data-claim-no="${orderOption.claimNo}" class="claimStatusBtn">${orderOption.claimStatusTypeLabel}</a>`
-        : orderOption.orderStatusTypeLabel;
+        ? `<a href="javascript:;" data-action="cancel" data-claim-no="${orderOption.claimNo}" class="order_ing_btn claimStatusBtn">${orderOption.claimStatusTypeLabel}</a>`
+        : `<span>${orderOption.orderStatusTypeLabel}</span>`;
 
       const orderStatusTypes = ['VIEW_DELIVERY', 'CONFIRM_ORDER', 'WRITE_REVIEW'];
       const statusButton = orderOption.nextActions
@@ -618,8 +627,8 @@ $(() => {
           .concat(canClaims ? [] : [{ nextActionType: 'NONE' }])
           .filter(({ nextActionType }) => !notClaimAction.includes(nextActionType))
           .map(({ nextActionType, uri }) => {
-            return `<a href="javascript:;" class="btn_white nextActionBtn" data-action="${nextActionType}"
-                    data-action-uri="${uri}" data-claim-no='${orderOption.claimNo}'>
+            return `<a href="javascript:;" class="btn_white delivery_order_btn nextActionBtn" data-action="${nextActionType}"
+                    data-action-uri="${uri}"  data-claim-no='${orderOption.claimNo}'>
                       ${this._getNextActionLabel(nextActionType)}
                     </a>`;
           })
@@ -637,6 +646,7 @@ $(() => {
       }
       return `${refundTypeLabel} - ${refundBankAccount.bankName} / ${refundBankAccount.bankAccount} / ${refundBankAccount.bankDepositorName}`;
     },
+
     _createRefundMethod({ returnDeliveryCompanyTypeLabel, returnInvoiceNo }) {
       const noRefundMethod = !returnDeliveryCompanyTypeLabel || !returnInvoiceNo;
       if (noRefundMethod) {
@@ -679,41 +689,6 @@ $(() => {
         WRITE_REVIEW: '후기작성',
       };
       return nextActionLabel[nextActionType];
-    },
-
-    /**
-     * Reference: /my/coupons.js
-     * @my :  마이페이지 공통 로직
-     */
-    my: {
-      initiate() {
-        shopby.my.menu.init('#myPageLeftMenu');
-        if (shopby.logined()) {
-          this.summary.initiate().catch(console.error);
-        }
-      },
-
-      summary: {
-        async initiate() {
-          const [summary, summaryAmount] = await this._getData();
-          this.render(summary, summaryAmount);
-        },
-        async _getData() {
-          return Promise.all([
-            shopby.api.member.getProfileSummary(),
-            shopby.api.order.getProfileOrdersSummaryAmount({
-              queryString: {
-                orderStatusType: 'BUY_CONFIRM',
-                startYmd: shopby.date.lastHalfYear(),
-                endYmd: shopby.date.today(),
-              },
-            }),
-          ]).then(res => res.map(({ data }) => data));
-        },
-        render(summary, summaryAmount) {
-          shopby.my.summary.init('#myPageSummary', summary, summaryAmount);
-        },
-      },
     },
   };
 

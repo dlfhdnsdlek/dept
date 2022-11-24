@@ -20,7 +20,7 @@ $(() => {
       this.setData();
       this.render();
       this.bindEvents();
-      this.captcha = this.captcha || shopby.helper.captcha();
+      this.captcha = this.captcha ? this.captcha : shopby.helper.captcha();
     },
     setData() {
       const savedMemberId = shopby.localStorage.getItemWithExpire(shopby.cache.key.member.saveMemberId);
@@ -36,13 +36,16 @@ $(() => {
       const mallInfo = shopby.cache.getMall();
       return mallInfo.openIdJoinConfig.providers
         .sort((a, b) => b.charCodeAt(0) - a.charCodeAt(0))
-        .map(provider => ({ provider, url: `/assets/img/etc/pc_${provider}.png`, title: `${provider} 아이디 로그인` }));
+        .map(provider => ({
+          provider,
+          url: `/assets/img/etc/txt_mo_${provider}.png`,
+          title: `${provider} 아이디로 로그인`,
+        }));
     },
     bindEvents() {
       $('button[name="member-login-btn"]').on('click', this.memberLogin.bind(this)).enterKeyup($password);
-      $('.btn_login_box').on('click', 'button', this.movePage);
       $('[data-action="oauth"]').on('click', shopby.helper.login.openIdLogin.bind(shopby.helper.login));
-      $('#btnFindOrdersWithGuest').on('click', this.guestLogin.bind(this)).enterKeyup('#guestPassword');
+      $('#btnfindOrdersWithGuest').on('click', this.guestLogin.bind(this)).enterKeyup('#guestPassword');
       $('#guestOrder').on('click', this.guestOrder);
     },
     async memberLogin() {
@@ -56,42 +59,31 @@ $(() => {
         shopby.alert(e.message);
         return;
       }
-
       try {
-        (await this.captcha) && this.captcha.submitCode();
+        await this.captcha.submitCode();
         const loginResult = await shopby.api.auth.postOauthToken({ requestBody: { memberId, password } });
         this._processAfterLogin(loginResult.data, memberId, checked);
-        this.captcha && this.captcha.reset();
+        this.captcha.reset();
       } catch (error) {
         const selector =
           shopby.platform === 'PC' ? '.member_login_box .js_caution_msg1' : '.login_box .js_caution_msg1';
         $(selector).show();
         if (error.code === 'M0305' || error.code === 'CP9001') {
-          this.captcha && this.captcha.retry(error.key);
-          this.captcha && this.captcha.errorHandler(error);
+          this.captcha.retry();
+          this.captcha.errorHandler(error);
         }
       }
-    },
-    movePage(event) {
-      const type = event.target.dataset.action;
-      const pages = {
-        joinMethod: '/pages/join/method.html',
-        findId: '/pages/find-id/find-id.html',
-        findPwd: '/pages/find-password/find-password.html',
-      };
-      location.href = pages[type];
     },
     async guestLogin() {
       const orderNo = $('#guestOrderNo').val().trim();
       const orderPw = $('#guestPassword').val().trim();
 
       if (!orderNo) {
-        shopby.alert('주문번호를 입력해주세요.');
+        shopby.alert('주문번호를 입력해주세요');
         return;
       }
-
       if (!orderPw) {
-        shopby.alert('비밀번호를 입력해주세요.');
+        shopby.alert('비밀번호를 입력해주세요');
         return;
       }
 
@@ -140,6 +132,7 @@ $(() => {
       if (result.daysFromLastPasswordChange > 90) {
         location.replace('/pages/login/change-password.html');
       }
+
       shopby.localStorage.removeItem(shopby.cache.key.member.dormant);
       shopby.helper.login.goNextUrl();
     },

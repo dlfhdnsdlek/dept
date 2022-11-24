@@ -13,7 +13,6 @@ $(() => {
     productInquiryConfig: shopby.cache.getBoardsConfig().productInquiryConfig,
     myProductInquiry: null,
     initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
       this._getMyProductInquiry().then(() => {
         this.render();
         this.bindEvents();
@@ -21,16 +20,14 @@ $(() => {
     },
 
     render() {
-      $('#myProductInquiryPage').render({
-        productInquiryConfig: this.productInquiryConfig,
-        myProductInquiry: this.myProductInquiry,
-      });
+      $('#productInquiryName').render({ productInquiryConfig: this.productInquiryConfig });
+      $('#boardViewPage').render({ myProductInquiry: this.myProductInquiry });
     },
 
     bindEvents() {
-      $('.btn_right_box')
-        .on('click', '.btn_board_edit', this.openProductInquiryPopupWithModificationMode.bind(this))
-        .on('click', '.btn_board_del', this.onDelete.bind(this));
+      $('.btn_bx')
+        .on('click', '.view_modify_btn', this.openProductInquiryPopupWithModificationMode.bind(this))
+        .on('click', '.view_del_btn', this.onDelete.bind(this));
     },
 
     openProductInquiryPopupWithModificationMode() {

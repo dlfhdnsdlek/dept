@@ -1,12 +1,9 @@
 ,platformType,bannerGroupType,bannerGroupCode,bannerGroupName
-,PC,LOGO,LOGO0001,상단로고
-,PC,SLIDE,BANNER01,메인 상단 배너
-,PC,NORMAL,BANNER02,메인 중간 배너1
-,PC,NORMAL,BANNER03,메인 중간 배너2
-,PC,NORMAL,BANNER04,메인 중간 배너3
-,PC,NORMAL,BANNER05,메인 중간 배너4
-,PC,NORMAL,BANNER06,메인 중간 배너5
-,PC,NORMAL,BANNER07,메인 하단 배너
-,PC,NORMAL,BANNER08,스크롤 좌측 배너
-,PC,NORMAL,BANNER09,스크롤 우측 배너
-,PC,NORMAL,BANNER10,메인 중간 좌측 배너
+,MOBILE_WEB,LOGO,LOGO0001,로고 전용 - 상단로고
+,MOBILE_WEB,SLIDE,BANNER01,움직이는 배너 - 메인 상단 배너
+,MOBILE_WEB,NORMAL,BANNER02,일반 배너 - 메인 중간 배너1
+,MOBILE_WEB,NORMAL,BANNER03,일반 배너 - 메인 중간 배너2
+,MOBILE_WEB,NORMAL,BANNER04,일반 배너 - 메인 중간 배너3
+,MOBILE_WEB,NORMAL,BANNER05,일반 배너 - 메인 중간 배너4
+,MOBILE_WEB,NORMAL,BANNER06,일반 배너 - 메인 중간 배너5
+,MOBILE_WEB,NORMAL,BANNER07,일반 배너 - 메인 하단 배너

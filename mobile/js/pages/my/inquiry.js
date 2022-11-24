@@ -15,14 +15,13 @@ $(() => {
     attachImages: null,
 
     async initiate() {
-      shopby.my.menu.init('#myPageLeftMenu');
       this.render();
       await this.fetchInquiry(this.inquiryNo);
       this.getAttachmentImages();
       this.bindEvents();
     },
     render() {
-      $('.inquiriesName').render({ name: this.inquiryConfig.name });
+      $('#inquiriesName').render({ name: this.inquiryConfig.name });
     },
     renderInquiryDetail() {
       this.$inquiryDetail.render({
@@ -39,6 +38,7 @@ $(() => {
         this.inquiryDetail = data;
         const answerRegisterYmdt =
           (this.inquiryDetail && this.inquiryDetail.answer && this.inquiryDetail.answer.answerRegisterYmdt) || '';
+
         this.inquiryDetail.answerRegisterYmd =
           answerRegisterYmdt && answerRegisterYmdt.length > 0 ? answerRegisterYmdt.split(' ')[0] : '';
         this.renderInquiryDetail();
@@ -48,7 +48,7 @@ $(() => {
     },
     bindEvents() {
       this.$inquiryDetail
-        .on('click', '.btn_right_box', this.onClickDeleteOrEditBtn.bind(this))
+        .on('click', '.btn_bx', this.onClickDeleteOrEditBtn.bind(this))
         .on('click', '.add_file_area', this.onClickAttachmentImages.bind(this));
     },
     onClickDeleteOrEditBtn({ target }) {

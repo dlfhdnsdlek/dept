@@ -41,7 +41,7 @@
       detail: {
         method: option.method,
         headers: {
-          platform: 'PC',
+          platform: 'MOBILE_WEB',
           clientId: clientId,
           Version: '1.0',
         },

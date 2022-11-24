@@ -9,13 +9,21 @@
  */
 
 $(() => {
+  const kcpProfile = shopby.localStorage.getItemWithExpire(shopby.cache.key.member.kcpAuth);
   shopby.member.findId = {
     isAuthPhoneConfig: false,
     kcpKey: null,
     kcpAuthUserName: '',
     initiate() {
       this.render();
+      kcpProfile && this.setKcpState()
       this.bindEvents();
+      this.isShopKcpCallback();
+    },
+    setKcpState() {
+      const findIdCertifyEl = document.getElementById('findIdCertify')
+      findIdCertifyEl.checked = true
+      this.changeFindType({ target: findIdCertifyEl })
     },
     bindEvents() {
       $('input[name="findIdFl"]').on('change', this.changeFindType.bind(this));
@@ -23,7 +31,8 @@ $(() => {
       $('#btnFindId').on('click', this.findId.bind(this)).enterKeyup('#userDomain');
       $('#btnGoFindPw').on('click', this.goFindPw);
       $('#btnGoLogin').on('click', shopby.goLogin.bind(shopby));
-      $('#btnAuthKCP').on('click', shopby.helper.member.openKcpCallback);
+      const btnAuthKCP = document.getElementById('btnAuthKCP')
+      btnAuthKCP.href = shopby.helper.member.getKcpCallbackUrl()
     },
     render() {
       const { authenticationTimeType, authenticationType } = shopby.cache.getMall().mallJoinConfig;
@@ -46,24 +55,25 @@ $(() => {
         case 'MOBILE':
           $('#email, #userCellPhoneNum, #userName, #btnFindId').hide().val('');
           $('#btnAuthKCP').show();
-          this.isShopKcpCallback();
           break;
         default:
           break;
       }
     },
-    isShopKcpCallback() {
+    async isShopKcpCallback() {
       if (this.isAuthPhoneConfig) {
-        window.shopKcpCallback = async (result, key) => {
-          if (!result) {
+        const shopKcpCallback = async (result, key) => {
+          if (!result || (result && result.fail)) {
             shopby.alert('본인 인증에 실패하였습니다.');
             return;
           }
           this.kcpKey = key;
           this.kcpAuthUserName = result.name;
-          shopby.localStorage.setItemWithExpire(shopby.cache.key.member.kcpAuth, result);
-          this.findId();
+          await this.findId();
+          shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
+          window.history.pushState(null, document.title, location.pathname);
         };
+        kcpProfile && (await shopKcpCallback(kcpProfile, shopby.utils.getUrlParam('key')));
       } else {
         shopby.localStorage.removeItem(shopby.cache.key.member.kcpAuth);
       }

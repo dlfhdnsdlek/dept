@@ -12,18 +12,19 @@ $(() => {
       this.render(await this.fetchData());
       this.bindEvents();
     },
+
     render([article, replyDetail]) {
+      $('.sub_top').render({ boardName, boardId });
       $('#boardViewPage').render({
         articles: article,
-        boardName,
+        reply: replyDetail,
         boardId,
       });
-      $('#boardReplyDetail').render(replyDetail);
     },
     bindEvents() {
       $('#boardViewPage')
         .on('click', '.vis_mode', this.mapAttachments.bind(this))
-        .on('click', '.btn_board_list', this.onClickBoardBtn.bind(this));
+        .on('click', '.openBoard', this.toggleBoard.bind(this));
     },
     mapAttachments({ currentTarget }) {
       const { attachments } = this.articles;
@@ -41,17 +42,23 @@ $(() => {
         clickedImageIndex: $(currentTarget).index(),
       });
     },
-    onClickBoardBtn({ target }) {
-      const mode = target.closest('.btn_board_list').dataset.mode;
-      switch (mode) {
-        case 'view':
-          location.href = `/pages/board/view.html?boardId=${boardId}&articleNo=${articleNo}&secreted=${this.secreted}`;
-          break;
-        case 'list':
-          location.href = `/pages/board/list.html?boardId=${boardId}`;
-          break;
-        default:
-          break;
+    toggleBoard({ target }) {
+      const $btn = $(target.closest('.openBoard') || target);
+      const $img = $btn.children('img');
+      const $boardContent = $('.boardContent');
+
+      if ($btn.hasClass('up')) {
+        $btn.text('본문 열기');
+        $btn.removeClass('up');
+        $img.removeClass('board-arrow_up');
+        $img.addClass('board-arrow_down');
+        $boardContent.hide();
+      } else {
+        $btn.text('본문 닫기');
+        $btn.addClass('up');
+        $img.addClass('board-arrow_up');
+        $img.removeClass('board-arrow_down');
+        $boardContent.show();
       }
     },
     async fetchData() {
@@ -60,29 +67,31 @@ $(() => {
           shopby.api.manage.getBoardsBoardNoArticlesArticleNo(this._requestCreator(articleNo)),
           shopby.api.manage.getBoardsBoardNoArticlesArticleNo(this._requestCreator(replyNo)),
         ]);
-        return result.map(({ value }) => {
-          console.log(value);
-          if (value.data && value.data.code && value.data.code === 'B0006') {
-            // 게시글이 비공개로 전환된 경우
-            this.secreted = true;
-            return {
-              title: '비밀글 입니다.',
-              content: '비밀글로 전환된 글입니다.',
-              registerName,
-              registerYmdt,
-            };
-          }
-          if (value.data && value.data.code && value.data.code === 'B0010') {
-            // 비공개 답글 접근 시
-            shopby.alert(value.data.message, () => {
-              location.href = `/pages/board/view.html?boardId=${boardId}&articleNo=${articleNo}`;
-            });
-            return;
-          }
-          return value.data;
-        });
+        return result.map(({ value }) => this._mapResult(value));
       } catch (error) {
         console.error(error);
+      }
+    },
+    _mapResult(value) {
+      const code = value.data && value.data.code;
+      switch (code) {
+        case 'B0010':
+          // 비공개로 전환된 답글 클릭 시 상위게시판으로 리다이렉트
+          shopby.alert(value.data.message, () => {
+            location.href = `/pages/board/view.html?boardId=${boardId}&articleNo=${articleNo}&secreted=${this.secreted}`;
+          });
+          return;
+        case 'B0006':
+          // 상위게시글이 비공개로 전환B0006
+          this.secreted = true;
+          return {
+            title: '비밀글 입니다.',
+            content: '비밀글로 전환된 글입니다.',
+            registerName,
+            registerYmdt,
+          };
+        default:
+          return value.data;
       }
     },
     _requestCreator(articleNo) {

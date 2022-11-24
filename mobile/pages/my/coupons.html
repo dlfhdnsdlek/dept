@@ -2,7 +2,7 @@
 <html lang="ko">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
         <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
@@ -10,100 +10,66 @@
         <script src="/lib/slick/slick.min.js"></script>
         <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
         <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
-        <link type="text/css" rel="stylesheet" href="/lib/date-picker/tui-date-picker.css" />
-        <script src="/lib/date-picker/tui-date-picker.js"></script>
-        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
         <script src="/js/core/shopby.js"></script>
-        <script src="/js/pages/my/components/mypage-components.js"></script>
+        <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
         <title>쿠폰</title>
     </head>
     <body>
         <header id="header"></header>
 
-        <div id="contents" style="visibility: hidden;">
+        <div id="contents">
             <main class="sub_content">
                 <div class="content_box">
-                    <div class="location_wrap">
-                        <div class="location_cont">
-                            <em><a href="/" class="local_home">HOME</a> &gt; 마이페이지 > 쿠폰</em>
+                    <div class="page_top_area">
+                        <div class="sub_top">
+                            <div class="sub_top_left">
+                                <a id="goBack"></a>
+                            </div>
+                            <h2><a href="#" class="js_page_reload">쿠폰</a></h2>
                         </div>
                     </div>
                 </div>
 
-                <div id="myPageLeftMenu" class="side_cont"></div>
-
                 <div class="content">
-                    <div class="mypage_main">
-                        <!-- 마이페이지 > 쇼핑정보, 혜택관리 공통으로 쓰이는 summary -->
-                        <div id="myPageSummary"></div>
-                        <div class="mypage_top_info"></div>
-
-                        <!-- 주문목록/배송조회-->
-                        <div class="mypage_lately_info">
-                            <div class="mypage_zone_tit">
-                                <h3>쿠폰</h3>
-                                <a href="#addCouponPopup" id="addCoupon" class="btn_coupon_register btn_open_layer"><em>쿠폰등록</em></a>
+                    <div class="coupon">
+                        <h3>쿠폰 등록</h3>
+                        <div class="my_coupon">
+                            <div class="add_copuon_box">
+                                <div class="inp_tx">
+                                    <input type="hidden" name="mode" value="couponOfflineRegist" />
+                                    <input type="text" maxlength="20" id="couponNumber" placeholder="프로모션 코드를 입력하세요." required />
+                                </div>
+                                <div class="btn"><button id="addCoupon" class="coupon_ok_btn">등록하기</button></div>
                             </div>
-                            <div id="searchDateRange"></div>
                         </div>
+
+                        <h3>쿠폰 내역</h3>
                         <div class="mypage_lately_info">
                             <div class="mypage_table_type order_list">
                                 <div class="mypage_breakdown_tab">
-                                    <ul id="couponTabMenu"></ul>
+                                    <div class="tab_menu">
+                                        <ul id="couponTabMenu"></ul>
+                                    </div>
                                 </div>
-                            </div>
-                            <script id="coupons" type="text/x-handlebars-template">
-                                <table class='table-coupon'>
-                                    <colgroup>
-                                        <col />
-                                        <col style='width:17%' />
-                                        <col style='width:12%' />
-                                        <col style='width: 20%;' />
-                                        <col style='width:12%' />
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                쿠폰명
-                                            </th>
-                                            <th>
-                                                혜택정보
-                                            </th>
-                                            <th>
-                                                사용/제한조건
-                                            </th>
-                                            <th>
-                                                {{#if isUseAble}}
-                                                    만료일
-                                                {{else}}
-                                                    사용/만료일
-                                                {{/if}}
-                                            </th>
-                                            <th>
-                                                발급일
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {{#each coupons}}
-                                            <tr>
-                                                <td data-name='couponName'>
-                                                    <div class='mypage_coupon_name'>
-                                                        <strong>
-                                                            {{couponName}}
-                                                        </strong>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <strong>
+                                <script id="coupons" type="text/x-handlebars-template">
+                                    <ul class='coupon_bx'>
+                                        {{#each this}}
+                                            <li class='coupon-li'>
+                                                <dl>
+                                                    <dt>
+                                                        <span class='elp'>
+                                                            {{#if unusableReason}}
+                                                                [{{unusableReason}}]
+                                                            {{/if}}{{couponName}}
+                                                        </span>
+                                                    </dt>
+                                                    <dd class='amount_type'>
                                                         {{#if discountAmt}}
                                                             {{toCurrencyString discountAmt}}원
                                                         {{/if}}
-
                                                         {{#if discountRate}}
                                                             {{discountRate}}%
                                                         {{/if}}
-
                                                         {{#ifEq couponType 'PRODUCT'}}
                                                             상품
                                                         {{/ifEq}}
@@ -111,188 +77,172 @@
                                                         {{#ifEq couponType 'CART'}}
                                                             주문
                                                         {{/ifEq}}
-                                                        할인
-                                                    </strong>
-                                                </td>
-                                                <td>
-                                                    <div class='btn_layer'>
-                                                        <span class='btn_gray_list'>
-                                                            <a
-                                                                href="#detail{{couponIssueNo}}"
-                                                                data-coupon-target-type="{{couponTargetType}}"
-                                                                data-coupon-no="{{couponNo}}"
-                                                                data-coupon-issue-no="{{couponIssueNo}}"
-                                                                data-id='couponDetailToggle'
-                                                                class='btn_gray_small'
-                                                            >
-                                                                <em>
-                                                                    상세 보기
-                                                                </em>
-                                                            </a>
-                                                        </span>
-                                                        <div id="detail{{couponNo}}"></div>
-                                                    </div>
-                                                </td>
-                                                <td class='table-coupon__used'>
-                                                    <em class='coupon_date_day'>
-                                                        {{#if used}}
-                                                            {{useYmdt}}
-                                                        {{else}}
-                                                            {{useEndYmdt}}
-                                                        {{/if}}
-                                                    </em>
+                                                        쿠폰
+                                                    </dd>
                                                     {{#if used}}
-                                                        <span class='coupon_before_use'>
-                                                            사용완료
-                                                        </span>
+                                                        <dd class='limit'>
+                                                            <strong>
+                                                                사용일자
+                                                            </strong>{{useYmdt}}
+                                                        </dd>
                                                     {{else}}
-                                                        {{#if expiration}}
-                                                            <span class='coupon_before_use'>
-                                                                사용가능
-                                                            </span>
-                                                        {{else}}
-                                                            <span class='coupon_before_use'>
-                                                                기간만료
-                                                            </span>
-                                                        {{/if}}
+                                                        <dd class='limit'>
+                                                            <strong>
+                                                                만료일자
+                                                            </strong>{{useEndYmdt}}
+                                                        </dd>
                                                     {{/if}}
-                                                </td>
-                                                <td>
-                                                    {{usedYmd}}
-                                                </td>
-                                            </tr>
+                                                    <dd>
+                                                        <strong>
+                                                            발급일자
+                                                        </strong>{{issueYmdt}}
+                                                    </dd>
+                                                    <dd>
+                                                        <a
+                                                            href="#lyUseCase{{couponIssueNo}}"
+                                                            class='detail'
+                                                            style='display:inline-block;'
+                                                            data-coupon-target-type="{{couponTargetType}}"
+                                                            data-coupon-no="{{couponNo}}"
+                                                            data-coupon-issue-no="{{couponIssueNo}}"
+                                                            data-id='couponDetailToggle'
+                                                        >
+                                                            사용/제한조건
+                                                        </a>
+                                                    </dd>
+                                                </dl>
+                                                <div id="detail{{couponNo}}"></div>
+                                            </li>
+                                        {{else}}
+                                            <li>
+                                                <p class='no_data'>
+                                                    발급된 쿠폰 내역이 없습니다.
+                                                </p>
+                                            </li>
                                         {{/each}}
-                                        {{#ifEq length 0}}
-                                            <tr>
-                                                <td colspan='5'>
-                                                    <p class='no_data'>
-                                                        조회내역이 없습니다.
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                        {{/ifEq}}
-                                    </tbody>
-                                </table>
-                            </script>
+                                    </ul>
+                                </script>
+                            </div>
+                            <div id="btnMoreCoupons"></div>
                         </div>
-                        <div class="pagination" id="pagination"></div>
                     </div>
                 </div>
             </main>
         </div>
-        <aside id="aside"></aside>
         <footer id="footer"></footer>
         <div id="popups-area"></div>
-
         <script id="coupon-detail" type="text/x-handlebars-template">
-            <div id="detail{{couponIssueNo}}" data-id='couponDetailContent' class='layer_area'>
-                <div class='ly_wrap use_case_layer'>
-                    <div class='ly_tit'>
-                        <strong>
-                            사용/제한 조건
-                        </strong>
-                    </div>
-                    <div class='ly_cont'>
-                        <div class='use_case_list'>
-                            <dl>
-                                <dt>
-                                    사용 가능 플랫폼
-                                </dt>
-                                <dd>
-                                    {{platform}}
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt>
-                                    최소 기준금액
-                                </dt>
-                                <dd>
-                                    {{toCurrencyString minSalePrice}}원 이상 구매 시 사용 가능
-                                </dd>
-                            </dl>
-                            {{#ifEq fixedAmt false}}
+            <div id="lyUseCase{{couponIssueNo}}" class='ly_pop ly_effect_3' data-id='couponDetailContent'>
+                <div class='layer_option'>
+                    <div class='ly_ct'>
+                        <div class='ly_head'>
+                            <h1 class='h_tit'>
+                                사용/제한 조건
+                            </h1>
+                        </div>
+                        <div class='ly_ct'>
+                            <div class='view_box'>
                                 <dl>
                                     <dt>
-                                        최대 할인금액
+                                        사용 가능 플랫폼
                                     </dt>
                                     <dd>
-                                        최대 {{toCurrencyString maxDiscountAmt}}원 할인
+                                        {{platform}}
                                     </dd>
                                 </dl>
-                            {{/ifEq}}
-                            {{#if availableCategories}}
                                 <dl>
                                     <dt>
-                                        사용가능 카테고리
-                                    </dt>
-                                    {{#each couponTargets}}
-                                        <dd>
-                                            {{this}}
-                                        </dd>
-                                    {{/each}}
-                                </dl>
-                            {{/if}}
-                            {{#if availableProducts}}
-                                <dl>
-                                    <dt>
-                                        사용가능 상품
+                                        최소 기준금액
                                     </dt>
                                     <dd>
-                                        {{safeString availableProducts}}
+                                        {{toCurrencyString minSalePrice}}원 이상 구매 시 사용 가능
                                     </dd>
                                 </dl>
-                            {{/if}}
-                            {{#if memberGradeNames}}
-                                <dl>
-                                    <dt>
-                                        사용가능 회원등급
-                                    </dt>
-                                    <dd>
-                                        {{memberGradeNames}}
-                                    </dd>
-                                </dl>
-                            {{/if}}
-                            {{#if unusableProduct}}
-                                <dl>
-                                    <dt>
-                                        사용불가 상품
-                                    </dt>
-                                    <dd>
-                                        {{safeString unusableProduct}}
-                                    </dd>
-                                </dl>
-                            {{/if}}
-                            {{#if isLimit}}
-                                <dl>
-                                    <dt>
-                                        사용 시 혜택 제한
-                                    </dt>
-                                    {{#if skipsAccumulation}}
+                                {{#ifEq fixedAmt false}}
+                                    <dl>
+                                        <dt>
+                                            최대 할인금액
+                                        </dt>
                                         <dd>
-                                            적립금 적립 불가
+                                            최대 {{toCurrencyString maxDiscountAmt}}원 할인
                                         </dd>
-                                    {{/if}}
-                                    {{#unless cartCouponUsable}}
+                                    </dl>
+                                {{/ifEq}}
+                                {{#if availableCategories}}
+                                    <dl>
+                                        <dt>
+                                            사용가능 카테고리
+                                        </dt>
+                                        {{#each couponTargets}}
+                                            <dd>
+                                                {{this}}
+                                            </dd>
+                                        {{/each}}
+                                    </dl>
+                                {{/if}}
+                                {{#if availableProducts}}
+                                    <dl>
+                                        <dt>
+                                            사용가능 상품
+                                        </dt>
                                         <dd>
-                                            {{limitCouponTypeLabel}} 쿠폰 사용 불가
+                                            {{safeString availableProducts}}
                                         </dd>
-                                    {{/unless}}
-                                    {{#unless productCouponUsable}}
+                                    </dl>
+                                {{/if}}
+                                {{#if memberGradeNames}}
+                                    <dl>
+                                        <dt>
+                                            사용가능 회원등급
+                                        </dt>
                                         <dd>
-                                            {{limitCouponTypeLabel}} 쿠폰 사용 불가
+                                            {{memberGradeNames}}
                                         </dd>
-                                    {{/unless}}
-                                </dl>
-                            {{/if}}
+                                    </dl>
+                                {{/if}}
+                                {{#if unusableProduct}}
+                                    <dl>
+                                        <dt>
+                                            사용불가 상품
+                                        </dt>
+                                        <dd>
+                                            {{safeString unusableProduct}}
+                                        </dd>
+                                    </dl>
+                                {{/if}}
+                                {{#if isLimit}}
+                                    <dl>
+                                        <dt>
+                                            사용 시 혜택 제한
+                                        </dt>
+                                        {{#if skipsAccumulation}}
+                                            <dd>
+                                                적립금 적립 불가
+                                            </dd>
+                                        {{/if}}
+                                        {{#unless cartCouponUsable}}
+                                            <dd>
+                                                {{limitCouponTypeLabel}} 쿠폰 사용 불가
+                                            </dd>
+                                        {{/unless}}
+                                        {{#unless productCouponUsable}}
+                                            <dd>
+                                                {{limitCouponTypeLabel}} 쿠폰 사용 불가
+                                            </dd>
+                                        {{/unless}}
+                                    </dl>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class='close_btn'>
+                            <button type='button' class='lys_close_btn ly_btn_close' data-id='couponDetailHide'>
+                                닫기
+                            </button>
                         </div>
                     </div>
-                    <a href='#content' data-id='couponDetailHide' class='ly_close'>
-                        <img src='/assets/img/common/layer/btn_layer_close.png' alt='닫기' />
-                    </a>
                 </div>
             </div>
         </script>
-
         <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
         <script src="/js/pages/my/coupons.js"></script>
     </body>

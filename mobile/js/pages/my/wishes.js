@@ -8,32 +8,32 @@
 $(() => {
   shopby.wishes = {
     page: {},
-    initiate() {
-      const url = shopby.utils.getUrlParams();
-      shopby.my.menu.init('#myPageLeftMenu');
-      this.page = new shopby.pagination(this.onClickPagination.bind(this), '#pagination');
-      this.page.pageNumber = url && url.pageNumber ? url.pageNumber : 1;
+    async initiate() {
+      const myWishes = await this._fetchLikeProducts();
+      const { data } = myWishes;
+      this._renderWishes(data);
+      this.bindEvents();
+    },
 
-      this.fetchApis().then(responses => {
-        if (responses.some(response => response && response.error)) {
-          // @fixme: /malls 도 401로 떨어져서 그냥 에러남.. 망함..
-          shopby.alert('인증 정보가 만료되었습니다.', shopby.goLogin);
-        } else {
-          this.render(responses);
-          this.bindEvents();
+    async _remove(productNos) {
+      const response = await shopby.api.product.postProfileLikeProducts({
+        requestBody: { productNos: productNos },
+      });
+
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        shopby.alert('찜리스트 삭제에 실패하였습니다.');
+      }
+    },
+    _removeOneWish(productNo) {
+      shopby.confirm({ message: '상품을 삭제하시겠습니까?' }, async callback => {
+        if (callback.state !== 'ok') {
+          return;
         }
+        await this._remove([productNo]);
       });
     },
-
-    render(responses) {
-      const [summary, summaryAmount, likes] = responses;
-
-      shopby.my.summary.init('#myPageSummary', summary, summaryAmount, likes.totalCount);
-
-      this._renderWishes(likes);
-      $('#contents').visualize();
-    },
-
     _removeWishes(checkedSelector) {
       const $checkedList = $(checkedSelector + ':checked');
       const length = $checkedList.length;
@@ -45,16 +45,7 @@ $(() => {
           if (callback.state !== 'ok') {
             return;
           }
-
-          const response = await shopby.api.product.postProfileLikeProducts({
-            requestBody: { productNos: productNos },
-          });
-
-          if (response.status === 200) {
-            window.location.reload();
-          } else {
-            shopby.alert('찜리스트 삭제에 실패하였습니다.');
-          }
+          await this._remove(productNos);
         });
       } else {
         shopby.alert('선택하신 상품이 없습니다.');
@@ -88,9 +79,6 @@ $(() => {
       $wishResults.parent().append(compiled(data));
 
       $('#totalCount').text(likes.totalCount);
-      this.page.render(likes.totalCount);
-
-      shopby.utils.pushState({ pageNumber: this.page.pageNumber }, '찜리스트');
     },
 
     bindEvents() {
@@ -98,7 +86,6 @@ $(() => {
       const checkedSelector = '[name=checked]';
 
       $('body')
-        .on('click', '#inquieryBtn', shopby.alert.bind(this, '1:1문의하기 구현', null))
         .on('change', checkedSelector, () => {
           $(allCheckedSelector).get(0).checked = $(checkedSelector)
             .get()
@@ -107,32 +94,15 @@ $(() => {
         .on('change', allCheckedSelector, ({ currentTarget: { checked: checked } }) =>
           $(checkedSelector).prop('checked', checked),
         )
-        .on('click', '#deleteBtn', this._removeWishes.bind(this, checkedSelector));
-    },
-
-    async fetchApis() {
-      const result = await Promise.all([
-        shopby.api.member.getProfileSummary(), // FIXME: API Deprecated
-        shopby.api.order.getProfileOrdersSummaryAmount({
-          queryString: {
-            orderStatusType: 'BUY_CONFIRM',
-            startYmd: shopby.date.lastHalfYear(),
-            endYmd: shopby.date.today(),
-          },
-        }),
-        this._fetchLikeProducts(),
-      ]);
-
-      return result.map(({ data }) => data);
+        .on('click', '#deleteBtn', this._removeWishes.bind(this, checkedSelector))
+        .on('click', '.btnDeleteItem', ({ target: { dataset } }) => this._removeOneWish(Number(dataset.productNo)));
     },
 
     async _fetchLikeProducts() {
-      const { pageNumber, pageSize } = this.page;
       return await shopby.api.product.getProfileLikeProducts({
         queryString: {
           hasTotalCount: true,
-          pageNumber,
-          pageSize,
+          pageSize: 100,
         },
       });
     },
@@ -143,7 +113,7 @@ $(() => {
       if (response.status === 200) {
         this._renderWishes(response.data);
       } else {
-        response.data && shopby.alert(response.data.message);
+        shopby.alert(response.data && response.data.message);
       }
     },
 

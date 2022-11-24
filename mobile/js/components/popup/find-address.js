@@ -13,12 +13,12 @@
 
       this.option = option;
       this.callback = callback;
+      this.data = [];
       this.keyword = '';
-
       $parent.append(this.$el);
 
       this.bindEvents();
-      this.page = new shopby.pagination(this.fetchAddressesWithPaging.bind(this), '#addressPagination');
+      this.page = new shopby.readMore(this.fetchAddresses.bind(this), '#readMore', 10);
     }
 
     bindEvents() {
@@ -48,13 +48,13 @@
           this.throwing('검색어를 입력해주세요.');
         }
 
-        this.fetchAddressesWithPaging(this.keyword);
+        this.fetchAddresses(false);
       } catch (e) {
         console.error(e.message);
       }
     }
 
-    async fetchAddressesWithPaging() {
+    async fetchAddresses(isMoreAddressAppend = true) {
       const { data } = await shopby.api.manage.getAddressesSearch({
         queryString: {
           keyword: this.keyword.trim(),
@@ -62,20 +62,24 @@
           pageSize: this.page.pageSize,
         },
       });
-
-      const empty = shopby.utils.isArrayEmpty((data && data.items) || []);
-      $('#addressTemplate,#noResult').toggle(empty);
+      if (!isMoreAddressAppend) {
+        const empty = shopby.utils.isArrayEmpty((data && data.items) || []);
+        $('#addressTemplate,#noResult').toggle(empty);
+      }
 
       if (data && data.error) {
         this.throwing('API 호출 실패');
       }
+      this.data = [...this.data, ...data.items];
+      isMoreAddressAppend ? this.appendAddress(this.data) : this.render(data);
+    }
 
-      this.render(data);
+    appendAddress(result) {
+      $('#addressTemplate').render(result);
     }
 
     render(result) {
       const empty = shopby.utils.isArrayEmpty((result && result.items) || []);
-
       if (empty) {
         $('#addressTemplate').empty();
         $('#noResult').show();

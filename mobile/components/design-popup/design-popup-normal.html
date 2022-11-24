@@ -9,17 +9,17 @@
 <script id="designPopupNormalTemplate" type="text/x-handlebars-template">
     <div>
         {{#if isFixedTop}}
-            <div class='pc_top_banner'>
-                <div class='pc_top_banner_in'>
-                    <div class='pc_top_banner_content'>
+            <div class='mobile_top_banner'>
+                <div class='top_banner_in'>
+                    <div class='top_banner_content'>
                         {{{content}}}
                     </div>
-                    <div class='pc_top_banner_ctrl'>
-                        <a href='javascript:void(0)' class='pc_top_banner_close' id='design-popup-close'>
-                            <img src='/assets/img/common/layer/btn_layer_close.png' alt='닫기' />
+                    <div class='top_banner_ctrl'>
+                        <a href='javascript:void(0)' class='top_banner_close' id='design-popup-close'>
+                            <img src='/assets/img/icon/icon_x2.png' alt='닫기' />
                         </a>
                         {{#if visibleToday}}
-                            <a href='javascript:void(0)' class='pc_top_banner_today' id='design-popup-today'>
+                            <a href='javascript:void(0)' class='top_banner_today' id='design-popup-today'>
                                 <label>
                                     <input type='checkbox' class='checkbox' />
                                     오늘 하루 보이지 않음
@@ -35,17 +35,22 @@
                     <div class='view'>
                         {{{content}}}
                     </div>
-                    {{#if visibleToday}}
-                        <div class='today' id='design-popup-today'>
-                            <label for="design-popup-today-{{popupNo}}">
-                                오늘 하루 보이지 않음
-                            </label>
-                            <input type='checkbox' id="design-popup-today-{{popupNo}}" />
+
+                    <div class='bottom'>
+                        {{#if visibleToday}}
+                            <div class='today' id='design-popup-today'>
+                                <label for="design-popup-today-{{popupNo}}">
+                                    오늘 하루 보이지 않음
+                                </label>
+                                <input type='checkbox' id="design-popup-today-{{popupNo}}" />
+                            </div>
+                        {{/if}}
+                        <div class='close_box'{{#unless visibleToday}}style='width:100%'{{/unless}}>
+                            <button type='button' class='close' id='design-popup-close'>
+                                닫기
+                            </button>
                         </div>
-                    {{/if}}
-                    <button type='button' class='close' id='design-popup-close'>
-                        닫기
-                    </button>
+                    </div>
                 </div>
             </div>
         {{/if}}

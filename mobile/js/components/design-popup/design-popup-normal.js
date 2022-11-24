@@ -37,7 +37,13 @@
           width: '100%',
         });
 
-        this.$el.find('.pc_top_banner').css({
+        if (this.data.detailInfo.resizable) {
+          this.$el.find('.top_banner_content img').css({
+            width: '100%',
+          });
+        }
+
+        this.$el.find('.mobile_top_banner').css({
           position: 'absolute',
           'margin-left': this.data.detailInfo.screenLeftPosition,
           'margin-top': this.data.detailInfo.screenTopPosition,

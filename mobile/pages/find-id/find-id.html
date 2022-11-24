@@ -17,83 +17,88 @@
 
     <body>
         <header id="header"></header>
-        <div id="contents" class="visible">
-            <div class="location_wrap">
-                <div class="location_cont">
-                    <em><a href="/" class="local_home">HOME</a> > 아이디 찾기</em>
-                </div>
-            </div>
-            <div class="sub_content">
-                <div class="content_box">
-                    <div class="member_wrap">
-                        <div class="member_tit">
-                            <h2>아이디찾기</h2>
+        <div id="contents">
+            <main class="sub_content">
+                <div class="page_top_area">
+                    <div class="navi_g">
+                        <ul>
+                            <li>홈</li>
+                            <li>로그인</li>
+                            <li>아이디 찾기</li>
+                        </ul>
+                    </div>
+                    <div class="sub_top">
+                        <div class="sub_top_left">
+                            <a id="goBack"></a>
                         </div>
-                        <div class="member_cont">
-                            <div class="find_id_box">
-                                <div class="find_id_sec" id="findIdBox">
-                                    <h3>회원 아이디찾기</h3>
-                                    <div class="form_element radio_find_type">
-                                        <input type="radio" id="findIdEmail" name="findIdFl" value="email" data-find-type="EMAIL" checked />
-                                        <label for="findIdEmail" class="choice_s">이메일</label>
-                                        <input type="radio" id="findIdPhone" name="findIdFl" value="mobileNo" data-find-type="SMS" />
-                                        <label for="findIdPhone" class="choice_s">휴대폰번호</label>
-                                        {{#if isAuthPhoneConfig}}
-                                        <input type="radio" id="findIdCertify" name="findIdFl" value="certify" data-find-type="MOBILE" />
-                                        <label for="findIdCertify" class="choice_s">본인인증</label>
-                                        {{/if}}
-                                    </div>
-                                    <div class="login_input" id="findIdForm">
-                                        <div>
-                                            <input type="text" id="userName" name="userName" placeholder="이름" />
-                                            <div id="email" style="display: flex; align-items: baseline; justify-content: space-between;">
-                                                <input type="text" id="userId" name="email" placeholder="가입 메일주소" style="width: 135px;" />
-                                                @
-                                                <input type="text" id="userDomain" name="email" style="width: 135px;" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                style="display: none;"
-                                                id="userCellPhoneNum"
-                                                name="userCellPhoneNum"
-                                                placeholder="가입 휴대폰번호"
-                                                maxlength="12"
-                                                data-pattern="notNumber"
-                                            />
-                                        </div>
-                                        <button type="submit" class="btn_member_id" id="btnFindId">
-                                            아이디 찾기
-                                        </button>
-                                    </div>
-                                    <div class="auth_box">
-                                        {{#if isAuthPhoneConfig}}
-                                        <button type="button" id="btnAuthKCP" class="btnAuthKCP" style="display: none;">휴대폰 본인인증</button>
-                                        {{/if}}
-                                    </div>
-                                    <p class="hide js_caution_msg1" id="cautionMsg"></p>
-                                </div>
-                                <div class="find_complete_box hide" id="findCompleteBox"></div>
-                                <div class="btn_member_sec">
-                                    <ul>
-                                        <li>
-                                            <button class="btn_member_white js_btn_find_password" id="btnGoFindPw">
-                                                비밀번호 찾기
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button class="btn_comfirm js_btn_login" id="btnGoLogin">
-                                                로그인하기
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <h2><a href="/pages/find-id/find-id.html" class="js_page_reload">아이디 찾기</a></h2>
                     </div>
                 </div>
-            </div>
+                <div id="findIdBox" class="find_wrap invisible">
+                    <div class="find_id">
+                        <p class="find_txt">
+                            <strong>아이디를 분실하셨나요?</strong>
+                            이름과 가입 시 이메일 또는 휴대폰번호를 입력해주세요.
+                        </p>
+
+                        <div class="find_id_sec">
+                            <div class="form_element">
+                                <span class="inp_rdo">
+                                    <input type="radio" id="findIdEmail" name="findIdFl" value="email" data-find-type="EMAIL" checked />
+                                    <label for="findIdEmail" class="choice_s">이메일</label>
+                                    <input type="radio" id="findIdPhone" name="findIdFl" value="mobileNo" data-find-type="SMS" />
+                                    <label for="findIdPhone" class="choice_s">휴대폰번호</label>
+                                    {{#if isAuthPhoneConfig}}
+                                    <input type="radio" id="findIdCertify" name="findIdFl" value="certify" data-find-type="MOBILE" />
+                                    <label for="findIdCertify" class="choice_s">본인인증</label>
+                                    {{/if}}
+                                </span>
+                            </div>
+                            <dl>
+                                <dd>
+                                    <input type="text" id="userName" name="userName" placeholder="이름" />
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dd>
+                                    <div id="email" class="find_email">
+                                        <input type="text" id="userId" name="email" placeholder="가입 메일주소" />
+                                        <span>@</span>
+                                        <input type="text" id="userDomain" name="email" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        style="display: none;"
+                                        id="userCellPhoneNum"
+                                        name="userCellPhoneNum"
+                                        placeholder="가입 휴대폰번호"
+                                        maxlength="12"
+                                        data-pattern="notNumber"
+                                    />
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dd>
+                                    {{#if isAuthPhoneConfig}}
+                                    <a href="#" id="btnAuthKCP" class="btnAuthKCP" style="display: none;">휴대폰 본인인증</a>
+                                    {{/if}}
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <p class="hide error" id="cautionMsg"></p>
+
+                        <button type="submit" class="find_id_btn" id="btnFindId">
+                            아이디 찾기
+                        </button>
+                    </div>
+                </div>
+                <div id="resultBox" class="find_id hide">
+                    <div class="find_id_msg" id="findCompleteBox"></div>
+                    <a href="/pages/login/login.html" class="find_id_btn btn_login">로그인</a>
+                </div>
+            </main>
         </div>
-        <aside id="aside"></aside>
         <footer id="footer"></footer>
         <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
         <script src="/js/pages/find-id/find-id.js"></script>

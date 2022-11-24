@@ -1,11 +1,20 @@
+/*
+ * © NHN Commerce Corp. All rights reserved.
+ * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ * @author Daejoong Son
+ * @since 2021.8.6
+ */
+
 $(() => {
   let editOptionData = null;
   let cartOptionsCompiled = null;
   let cartTextOptionsCompiled = null;
   let $originOptions = null;
+  let hasProducts = null; // boolean
 
-  const _getTextOptions = $tr => {
-    return $tr
+  const _getTextOptions = $li => {
+    return $li
       .find('[name=textOptionItem]')
       .get()
       .map(textOptionItem => {
@@ -19,25 +28,30 @@ $(() => {
       });
   };
 
-  const _cancelChangeOption = $tr => {
-    if ($tr.find('.btnChangeOption').data('editStatus') !== 'editing') {
+  const _cancelChangeOption = $li => {
+    if ($li.find('.btnChangeOption').data('editStatus') !== 'editing') {
       return;
     }
 
-    $tr.find('.pick_add_info dl').remove();
-    $tr.find('.pick_add_info').append($originOptions);
+    $li.find('.pick_add_info').append($originOptions);
 
-    $tr.find('.btnChangeOption').removeClass('comp').data('editStatus', 'complete').html('옵션/수량 변경');
-    $tr.find('[can-change-option=true]').prop('disabled', true);
+    $li.find('.btnChangeOption').removeClass('on').data('editStatus', 'complete').html('옵션/수량 변경');
+    $li.find('[data-can-change-option=true]').prop('disabled', true);
   };
 
-  const _validateEditOption = $tr => {
+  const getSelectedCartNos = () => {
+    return $('#cart li input[type="checkbox"]:checked')
+      .get()
+      .map(elem => parseInt($(elem).closest('li').attr('data-cart-no')));
+  };
+
+  const _validateEditOption = $li => {
     if (editOptionData.selectedOptions.length === 0) {
       shopby.alert({ message: '옵션을 선택해주세요.', iconType: 'fail' });
       return false;
     }
 
-    const textOptions = _getTextOptions($tr);
+    const textOptions = _getTextOptions($li);
 
     if (textOptions.length > 0 && textOptions.some(item => item.isRequired && !item.inputValue)) {
       shopby.alert({ message: '텍스트옵션(필수)을 입력해주세요.', iconType: 'fail' });
@@ -54,15 +68,15 @@ $(() => {
    * 2. 신규 옵션 추가
    * 3. 리렌더링
    *
-   * @param $tr
+   * @param $li
    * @private
    */
-  const _changeOption = $tr => {
-    const cartNo = $tr.data('cartNo');
-    const productNo = $tr.data('productNo');
-    const orderCnt = $tr.find('[name=orderCnt]').val();
+  const _changeOption = $li => {
+    const cartNo = $li.data('cartNo');
+    const productNo = $li.data('productNo');
+    const orderCnt = $li.find('[name=orderCnt]').val();
 
-    const optionInputs = _getTextOptions($tr);
+    const optionInputs = _getTextOptions($li);
 
     shopby.helper.cart
       .removeCarts([cartNo])
@@ -96,70 +110,79 @@ $(() => {
    * @private
    */
   const _onChangeOptionButton = async e => {
-    const $button = $(e.target);
-    const $tr = $button.parents('tr');
-    const isComplete = $button.data('editStatus') === 'complete';
+    const isComplete = $(e.currentTarget).data('editStatus') === 'complete';
+    isComplete ? _renderOption(e) : _updateOption(e);
+  };
 
-    const cartNo = $tr.data('cartNo');
-    const productNo = $tr.data('productNo');
-    const optionNo = $tr.data('optionNo');
-    // 다른 카트 옵션 변경 취소
-    $(`#cartContents tbody tr[data-cart-no!=${cartNo}]`)
-      .get()
-      .map(el => {
-        _cancelChangeOption($(el));
-      });
-    if (isComplete) {
-      /**
-       * 카트 옵션 변경 모드 세팅
-       *
-       * 1. get product option
-       * 2. 기존 select box hide
-       * 3. 새로운 select box rendering
-       */
+  const _renderOption = async e => {
+    const $button = $(e.currentTarget);
+    const $li = $button.parents('li');
 
-      const { data } = await shopby.api.product.getProductsProductNoOptions({ pathVariable: { productNo: productNo } });
-      const { data: productData } = await shopby.api.product.getProductsProductNo({
-        pathVariable: { productNo: productNo },
-      });
-      const textOptions = _getTextOptions($tr);
-      editOptionData = shopby.helper.option(data, productData.reservationData, optionNo, textOptions);
-      $originOptions = $tr.find('.pick_add_info dl').remove();
-      if (data.type === 'COMBINATION' || data.type === 'MAPPING') {
-        cartOptionsCompiled = cartOptionsCompiled || Handlebars.compile($('#cartOptionsTemplate').html());
-        $tr.find('.pick_add_info').append($(cartOptionsCompiled({ options: editOptionData.options })));
-      }
+    const { cartNo, productNo, optionNo } = $li.data();
 
-      const orderCnt = Number($tr.find('input[name="orderCnt"]').val());
-      const textInputNo = Number($tr.find('input[name="textOptionItem"]').data('text-input-no'));
-      const hasOptionalTextOption = editOptionData.textOptions.some(option => option.inputMatchingType === 'OPTION');
-      if (orderCnt > 1 && hasOptionalTextOption) {
-        editOptionData.drawAmountTextOption(optionNo, textInputNo, orderCnt);
-      }
-      cartTextOptionsCompiled = cartTextOptionsCompiled || Handlebars.compile($('#cartTextOptionsTemplate').html());
-      $tr.find('.pick_add_info').append(
-        $(
-          cartTextOptionsCompiled({
-            textOptions: editOptionData.textOptions,
-            optionalTextOptions:
-              editOptionData.selectedOption.options.length > 0 && editOptionData.selectedOption.options[0].textOptions,
-          }),
-        ),
-      );
-    } else {
-      if (!_validateEditOption($tr)) {
-        return;
-      }
+    _cancelOtherOptionEditing(cartNo);
 
-      _changeOption($tr);
+    const { data } = await shopby.api.product.getProductsProductNoOptions({ pathVariable: { productNo } });
+    const { data: productData } = await shopby.api.product.getProductsProductNo({
+      pathVariable: { productNo: productNo },
+    });
+    const textOptions = _getTextOptions($li);
+    editOptionData = shopby.helper.option(data, productData.reservationData, optionNo, textOptions);
+
+    $originOptions = $li.find('[data-id="cartOptionsArea"]').html('');
+
+    const $cartOptionsArea = $li.find('[data-id="cartOptionsArea"]');
+    if (data.type === 'COMBINATION' || data.type === 'MAPPING') {
+      cartOptionsCompiled = cartOptionsCompiled || Handlebars.compile($('#cartOptionsTemplate').html());
+      $cartOptionsArea.append($(cartOptionsCompiled({ options: editOptionData.options })));
+    }
+    $cartOptionsArea.parent().addClass('on');
+
+    const orderCnt = Number($li.find('input[name="orderCnt"]').val());
+    const textInputNo = Number($li.find('input[name="textOptionItem"]').data('text-input-no'));
+    const hasOptionalTextOption = editOptionData.textOptions.some(option => option.inputMatchingType === 'OPTION');
+    if (orderCnt > 1 && hasOptionalTextOption) {
+      editOptionData.drawAmountTextOption(optionNo, textInputNo, orderCnt);
     }
 
-    $button
-      .toggleClass('comp')
-      .data('editStatus', isComplete ? 'editing' : 'complete')
-      .html(isComplete ? '변경 완료' : '옵션/수량 변경');
+    cartTextOptionsCompiled = cartTextOptionsCompiled || Handlebars.compile($('#cartTextOptionsTemplate').html());
+    $cartOptionsArea.append(
+      $(
+        cartTextOptionsCompiled({
+          textOptions: editOptionData.textOptions,
+          optionalTextOptions:
+            editOptionData.selectedOption.options.length > 0 && editOptionData.selectedOption.options[0].textOptions,
+        }),
+      ),
+    );
 
-    $tr.find('[can-change-option=true]').prop('disabled', !isComplete);
+    $button.addClass('on').data('editStatus', 'editing');
+    $button.text('변경 완료');
+
+    const $quantity = $li.find('[data-can-change-option=true]');
+    $quantity.prop('disabled', false);
+  };
+
+  /**
+   * @fixme
+   * 이 메서드 탈때 옵션이 변경되는게 아니라 상품이 하나 더 담깁니다.
+   * pc 에도 재현되는 문제인데 pc와 같이 수정필요합니다.
+   */
+  const _updateOption = e => {
+    const $button = $(e.currentTarget);
+    const $li = $button.parents('li');
+    if (!_validateEditOption($li)) return;
+    _changeOption($li);
+    const $quantity = $li.find('[data-can-change-option=true]');
+    $quantity.prop('disabled', true);
+    $li.find('.btnChangeOption').removeClass('on').data('editStatus', 'complete').html('옵션/수량 변경');
+  };
+
+  const _cancelOtherOptionEditing = cartNo => {
+    const otherCarts = $(`#cart li[data-cart-no!=${cartNo}]`);
+    otherCarts.get().map(el => {
+      _cancelChangeOption($(el));
+    });
   };
 
   /**
@@ -169,26 +192,24 @@ $(() => {
    * @private
    */
   const _changeOptionSelect = e => {
-    const $select = $(e.target);
-    const $dl = $select.parents('dl');
-    const $tr = $dl.parents('tr');
-
-    const depth = $dl.data('depth');
+    const $select = $(e.currentTarget);
+    const $li = $select.parents('li');
+    const depth = $select.data('depth');
     const selectedIndex = $select.find('option').index($select.find('option:selected'));
 
     editOptionData.changeSelectOption(depth, selectedIndex, true);
 
     if (editOptionData.selectedOptions.length > 0) {
-      const $input = $tr.find('input[name=orderCnt]');
+      const $input = $li.find('input[name=orderCnt]');
       const orderCnt = Number($input.val());
       if (orderCnt > editOptionData.selectedOptions[0].stockCnt) {
         $input.val(editOptionData.selectedOptions[0].stockCnt);
       }
     }
 
-    $tr.find('.pick_add_info dl').remove();
-    $tr
-      .find('.pick_add_info')
+    $li.find('.cart_options_area .inp_sel').remove();
+    $li
+      .find('.cart_options_area')
       .append($(cartOptionsCompiled({ options: editOptionData.options })))
       .append(
         $(
@@ -210,8 +231,8 @@ $(() => {
   const _changeCartCntByButton = e => {
     // 각 옵션별 수량 +, - 버튼
     const $button = $(e.target);
-    const $tr = $button.parents('tr');
-    const $input = $tr.find('input[name=orderCnt]');
+    const $li = $button.parents('li');
+    const $input = $li.find('input[name=orderCnt]');
 
     const type = $button.data('type');
 
@@ -253,20 +274,18 @@ $(() => {
     $input.val(orderCnt >= stockCnt ? stockCnt : orderCnt);
   };
 
-  const _order = async e => {
-    const $button = $(e.target);
-    const type = $button.data('orderType');
-
+  const _order = async () => {
     const cartNos = [];
     const products = [];
 
-    $('tbody tr')
+    $('#cart li')
       .get()
-      .filter(el => (type === 'part' ? $(el).find('input[type="checkbox"]').is(':checked') : true))
+      .filter(el => $(el).find('input[type="checkbox"]').is(':checked'))
       .map(el => {
         const $el = $(el);
 
         cartNos.push($el.data('cartNo'));
+
         products.push({
           productNo: $el.data('productNo'),
           optionNo: $el.data('optionNo'),
@@ -314,16 +333,29 @@ $(() => {
     }
   };
 
-  /**
-   * 선택된 카트 제거
-   * @private
-   */
-  const _removeCarts = () => {
-    const cartNos = $('table tbody input[type="checkbox"]:checked')
-      .get()
-      .map(elem => Number($(elem).closest('tr').attr('data-cart-no')));
+  const _removeCart = event => {
+    event.preventDefault();
 
-    if (shopby.utils.isArrayEmpty(cartNos)) {
+    const cartNoString = event.currentTarget.dataset.cartNo;
+    if (!cartNoString) return;
+    const cartNos = [Number(cartNoString)];
+
+    shopby.confirm({ message: '선택된 상품을 장바구니에서 삭제하시겠습니까?' }, status => {
+      if (status && status.state === 'ok') {
+        shopby.helper.cart.removeCarts(cartNos).then(success => {
+          if (success) {
+            shopby.cart.initiate();
+            shopby.helper.cart.updateCartCount(true);
+          }
+        });
+      }
+    });
+  };
+
+  const _removeSelectedCarts = () => {
+    const cartNos = getSelectedCartNos();
+
+    if (cartNos.length < 1) {
       shopby.alert('선택된 상품이 없습니다.');
       return;
     }
@@ -332,7 +364,7 @@ $(() => {
       if (status && status.state === 'ok') {
         shopby.helper.cart.removeCarts(cartNos).then(success => {
           if (success) {
-            shopby.cart.initiate(true);
+            shopby.cart.initiate();
             shopby.helper.cart.updateCartCount(true);
           }
         });
@@ -343,11 +375,12 @@ $(() => {
   shopby.cart = {
     async initiate(isRefresh = false) {
       // redering 초기화 (handlbar template 미노출 처리)
-      this.calculatePrice();
-      $('#removeButtonArea').hide();
+      $('#selectRemoveArea').hide();
       $('#orderBoxArea').hide();
 
       const cartData = await shopby.helper.cart.getCartData(true);
+      this.setHasProducts(cartData);
+      this.calculatePrice();
       this.render(cartData);
 
       this.naverPay = await this.generateNaverPay();
@@ -359,22 +392,16 @@ $(() => {
 
       this.calculatePrice();
     },
+    setHasProducts(cartData) {
+      hasProducts = shopby.utils.isArrayNotEmpty(cartData.list);
+    },
     render(cartData) {
       // list render
-      // todo cartData.list  selectType => 일체형 / 분리형 구분
-
       const compiled = Handlebars.compile($('#cartContentsTemplate').html());
       const html = $(compiled({ carts: cartData.list }));
       $('#cartContents').html(html);
 
-      $('#removeButtonArea')
-        .render({ hasProducts: shopby.utils.isArrayNotEmpty(cartData.list) })
-        .show();
-
-      // etc render
-      $('#orderBoxArea')
-        .render({ hasProducts: shopby.utils.isArrayNotEmpty(cartData.list) })
-        .show();
+      $('#selectRemoveArea').render({ hasProducts }).show();
     },
     bindEvents() {
       const allCheckedSelector = '#allChecked';
@@ -398,21 +425,30 @@ $(() => {
         .on('click', '.goods_cnt', _changeCartCntByButton)
         .on('change', 'input[name=orderCnt]', _changeCartCntByInput)
         .on('change', 'select', _changeOptionSelect)
-        .on('click', '#removeButtonArea button', _removeCarts)
+        .on('click', '#selectRemoveArea button', _removeSelectedCarts)
+        .on('click', '[data-action="deleteItem"]', _removeCart)
         .on('click', '.btn_order', _order)
         .on('keyup', 'input[name="textOptionItem"]', this.onKeyUpTextOptionInput);
     },
     calculatePrice() {
       const $cartPriceArea = $('#cartPriceArea');
+      const $cartSubmitArea = $('#cartSubmitArea');
 
-      const cartNos = $('table tbody input[type="checkbox"]:checked')
-        .get()
-        .map(elem => parseInt($(elem).closest('tr').attr('data-cart-no')));
+      const cartNos = getSelectedCartNos();
+      const {
+        accumulationConfig: { accumulationUnit },
+      } = shopby.cache.getMall();
 
       shopby.helper.cart.getCartsCalculate(cartNos).then(price => {
         $cartPriceArea.render({
+          hasProducts,
           checkedCount: cartNos.length,
-          price: price,
+          accumulationUnit,
+          price,
+        });
+        $cartSubmitArea.render({
+          hasProducts,
+          price,
         });
       });
     },
@@ -437,7 +473,7 @@ $(() => {
 
     loadNaverPayOrder() {
       try {
-        const products = $('tbody tr')
+        const products = $('#cart li')
           .get()
           .filter(el => $(el).find('input[type="checkbox"]').is(':checked'))
           .map(el => {
@@ -450,8 +486,8 @@ $(() => {
               optionInputs: _getTextOptions($el),
             };
           });
-
         this.validateNaverPayOrder(products);
+
         this.naverPay.requestNaverPayOrder(products);
       } catch (e) {
         alert(e.message);

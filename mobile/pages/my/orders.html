@@ -2,7 +2,7 @@
 <html lang="ko">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
         <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
@@ -11,157 +11,137 @@
     <body>
         <header id="header"></header>
 
-        <div id="contents" style="visibility: hidden;">
-            <main class="sub_content">
-                <div class="content_box">
-                    <div class="location_wrap">
-                        <div class="location_cont">
-                            <em><a href="/" class="local_home">HOME</a> &gt; 마이페이지 > 주문목록 / 배송조회</em>
+        <div id="contents">
+            <main class="contents_wrap">
+                <div class="page_top_area">
+                    <div class="navi_g">
+                        <ul>
+                            <li>홈</li>
+                            <li>마이페이지</li>
+                            <li>주문목록 / 배송조회</li>
+                        </ul>
+                    </div>
+                    <div class="sub_top">
+                        <div class="sub_top_left">
+                            <a id="goBack"></a>
                         </div>
+                        <h2><a href="/pages/my/orders.html">주문목록 / 배송조회</a></h2>
                     </div>
                 </div>
 
-                <!-- mypage 왼쪽 메뉴 -->
-                <div id="myPageLeftMenu" class="side_cont"></div>
-
                 <!-- mypage 본문 -->
-                <div class="content">
+                <div class="order_list">
+                    <div id="dateSelector"></div>
+
                     <div class="mypage_main">
-                        <!-- 마이페이지 > 쇼핑정보, 혜택관리 공통으로 쓰이는 summary -->
                         <div id="myPageSummary"></div>
-                        <!-- 밑에 밑줄....-->
-                        <div class="mypage_top_info"></div>
 
                         <!-- 주문목록/배송조회-->
-                        <div class="mypage_lately_info">
-                            <div class="mypage_zone_tit">
-                                <h3>주문목록/배송조회</h3>
-                            </div>
-                            <div id="myOrdersDateRangePicker"></div>
-                        </div>
-                        <div class="mypage_lately_info">
-                            <div class="mypage_zone_tit">
-                                <h3>
-                                    <span>주문목록/배송조회 내역 총 <span id="totalcount">0</span>건</span>
-                                </h3>
-                            </div>
-                            <div class="mypage_table_type order_list">
-                                <script id="ordersResult" type="text/x-handlebars-template">
-                                    <table>
-                                        <colgroup class='order_table_colgroup'>
-                                            <col style='width:17%' />
-                                            <col />
-                                            <col style='width:8%' />
-                                            <col style='width:12%' />
-                                            <col style='width:10%' />
-                                            <col style='width:11%' />
-                                        </colgroup>
-                                        <thead class='order_table_head'>
-                                            <tr>
-                                                <th>
-                                                    주문일자(주문번호)
-                                                </th>
-                                                <th>
-                                                    상품정보
-                                                </th>
-                                                <th>
-                                                    수량
-                                                </th>
-                                                <th>
-                                                    상품금액
-                                                </th>
-                                                <th>
-                                                    진행상태
-                                                </th>
-                                                <th>
-                                                    접수
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class='order_table_body'>
-                                            {{#each this}}
-                                                <tr
-                                                    data-order-no="{{orderNo}}"
-                                                    data-option-no="{{optionNo}}"
-                                                    data-order-option-no="{{orderOptionNo}}"
-                                                    data-claim-nos="{{claimNos}}"
-                                                    data-order-status-type="{{orderStatusType}}"
-                                                    data-pay-type="{{payType}}"
-                                                    data-pg-type="{{pgType}}"
-                                                >
-                                                    {{#ifNe rowSpan 0}}
-                                                        <td class='order_DayNum' rowspan="{{rowSpan}}">
-                                                            <p>
-                                                                {{orderYmdt}}
-                                                            </p>
-                                                            <p>
-                                                                <a href="/pages/my/order.html?orderNo={{orderNo}}">
-                                                                    {{orderNo}}
-                                                                </a>
-                                                            </p>
-                                                        </td>
-                                                    {{/ifNe}}
-                                                    <td class='td_left'>
-                                                        <div class='pick_add_cont'>
-                                                            <span class='pick_add_img'>
-                                                                <div>
-                                                                    <a href="/pages/product/view.html?productNo={{productNo}}">
+                        <div id="myOrdersDateRangePicker"></div>
+                        <div id="orderResults"></div>
+                        <script id="orderResultsTemplate" type="text/x-handlebars-template">
+                            <div class='order_goods_list'>
+                                {{#each this}}
+                                    <p class='order_top_date'>
+                                        {{ymd}} (총
+                                        <strong>
+                                            {{orders.length}}
+                                        </strong>
+                                        건)
+                                    </p>
+                                    {{#each orders}}
+                                        <div class='orderlist_wrap'>
+                                            <div class='order_number_box'>
+                                                <div class='order_number'>
+                                                    <div class='order_number_left'>
+                                                        주문번호
+                                                        <span>
+                                                            {{orderNo}}
+                                                        </span>
+                                                    </div>
+                                                    <div class='order_number_right'>
+                                                        <a class='btn_order_detail_view' href="/pages/my/order.html?orderNo={{orderNo}}">
+                                                            주문 상세 보기
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <ul class='my_goods'>
+                                                {{#each items}}
+                                                    <li
+                                                        class='order_product'
+                                                        data-order-no="{{orderNo}}"
+                                                        data-option-no="{{optionNo}}"
+                                                        data-order-option-no="{{orderOptionNo}}"
+                                                        data-claim-nos="{{claimNos}}"
+                                                        data-order-status-type="{{orderStatusType}}"
+                                                        data-pay-type="{{payType}}"
+                                                        data-pg-type="{{pgType}}"
+                                                    >
+                                                        <div class='info'>
+                                                            <a href="/pages/product/view.html?productNo={{productNo}}">
+                                                                <div class='itemhead'>
+                                                                    <div class='img'>
                                                                         {{img imageUrl '' '' productName 'middle'}}
-                                                                    </a>
+                                                                    </div>
                                                                 </div>
-                                                            </span>
-                                                            <div class='pick_add_info'>
-                                                                <a href="/pages/product/view.html?productNo={{productNo}}">
-                                                                    <em class='productName' style='display: block;'>
-                                                                        {{{productName}}}
-                                                                    </em>
-                                                                </a>
-                                                                <div class='goods_option'>
-                                                                    {{#ifNe productName optionName}}
-                                                                        <div class='icon_re'>
-                                                                            <span>
-                                                                                {{{optionTextInfo}}}
-                                                                            </span>
-                                                                        </div>
-                                                                    {{/ifNe}}
+                                                                <dd class='itembody'>
+                                                                    <div class='ing_chk'>
+                                                                        <strong class='order_ing_btn'>
+                                                                            {{orderStatusTypeLabel}}
+                                                                        </strong>
+                                                                    </div>
+                                                                    <dl>
+                                                                        <dt class='prd_name product_name'>
+                                                                            {{safeString productName}}
+                                                                        </dt>
+                                                                        {{#ifNe productName optionName}}
+                                                                            <dl class='prd_option'>
+                                                                                <span>
+                                                                                    {{{optionTextInfo}}}
+                                                                                </span>
+                                                                            </dl>
+                                                                        {{/ifNe}}
+                                                                    </dl>
+                                                                </dd>
+                                                            </a>
+                                                            <div class='order_info'>
+                                                                <div class='info_box'>
+                                                                    <div class='info2'>
+                                                                        수량: {{toCurrencyString orderCnt}}
+                                                                        <span>
+                                                                            {{toCurrencyString buyAmt}}원
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class='ing_chk'>
+                                                                        {{{nextActionText}}}
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                            <ul class='btn_bx'>
+                                                                {{{orderStatusText}}}
+                                                            </ul>
                                                         </div>
-                                                        <em class='name' style='display: block;'></em>
-                                                    </td>
-                                                    <td class='order_Amount'>
-                                                        {{toCurrencyString orderCnt}}
-                                                    </td>
-                                                    <td>
-                                                        <strong>
-                                                            {{toCurrencyString buyAmt}}
-                                                        </strong>
-                                                        원
-                                                    </td>
-                                                    <td>
-                                                        {{{orderStatusText}}}
-                                                    </td>
-                                                    <td>
-                                                        {{{nextActionText}}}
-                                                    </td>
-                                                </tr>
-                                            {{/each}}
-                                        </tbody>
-                                    </table>
-                                </script>
+                                                    </li>
+                                                {{/each}}
+                                            </ul>
+                                        </div>
+                                    {{/each}}
+                                {{/each}}
+                                {{#ifEq length 0}}
+                                    <div class='my_goods no'>
+                                        <p>
+                                            최근 주문 내역이 없습니다.
+                                        </p>
+                                    </div>
+                                {{/ifEq}}
                             </div>
-                            <div class="btn_right_box">
-                                <button type="button" id="btn_write" class="btn_write">
-                                    <strong>1:1문의하기</strong>
-                                </button>
-                            </div>
-                            <div class="pagination" id="pagination"></div>
-                        </div>
+                        </script>
                     </div>
+                    <div id="readMore"></div>
                 </div>
             </main>
         </div>
-        <aside id="aside"></aside>
         <footer id="footer"></footer>
         <div id="popups-area"></div>
 
@@ -170,8 +150,6 @@
         <script src="/lib/slick/slick.min.js"></script>
         <script src="/lib/dayjs/dayjs.min-v1.10.5.js"></script>
         <script src="https://api-storage.cloud.toast.com/v1/AUTH_2f1140ef2c7d47a2b0645d106f5c19a9/shopby-pro-skin/shopby-shop-sdk.js"></script>
-        <link type="text/css" rel="stylesheet" href="/lib/date-picker/tui-date-picker.css" />
-        <script src="/lib/date-picker/tui-date-picker.js"></script>
         <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
         <script src="/js/core/shopby.js"></script>
         <script src="/js/pages/my/components/mypage-components.js"></script>

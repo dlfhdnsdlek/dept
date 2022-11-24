@@ -151,17 +151,17 @@
       $sliderWrap.slick(slideOption);
 
       slideOption.autoplay = false;
-
-      const { slideMinWidth, slideMinHeight, slideMaxWidth, slideMaxHeight } = this.data.popupSlideInfo;
+      const { slideMinWidth, slideMinHeight, slideMaxWidth, slideMaxHeight, resizable } = this.data.popupSlideInfo;
       const bWindow = this.data.detailInfo.screenType === 'WINDOW';
 
       this.data.popupSlideInfo.slideImages.map((slideImage, index) => {
+        const style = resizable ? `style="width: ${slideMaxWidth}px; height: ${slideMaxHeight}px;"` : '';
         const slickItem =
-          `<div style="width: ${slideMaxWidth}px; height: ${slideMaxHeight}px; overflow:hidden;"` +
-          `<a href="javascript:void(0)" onclick="shopby.designPopup.onClickMultiPopup(${slideImage.landingUrl}, ${
+          `<div style="width: ${slideMaxWidth}px; height: ${slideMaxHeight}px; overflow:hidden;">` +
+          `<a href="javascript:void(0)" onclick="shopby.designPopup.onClickMultiPopup('${slideImage.landingUrl}', ${
             slideImage.openLocationTarget !== 'SELF'
           }, ${bWindow})">` +
-          `<img src="${slideImage.mainImageUrl}" style="with: ${slideMaxWidth}px; height: ${slideMaxHeight}px;" alt="${slideImage.mainImageUrl}" />` +
+          `<img src="${slideImage.mainImageUrl}" ${style} alt="${slideImage.mainImageUrl}" />` +
           `</a></div>`;
 
         $sliderWrap.slick('slickAdd', slickItem);
@@ -172,11 +172,16 @@
         const { thumbImageUrl, thumbImageUrlOnOver, landingUrl, openLocationTarget } = slideImage;
         const target = openLocationTarget === 'SELF' ? '_self' : '_blank';
         const smallImages = [{ main: thumbImageUrl, sub: thumbImageUrlOnOver }];
+        if (thumbImageUrl !== thumbImageUrlOnOver) {
+          smallImages.push({ main: thumbImageUrlOnOver, sub: thumbImageUrl });
+        }
+
         smallImages.map(smallImage => {
+          const style = resizable ? `style="width: ${slideMinWidth}px; height: ${slideMinHeight}px;"` : '';
           const smallSlickItem =
-            `<div class="smallImageWrap" style="width: ${slideMinWidth}px; height: ${slideMinHeight}px; overflow:hidden;">` +
+            `<div style="width: ${slideMinWidth}px; height: ${slideMinHeight}px; overflow:hidden;">` +
             `<a href="${landingUrl}" target="${target}">` +
-            `<img class="smallImage" src="${smallImage.main}" data-sub="${smallImage.sub}" data-main="${smallImage.main}" style="with: ${slideMinWidth}px; height: ${slideMinHeight}px;" alt="${smallImage.sub}" />` +
+            `<img src="${smallImage.main}" ${style} alt="${smallImage.sub}" data-sub="${smallImage.sub}" data-main="${smallImage.main}"/>` +
             `</a></div>`;
 
           $smallSliderWrap.slick('slickAdd', smallSlickItem);
@@ -211,11 +216,12 @@
         })
         .on('mouseover', '.mp_item', e => {
           const $this = $(e.currentTarget);
-          $this.addClass('sb_div_slide_pause');
 
+          $this.addClass('sb_div_slide_pause');
           const $target = $(e.target);
           const subImage = $target.data().sub;
           $target.attr('src', subImage);
+
           if (!$this.hasClass('sb_div_slide_current')) {
             slickGoToNotAnimation($this, 1);
           }
@@ -224,7 +230,6 @@
           const $this = $(e.currentTarget);
 
           $this.removeClass('sb_div_slide_pause');
-
           const $target = $(e.target);
           const mainImage = $target.data().main;
           $target.attr('src', mainImage);

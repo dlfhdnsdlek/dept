@@ -2,6 +2,7 @@
  * © NHN Commerce Corp. All rights reserved.
  * NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
+ * @author Hyeyeon Park
  * @author Bomee Yoon
  * @author Eunbi Kim
  * @since 2021-6-23
@@ -17,6 +18,7 @@ $(() => {
   shopby.product.list = {
     async initiate() {
       await this.productList.initiate();
+      $('#productsPage').removeClass('invisible').addClass('visible');
       if (sectionId || keyword) return;
       this.category.initiate();
     },
@@ -46,20 +48,14 @@ $(() => {
         $selectedCategoryTit.render({ selectedCategoryTit });
         $searchBoxOrCategoryBoxArea.render({ selectedChildCategories });
       },
+
       bindEvents() {
-        $('.location_select').on('mouseenter mouseleave', this.events.toggle);
-        this.events.hide.call(this);
+        $categorySelector.on('change', this.goSelectedCategory);
       },
 
-      events: {
-        toggle() {
-          $(this).find('.location_tit').toggleClass('active');
-          $(this).find('ul').stop().slideToggle('fast');
-        },
-        hide() {
-          !this.data.selectedChildCategories ||
-            (!this.data.selectedChildCategories.length && $searchBoxOrCategoryBoxArea.hide());
-        },
+      goSelectedCategory({ target }) {
+        const categoryNo = $(target).find('option:selected').data('category-no');
+        location.href = `/pages/product/list.html?categoryNo=${categoryNo}`;
       },
 
       setCategoryData() {
@@ -93,14 +89,13 @@ $(() => {
       _getSelectData(categoryNo, categoryList, parents) {
         const { length } = categoryList;
         const PARENTS_LAST_INDEX = parents.length - 1;
-
         for (let i = 0; i < length; i += 1) {
           const category = categoryList[i];
-          const { label, categoryNo: no, children } = category;
-
+          const { label, categoryNo: no, children, depth } = category;
           parents[PARENTS_LAST_INDEX].selectedLabel = label;
 
           if (categoryNo === no) {
+            parents[PARENTS_LAST_INDEX].isParent = PARENTS_LAST_INDEX === depth - 1;
             return { category, parents };
           }
 
@@ -119,8 +114,9 @@ $(() => {
         }
       },
     },
+    //todo getUrlParam
     productList: {
-      page: shopby.pagination,
+      page: null,
       $productList: $('#productList'),
       data: {
         productInfo: null,
@@ -133,33 +129,32 @@ $(() => {
         searchWord: null,
         message: '진열중인 상품이 없습니다.',
         page: getUrlParam('page', 1),
-        pageSize: getUrlParam('pageSize', 20),
-        orderBy: getUrlParam('orderBy', 'sale_cnt'),
+        pageSize: 10,
+        orderBy: sectionId ? getUrlParam('orderBy', 'ranking') : getUrlParam('orderBy', 'sale_cnt'),
         brandNo: getUrlParam('brandNo'),
         keyword: getUrlParam('keyword'),
         keywordInResult: getUrlParam('keywordInResult'),
         listType: getUrlParam('type', 'gallery'),
         categoryNo: getUrlParam('categoryNo'),
       },
+
       async initiate() {
-        this.page = new shopby.pagination(this.paginationCallback.bind(this), '#pagination', this.data.pageSize);
+        this.page = new shopby.readMore(this.onClickReadMore.bind(this), '#productsMoreButton', this.data.pageSize);
         await this.setData();
         this.render();
         this.bindEvents();
       },
+
       async setData() {
         const { keyword, keywordInResult } = this.data;
         this.data.searchWord = keywordInResult ? keywordInResult : keyword;
-        !sectionId ? await this.fetchProductList() : await this.fetchMainSection();
-        this.data.productList.forEach(
-          product => (product.calculatedSalePrice = shopby.utils.getDisplayProductPrice(product)),
-        );
-        this.setSortingData();
+        await this.setProductList();
       },
+
       render() {
-        const { productList, searchWord, keyword, totalCount } = this.data;
+        const { productList, searchWord, keyword, totalCount, orderBy } = this.data;
         this.page.render(totalCount);
-        $('#searchResult').render({ searchWord, keyword, totalCount });
+        $('#searchResult').render({ searchWord, keyword, totalCount, sectionId });
         if (this.data.keyword !== '') {
           this.keywordRender();
         }
@@ -167,40 +162,82 @@ $(() => {
           this.sectionRender();
         }
         this.$productList.render({ productList, message: this.data.message });
-        this.setPageSize();
+        this.selectRender(orderBy);
       },
+
       bindEvents() {
         $('#productSorting').on('change', this.onChangeProductSorting.bind(this));
-        this.$productList.on('click', '#wishBtn', this.onClickWishBtn.bind(this));
+        $('#productList').on('click', '#wishBtn', this.onClickWishBtn.bind(this));
         $('.btn_goods_search').on('click', this.onClickKeywordInResultBtn.bind(this));
+        $('#displayType').on('click', this.onChangeDisplayType.bind(this));
       },
+
+      async setProductList() {
+        !sectionId ? await this.fetchProductList() : await this.fetchMainSection();
+        this.data.productList = this.data.productList.map(product => ({
+          ...product,
+          calculatedSalePrice: shopby.utils.getDisplayProductPrice(product),
+        }));
+      },
+
+      selectRender(orderBy) {
+        $('#productSorting').val(orderBy).prop('selected', true);
+      },
+
+      async onChangeDisplayType({ target }) {
+        const displayType = target.innerText;
+        switch (displayType) {
+          case 'list':
+            target.innerText = 'gallery';
+            $(target).css({
+              background: '#ffffff url("/assets/img/icon/icon_product_type_gallery2_on.png") no-repeat center',
+              'background-size': '16px',
+            });
+            break;
+          case 'gallery':
+            target.innerText = 'list';
+            $(target).css({
+              background: '#ffffff url("/assets/img/icon/icon_product_type_list_on.png") no-repeat center',
+              'background-size': '16px',
+            });
+            break;
+          default:
+            break;
+        }
+        this.page.pageNumber = 1;
+        await this.setProductList();
+        this._removeProducts();
+        this._appendProducts();
+      },
+
       keywordRender() {
         this.data.message = '검색결과가 없습니다.';
-        const searchBoxTemplate = this.getSearchBoxTemplate();
-        $searchBoxOrCategoryBoxArea.html(searchBoxTemplate).attr('class', 'search_form_box');
-        $categorySelector.hide();
-        $selectedCategoryTit.hide();
-      },
-      sectionRender() {
-        $selectedCategoryTit.render({ selectedCategoryTit: this.data.title });
-        $categorySelector.hide();
+        $selectedCategoryTit.render({ selectedCategoryTit: '상품 검색' });
         $searchBoxOrCategoryBoxArea.hide();
       },
+
+      sectionRender() {
+        $selectedCategoryTit.render({ selectedCategoryTit: this.data.title });
+        $searchBoxOrCategoryBoxArea.hide();
+      },
+
       getCurrentDepthCategories() {
         const depth = Number(getUrlParam('depth')) || 1;
         const categoryNo = Number(getUrlParam('categoryNo'));
         const key = `depth${depth + 1}Categories`;
         return (
-          this.data.productInfo[key] &&
-          this.data.productInfo[key].filter(({ parentCategoryNo }) => parentCategoryNo === categoryNo)
+          (this.data.productInfo[key] &&
+            this.data.productInfo[key].filter(({ parentCategoryNo }) => parentCategoryNo === categoryNo)) ||
+          null
         );
       },
+
       async fetchProductList() {
         const { direction, order } = this.mapSortingParams(this.data.orderBy);
         try {
           const queryString = {
-            pageNumber: this.data.page,
-            pageSize: this.data.pageSize,
+            pageNumber: this.page.pageNumber,
+            pageSize: this.page.pageSize,
             categoryNos: this.data.categoryNo,
             'order.direction': direction,
             'order.by': order,
@@ -212,6 +249,7 @@ $(() => {
             includeSummaryInfo: false,
           };
           const { data } = await shopby.api.product.getProductsSearch({ queryString });
+
           if (queryString['filter.keywords']) {
             shopby.setGlobalVariableBy('PRODUCT_SEARCH', data);
           } else {
@@ -225,13 +263,15 @@ $(() => {
           console.error(e);
         }
       },
+
       async fetchMainSection() {
         const orders = {
+          ranking: '',
           sale_cnt: 'SALE',
           price_asc: 'LOW_PRICE',
           price_dsc: 'HIGH_PRICE',
           review: 'REVIEW',
-          register: 'REGISTER',
+          date: 'REGISTER',
         };
 
         try {
@@ -240,8 +280,8 @@ $(() => {
               sectionsId: sectionId,
             },
             queryString: {
-              pageNumber: this.data.page,
-              pageSize: this.data.pageSize,
+              pageNumber: this.page.pageNumber,
+              pageSize: this.page.pageSize,
               by: orders[this.data.orderBy],
               hasTotalCount: true,
               'filter.keywords': this.data.keyword,
@@ -258,17 +298,12 @@ $(() => {
           console.error(e);
         }
       },
+
       onChangeProductSorting({ target }) {
-        const { name, value } = target;
-        switch (name) {
-          case 'pageSize':
-            return shopby.utils.sendQueryString({ pageSize: value, page: 1 });
-          case 'sort':
-            return shopby.utils.sendQueryString({ orderBy: value });
-          default:
-            return;
-        }
+        const { value } = target;
+        return shopby.utils.sendQueryString({ orderBy: value });
       },
+
       async onClickWishBtn(event) {
         event.preventDefault();
         const $button = $(event.currentTarget);
@@ -286,10 +321,12 @@ $(() => {
           console.error(e);
         }
       },
+
       onClickKeywordInResultBtn() {
         const keywordInResult = $('input[name=keywordInResult]').val();
         shopby.utils.sendQueryString({ keywordInResult });
       },
+
       mapSortingParams(paramKey) {
         switch (paramKey) {
           case 'sale_cnt':
@@ -300,37 +337,29 @@ $(() => {
             return { order: 'DISCOUNTED_PRICE', direction: 'DESC' };
           case 'review':
             return { order: 'REVIEW', direction: 'DESC' };
-          case 'register':
+          case 'recent':
           default:
             return { order: 'RECENT_PRODUCT', direction: 'DESC' };
         }
       },
-      setSortingData() {
-        $(`input[value=${this.data.orderBy}]`).closest('li').find('label').addClass('on');
+
+      async onClickReadMore() {
+        await this.setProductList();
+        this._appendProducts();
       },
-      setPageSize() {
-        $(`select[name=pageSize]`).val(this.data.pageSize).prop('selected', true);
+
+      _removeProducts() {
+        $('#productList').empty();
       },
-      async paginationCallback() {
-        const { pageNumber } = this.page;
-        this.data.page = pageNumber;
-        shopby.utils.pushState({ page: pageNumber });
-        await this.setData();
-        this.render();
-        this.bindEvents();
-      },
-      getSearchBoxTemplate() {
-        const { keywordInResult } = this.data;
-        return `
-             <div class="goods_search_box">
-               <div class="search_again_box">
-                 <div class="keyword-div">
-                  <input type="text" class="keyword_input" autocomplete="off"
-                  value="${keywordInResult}" name="keywordInResult">
-                 </div>
-                 <button type="button" class="btn_goods_search"><em>검색</em></button>
-               </div>
-            </div>`;
+
+      _appendProducts() {
+        const { productList, totalCount } = this.data;
+        this.page.render(totalCount);
+        if (productList.length === 0) return;
+        const displayType = $('#displayType').text();
+        const compiled = Handlebars.compile($(`#product-list-type-${displayType}`).html());
+        const appendHtml = $(compiled({ productList })).find('li.product_item');
+        $('#productList').append(appendHtml);
       },
     },
   };

@@ -32,23 +32,25 @@
     </ul>
 </script>
 <script id="findAddressPopupTemplate" type="text/x-handlebars-template">
-    <div class='layer_wrap dimed'>
-        <div class='box common_popup_body' style='width: 480px;'>
-            <div class='view' style='text-align: left;'>
-                <h2>
-                    우편번호 찾기
-                </h2>
+    <div class='ly_pop ly_show'>
+        <div class='ly_wrap' style='overflow: hidden'>
+            <div class='layer_common_wrapper address_popup_container' style='padding-bottom:0'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        우편번호 찾기
+                    </h1>
+                </div>
                 <div class='post-search'>
                     <div class='search-form' id='search-form'>
                         <label for='addressKeyword'></label>
                         <input
                             id='addressKeyword'
-                            class='address_search_keyword'
+                            class='address_search_name'
                             name='address_search_keyword'
                             type='text'
                             placeholder='검색어(도로명,지번,건물명)를 입력해주세요'
                         />
-                        <input id='searchAddressBtn' class='button' type='button' value='검색' />
+                        <input id='searchAddressBtn' class='button btnFindAddress' type='button' value='검색' />
                     </div>
                     <div id='tip' class='post-search-tip'>
                         <h2>
@@ -82,11 +84,10 @@
                             </dd>
                         </dl>
                     </div>
-                    <div class='search-wrapper'>
-                        <div class='search-result'>
-                            <div class='ul_wrap'>
-                                <ul id='addressTemplate' data-template-id='findAddressPopupAddressTemplate'></ul>
-                            </div>
+                    <div class='search-wrapper search-result'>
+                        <div class='ul_wrap'>
+                            <ul id='addressTemplate' data-template-id='findAddressPopupAddressTemplate'></ul>
+                            <div id='readMore'></div>
                         </div>
                         <div id='noResult' class='search-empty hide'>
                             <strong>
@@ -123,14 +124,24 @@
                             </div>
                         </div>
                     </div>
-                    <div id='addressPagination' class='pagination'></div>
                 </div>
             </div>
-            <a href='#' id='addressCloseBtn' class='ly_close btnClosePopup' data-action-type='negative'>
-                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
-            </a>
+            <ul class='btn_box'>
+                <li>
+                    <button type='button' class='address_cancel_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                        닫 기
+                    </button>
+                </li>
+            </ul>
+            <div class='close_btn'>
+                <button type='button' class='lys_close_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                    닫기
+                </button>
+            </div>
         </div>
     </div>
 </script>
+
+<script src="/js/components/popup/find-address.js"></script>
 
 <script src="/js/components/popup/find-address.js"></script>

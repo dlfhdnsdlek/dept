@@ -1,41 +1,37 @@
-<!--
-  ~  © 2021. NHN Commerce Corp. All rights reserved.
-  ~  NHN Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
-  ~
-  ~  @author hyeyeon-park
-  ~  @since 2021.7.27
-  -->
-
 <script id="messagePopupTemplate" type="text/x-handlebars-template">
-    <div class='layer_wrap dimed'>
-        <div class='box common_popup_body'>
-            <div class='view' style='text-align: left;'>
-                <h2>
-                    {{title}}
-                </h2>
-                <div class='scroll_box'>
-                    <p class="{{iconType}}">
+    <div class='ly_pop ly_effect_3 ly_show'>
+        <div class='ly_wrap'>
+            <div class='layer_common_wrapper'>
+                <div class='ly_head'>
+                    <h1 class='h_tit'>
+                        {{title}}
+                    </h1>
+                </div>
+                <div class='notice_box'>
+                    <p>
                         {{{message}}}
                     </p>
                 </div>
-                <div class='btn_box'>
-                    <button type='button' class='btn_cancel btnClosePopup' data-action-type='negative'>
-                        <span>
-                            닫기
-                        </span>
-                    </button>
-                    {{#if yesOrNo}}
-                        <button type='button' class='btn_confirm btnClosePopup' data-action-type='positive'>
-                            <span>
-                                확인
-                            </span>
+                <ul class='btn_box'>
+                    <li>
+                        <button type='button' class='address_cancel_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                            닫 기
                         </button>
+                    </li>
+                    {{#if yesOrNo}}
+                        <li>
+                            <button type='button' class='address_save_btn btnClosePopup' data-action-type='positive'>
+                                확 인
+                            </button>
+                        </li>
                     {{/if}}
+                </ul>
+                <div class='close_btn'>
+                    <button type='button' class='lys_close_btn ly_btn_close btnClosePopup' data-action-type='negative'>
+                        닫기
+                    </button>
                 </div>
             </div>
-            <a href='javascript:void(0)' class='ly_close btnClosePopup' data-action-type='negative'>
-                <img src='/assets/img/mypage/icon-layer-close.png' alt='닫기' />
-            </a>
         </div>
     </div>
 </script>

@@ -1,10 +1,10 @@
-!(function(t, e) {
+!(function (t, e) {
   'object' == typeof exports && 'undefined' != typeof module
     ? (module.exports = e())
     : 'function' == typeof define && define.amd
     ? define(e)
     : ((t = 'undefined' != typeof globalThis ? globalThis : t || self).dayjs = e());
-})(this, function() {
+})(this, function () {
   'use strict';
   var t = 1e3,
     e = 6e4,
@@ -27,13 +27,13 @@
       weekdays: 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
       months: 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
     },
-    m = function(t, e, n) {
+    m = function (t, e, n) {
       var r = String(t);
       return !r || r.length >= e ? t : '' + Array(e + 1 - r.length).join(n) + t;
     },
     g = {
       s: m,
-      z: function(t) {
+      z: function (t) {
         var e = -t.utcOffset(),
           n = Math.abs(e),
           r = Math.floor(n / 60),
@@ -48,10 +48,10 @@
           u = e.clone().add(r + (s ? -1 : 1), f);
         return +(-(r + (n - i) / (s ? i - u : u - i)) || 0);
       },
-      a: function(t) {
+      a: function (t) {
         return t < 0 ? Math.ceil(t) || 0 : Math.floor(t);
       },
-      p: function(t) {
+      p: function (t) {
         return (
           { M: f, y: c, w: o, d: a, D: d, h: u, m: s, s: i, ms: r, Q: h }[t] ||
           String(t || '')
@@ -59,17 +59,17 @@
             .replace(/s$/, '')
         );
       },
-      u: function(t) {
+      u: function (t) {
         return void 0 === t;
       },
     },
     D = 'en',
     v = {};
   v[D] = M;
-  var p = function(t) {
+  var p = function (t) {
       return t instanceof _;
     },
-    S = function(t, e, n) {
+    S = function (t, e, n) {
       var r;
       if (!t) return D;
       if ('string' == typeof t) v[t] && (r = t), e && ((v[t] = e), (r = t));
@@ -79,7 +79,7 @@
       }
       return !n && r && (D = r), r || (!n && D);
     },
-    w = function(t, e) {
+    w = function (t, e) {
       if (p(t)) return t.clone();
       var n = 'object' == typeof e ? e : {};
       return (n.date = t), (n.args = arguments), new _(n);
@@ -87,17 +87,17 @@
     O = g;
   (O.l = S),
     (O.i = p),
-    (O.w = function(t, e) {
+    (O.w = function (t, e) {
       return w(t, { locale: e.$L, utc: e.$u, x: e.$x, $offset: e.$offset });
     });
-  var _ = (function() {
+  var _ = (function () {
       function M(t) {
         (this.$L = S(t.locale, null, !0)), this.parse(t);
       }
       var m = M.prototype;
       return (
-        (m.parse = function(t) {
-          (this.$d = (function(t) {
+        (m.parse = function (t) {
+          (this.$d = (function (t) {
             var e = t.date,
               n = t.utc;
             if (null === e) return new Date(NaN);
@@ -118,7 +118,7 @@
             (this.$x = t.x || {}),
             this.init();
         }),
-        (m.init = function() {
+        (m.init = function () {
           var t = this.$d;
           (this.$y = t.getFullYear()),
             (this.$M = t.getMonth()),
@@ -129,40 +129,40 @@
             (this.$s = t.getSeconds()),
             (this.$ms = t.getMilliseconds());
         }),
-        (m.$utils = function() {
+        (m.$utils = function () {
           return O;
         }),
-        (m.isValid = function() {
+        (m.isValid = function () {
           return !(this.$d.toString() === $);
         }),
-        (m.isSame = function(t, e) {
+        (m.isSame = function (t, e) {
           var n = w(t);
           return this.startOf(e) <= n && n <= this.endOf(e);
         }),
-        (m.isAfter = function(t, e) {
+        (m.isAfter = function (t, e) {
           return w(t) < this.startOf(e);
         }),
-        (m.isBefore = function(t, e) {
+        (m.isBefore = function (t, e) {
           return this.endOf(e) < w(t);
         }),
-        (m.$g = function(t, e, n) {
+        (m.$g = function (t, e, n) {
           return O.u(t) ? this[e] : this.set(n, t);
         }),
-        (m.unix = function() {
+        (m.unix = function () {
           return Math.floor(this.valueOf() / 1e3);
         }),
-        (m.valueOf = function() {
+        (m.valueOf = function () {
           return this.$d.getTime();
         }),
-        (m.startOf = function(t, e) {
+        (m.startOf = function (t, e) {
           var n = this,
             r = !!O.u(e) || e,
             h = O.p(t),
-            $ = function(t, e) {
+            $ = function (t, e) {
               var i = O.w(n.$u ? Date.UTC(n.$y, e, t) : new Date(n.$y, e, t), n);
               return r ? i : i.endOf(a);
             },
-            l = function(t, e) {
+            l = function (t, e) {
               return O.w(n.toDate()[t].apply(n.toDate('s'), (r ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e)), n);
             },
             y = this.$W,
@@ -191,10 +191,10 @@
               return this.clone();
           }
         }),
-        (m.endOf = function(t) {
+        (m.endOf = function (t) {
           return this.startOf(t, !1);
         }),
-        (m.$set = function(t, e) {
+        (m.$set = function (t, e) {
           var n,
             o = O.p(t),
             h = 'set' + (this.$u ? 'UTC' : ''),
@@ -215,18 +215,18 @@
           } else $ && this.$d[$](l);
           return this.init(), this;
         }),
-        (m.set = function(t, e) {
+        (m.set = function (t, e) {
           return this.clone().$set(t, e);
         }),
-        (m.get = function(t) {
+        (m.get = function (t) {
           return this[O.p(t)]();
         }),
-        (m.add = function(r, h) {
+        (m.add = function (r, h) {
           var d,
             $ = this;
           r = Number(r);
           var l = O.p(h),
-            y = function(t) {
+            y = function (t) {
               var e = w($);
               return O.w(e.date(e.date() + Math.round(t * r)), $);
             };
@@ -238,10 +238,10 @@
             m = this.$d.getTime() + r * M;
           return O.w(m, this);
         }),
-        (m.subtract = function(t, e) {
+        (m.subtract = function (t, e) {
           return this.add(-1 * t, e);
         }),
-        (m.format = function(t) {
+        (m.format = function (t) {
           var e = this;
           if (!this.isValid()) return $;
           var n = t || 'YYYY-MM-DDTHH:mm:ssZ',
@@ -252,15 +252,15 @@
             a = this.$M,
             o = i.weekdays,
             f = i.months,
-            h = function(t, r, i, s) {
+            h = function (t, r, i, s) {
               return (t && (t[r] || t(e, n))) || i[r].substr(0, s);
             },
-            c = function(t) {
+            c = function (t) {
               return O.s(s % 12 || 12, t, '0');
             },
             d =
               i.meridiem ||
-              function(t, e, n) {
+              function (t, e, n) {
                 var r = t < 12 ? 'AM' : 'PM';
                 return n ? r.toLowerCase() : r;
               },
@@ -290,14 +290,14 @@
               SSS: O.s(this.$ms, 3, '0'),
               Z: r,
             };
-          return n.replace(y, function(t, e) {
+          return n.replace(y, function (t, e) {
             return e || l[t] || r.replace(':', '');
           });
         }),
-        (m.utcOffset = function() {
+        (m.utcOffset = function () {
           return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
         }),
-        (m.diff = function(r, d, $) {
+        (m.diff = function (r, d, $) {
           var l,
             y = O.p(d),
             M = w(r),
@@ -319,31 +319,31 @@
             $ ? D : O.a(D)
           );
         }),
-        (m.daysInMonth = function() {
+        (m.daysInMonth = function () {
           return this.endOf(f).$D;
         }),
-        (m.$locale = function() {
+        (m.$locale = function () {
           return v[this.$L];
         }),
-        (m.locale = function(t, e) {
+        (m.locale = function (t, e) {
           if (!t) return this.$L;
           var n = this.clone(),
             r = S(t, e, !0);
           return r && (n.$L = r), n;
         }),
-        (m.clone = function() {
+        (m.clone = function () {
           return O.w(this.$d, this);
         }),
-        (m.toDate = function() {
+        (m.toDate = function () {
           return new Date(this.valueOf());
         }),
-        (m.toJSON = function() {
+        (m.toJSON = function () {
           return this.isValid() ? this.toISOString() : null;
         }),
-        (m.toISOString = function() {
+        (m.toISOString = function () {
           return this.$d.toISOString();
         }),
-        (m.toString = function() {
+        (m.toString = function () {
           return this.$d.toUTCString();
         }),
         M
@@ -361,17 +361,17 @@
       ['$M', f],
       ['$y', c],
       ['$D', d],
-    ].forEach(function(t) {
-      b[t[1]] = function(e) {
+    ].forEach(function (t) {
+      b[t[1]] = function (e) {
         return this.$g(e, t[0], t[1]);
       };
     }),
-    (w.extend = function(t, e) {
+    (w.extend = function (t, e) {
       return t.$i || (t(e, _, w), (t.$i = !0)), w;
     }),
     (w.locale = S),
     (w.isDayjs = p),
-    (w.unix = function(t) {
+    (w.unix = function (t) {
       return w(1e3 * t);
     }),
     (w.en = v[D]),

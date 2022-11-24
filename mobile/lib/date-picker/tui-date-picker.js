@@ -9,8 +9,8 @@
   else if (typeof define === 'function' && define.amd) define(['tui-time-picker'], factory);
   else if (typeof exports === 'object') exports['DatePicker'] = factory(require('tui-time-picker'));
   else (root['tui'] = root['tui'] || {}), (root['tui']['DatePicker'] = factory(root['tui']['TimePicker']));
-})(window, function(__WEBPACK_EXTERNAL_MODULE__43__) {
-  return /******/ (function(modules) {
+})(window, function (__WEBPACK_EXTERNAL_MODULE__43__) {
+  return /******/ (function (modules) {
     // webpackBootstrap
     /******/ // The module cache
     /******/ var installedModules = {}; // The require function
@@ -42,7 +42,7 @@
     /******/
     /******/ /******/ __webpack_require__.c = installedModules; // define getter function for harmony exports
     /******/
-    /******/ /******/ __webpack_require__.d = function(exports, name, getter) {
+    /******/ /******/ __webpack_require__.d = function (exports, name, getter) {
       /******/ if (!__webpack_require__.o(exports, name)) {
         /******/ Object.defineProperty(exports, name, { enumerable: true, get: getter });
         /******/
@@ -50,7 +50,7 @@
       /******/
     }; // define __esModule on exports
     /******/
-    /******/ /******/ __webpack_require__.r = function(exports) {
+    /******/ /******/ __webpack_require__.r = function (exports) {
       /******/ if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
         /******/ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
         /******/
@@ -59,7 +59,7 @@
       /******/
     }; // create a fake namespace object // mode & 1: value is a module id, require it // mode & 2: merge all properties of value into the ns // mode & 4: return value when already ns object // mode & 8|1: behave like require
     /******/
-    /******/ /******/ /******/ /******/ /******/ /******/ __webpack_require__.t = function(value, mode) {
+    /******/ /******/ /******/ /******/ /******/ /******/ __webpack_require__.t = function (value, mode) {
       /******/ if (mode & 1) value = __webpack_require__(value);
       /******/ if (mode & 8) return value;
       /******/ if (mode & 4 && typeof value === 'object' && value && value.__esModule) return value;
@@ -71,7 +71,7 @@
           __webpack_require__.d(
             ns,
             key,
-            function(key) {
+            function (key) {
               return value[key];
             }.bind(null, key),
           );
@@ -79,7 +79,7 @@
       /******/
     }; // getDefaultExport function for compatibility with non-harmony modules
     /******/
-    /******/ /******/ __webpack_require__.n = function(module) {
+    /******/ /******/ __webpack_require__.n = function (module) {
       /******/ var getter =
         module && module.__esModule
           ? /******/ function getDefault() {
@@ -93,7 +93,7 @@
       /******/
     }; // Object.prototype.hasOwnProperty.call
     /******/
-    /******/ /******/ __webpack_require__.o = function(object, property) {
+    /******/ /******/ __webpack_require__.o = function (object, property) {
       return Object.prototype.hasOwnProperty.call(object, property);
     }; // __webpack_public_path__
     /******/
@@ -106,7 +106,7 @@
     /************************************************************************/
     /******/ [
       /* 0 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview
@@ -170,7 +170,7 @@
             parent = null;
           }
 
-          obj = props.init || function() {};
+          obj = props.init || function () {};
 
           if (parent) {
             inherit(obj, parent);
@@ -191,7 +191,7 @@
         /***/
       },
       /* 1 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Constants of date-picker
@@ -221,7 +221,7 @@
         /***/
       },
       /* 2 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Execute the provided callback once for each element present in the array(or Array-like object) in ascending order.
@@ -268,7 +268,7 @@
         /***/
       },
       /* 3 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /* eslint-disable complexity */
         /**
@@ -327,7 +327,7 @@
         /***/
       },
       /* 4 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Utils for Datepicker component
@@ -346,7 +346,7 @@
            * @param {Event} ev Event object
            * @returns {HTMLElement} An event target element
            */
-          getTarget: function(ev) {
+          getTarget: function (ev) {
             return ev.target || ev.srcElement;
           },
 
@@ -355,7 +355,7 @@
            * @param {HTMLElement|string} param HTMLElement or selector
            * @returns {HTMLElement} A matched element
            */
-          getElement: function(param) {
+          getElement: function (param) {
             return isHTMLNode(param) ? param : document.querySelector(param);
           },
 
@@ -364,7 +364,7 @@
            * @param {HTMLElement} elem An element
            * @returns {string}
            */
-          getSelector: function(elem) {
+          getSelector: function (elem) {
             var selector = '';
             if (elem.id) {
               selector = '#' + elem.id;
@@ -379,7 +379,7 @@
            * Create an unique id.
            * @returns {number}
            */
-          generateId: function() {
+          generateId: function () {
             currentId += 1;
 
             return currentId;
@@ -391,10 +391,10 @@
            * @param {function} iteratee - iteratee callback function
            * @returns {Array}
            */
-          filter: function(arr, iteratee) {
+          filter: function (arr, iteratee) {
             var result = [];
 
-            forEachArray(arr, function(item) {
+            forEachArray(arr, function (item) {
               if (iteratee(item)) {
                 result.push(item);
               }
@@ -407,7 +407,7 @@
            * Send hostname for GA
            * @ignore
            */
-          sendHostName: function() {
+          sendHostName: function () {
             sendHostname('date-picker', 'UA-129987462-1');
           },
         };
@@ -417,7 +417,7 @@
         /***/
       },
       /* 5 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Utils for DatePicker component
@@ -445,7 +445,7 @@
            * @param {number} month A month
            * @returns {number} Weeks count (4~6)
            **/
-          getWeeksCount: function(year, month) {
+          getWeeksCount: function (year, month) {
             var firstDay = utils.getFirstDay(year, month),
               lastDate = utils.getLastDayInMonth(year, month);
 
@@ -456,7 +456,7 @@
            * @param {Date} date - Date instance
            * @returns {boolean}
            */
-          isValidDate: function(date) {
+          isValidDate: function (date) {
             return isDate(date) && !isNaN(date.getTime());
           },
 
@@ -466,7 +466,7 @@
            * @param {number} month A month
            * @returns {number} (0~6)
            */
-          getFirstDay: function(year, month) {
+          getFirstDay: function (year, month) {
             return new Date(year, month - 1, 1).getDay();
           },
 
@@ -476,7 +476,7 @@
            * @param {number} month A month
            * @returns {number} timestamp
            */
-          getFirstDayTimestamp: function(year, month) {
+          getFirstDayTimestamp: function (year, month) {
             return new Date(year, month, 1).getTime();
           },
 
@@ -486,7 +486,7 @@
            * @param {number} month A month
            * @returns {number} (1~31)
            */
-          getLastDayInMonth: function(year, month) {
+          getLastDayInMonth: function (year, month) {
             return new Date(year, month, 0).getDate();
           },
 
@@ -499,7 +499,7 @@
            *  dateUtil.prependLeadingZero(9); //  '09'
            *  dateUtil.prependLeadingZero(12); //  '12'
            */
-          prependLeadingZero: function(number) {
+          prependLeadingZero: function (number) {
             var prefix = '';
 
             if (number < 10) {
@@ -514,7 +514,7 @@
            * @param {number} hour - Original hour
            * @returns {number} Converted meridiem hour
            */
-          getMeridiemHour: function(hour) {
+          getMeridiemHour: function (hour) {
             hour %= 12;
 
             if (hour === 0) {
@@ -531,7 +531,7 @@
            * @throws Will throw an error if the defaultNumber is invalid.
            * @returns {number}
            */
-          getSafeNumber: function(any, defaultNumber) {
+          getSafeNumber: function (any, defaultNumber) {
             if (isNaN(defaultNumber) || !isNumber(defaultNumber)) {
               throw Error('The defaultNumber must be a valid number.');
             }
@@ -550,7 +550,7 @@
            * @param {number} dayNumber - Day number (0: sunday, 1: monday, ....)
            * @returns {number}
            */
-          getDateOfWeek: function(year, month, weekNumber, dayNumber) {
+          getDateOfWeek: function (year, month, weekNumber, dayNumber) {
             var firstDayOfMonth = new Date(year, month - 1).getDay();
             var dateOffset = firstDayOfMonth - dayNumber - 1;
 
@@ -563,7 +563,7 @@
            * @param {number} end - End value
            * @returns {Array}
            */
-          getRangeArr: function(start, end) {
+          getRangeArr: function (start, end) {
             var arr = [];
             var i;
 
@@ -587,7 +587,7 @@
            * @throws {Error}
            * @returns {Date}
            */
-          cloneWithStartOf: function(date, type) {
+          cloneWithStartOf: function (date, type) {
             type = type || TYPE_DATE;
             date = new Date(date);
 
@@ -617,7 +617,7 @@
            * @throws {Error}
            * @returns {Date}
            */
-          cloneWithEndOf: function(date, type) {
+          cloneWithEndOf: function (date, type) {
             type = type || TYPE_DATE;
             date = new Date(date);
 
@@ -647,7 +647,7 @@
            * @param {string} [cmpLevel] - Comparing level
            * @returns {number}
            */
-          compare: function(dateA, dateB, cmpLevel) {
+          compare: function (dateA, dateB, cmpLevel) {
             var aTimestamp, bTimestamp;
 
             if (!(utils.isValidDate(dateA) && utils.isValidDate(dateB))) {
@@ -676,7 +676,7 @@
            * @param {string} [cmpLevel] - Comparing level
            * @returns {boolean}
            */
-          isSame: function(dateA, dateB, cmpLevel) {
+          isSame: function (dateA, dateB, cmpLevel) {
             return utils.compare(dateA, dateB, cmpLevel) === 0;
           },
 
@@ -688,7 +688,7 @@
            * @param {string} [cmpLevel = TYPE_DATE] - Comparing level
            * @returns {boolean}
            */
-          inRange: function(start, end, target, cmpLevel) {
+          inRange: function (start, end, target, cmpLevel) {
             return utils.compare(start, target, cmpLevel) < 1 && utils.compare(end, target, cmpLevel) > -1;
           },
         };
@@ -698,7 +698,7 @@
         /***/
       },
       /* 6 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is an instance of Array or not.
@@ -721,7 +721,7 @@
         /***/
       },
       /* 7 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Extend the target object from other objects.
@@ -761,7 +761,7 @@
         /***/
       },
       /* 8 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview This module provides some functions for custom events. And it is implemented in the observer design pattern.
@@ -814,7 +814,7 @@
          * model.fire('change');
          * alert(model.name); // 'model';
          */
-        CustomEvents.mixin = function(func) {
+        CustomEvents.mixin = function (func) {
           extend(func.prototype, CustomEvents.prototype);
         };
 
@@ -825,7 +825,7 @@
          * @returns {HandlerItem} HandlerItem object
          * @private
          */
-        CustomEvents.prototype._getHandlerItem = function(handler, context) {
+        CustomEvents.prototype._getHandlerItem = function (handler, context) {
           var item = { handler: handler };
 
           if (context) {
@@ -842,7 +842,7 @@
          *  parameter then make new array and return it
          * @private
          */
-        CustomEvents.prototype._safeEvent = function(eventName) {
+        CustomEvents.prototype._safeEvent = function (eventName) {
           var events = this.events;
           var byName;
 
@@ -869,7 +869,7 @@
          * @returns {array} context array
          * @private
          */
-        CustomEvents.prototype._safeContext = function() {
+        CustomEvents.prototype._safeContext = function () {
           var context = this.contexts;
 
           if (!context) {
@@ -885,7 +885,7 @@
          * @returns {number} index of context
          * @private
          */
-        CustomEvents.prototype._indexOfContext = function(ctx) {
+        CustomEvents.prototype._indexOfContext = function (ctx) {
           var context = this._safeContext();
           var index = 0;
 
@@ -906,7 +906,7 @@
          * @param {object} ctx - context object to memorize
          * @private
          */
-        CustomEvents.prototype._memorizeContext = function(ctx) {
+        CustomEvents.prototype._memorizeContext = function (ctx) {
           var context, index;
 
           if (!isExisty(ctx)) {
@@ -928,7 +928,7 @@
          * @param {object} ctx - context object to forget
          * @private
          */
-        CustomEvents.prototype._forgetContext = function(ctx) {
+        CustomEvents.prototype._forgetContext = function (ctx) {
           var context, contextIndex;
 
           if (!isExisty(ctx)) {
@@ -955,7 +955,7 @@
          * @param {object} [context] - context for binding
          * @private
          */
-        CustomEvents.prototype._bindEvent = function(eventName, handler, context) {
+        CustomEvents.prototype._bindEvent = function (eventName, handler, context) {
           var events = this._safeEvent(eventName);
           this._memorizeContext(context);
           events.push(this._getHandlerItem(handler, context));
@@ -988,19 +988,19 @@
          *     'play': handler
          * }, myObj);
          */
-        CustomEvents.prototype.on = function(eventName, handler, context) {
+        CustomEvents.prototype.on = function (eventName, handler, context) {
           var self = this;
 
           if (isString(eventName)) {
             // [syntax 1, 2]
             eventName = eventName.split(R_EVENTNAME_SPLIT);
-            forEach(eventName, function(name) {
+            forEach(eventName, function (name) {
               self._bindEvent(name, handler, context);
             });
           } else if (isObject(eventName)) {
             // [syntax 3, 4]
             context = handler;
-            forEach(eventName, function(func, name) {
+            forEach(eventName, function (func, name) {
               self.on(name, func, context);
             });
           }
@@ -1013,12 +1013,12 @@
          * @param {function|object} [handler] - handler function or context
          * @param {object} [context] - context for binding
          */
-        CustomEvents.prototype.once = function(eventName, handler, context) {
+        CustomEvents.prototype.once = function (eventName, handler, context) {
           var self = this;
 
           if (isObject(eventName)) {
             context = handler;
-            forEach(eventName, function(func, name) {
+            forEach(eventName, function (func, name) {
               self.once(name, func, context);
             });
 
@@ -1040,7 +1040,7 @@
          * @param {function} predicate - function return boolean
          * @private
          */
-        CustomEvents.prototype._spliceMatches = function(arr, predicate) {
+        CustomEvents.prototype._spliceMatches = function (arr, predicate) {
           var i = 0;
           var len;
 
@@ -1063,10 +1063,10 @@
          * @returns {function} handler matcher
          * @private
          */
-        CustomEvents.prototype._matchHandler = function(handler) {
+        CustomEvents.prototype._matchHandler = function (handler) {
           var self = this;
 
-          return function(item) {
+          return function (item) {
             var needRemove = handler === item.handler;
 
             if (needRemove) {
@@ -1083,10 +1083,10 @@
          * @returns {function} object matcher
          * @private
          */
-        CustomEvents.prototype._matchContext = function(context) {
+        CustomEvents.prototype._matchContext = function (context) {
           var self = this;
 
-          return function(item) {
+          return function (item) {
             var needRemove = context === item.context;
 
             if (needRemove) {
@@ -1104,10 +1104,10 @@
          * @returns {function} handler, context matcher
          * @private
          */
-        CustomEvents.prototype._matchHandlerAndContext = function(handler, context) {
+        CustomEvents.prototype._matchHandlerAndContext = function (handler, context) {
           var self = this;
 
-          return function(item) {
+          return function (item) {
             var matchHandler = handler === item.handler;
             var matchContext = context === item.context;
             var needRemove = matchHandler && matchContext;
@@ -1126,20 +1126,20 @@
          * @param {function} [handler] - handler function
          * @private
          */
-        CustomEvents.prototype._offByEventName = function(eventName, handler) {
+        CustomEvents.prototype._offByEventName = function (eventName, handler) {
           var self = this;
           var andByHandler = isFunction(handler);
           var matchHandler = self._matchHandler(handler);
 
           eventName = eventName.split(R_EVENTNAME_SPLIT);
 
-          forEach(eventName, function(name) {
+          forEach(eventName, function (name) {
             var handlerItems = self._safeEvent(name);
 
             if (andByHandler) {
               self._spliceMatches(handlerItems, matchHandler);
             } else {
-              forEach(handlerItems, function(item) {
+              forEach(handlerItems, function (item) {
                 self._forgetContext(item.context);
               });
 
@@ -1153,11 +1153,11 @@
          * @param {function} handler - handler function
          * @private
          */
-        CustomEvents.prototype._offByHandler = function(handler) {
+        CustomEvents.prototype._offByHandler = function (handler) {
           var self = this;
           var matchHandler = this._matchHandler(handler);
 
-          forEach(this._safeEvent(), function(handlerItems) {
+          forEach(this._safeEvent(), function (handlerItems) {
             self._spliceMatches(handlerItems, matchHandler);
           });
         };
@@ -1168,12 +1168,12 @@
          * @param {function} handler - handler function
          * @private
          */
-        CustomEvents.prototype._offByObject = function(obj, handler) {
+        CustomEvents.prototype._offByObject = function (obj, handler) {
           var self = this;
           var matchFunc;
 
           if (this._indexOfContext(obj) < 0) {
-            forEach(obj, function(func, name) {
+            forEach(obj, function (func, name) {
               self.off(name, func);
             });
           } else if (isString(handler)) {
@@ -1183,13 +1183,13 @@
           } else if (isFunction(handler)) {
             matchFunc = this._matchHandlerAndContext(handler, obj);
 
-            forEach(this._safeEvent(), function(handlerItems) {
+            forEach(this._safeEvent(), function (handlerItems) {
               self._spliceMatches(handlerItems, matchFunc);
             });
           } else {
             matchFunc = this._matchContext(obj);
 
-            forEach(this._safeEvent(), function(handlerItems) {
+            forEach(this._safeEvent(), function (handlerItems) {
               self._spliceMatches(handlerItems, matchFunc);
             });
           }
@@ -1232,7 +1232,7 @@
          * // # 2.8 off the all events
          * CustomEvents.off();
          */
-        CustomEvents.prototype.off = function(eventName, handler) {
+        CustomEvents.prototype.off = function (eventName, handler) {
           if (isString(eventName)) {
             // [syntax 1, 2]
             this._offByEventName(eventName, handler);
@@ -1253,7 +1253,7 @@
          * Fire custom event
          * @param {string} eventName - name of custom event
          */
-        CustomEvents.prototype.fire = function(eventName) {
+        CustomEvents.prototype.fire = function (eventName) {
           // eslint-disable-line
           this.invoke.apply(this, arguments);
         };
@@ -1286,7 +1286,7 @@
          *     // doSomething
          * }
          */
-        CustomEvents.prototype.invoke = function(eventName) {
+        CustomEvents.prototype.invoke = function (eventName) {
           var events, args, index, item;
 
           if (!this.hasListener(eventName)) {
@@ -1316,7 +1316,7 @@
          * @param {string} eventName - Custom event name
          * @returns {boolean} Is there at least one handler in event name?
          */
-        CustomEvents.prototype.hasListener = function(eventName) {
+        CustomEvents.prototype.hasListener = function (eventName) {
           return this.getListenerLength(eventName) > 0;
         };
 
@@ -1325,7 +1325,7 @@
          * @param {string} eventName - Custom event name
          * @returns {number} number of event
          */
-        CustomEvents.prototype.getListenerLength = function(eventName) {
+        CustomEvents.prototype.getListenerLength = function (eventName) {
           var events = this._safeEvent(eventName);
 
           return events.length;
@@ -1336,7 +1336,7 @@
         /***/
       },
       /* 9 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Execute the provided callback once for each property of object(or element of array) which actually exist.
@@ -1392,7 +1392,7 @@
         /***/
       },
       /* 10 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Default locale texts
@@ -1442,7 +1442,7 @@
         /***/
       },
       /* 11 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Convert text by binding expressions with context.
@@ -1481,14 +1481,14 @@
          * @param {RegExp} regexp - regular expression
          * @returns {Array.<string>}
          */
-        var splitByRegExp = (function() {
+        var splitByRegExp = (function () {
           if (isValidSplit) {
-            return function(text, regexp) {
+            return function (text, regexp) {
               return text.split(regexp);
             };
           }
 
-          return function(text, regexp) {
+          return function (text, regexp) {
             var result = [];
             var prevIndex = 0;
             var match, index;
@@ -1556,7 +1556,7 @@
           var start = 0;
 
           // eslint-disable-next-line complexity
-          forEach(sourcesInsideBlock, function(source, index) {
+          forEach(sourcesInsideBlock, function (source, index) {
             if (source.indexOf('if') === 0) {
               otherIfCount += 1;
             } else if (source === '/if') {
@@ -1589,7 +1589,7 @@
           var result = false;
           var compiledSource = '';
 
-          forEach(analyzed.exps, function(exp, index) {
+          forEach(analyzed.exps, function (exp, index) {
             result = handleExpression(exp, context);
             if (result) {
               compiledSource = compile(analyzed.sourcesInsideIf[index], context);
@@ -1615,7 +1615,7 @@
           var additionalContext = {};
           var result = '';
 
-          forEach(collection, function(item, key) {
+          forEach(collection, function (item, key) {
             additionalContext[additionalKey] = key;
             additionalContext['@this'] = item;
             extend(context, additionalContext);
@@ -1729,7 +1729,7 @@
          */
         function executeFunction(helper, argExps, context) {
           var args = [];
-          forEach(argExps, function(exp) {
+          forEach(argExps, function (exp) {
             args.push(getValueFromContext(exp, context));
           });
 
@@ -1830,7 +1830,7 @@
         /***/
       },
       /* 12 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is undefined or not.
@@ -1853,7 +1853,7 @@
         /***/
       },
       /* 13 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is a string or not.
@@ -1876,7 +1876,7 @@
         /***/
       },
       /* 14 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Remove element from parent node.
@@ -1899,7 +1899,7 @@
         /***/
       },
       /* 15 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is a number or not.
@@ -1922,7 +1922,7 @@
         /***/
       },
       /* 16 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Add css class to element
@@ -1952,7 +1952,7 @@
           var origin;
 
           if (classList) {
-            forEach(cssClass, function(name) {
+            forEach(cssClass, function (name) {
               element.classList.add(name);
             });
 
@@ -1965,7 +1965,7 @@
             cssClass = [].concat(origin.split(/\s+/), cssClass);
           }
 
-          forEach(cssClass, function(cls) {
+          forEach(cssClass, function (cls) {
             if (inArray(cls, newClass) < 0) {
               newClass.push(cls);
             }
@@ -1979,7 +1979,7 @@
         /***/
       },
       /* 17 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Get HTML element's design classes.
@@ -2011,7 +2011,7 @@
         /***/
       },
       /* 18 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Remove css class from element
@@ -2035,7 +2035,7 @@
           var origin, newClass;
 
           if (classList) {
-            forEachArray(cssClass, function(name) {
+            forEachArray(cssClass, function (name) {
               classList.remove(name);
             });
 
@@ -2044,7 +2044,7 @@
 
           origin = getClass(element).split(/\s+/);
           newClass = [];
-          forEachArray(origin, function(name) {
+          forEachArray(origin, function (name) {
             if (inArray(name, cssClass) < 0) {
               newClass.push(name);
             }
@@ -2058,7 +2058,7 @@
         /***/
       },
       /* 19 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Set mouse-touch event
@@ -2074,7 +2074,7 @@
            * @type {boolean} Whether using Mobile browser
            * @private
            */
-          _isMobile: (function() {
+          _isMobile: (function () {
             return /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
           })(),
 
@@ -2084,7 +2084,7 @@
            * @returns {string}
            * @private
            */
-          _getEventType: function(type) {
+          _getEventType: function (type) {
             if (this._isMobile) {
               if (type === 'mousedown') {
                 type = 'touchstart';
@@ -2103,7 +2103,7 @@
            * @param {Function} handler A handler function
            * @param {object} [context] A context for handler.
            */
-          on: function(element, type, handler, context) {
+          on: function (element, type, handler, context) {
             on(element, this._getEventType(type), handler, context);
           },
 
@@ -2113,7 +2113,7 @@
            * @param {string} type A mouse event type - mousedown, click
            * @param {Function} handler - Handler
            */
-          off: function(element, type, handler) {
+          off: function (element, type, handler) {
             off(element, this._getEventType(type), handler);
           },
         };
@@ -2123,7 +2123,7 @@
         /***/
       },
       /* 20 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Layer base
@@ -2145,7 +2145,7 @@
          */
         var LayerBase = defineClass(
           /** @lends LayerBase.prototype */ {
-            init: function(language) {
+            init: function (language) {
               language = language || DEFAULT_LANGUAGE_TYPE;
 
               /**
@@ -2177,7 +2177,7 @@
              * @returns {object}
              * @private
              */
-            _makeContext: function() {
+            _makeContext: function () {
               throwOverrideError(this.getType(), '_makeContext');
             },
 
@@ -2186,7 +2186,7 @@
              * @abstract
              * @throws {Error}
              */
-            render: function() {
+            render: function () {
               throwOverrideError(this.getType(), 'render');
             },
 
@@ -2196,7 +2196,7 @@
              * @throws {Error}
              * @returns {HTMLElement[]}
              */
-            getDateElements: function() {
+            getDateElements: function () {
               throwOverrideError(this.getType(), 'getDateElements');
             },
 
@@ -2204,7 +2204,7 @@
              * Returns layer type
              * @returns {string}
              */
-            getType: function() {
+            getType: function () {
               return this._type;
             },
 
@@ -2212,14 +2212,14 @@
              * Set language
              * @param {string} language - Language name
              */
-            changeLanguage: function(language) {
+            changeLanguage: function (language) {
               this._localeText = localeText[language];
             },
 
             /**
              * Remove elements
              */
-            remove: function() {
+            remove: function () {
               if (this._element) {
                 removeElement(this._element);
               }
@@ -2244,7 +2244,7 @@
         /***/
       },
       /* 21 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview DatePicker component
@@ -2308,7 +2308,7 @@
          * @param {object} option - DatePicker option
          * @returns {object}
          */
-        var mergeDefaultOption = function(option) {
+        var mergeDefaultOption = function (option) {
           option = extend(
             {
               language: DEFAULT_LANGUAGE_TYPE,
@@ -2446,7 +2446,7 @@
                */
               localeTexts: localeTexts,
             },
-            init: function(container, options) {
+            init: function (container, options) {
               options = mergeDefaultOption(options);
 
               /**
@@ -2563,7 +2563,7 @@
              * @param {Object} option - user option
              * @private
              */
-            _initializeDatePicker: function(option) {
+            _initializeDatePicker: function (option) {
               this.setRanges(option.selectableRanges);
               this._setEvents();
               this._initTimePicker(option.timePicker, option.usageStatistics);
@@ -2586,7 +2586,7 @@
              * @param {object} option - Constructor option
              * @private
              */
-            _setEvents: function() {
+            _setEvents: function () {
               mouseTouchEvent.on(this._element, 'click', this._onClickHandler, this);
               this._calendar.on('draw', this._onDrawCalendar, this);
             },
@@ -2595,7 +2595,7 @@
              * Remove events on the date picker's element
              * @private
              */
-            _removeEvents: function() {
+            _removeEvents: function () {
               mouseTouchEvent.off(this._element, 'click', this._onClickHandler, this);
               this._calendar.off();
             },
@@ -2604,7 +2604,7 @@
              * Set events on the document
              * @private
              */
-            _setDocumentEvents: function() {
+            _setDocumentEvents: function () {
               mouseTouchEvent.on(document, 'mousedown', this._onMousedownDocument, this);
             },
 
@@ -2612,7 +2612,7 @@
              * Remove events on the document
              * @private
              */
-            _removeDocumentEvents: function() {
+            _removeDocumentEvents: function () {
               mouseTouchEvent.off(document, 'mousedown', this._onMousedownDocument);
             },
 
@@ -2621,7 +2621,7 @@
              * @param {HTMLElement} opener An opener to bind the events
              * @private
              */
-            _setOpenerEvents: function(opener) {
+            _setOpenerEvents: function (opener) {
               mouseTouchEvent.on(opener, 'click', this.toggle, this);
             },
 
@@ -2630,7 +2630,7 @@
              * @param {HTMLElement} opener An opener to unbind the events
              * @private
              */
-            _removeOpenerEvents: function(opener) {
+            _removeOpenerEvents: function (opener) {
               mouseTouchEvent.off(opener, 'click', this.toggle);
             },
 
@@ -2640,7 +2640,7 @@
              * @param {boolean} usageStatistics - GA tracking options
              * @private
              */
-            _initTimePicker: function(opTimePicker, usageStatistics) {
+            _initTimePicker: function (opTimePicker, usageStatistics) {
               var layoutType;
               if (!opTimePicker) {
                 return;
@@ -2667,7 +2667,7 @@
 
               this._timePicker.on(
                 'change',
-                function(ev) {
+                function (ev) {
                   var prevDate;
                   if (this._date) {
                     prevDate = new Date(this._date);
@@ -2683,7 +2683,7 @@
              * @param {HTMLElement} target A target element
              * @private
              */
-            _changePicker: function(target) {
+            _changePicker: function (target) {
               var btnSelector = '.' + CLASS_NAME_SELECTOR_BUTTON;
               var selectedBtn = closest(target, btnSelector);
               var isDateElement = !!selectedBtn.querySelector(SELECTOR_DATE_ICO);
@@ -2705,7 +2705,7 @@
              * @returns {boolean}
              * @private
              */
-            _isOpener: function(element) {
+            _isOpener: function (element) {
               var el = util.getElement(element);
 
               return inArray(el, this._openers) > -1;
@@ -2716,7 +2716,7 @@
              * @param {HTMLElement} el - date element
              * @private
              */
-            _setTodayClassName: function(el) {
+            _setTodayClassName: function (el) {
               var timestamp, isToday;
 
               if (this.getCalendarType() !== TYPE_DATE) {
@@ -2738,7 +2738,7 @@
              * @param {HTMLElement} el - date element
              * @private
              */
-            _setSelectableClassName: function(el) {
+            _setSelectableClassName: function (el) {
               var elDate = new Date(Number(getData(el, 'timestamp')));
 
               if (this._isSelectableOnCalendar(elDate)) {
@@ -2755,7 +2755,7 @@
              * @param {HTMLElement} el - date element
              * @private
              */
-            _setSelectedClassName: function(el) {
+            _setSelectedClassName: function (el) {
               var elDate = new Date(Number(getData(el, 'timestamp')));
 
               if (this._isSelectedOnCalendar(elDate)) {
@@ -2771,7 +2771,7 @@
              * @returns {boolean}
              * @private
              */
-            _isSelectableOnCalendar: function(date) {
+            _isSelectableOnCalendar: function (date) {
               var type = this.getCalendarType();
               var start = dateUtil.cloneWithStartOf(date, type).getTime();
               var end = dateUtil.cloneWithEndOf(date, type).getTime();
@@ -2785,7 +2785,7 @@
              * @returns {boolean}
              * @private
              */
-            _isSelectedOnCalendar: function(date) {
+            _isSelectedOnCalendar: function (date) {
               var curDate = this.getDate();
               var calendarType = this.getCalendarType();
 
@@ -2796,7 +2796,7 @@
              * Show the date picker element
              * @private
              */
-            _show: function() {
+            _show: function () {
               removeClass(this._element, CLASS_NAME_HIDDEN);
             },
 
@@ -2804,7 +2804,7 @@
              * Hide the date picker element
              * @private
              */
-            _hide: function() {
+            _hide: function () {
               addClass(this._element, CLASS_NAME_HIDDEN);
             },
 
@@ -2812,7 +2812,7 @@
              * Set value a date-string of current this instance to input element
              * @private
              */
-            _syncToInput: function() {
+            _syncToInput: function () {
               if (!this._date) {
                 return;
               }
@@ -2825,7 +2825,7 @@
              * @param {boolean} [shouldRollback = false] - Should rollback from unselectable or error
              * @private
              */
-            _syncFromInput: function(shouldRollback) {
+            _syncFromInput: function (shouldRollback) {
               var isFailed = false;
               var date;
 
@@ -2863,7 +2863,7 @@
              * @param {Event} ev - Event object
              * @private
              */
-            _onMousedownDocument: function(ev) {
+            _onMousedownDocument: function (ev) {
               var target = util.getTarget(ev);
               var selector = util.getSelector(target);
               var isContain = selector ? this._element.querySelector(selector) : false;
@@ -2881,7 +2881,7 @@
              * @param {Event} ev An event object
              * @private
              */
-            _onClickHandler: function(ev) {
+            _onClickHandler: function (ev) {
               var target = util.getTarget(ev);
 
               if (closest(target, '.' + CLASS_NAME_SELECTABLE)) {
@@ -2898,7 +2898,7 @@
              * @param {HTMLElement} target An event target element
              * @private
              */
-            _updateDate: function(target) {
+            _updateDate: function (target) {
               var timestamp = Number(getData(target, 'timestamp'));
               var newDate = new Date(timestamp);
               var timePicker = this._timePicker;
@@ -2928,10 +2928,10 @@
              * @see {@link Calendar#draw}
              * @private
              */
-            _onDrawCalendar: function(eventData) {
+            _onDrawCalendar: function (eventData) {
               forEachArray(
                 eventData.dateElements,
-                function(el) {
+                function (el) {
                   this._setTodayClassName(el);
                   this._setSelectableClassName(el);
                   this._setSelectedClassName(el);
@@ -2966,7 +2966,7 @@
              * @see Don't save buttons reference. The buttons are rerendered every "calendar.draw".
              * @private
              */
-            _setDisplayHeadButtons: function() {
+            _setDisplayHeadButtons: function () {
               var nextYearDate = this._calendar.getNextYearDate();
               var prevYearDate = this._calendar.getPrevYearDate();
               var maxTimestamp = this._rangeModel.getMaximumValue();
@@ -3002,7 +3002,7 @@
              * @param {boolean} shouldShow - Condition
              * @private
              */
-            _setDisplay: function(el, shouldShow) {
+            _setDisplay: function (el, shouldShow) {
               if (el) {
                 if (shouldShow) {
                   removeClass(el, CLASS_NAME_HIDDEN);
@@ -3017,7 +3017,7 @@
              * @private
              * @throws {Error}
              */
-            _onChangeInput: function() {
+            _onChangeInput: function () {
               this._syncFromInput(true);
             },
 
@@ -3027,7 +3027,7 @@
              * @returns {boolean}
              * @private
              */
-            _isChanged: function(date) {
+            _isChanged: function (date) {
               var prevDate = this.getDate();
 
               return !prevDate || date.getTime() !== prevDate.getTime();
@@ -3037,7 +3037,7 @@
              * Refresh datepicker
              * @private
              */
-            _refreshFromRanges: function() {
+            _refreshFromRanges: function () {
               if (!this.isSelectable(this._date)) {
                 this.setNull();
               } else {
@@ -3049,7 +3049,7 @@
              * Return the current calendar's type.
              * @returns {('date'|'month'|'year')}
              */
-            getCalendarType: function() {
+            getCalendarType: function () {
               return this._calendar.getType();
             },
 
@@ -3057,7 +3057,7 @@
              * Return the date picker's type.
              * @returns {('date'|'month'|'year')}
              */
-            getType: function() {
+            getType: function () {
               return this._type;
             },
 
@@ -3066,7 +3066,7 @@
              * @param {Date} date - Date to check
              * @returns {boolean}
              */
-            isSelectable: function(date) {
+            isSelectable: function (date) {
               var type = this.getType();
               var start, end;
 
@@ -3084,7 +3084,7 @@
              * @param {Date} date - Date to check
              * @returns {boolean}
              */
-            isSelected: function(date) {
+            isSelected: function (date) {
               return dateUtil.isValidDate(date) && dateUtil.isSame(this._date, date, this.getType());
             },
 
@@ -3097,9 +3097,9 @@
              *     [new Date(2015, 2, 3), new Date(2016, 4, 2)]
              * ]);
              */
-            setRanges: function(ranges) {
+            setRanges: function (ranges) {
               var result = [];
-              forEachArray(ranges, function(range) {
+              forEachArray(ranges, function (range) {
                 var start = new Date(range[0]).getTime();
                 var end = new Date(range[1]).getTime();
 
@@ -3116,7 +3116,7 @@
              * @example
              * datepicker.setType('month');
              */
-            setType: function(type) {
+            setType: function (type) {
               this._type = type;
             },
 
@@ -3130,7 +3130,7 @@
              *
              * datepicker.addRange(start, end);
              */
-            addRange: function(start, end) {
+            addRange: function (start, end) {
               start = new Date(start).getTime();
               end = new Date(end).getTime();
 
@@ -3149,7 +3149,7 @@
              *
              * datepicker.removeRange(start, end);
              */
-            removeRange: function(start, end, type) {
+            removeRange: function (start, end, type) {
               start = new Date(start);
               end = new Date(end);
 
@@ -3167,7 +3167,7 @@
              * Add an opener.
              * @param {HTMLElement|string} opener - element or selector of opener
              */
-            addOpener: function(opener) {
+            addOpener: function (opener) {
               opener = util.getElement(opener);
 
               if (!this._isOpener(opener)) {
@@ -3180,7 +3180,7 @@
              * Remove an opener.
              * @param {HTMLElement|string} opener - element or selector of opener
              */
-            removeOpener: function(opener) {
+            removeOpener: function (opener) {
               var index;
 
               opener = util.getElement(opener);
@@ -3195,10 +3195,10 @@
             /**
              * Remove all openers.
              */
-            removeAllOpeners: function() {
+            removeAllOpeners: function () {
               forEachArray(
                 this._openers,
-                function(opener) {
+                function (opener) {
                   this._removeOpenerEvents(opener);
                 },
                 this,
@@ -3211,7 +3211,7 @@
              * @example
              * datepicker.open();
              */
-            open: function() {
+            open: function () {
               if (this.isOpened() || !this._isEnabled) {
                 return;
               }
@@ -3248,7 +3248,7 @@
              * Raise the calendar type. (date -> month -> year)
              * @param {Date} [date] - Date to set
              */
-            drawUpperCalendar: function(date) {
+            drawUpperCalendar: function (date) {
               var calendarType = this.getCalendarType();
 
               if (calendarType === TYPE_DATE) {
@@ -3268,7 +3268,7 @@
              * Lower the calendar type. (year -> month -> date)
              * @param {Date} [date] - Date to set
              */
-            drawLowerCalendar: function(date) {
+            drawLowerCalendar: function (date) {
               var calendarType = this.getCalendarType();
               var pickerType = this.getType();
               var isLast = calendarType === pickerType;
@@ -3295,7 +3295,7 @@
              * @exmaple
              * datepicker.close();
              */
-            close: function() {
+            close: function () {
               if (!this.isOpened()) {
                 return;
               }
@@ -3325,7 +3325,7 @@
              * @example
              * datepicker.toggle();
              */
-            toggle: function() {
+            toggle: function () {
               if (this.isOpened()) {
                 this.close();
               } else {
@@ -3340,7 +3340,7 @@
              * // 2015-04-13
              * datepicker.getDate(); // new Date(2015, 3, 13)
              */
-            getDate: function() {
+            getDate: function () {
               if (!this._date) {
                 return null;
               }
@@ -3355,7 +3355,7 @@
              * datepicker.setDate(new Date()); // Set today
              */
             // eslint-disable-next-line complexity
-            setDate: function(date) {
+            setDate: function (date) {
               var isValidInput, newDate, shouldUpdate;
 
               if (date === null) {
@@ -3399,7 +3399,7 @@
             /**
              * Set no date to be selected. (Selected date: null)
              */
-            setNull: function() {
+            setNull: function () {
               var calendarDate = this._calendar.getDate();
               var isChagned = this._date !== null;
 
@@ -3435,7 +3435,7 @@
              * datepicker.setDateFormat('yy/M/d');
              * datepicker.setDateFormat('yy/MM/dd');
              */
-            setDateFormat: function(format) {
+            setDateFormat: function (format) {
               this._datepickerInput.setFormat(format);
               this._syncToInput();
             },
@@ -3450,7 +3450,7 @@
              * datepicker.open();
              * datepicker.isOpened(); // true
              */
-            isOpened: function() {
+            isOpened: function () {
               return !hasClass(this._element, CLASS_NAME_HIDDEN);
             },
 
@@ -3461,7 +3461,7 @@
              * @example
              * const timePicker = this.getTimePicker();
              */
-            getTimePicker: function() {
+            getTimePicker: function () {
               return this._timePicker;
             },
 
@@ -3470,7 +3470,7 @@
              * @see {@link calendar Calendar}
              * @returns {Calendar}
              */
-            getCalendar: function() {
+            getCalendar: function () {
               return this._calendar;
             },
 
@@ -3479,7 +3479,7 @@
              * @see {@link DatePicker#localeTexts DatePicker.localeTexts}
              * @returns {object}
              */
-            getLocaleText: function() {
+            getLocaleText: function () {
               return localeTexts[this._language] || localeTexts[DEFAULT_LANGUAGE_TYPE];
             },
 
@@ -3490,7 +3490,7 @@
              * @param {string} [options.format = prevInput.format] - Format of the Date string in the input
              * @param {boolean} [options.syncFromInput = false] - Whether set the date from the input
              */
-            setInput: function(element, options) {
+            setInput: function (element, options) {
               var prev = this._datepickerInput;
               var localeText = this.getLocaleText();
               var prevFormat;
@@ -3525,7 +3525,7 @@
             /**
              * Enable the date picker.
              */
-            enable: function() {
+            enable: function () {
               if (this._isEnabled) {
                 return;
               }
@@ -3534,7 +3534,7 @@
 
               forEachArray(
                 this._openers,
-                function(opener) {
+                function (opener) {
                   opener.removeAttribute('disabled');
                   this._setOpenerEvents(opener);
                 },
@@ -3545,7 +3545,7 @@
             /**
              * Disable the date picker.
              */
-            disable: function() {
+            disable: function () {
               if (!this._isEnabled) {
                 return;
               }
@@ -3556,7 +3556,7 @@
 
               forEachArray(
                 this._openers,
-                function(opener) {
+                function (opener) {
                   opener.setAttribute('disabled', true);
                   this._removeOpenerEvents(opener);
                 },
@@ -3568,7 +3568,7 @@
              * Return whether the date picker is disabled
              * @returns {boolean}
              */
-            isDisabled: function() {
+            isDisabled: function () {
               // @todo this._isEnabled --> this._isDisabled
               return !this._isEnabled;
             },
@@ -3577,7 +3577,7 @@
              * Apply a CSS class to the date picker.
              * @param {string} className - Class name
              */
-            addCssClass: function(className) {
+            addCssClass: function (className) {
               addClass(this._element, className);
             },
 
@@ -3585,7 +3585,7 @@
              * Remove a CSS class from the date picker.
              * @param {string} className - Class name
              */
-            removeCssClass: function(className) {
+            removeCssClass: function (className) {
               removeClass(this._element, className);
             },
 
@@ -3593,7 +3593,7 @@
              * Return the date elements on the calendar.
              * @returns {HTMLElement[]}
              */
-            getDateElements: function() {
+            getDateElements: function () {
               return this._calendar.getDateElements();
             },
 
@@ -3603,7 +3603,7 @@
              * @param {Date|number} endDate - End date to find overlapped range
              * @returns {Array.<Date>} - \[startDate, endDate]
              */
-            findOverlappedRange: function(startDate, endDate) {
+            findOverlappedRange: function (startDate, endDate) {
               var startTimestamp = new Date(startDate).getTime();
               var endTimestamp = new Date(endDate).getTime();
               var overlappedRange = this._rangeModel.findOverlappedRange(startTimestamp, endTimestamp);
@@ -3616,7 +3616,7 @@
              * @param {string} language - Language code. English('en') and Korean('ko') are provided as default.
              * @see To set to the other languages, use {@link DatePicker#localeTexts DatePicker.localeTexts}.
              */
-            changeLanguage: function(language) {
+            changeLanguage: function (language) {
               this._language = language;
               this._calendar.changeLanguage(this._language);
               this._datepickerInput.changeLocaleTitles(this.getLocaleText().titles);
@@ -3630,7 +3630,7 @@
             /**
              * Destroy the date picker.
              */
-            destroy: function() {
+            destroy: function () {
               this._removeDocumentEvents();
               this._calendar.destroy();
               if (this._timePicker) {
@@ -3654,7 +3654,7 @@
         /***/
       },
       /* 22 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is an object or not.
@@ -3677,7 +3677,7 @@
         /***/
       },
       /* 23 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Execute the provided callback once for each property of object which actually exist.
@@ -3724,7 +3724,7 @@
         /***/
       },
       /* 24 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Set className value
@@ -3759,7 +3759,7 @@
         /***/
       },
       /* 25 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Find parent element recursively
@@ -3798,7 +3798,7 @@
         /***/
       },
       /* 26 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Get data value from data-attribute
@@ -3827,7 +3827,7 @@
         /***/
       },
       /* 27 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check element has specific css class
@@ -3861,7 +3861,7 @@
         /***/
       },
       /* 28 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is an instance of Date or not.
@@ -3884,7 +3884,7 @@
         /***/
       },
       /* 29 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Calendar component
@@ -3965,7 +3965,7 @@
             static: {
               localeTexts: localeTexts,
             },
-            init: function(container, options) {
+            init: function (container, options) {
               options = extend(
                 {
                   language: DEFAULT_LANGUAGE_TYPE,
@@ -4042,13 +4042,13 @@
              * @param {object} options - Header options
              * @private
              */
-            _initHeader: function(options) {
+            _initHeader: function (options) {
               var headerContainer = this._element.querySelector(HEADER_SELECTOR);
 
               this._header = new Header(headerContainer, options);
               this._header.on(
                 'click',
-                function(ev) {
+                function (ev) {
                   var target = util.getTarget(ev);
                   if (hasClass(target, CLASS_NAME_PREV_MONTH_BTN)) {
                     this.drawPrev();
@@ -4069,7 +4069,7 @@
              * @param {object} options - Body options
              * @private
              */
-            _initBody: function(options) {
+            _initBody: function (options) {
               var bodyContainer = this._element.querySelector(BODY_SELECTOR);
 
               this._body = new Body(bodyContainer, options);
@@ -4079,7 +4079,7 @@
              * clickHandler - prev year button
              * @private
              */
-            _onClickPrevYear: function() {
+            _onClickPrevYear: function () {
               if (this.getType() === TYPE_DATE) {
                 this.draw({
                   date: this._getRelativeDate(-12),
@@ -4093,7 +4093,7 @@
              * clickHandler - next year button
              * @private
              */
-            _onClickNextYear: function() {
+            _onClickNextYear: function () {
               if (this.getType() === TYPE_DATE) {
                 this.draw({
                   date: this._getRelativeDate(12),
@@ -4109,7 +4109,7 @@
              * @returns {boolean}
              * @private
              */
-            _isValidType: function(type) {
+            _isValidType: function (type) {
               return type === TYPE_DATE || type === TYPE_MONTH || type === TYPE_YEAR;
             },
 
@@ -4119,7 +4119,7 @@
              * @returns {boolean}
              * @private
              */
-            _shouldUpdate: function(date, type) {
+            _shouldUpdate: function (date, type) {
               var prevDate = this._date;
 
               if (!dateUtil.isValidDate(date)) {
@@ -4142,7 +4142,7 @@
              * Render header & body elements
              * @private
              */
-            _render: function() {
+            _render: function () {
               var date = this._date;
               var type = this.getType();
 
@@ -4168,7 +4168,7 @@
              * @returns {Date}
              * @private
              */
-            _getRelativeDate: function(step) {
+            _getRelativeDate: function (step) {
               var prev = this._date;
 
               return new Date(prev.getFullYear(), prev.getMonth() + step);
@@ -4192,7 +4192,7 @@
              *     date: new Date()
              * });
              */
-            draw: function(options) {
+            draw: function (options) {
               var date, type;
 
               options = options || {};
@@ -4233,21 +4233,21 @@
             /**
              * Show the calendar.
              */
-            show: function() {
+            show: function () {
               removeClass(this._element, CLASS_NAME_HIDDEN);
             },
 
             /**
              * Hide the calendar.
              */
-            hide: function() {
+            hide: function () {
               addClass(this._element, CLASS_NAME_HIDDEN);
             },
 
             /**
              * Draw the next page.
              */
-            drawNext: function() {
+            drawNext: function () {
               this.draw({
                 date: this.getNextDate(),
               });
@@ -4256,7 +4256,7 @@
             /**
              * Draw the previous page.
              */
-            drawPrev: function() {
+            drawPrev: function () {
               this.draw({
                 date: this.getPrevDate(),
               });
@@ -4266,7 +4266,7 @@
              * Return the next date.
              * @returns {Date}
              */
-            getNextDate: function() {
+            getNextDate: function () {
               if (this.getType() === TYPE_DATE) {
                 return this._getRelativeDate(1);
               }
@@ -4278,7 +4278,7 @@
              * Return the previous date.
              * @returns {Date}
              */
-            getPrevDate: function() {
+            getPrevDate: function () {
               if (this.getType() === TYPE_DATE) {
                 return this._getRelativeDate(-1);
               }
@@ -4290,7 +4290,7 @@
              * Return the date a year later.
              * @returns {Date}
              */
-            getNextYearDate: function() {
+            getNextYearDate: function () {
               switch (this.getType()) {
                 case TYPE_DATE:
                 case TYPE_MONTH:
@@ -4306,7 +4306,7 @@
              * Return the date a year previously.
              * @returns {Date}
              */
-            getPrevYearDate: function() {
+            getPrevYearDate: function () {
               switch (this.getType()) {
                 case TYPE_DATE:
                 case TYPE_MONTH:
@@ -4323,7 +4323,7 @@
              * @param {string} language - Language code. English('en') and Korean('ko') are provided as default.
              * @see To set to the other languages, use {@link DatePicker#localeTexts DatePicker.localeTexts}.
              */
-            changeLanguage: function(language) {
+            changeLanguage: function (language) {
               this._header.changeLanguage(language);
               this._body.changeLanguage(language);
               this._render();
@@ -4333,7 +4333,7 @@
              * Return the rendered date.
              * @returns {Date}
              */
-            getDate: function() {
+            getDate: function () {
               return new Date(this._date);
             },
 
@@ -4341,7 +4341,7 @@
              * Return the calendar's type.
              * @returns {('date'|'month'|'year')}
              */
-            getType: function() {
+            getType: function () {
               return this._type;
             },
 
@@ -4349,7 +4349,7 @@
              * Returns HTML elements for dates.
              * @returns {HTMLElement[]}
              */
-            getDateElements: function() {
+            getDateElements: function () {
               return this._body.getDateElements();
             },
 
@@ -4357,7 +4357,7 @@
              * Apply a CSS class to the calendar.
              * @param {string} className - Class name
              */
-            addCssClass: function(className) {
+            addCssClass: function (className) {
               addClass(this._element, className);
             },
 
@@ -4365,14 +4365,14 @@
              * Remove a CSS class from the calendar.
              * @param {string} className - Class name
              */
-            removeCssClass: function(className) {
+            removeCssClass: function (className) {
               removeClass(this._element, className);
             },
 
             /**
              * Destroy the calendar.
              */
-            destroy: function() {
+            destroy: function () {
               this._header.destroy();
               this._body.destroy();
               removeElement(this._element);
@@ -4388,7 +4388,7 @@
         /***/
       },
       /* 30 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Date <-> Text formatting module
@@ -4498,7 +4498,7 @@
          */
         var DateTimeFormatter = defineClass(
           /** @lends DateTimeFormatter.prototype */ {
-            init: function(rawStr, titles) {
+            init: function (rawStr, titles) {
               /**
                * @type {string}
                * @private
@@ -4534,16 +4534,16 @@
              * Parse initial format and make the keyOrder, regExp
              * @private
              */
-            _parseFormat: function() {
+            _parseFormat: function () {
               var regExpStr = '^';
               var matchedKeys = this._rawStr.match(rFormableKeys);
               var keyOrder = [];
 
-              matchedKeys = util.filter(matchedKeys, function(key) {
+              matchedKeys = util.filter(matchedKeys, function (key) {
                 return key[0] !== '\\';
               });
 
-              forEachArray(matchedKeys, function(key, index) {
+              forEachArray(matchedKeys, function (key, index) {
                 if (!/m/i.test(key)) {
                   key = key.toLowerCase();
                 }
@@ -4565,7 +4565,7 @@
              * @param {string} str - Date string
              * @returns {Date}
              */
-            parse: function(str) {
+            parse: function (str) {
               var dateHash = {
                 year: 0,
                 month: 1,
@@ -4585,7 +4585,7 @@
               }
 
               // eslint-disable-next-line complexity
-              forEachArray(this._keyOrder, function(name, index) {
+              forEachArray(this._keyOrder, function (name, index) {
                 var value = matched[index + 1];
 
                 if (name === constants.TYPE_MERIDIEM && /[ap]m/i.test(value)) {
@@ -4621,7 +4621,7 @@
              * Returns raw string of format
              * @returns {string}
              */
-            getRawString: function() {
+            getRawString: function () {
               return this._rawStr;
             },
 
@@ -4630,7 +4630,7 @@
              * @param {Date} dateObj - Date object
              * @returns {string}
              */
-            format: function(dateObj) {
+            format: function (dateObj) {
               var year = dateObj.getFullYear();
               var month = dateObj.getMonth() + 1;
               var dayInMonth = dateObj.getDate();
@@ -4664,7 +4664,7 @@
                 a: meridiem,
               };
 
-              return this._rawStr.replace(rFormableKeys, function(key) {
+              return this._rawStr.replace(rFormableKeys, function (key) {
                 if (key[0] === '\\') {
                   return key.substr(1);
                 }
@@ -4680,7 +4680,7 @@
         /***/
       },
       /* 31 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Bind DOM events
@@ -4726,14 +4726,14 @@
          */
         function on(element, types, handler, context) {
           if (isString(types)) {
-            forEach(types.split(/\s+/g), function(type) {
+            forEach(types.split(/\s+/g), function (type) {
               bindEvent(element, type, handler, context);
             });
 
             return;
           }
 
-          forEach(types, function(func, type) {
+          forEach(types, function (func, type) {
             bindEvent(element, type, func, handler);
           });
         }
@@ -4775,7 +4775,7 @@
           var events = safeEvent(element, type);
           var existInEvents = false;
 
-          forEach(events, function(obj) {
+          forEach(events, function (obj) {
             if (obj.handler === handler) {
               existInEvents = true;
 
@@ -4798,7 +4798,7 @@
         /***/
       },
       /* 32 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Get event collection for specific HTML element
@@ -4835,7 +4835,7 @@
         /***/
       },
       /* 33 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Unbind DOM events
@@ -4876,14 +4876,14 @@
          */
         function off(element, types, handler) {
           if (isString(types)) {
-            forEach(types.split(/\s+/g), function(type) {
+            forEach(types.split(/\s+/g), function (type) {
               unbindEvent(element, type, handler);
             });
 
             return;
           }
 
-          forEach(types, function(func, type) {
+          forEach(types, function (func, type) {
             unbindEvent(element, type, func);
           });
         }
@@ -4901,12 +4901,12 @@
           var index;
 
           if (!handler) {
-            forEach(events, function(item) {
+            forEach(events, function (item) {
               removeHandler(element, type, item.wrappedHandler);
             });
             events.splice(0, events.length);
           } else {
-            forEach(events, function(item, idx) {
+            forEach(events, function (item, idx) {
               if (handler === item.handler) {
                 removeHandler(element, type, item.wrappedHandler);
                 index = idx;
@@ -4940,7 +4940,7 @@
         /***/
       },
       /* 34 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview The entry file of DatePicker components
@@ -4970,7 +4970,7 @@
          *    type: 'date'
          * });
          */
-        DatePicker.createCalendar = function(wrapperElement, options) {
+        DatePicker.createCalendar = function (wrapperElement, options) {
           return new Calendar(wrapperElement, options);
         };
 
@@ -4999,7 +4999,7 @@
          *     ]
          * });
          */
-        DatePicker.createRangePicker = function(options) {
+        DatePicker.createRangePicker = function (options) {
           return new DateRangePicker(options);
         };
 
@@ -5008,7 +5008,7 @@
         /***/
       },
       /* 35 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Provide a simple inheritance in prototype-oriented.
@@ -5061,7 +5061,7 @@
         /***/
       },
       /* 36 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Create a new object with the specified prototype object and properties.
@@ -5090,7 +5090,7 @@
         /***/
       },
       /* 37 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is existing or not.
@@ -5125,7 +5125,7 @@
         /***/
       },
       /* 38 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is null or not.
@@ -5148,7 +5148,7 @@
         /***/
       },
       /* 39 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is a function or not.
@@ -5171,7 +5171,7 @@
         /***/
       },
       /* 40 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check element match selector
@@ -5187,7 +5187,7 @@
           elProto.webkitMatchesSelector ||
           elProto.mozMatchesSelector ||
           elProto.msMatchesSelector ||
-          function(selector) {
+          function (selector) {
             var doc = this.document || this.ownerDocument;
 
             return inArray(this, toArray(doc.querySelectorAll(selector))) > -1;
@@ -5209,7 +5209,7 @@
         /***/
       },
       /* 41 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Transform the Array-like object to Array.
@@ -5245,7 +5245,7 @@
             arr = Array.prototype.slice.call(arrayLike);
           } catch (e) {
             arr = [];
-            forEachArray(arrayLike, function(value) {
+            forEachArray(arrayLike, function (value) {
               arr.push(value);
             });
           }
@@ -5258,7 +5258,7 @@
         /***/
       },
       /* 42 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Convert kebab-case
@@ -5271,7 +5271,7 @@
          * @private
          */
         function convertToKebabCase(key) {
-          return key.replace(/([A-Z])/g, function(match) {
+          return key.replace(/([A-Z])/g, function (match) {
             return '-' + match.toLowerCase();
           });
         }
@@ -5281,13 +5281,13 @@
         /***/
       },
       /* 43 */
-      /***/ function(module, exports) {
+      /***/ function (module, exports) {
         module.exports = __WEBPACK_EXTERNAL_MODULE__43__;
 
         /***/
       },
       /* 44 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Calendar Header
@@ -5331,7 +5331,7 @@
          */
         var Header = defineClass(
           /** @lends Header.prototype */ {
-            init: function(container, option) {
+            init: function (container, option) {
               /**
                * Container element
                * @type {HTMLElement}
@@ -5396,7 +5396,7 @@
              * @param {object} localeText - Locale text
              * @private
              */
-            _setFormatters: function(localeText) {
+            _setFormatters: function (localeText) {
               this._yearMonthTitleFormatter = new DateTimeFormatter(localeText.titleFormat, localeText.titles);
               this._yearTitleFormatter = new DateTimeFormatter(YEAR_TITLE_FORMAT, localeText.titles);
               this._todayFormatter = new DateTimeFormatter(localeText.todayFormat, localeText.titles);
@@ -5406,14 +5406,14 @@
              * @param {object} option - Constructor option
              * @private
              */
-            _setEvents: function() {
+            _setEvents: function () {
               mouseTouchEvent.on(this._container, 'click', this._onClickHandler, this);
             },
 
             /**
              * @private
              */
-            _removeEvents: function() {
+            _removeEvents: function () {
               this.off();
               mouseTouchEvent.off(this._container, 'click', this._onClickHandler);
             },
@@ -5423,7 +5423,7 @@
              * @param {Event} ev An event object
              * @private
              */
-            _onClickHandler: function(ev) {
+            _onClickHandler: function (ev) {
               var target = util.getTarget(ev);
 
               if (closest(target, SELECTOR_BTN)) {
@@ -5436,7 +5436,7 @@
              * @returns {string}
              * @private
              */
-            _getTitleClass: function(type) {
+            _getTitleClass: function (type) {
               switch (type) {
                 case TYPE_DATE:
                   return CLASS_NAME_TITLE_MONTH;
@@ -5455,7 +5455,7 @@
              * @returns {string}
              * @private
              */
-            _getTitleText: function(date, type) {
+            _getTitleText: function (date, type) {
               var currentYear, start, end;
 
               switch (type) {
@@ -5478,7 +5478,7 @@
              * Change langauge
              * @param {string} language - Language
              */
-            changeLanguage: function(language) {
+            changeLanguage: function (language) {
               this._setFormatters(localeTexts[language]);
             },
 
@@ -5487,7 +5487,7 @@
              * @param {Date} date - date
              * @param {string} type - Calendar type
              */
-            render: function(date, type) {
+            render: function (date, type) {
               var context = {
                 showToday: this._showToday,
                 showJumpButtons: this._showJumpButtons,
@@ -5507,7 +5507,7 @@
             /**
              * Destroy header
              */
-            destroy: function() {
+            destroy: function () {
               this._removeEvents();
               removeElement(this._innerElement);
               removeElement(this._infoElement);
@@ -5522,12 +5522,12 @@
         /***/
       },
       /* 45 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
 
         var template = __webpack_require__(11);
 
-        module.exports = function(context) {
+        module.exports = function (context) {
           var source =
             '{{if isDateCalendar}}' +
             '  {{if showJumpButtons}}' +
@@ -5564,7 +5564,7 @@
         /***/
       },
       /* 46 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Check whether the given variable is a instance of HTMLNode or not.
@@ -5591,7 +5591,7 @@
         /***/
       },
       /* 47 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Send hostname on DOMContentLoaded.
@@ -5642,7 +5642,7 @@
 
           window.localStorage.setItem(applicationKeyForStorage, new Date().getTime());
 
-          setTimeout(function() {
+          setTimeout(function () {
             if (document.readyState === 'interactive' || document.readyState === 'complete') {
               imagePing(url, {
                 v: 1,
@@ -5663,7 +5663,7 @@
         /***/
       },
       /* 48 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Request image ping.
@@ -5697,7 +5697,7 @@
         function imagePing(url, trackingInfo) {
           var trackingElement = document.createElement('img');
           var queryString = '';
-          forEachOwnProperties(trackingInfo, function(value, key) {
+          forEachOwnProperties(trackingInfo, function (value, key) {
             queryString += '&' + key + '=' + value;
           });
           queryString = queryString.substring(1);
@@ -5716,7 +5716,7 @@
         /***/
       },
       /* 49 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Calendar body
@@ -5741,7 +5741,7 @@
          */
         var Body = defineClass(
           /** @lends Body.prototype */ {
-            init: function(bodyContainer, option) {
+            init: function (bodyContainer, option) {
               var language = option.language;
 
               /**
@@ -5786,7 +5786,7 @@
              * @returns {Base} - Layer
              * @private
              */
-            _getLayer: function(type) {
+            _getLayer: function (type) {
               switch (type) {
                 case TYPE_DATE:
                   return this._dateLayer;
@@ -5804,7 +5804,7 @@
              * @param {Function} fn - function
              * @private
              */
-            _eachLayer: function(fn) {
+            _eachLayer: function (fn) {
               forEachArray([this._dateLayer, this._monthLayer, this._yearLayer], fn);
             },
 
@@ -5812,8 +5812,8 @@
              * Change language
              * @param {string} language - Language
              */
-            changeLanguage: function(language) {
-              this._eachLayer(function(layer) {
+            changeLanguage: function (language) {
+              this._eachLayer(function (layer) {
                 layer.changeLanguage(language);
               });
             },
@@ -5823,7 +5823,7 @@
              * @param {Date} date - date
              * @param {string} type - Layer type
              */
-            render: function(date, type) {
+            render: function (date, type) {
               var nextLayer = this._getLayer(type);
               var prevLayer = this._currentLayer;
 
@@ -5837,15 +5837,15 @@
              * Returns date elements
              * @returns {HTMLElement[]}
              */
-            getDateElements: function() {
+            getDateElements: function () {
               return this._currentLayer.getDateElements();
             },
 
             /**
              * Destory
              */
-            destroy: function() {
-              this._eachLayer(function(layer) {
+            destroy: function () {
+              this._eachLayer(function (layer) {
                 layer.remove();
               });
 
@@ -5859,7 +5859,7 @@
         /***/
       },
       /* 50 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Date layer
@@ -5884,7 +5884,7 @@
         var DateLayer = defineClass(
           LayerBase,
           /** @lends DateLayer.prototype */ {
-            init: function(language) {
+            init: function (language) {
               LayerBase.call(this, language);
             },
 
@@ -5900,7 +5900,7 @@
              * @private
              * @returns {object} Template context
              */
-            _makeContext: function(date) {
+            _makeContext: function (date) {
               var daysShort = this._localeText.titles.D;
               var year, month;
 
@@ -5929,7 +5929,7 @@
              * @returns {Array.<Array.<Date>>}
              * @private
              */
-            _getWeeks: function(year, month) {
+            _getWeeks: function (year, month) {
               var weekNumber = 0;
               var weeksCount = 6; // Fix for no changing height
               var weeks = [];
@@ -5953,7 +5953,7 @@
              * @param {Array.<Date>} dates
              * @private
              */
-            _getWeek: function(currentYear, currentMonth, dates) {
+            _getWeek: function (currentYear, currentMonth, dates) {
               var firstDateOfCurrentMonth = new Date(currentYear, currentMonth - 1, 1);
               var lastDateOfCurrentMonth = new Date(currentYear, currentMonth, 0);
               var contexts = [];
@@ -5995,7 +5995,7 @@
              * @param {Date} date Date to render
              * @param {HTMLElement} container A container element for the rendered element
              */
-            render: function(date, container) {
+            render: function (date, container) {
               var context = this._makeContext(date);
 
               container.innerHTML = bodyTmpl(context);
@@ -6007,7 +6007,7 @@
              * @override
              * @returns {HTMLElement[]}
              */
-            getDateElements: function() {
+            getDateElements: function () {
               return this._element.querySelectorAll(DATE_SELECTOR);
             },
           },
@@ -6018,12 +6018,12 @@
         /***/
       },
       /* 51 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
 
         var template = __webpack_require__(11);
 
-        module.exports = function(context) {
+        module.exports = function (context) {
           var source =
             '<table class="tui-calendar-body-inner" cellspacing="0" cellpadding="0">' +
             '  <caption><span>Dates</span></caption>' +
@@ -6055,7 +6055,7 @@
         /***/
       },
       /* 52 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Month layer
@@ -6080,7 +6080,7 @@
         var MonthLayer = defineClass(
           LayerBase,
           /** @lends MonthLayer.prototype */ {
-            init: function(language) {
+            init: function (language) {
               LayerBase.call(this, language);
             },
 
@@ -6096,7 +6096,7 @@
              * @returns {object} Template context
              * @private
              */
-            _makeContext: function(date) {
+            _makeContext: function (date) {
               var monthsShort = this._localeText.titles.MMM;
 
               return {
@@ -6123,7 +6123,7 @@
              * @param {Date} date Date to render
              * @param {HTMLElement} container A container element for the rendered element
              */
-            render: function(date, container) {
+            render: function (date, container) {
               var context = this._makeContext(date);
 
               container.innerHTML = bodyTmpl(context);
@@ -6135,7 +6135,7 @@
              * @override
              * @returns {HTMLElement[]}
              */
-            getDateElements: function() {
+            getDateElements: function () {
               return this._element.querySelectorAll(DATE_SELECTOR);
             },
           },
@@ -6146,12 +6146,12 @@
         /***/
       },
       /* 53 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
 
         var template = __webpack_require__(11);
 
-        module.exports = function(context) {
+        module.exports = function (context) {
           var source =
             '<table class="tui-calendar-body-inner">' +
             '  <caption><span>Months</span></caption>' +
@@ -6183,7 +6183,7 @@
         /***/
       },
       /* 54 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Year layer
@@ -6208,7 +6208,7 @@
         var YearLayer = defineClass(
           LayerBase,
           /** @lends YearLayer.prototype */ {
-            init: function(language) {
+            init: function (language) {
               LayerBase.call(this, language);
             },
 
@@ -6224,7 +6224,7 @@
              * @returns {object} Template context
              * @private
              */
-            _makeContext: function(date) {
+            _makeContext: function (date) {
               var year = date.getFullYear();
 
               return {
@@ -6243,7 +6243,7 @@
              * @param {Date} date Date to render
              * @param {HTMLElement} container A container element for the rendered element
              */
-            render: function(date, container) {
+            render: function (date, container) {
               var context = this._makeContext(date);
 
               container.innerHTML = bodyTmpl(context);
@@ -6255,7 +6255,7 @@
              * @override
              * @returns {HTMLElement[]}
              */
-            getDateElements: function() {
+            getDateElements: function () {
               return this._element.querySelectorAll(DATE_SELECTOR);
             },
           },
@@ -6266,12 +6266,12 @@
         /***/
       },
       /* 55 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
 
         var template = __webpack_require__(11);
 
-        module.exports = function(context) {
+        module.exports = function (context) {
           var source =
             '<table class="tui-calendar-body-inner">' +
             '  <caption><span>Years</span></caption>' +
@@ -6294,7 +6294,7 @@
         /***/
       },
       /* 56 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview RangeModel
@@ -6315,7 +6315,7 @@
          */
         var RangeModel = defineClass(
           /** @lends RangeModel.prototype */ {
-            init: function(ranges) {
+            init: function (ranges) {
               ranges = ranges || [];
 
               /**
@@ -6326,7 +6326,7 @@
 
               forEachArray(
                 ranges,
-                function(range) {
+                function (range) {
                   this.add(range[0], range[1]);
                 },
                 this,
@@ -6339,7 +6339,7 @@
              * @param {number} [end] - End
              * @returns {boolean}
              */
-            contains: function(start, end) {
+            contains: function (start, end) {
               var i = 0;
               var length = this._ranges.length;
               var range;
@@ -6360,7 +6360,7 @@
              * @param {number} [end] - End
              * @returns {boolean}
              */
-            hasOverlap: function(start, end) {
+            hasOverlap: function (start, end) {
               var i = 0;
               var length = this._ranges.length;
               var range;
@@ -6380,7 +6380,7 @@
              * @param {number} start - Start
              * @param {number} [end] - End
              */
-            add: function(start, end) {
+            add: function (start, end) {
               var overlapped = false;
               var i = 0;
               var len = this._ranges.length;
@@ -6409,7 +6409,7 @@
              * Returns minimum value in ranges
              * @returns {number}
              */
-            getMinimumValue: function() {
+            getMinimumValue: function () {
               return this._ranges[0].start;
             },
 
@@ -6417,7 +6417,7 @@
              * Returns maximum value in ranges
              * @returns {number}
              */
-            getMaximumValue: function() {
+            getMaximumValue: function () {
               var length = this._ranges.length;
 
               return this._ranges[length - 1].end;
@@ -6427,14 +6427,14 @@
              * @param {number} start - Start
              * @param {number} [end] - End
              */
-            exclude: function(start, end) {
+            exclude: function (start, end) {
               if (!isNumber(end)) {
                 end = start;
               }
 
               forEachArray(
                 this._ranges,
-                function(range) {
+                function (range) {
                   var rangeEnd;
 
                   if (range.isOverlapped(start, end)) {
@@ -6450,7 +6450,7 @@
               );
 
               // Reduce empty ranges
-              this._ranges = util.filter(this._ranges, function(range) {
+              this._ranges = util.filter(this._ranges, function (range) {
                 return !range.isEmpty();
               });
             },
@@ -6461,7 +6461,7 @@
              * @param {number} end - End
              * @returns {Array.<number>} - [start, end]
              */
-            findOverlappedRange: function(start, end) {
+            findOverlappedRange: function (start, end) {
               var i = 0;
               var len = this._ranges.length;
               var range;
@@ -6483,7 +6483,7 @@
         /***/
       },
       /* 57 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Range (in RangeModel)
@@ -6501,7 +6501,7 @@
          */
         var Range = defineClass(
           /** @lends Range.prototype */ {
-            init: function(start, end) {
+            init: function (start, end) {
               this.setRange(start, end);
             },
 
@@ -6510,7 +6510,7 @@
              * @param {number} start - Start number
              * @param {number} [end] - End number
              */
-            setRange: function(start, end) {
+            setRange: function (start, end) {
               if (!isNumber(end)) {
                 end = start;
               }
@@ -6524,7 +6524,7 @@
              * @param {number} start - Start
              * @param {number} [end] - End
              */
-            merge: function(start, end) {
+            merge: function (start, end) {
               if (!isNumber(start) || !isNumber(end) || !this.isOverlapped(start, end)) {
                 return;
               }
@@ -6537,14 +6537,14 @@
              * Whether being empty.
              * @returns {boolean}
              */
-            isEmpty: function() {
+            isEmpty: function () {
               return !isNumber(this.start) || !isNumber(this.end);
             },
 
             /**
              * Set empty
              */
-            setEmpty: function() {
+            setEmpty: function () {
               this.start = this.end = null;
             },
 
@@ -6554,7 +6554,7 @@
              * @param {number} [end] - End
              * @returns {boolean}
              */
-            contains: function(start, end) {
+            contains: function (start, end) {
               if (!isNumber(end)) {
                 end = start;
               }
@@ -6568,7 +6568,7 @@
              * @param {number} [end] - End
              * @returns {boolean}
              */
-            isOverlapped: function(start, end) {
+            isOverlapped: function (start, end) {
               if (!isNumber(end)) {
                 end = start;
               }
@@ -6581,7 +6581,7 @@
              * @param {number} start - Start
              * @param {number} end - End
              */
-            exclude: function(start, end) {
+            exclude: function (start, end) {
               if (start <= this.start && end >= this.end) {
                 // Excluding range contains this
                 this.setEmpty();
@@ -6599,12 +6599,12 @@
         /***/
       },
       /* 58 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
 
         var template = __webpack_require__(11);
 
-        module.exports = function(context) {
+        module.exports = function (context) {
           var source =
             '<div class="tui-datepicker">' +
             '  {{if timePicker}}' +
@@ -6642,7 +6642,7 @@
         /***/
       },
       /* 59 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview DatePicker input(element) component
@@ -6671,7 +6671,7 @@
          */
         var DatePickerInput = defineClass(
           /** @lends DatePickerInput.prototype */ {
-            init: function(inputElement, option) {
+            init: function (inputElement, option) {
               option.format = option.format || DEFAULT_FORMAT;
 
               /**
@@ -6709,7 +6709,7 @@
              * Change locale titles
              * @param {object} titles - locale text in format
              */
-            changeLocaleTitles: function(titles) {
+            changeLocaleTitles: function (titles) {
               this._titles = titles;
             },
 
@@ -6717,7 +6717,7 @@
              * Set input 'click', 'change' event
              * @private
              */
-            _setEvents: function() {
+            _setEvents: function () {
               if (this._input) {
                 on(this._input, 'change', this._onChangeHandler, this);
                 mouseTouchEvent.on(this._input, 'click', this._onClickHandler, this);
@@ -6728,7 +6728,7 @@
              * Remove events
              * @private
              */
-            _removeEvents: function() {
+            _removeEvents: function () {
               this.off();
 
               if (this._input) {
@@ -6740,14 +6740,14 @@
             /**
              * Onchange handler
              */
-            _onChangeHandler: function() {
+            _onChangeHandler: function () {
               this.fire('change');
             },
 
             /**
              * Onclick handler
              */
-            _onClickHandler: function() {
+            _onClickHandler: function () {
               this.fire('click');
             },
 
@@ -6756,14 +6756,14 @@
              * @param {HTMLElement} el - To check matched set of elements
              * @returns {boolean}
              */
-            is: function(el) {
+            is: function (el) {
               return this._input === el;
             },
 
             /**
              * Enable input
              */
-            enable: function() {
+            enable: function () {
               if (this._input) {
                 this._input.removeAttribute('disabled');
               }
@@ -6772,7 +6772,7 @@
             /**
              * Disable input
              */
-            disable: function() {
+            disable: function () {
               if (this._input) {
                 this._input.setAttribute('disabled', true);
               }
@@ -6782,7 +6782,7 @@
              * Return format
              * @returns {string}
              */
-            getFormat: function() {
+            getFormat: function () {
               return this._formatter.getRawString();
             },
 
@@ -6790,7 +6790,7 @@
              * Set format
              * @param {string} format - Format
              */
-            setFormat: function(format) {
+            setFormat: function (format) {
               if (!format) {
                 return;
               }
@@ -6801,7 +6801,7 @@
             /**
              * Clear text
              */
-            clearText: function() {
+            clearText: function () {
               if (this._input) {
                 this._input.value = '';
               }
@@ -6811,7 +6811,7 @@
              * Set value from date
              * @param {Date} date - Date
              */
-            setDate: function(date) {
+            setDate: function (date) {
               if (this._input) {
                 this._input.value = this._formatter.format(date);
               }
@@ -6822,7 +6822,7 @@
              * @returns {Date}
              * @throws {Error}
              */
-            getDate: function() {
+            getDate: function () {
               var value = '';
 
               if (this._input) {
@@ -6835,7 +6835,7 @@
             /**
              * Destroy
              */
-            destroy: function() {
+            destroy: function () {
               this._removeEvents();
 
               this._input = this._id = this._formatter = null;
@@ -6849,7 +6849,7 @@
         /***/
       },
       /* 60 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         'use strict';
         /**
          * @fileoverview Date-Range picker
@@ -6921,7 +6921,7 @@
          */
         var DateRangePicker = defineClass(
           /** @lends DateRangePicker.prototype */ {
-            init: function(options) {
+            init: function (options) {
               var startpickerOpt, endpickerOpt;
 
               options = options || {};
@@ -6958,7 +6958,7 @@
              * @param {Object} options - DatePicker options
              * @private
              */
-            _initializePickers: function(options) {
+            _initializePickers: function (options) {
               var startpickerContainer = util.getElement(options.startpicker.container);
               var endpickerContainer = util.getElement(options.endpicker.container);
               var startInput = util.getElement(options.startpicker.input);
@@ -6995,7 +6995,7 @@
              * @param {Object} eventData - Event data {@link DatePicker#event:draw}
              * @private
              */
-            _onDrawPicker: function(eventData) {
+            _onDrawPicker: function (eventData) {
               var calendarType = eventData.type;
               var startDate = this._startpicker.getDate();
               var endDate = this._endpicker.getDate();
@@ -7011,7 +7011,7 @@
 
               forEachArray(
                 eventData.dateElements,
-                function(el) {
+                function (el) {
                   var elDate = new Date(Number(getData(el, 'timestamp')));
                   var isInRange = dateUtil.inRange(startDate, endDate, elDate, calendarType);
                   var isSelected =
@@ -7030,7 +7030,7 @@
              * @param {boolean} isInRange - In range
              * @private
              */
-            _setRangeClass: function(el, isInRange) {
+            _setRangeClass: function (el, isInRange) {
               if (isInRange) {
                 addClass(el, CLASS_NAME_SELECTED_RANGE);
               } else {
@@ -7044,7 +7044,7 @@
              * @param {boolean} isSelected - Is selected
              * @private
              */
-            _setSelectedClass: function(el, isSelected) {
+            _setSelectedClass: function (el, isSelected) {
               if (isSelected) {
                 addClass(el, CLASS_NAME_SELECTED);
               } else {
@@ -7056,7 +7056,7 @@
              * Sync ranges to endpicker
              * @private
              */
-            _syncRangesToEndpicker: function() {
+            _syncRangesToEndpicker: function () {
               var startDate = this._startpicker.getDate();
               var overlappedRange;
 
@@ -7078,7 +7078,7 @@
              * After change on start-picker
              * @private
              */
-            _onChangeStartpicker: function() {
+            _onChangeStartpicker: function () {
               this._syncRangesToEndpicker();
               /**
                * Occur after the start date is changed.
@@ -7102,7 +7102,7 @@
              * After change on end-picker
              * @private
              */
-            _onChangeEndpicker: function() {
+            _onChangeEndpicker: function () {
               /**
                * Occur after the end date is changed.
                * @event DateRangePicker#change:end
@@ -7125,7 +7125,7 @@
              * Return a start-datepicker.
              * @returns {DatePicker}
              */
-            getStartpicker: function() {
+            getStartpicker: function () {
               return this._startpicker;
             },
 
@@ -7133,7 +7133,7 @@
              * Return a end-datepicker.
              * @returns {DatePicker}
              */
-            getEndpicker: function() {
+            getEndpicker: function () {
               return this._endpicker;
             },
 
@@ -7141,7 +7141,7 @@
              * Set the start date.
              * @param {Date} date - Start date
              */
-            setStartDate: function(date) {
+            setStartDate: function (date) {
               this._startpicker.setDate(date);
             },
 
@@ -7149,7 +7149,7 @@
              * Return the start date.
              * @returns {?Date}
              */
-            getStartDate: function() {
+            getStartDate: function () {
               return this._startpicker.getDate();
             },
 
@@ -7157,7 +7157,7 @@
              * Return the end date.
              * @returns {?Date}
              */
-            getEndDate: function() {
+            getEndDate: function () {
               return this._endpicker.getDate();
             },
 
@@ -7165,7 +7165,7 @@
              * Set the end date.
              * @param {Date} date - End date
              */
-            setEndDate: function(date) {
+            setEndDate: function (date) {
               this._endpicker.setDate(date);
             },
 
@@ -7173,7 +7173,7 @@
              * Set selectable ranges.
              * @param {Array.<Array.<number|Date>>} ranges - Selectable ranges. Use Date instances or numbers(timestamp).
              */
-            setRanges: function(ranges) {
+            setRanges: function (ranges) {
               this._startpicker.setRanges(ranges);
               this._syncRangesToEndpicker();
             },
@@ -7183,7 +7183,7 @@
              * @param {Date|number} start - the start date
              * @param {Date|number} end - the end date
              */
-            addRange: function(start, end) {
+            addRange: function (start, end) {
               this._startpicker.addRange(start, end);
               this._syncRangesToEndpicker();
             },
@@ -7194,7 +7194,7 @@
              * @param {Date|number} end - the end date
              * @param {null|'date'|'month'|'year'} type - Range type. If falsy, start and end values are considered as timestamp
              */
-            removeRange: function(start, end, type) {
+            removeRange: function (start, end, type) {
               this._startpicker.removeRange(start, end, type);
               this._syncRangesToEndpicker();
             },
@@ -7204,7 +7204,7 @@
              * @param {string} language - Language code. English('en') and Korean('ko') are provided as default.
              * @see To set to the other languages, use {@link DatePicker#localeTexts DatePicker.localeTexts}.
              */
-            changeLanguage: function(language) {
+            changeLanguage: function (language) {
               this._startpicker.changeLanguage(language);
               this._endpicker.changeLanguage(language);
             },
@@ -7212,7 +7212,7 @@
             /**
              * Destroy the date-range picker.
              */
-            destroy: function() {
+            destroy: function () {
               this.off();
               this._startpicker.destroy();
               this._endpicker.destroy();
@@ -7227,7 +7227,7 @@
         /***/
       },
       /* 61 */
-      /***/ function(module, exports, __webpack_require__) {
+      /***/ function (module, exports, __webpack_require__) {
         // extracted by mini-css-extract-plugin
         /***/
       },

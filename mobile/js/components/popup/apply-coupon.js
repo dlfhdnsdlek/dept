@@ -95,6 +95,7 @@
     async initiate() {
       await this.setDefaultChoiceCoupon();
       await this.contentUpdate();
+      this.couponContentScroll();
     }
 
     async setDefaultChoiceCoupon() {
@@ -181,6 +182,8 @@
       }
 
       this.sameProductCouponReadonlyAttach();
+      this.totalCouponAmtHidden();
+      this.couponContentScroll();
     }
 
     selectChoicedCartCoupon() {
@@ -282,6 +285,7 @@
       }
 
       this.initHandler();
+      this.totalCouponAmtHidden();
     }
 
     initHandler() {
@@ -299,11 +303,38 @@
         .on('click', 'input[type=radio][data-type="product"]', this.tryChoiceProductCoupon.bind(this))
         .on('click', 'input[type=radio][data-type="cart"]', this.tryChoiceCartCoupon.bind(this))
         .on('click', 'button[data-action="submit"]', this.onSubmit.bind(this))
-        .on('click', 'button[data-action="cancel"],.ly_close', this.onCancel.bind(this));
+        .on('click', 'button[data-action="cancel"]', this.onCancel.bind(this));
+    }
+
+    totalCouponAmtHidden() {
+      const scrollBox = document.querySelector('.scroll_box');
+      const scrollBoxStyle = window.getComputedStyle(scrollBox);
+      const maxHeightValue = scrollBoxStyle.getPropertyValue('max-height');
+      const maxHeightNum = Number(maxHeightValue.slice(0, maxHeightValue.length - 2));
+
+      if ($('.scroll_box').innerHeight() < maxHeightNum) {
+        $('.total_coupon_amount').hide();
+      }
+    }
+
+    couponContentScroll() {
+      $('.scroll_box').on('scroll', function () {
+        const $totalCouponAmount = $('.total_coupon_amount');
+        const $scrollTop = $('.scroll_box').scrollTop();
+        const $innderHeight = $('.scroll_box').innerHeight();
+        const $scrollHeight = $('.scroll_box')[0].scrollHeight;
+
+        if ($scrollTop + $innderHeight >= $scrollHeight) {
+          $totalCouponAmount.hide();
+        } else {
+          $totalCouponAmount.show();
+        }
+      });
     }
 
     toggleContent(event) {
       event.currentTarget.classList.toggle('on');
+      this.totalCouponAmtHidden();
     }
 
     closeTooltip(event) {
@@ -318,11 +349,11 @@
 
       const couponIssueNo =
         event.currentTarget.value === 'default' ? event.currentTarget.value : Number(event.currentTarget.value);
-
       if (this.choicedProductCouponIssueNos.includes(couponIssueNo)) return;
 
       const { skipsAccumulation, productNo, cartCouponUsable } = event.currentTarget.dataset;
       const coupon = { productNo, couponIssueNo };
+
       const checkUsableCartCoupon = () => {
         if (this[state].cartCouponOnly || cartCouponUsable === 'false') {
           this.productCouponUsageRestrictionHandler(coupon, true);
@@ -355,6 +386,7 @@
       if (this[state].choiceCoupon.cartCouponIssueNo === couponIssueNo) return;
 
       const { skipsAccumulation, productCouponUsable } = event.currentTarget.dataset;
+
       const checkUsableProductCoupon = () => {
         if (this[state].productCouponOnly || productCouponUsable === 'false') {
           this.cartCouponUsageRestrictionHandler(couponIssueNo, true);
@@ -402,6 +434,8 @@
               this[state].prductCouponOnly = true;
               this[state].cartCouponOnly = false;
             }
+          } else {
+            this.resetProductCoupon();
           }
         },
       );
@@ -422,6 +456,8 @@
               this[state].cartCouponOnly = true;
               this[state].prductCouponOnly = false;
             }
+          } else {
+            this.resetCartCoupon();
           }
         },
       );

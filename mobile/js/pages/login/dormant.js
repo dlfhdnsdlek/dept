@@ -17,11 +17,11 @@ $(() => {
         history.back();
       }
     },
-    render({ signUpDateTime, dormantDateTime, lastLoginDateTime }) {
+    render({ joinDate, dormantDate }) {
       $('#dormantDateInfo').render({
-        joinDate: this._formatDate(signUpDateTime),
-        dormantDate: this._formatDate(dormantDateTime),
-        lastLoginDate: this._formatDate(lastLoginDateTime),
+        joinDate: this._formatDate(joinDate),
+        dormantDate: this._formatDate(dormantDate),
+        lastLoginDate: this._getLastLoginDate(dormantDate),
       });
     },
     bindEvents() {
@@ -41,12 +41,21 @@ $(() => {
       shopby.goLogin();
     },
     async confirmReleaseDormant() {
-      await shopby.api.member.putProfileDormancy({ requestBody: { authType: 'NONE' } });
-      this.renderDormantComplete();
+      try {
+        await shopby.api.member.putProfileDormancy({ requestBody: { authType: 'NONE' } });
+        this.renderDormantComplete();
+      } catch (error) {
+        shopby.alert(error.message);
+      }
     },
 
     _formatDate(date) {
       return dayjs(date).format('YYYY년 MM월 DD일');
+    },
+    _getLastLoginDate(dormantDate) {
+      const year = Number(dormantDate.substring(0, 4)) - 1;
+      const monthDay = dormantDate.substring(4, 10);
+      return this._formatDate(`${year}${monthDay}`);
     },
   };
 

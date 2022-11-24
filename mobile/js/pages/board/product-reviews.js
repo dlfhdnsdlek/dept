@@ -1,9 +1,14 @@
 $(() => {
-  const $listContainer = $('#plus-review-list-container');
   const $tabContainer = $('#p-tab');
-  const $searchBox = $('#p-search');
-  const $sortBtnsContainer = $('#p-sort-btns');
-  const $searchBtn = $('#p-magnet');
+  const $listContainer = $('#plus-review-list-container');
+  const $sortSelecter = $('#p-sort-select');
+  const $categorySelector = $('#p-category-select');
+  const $searchTextDel = $('.c-search-text-del');
+  const $searchKeyword = $('#search-keyword');
+  const $searchToggleBtn = $('.magnet-btn');
+  const $inputField = $('.insert-keyword');
+  const $reviewPopupBtn = $('.underline-btn');
+  const $searchForm = $('#search-form');
 
   const SELECT_BOARD_TYPE = {
     ALL: 'ALL',
@@ -37,18 +42,27 @@ $(() => {
     sortingOrdering: SORTING_ORDERING.DESC,
     depth1DisplayCategoryNo: 0,
     searchkeyword: '',
+    page: {
+      pageSize: 1,
+      pageNumber: 1,
+      totalCount: 1,
+    },
     categories: [],
     widgetList: [],
+    isClickPagenation: false,
     isUseReviewRecommend: false,
-    page: {},
-    async initiate() {
+    initiate() {
       this.getBoardTypeQuery();
-      this.page = new shopby.pagination(this.onClickPagination.bind(this), '#pagination');
       this.productReviewConfig = shopby.cache.getBoardsConfig().productReviewConfig;
-      Promise.all([this.checkCurrentTab(), this.getProductReviewsConfigurations(), this.getCategories()]).then(() => {
-        this.page.pageSize = this.widgetList.length;
+      Promise.all([
+        this.getPagenation(),
+        this.getProductReviewsConfigurations(),
+        this.checkCurrentTab(),
+        this.getCategories(),
+      ]).then(() => {
         this.renderInit();
         this.bindEvents();
+        this.page.pageSize = this.widgetList.length;
       });
     },
     renderInit() {
@@ -60,12 +74,18 @@ $(() => {
       this.renderPagenation();
     },
     bindEvents() {
-      $searchBtn.on('click', this.onClickSearch.bind(this));
+      const _this = this;
+      $searchForm.submit(e => {
+        _this.onClickSearch(e);
+        $searchKeyword.val(_this.searchkeyword);
+      });
+      $searchKeyword.on('change', () => (_this.searchkeyword = $searchKeyword.val()));
       $tabContainer.on('click', 'button', this.onClickTab.bind(this));
-      $sortBtnsContainer.on('click', 'button', this.onClickSortBtn.bind(this));
-      $searchBox.on('change', 'select', this.onChangeCategory.bind(this));
-      $searchBox.on('click', 'button', this.onClickSearch.bind(this));
-      $('.p-write-review').on('click', this.onClickReviewPopup.bind(this));
+      $sortSelecter.on('change', this.onClickSortSelect.bind(this));
+      $categorySelector.on('change', this.onChangeCategory.bind(this));
+      $searchTextDel.on('click', this.onClickDelSearchText.bind(this));
+      $searchToggleBtn.on('click', this.onClickSearchField.bind(this));
+      $reviewPopupBtn.on('click', this.onClickReviewPopup.bind(this));
     },
     async checkCurrentTab() {
       if (this.selectedBoardType !== SELECT_BOARD_TYPE.REVIEWED_PRODUCTS) {
@@ -91,7 +111,7 @@ $(() => {
     },
     resetSearch() {
       this.searchkeyword = '';
-      $('#search-category').val(this.searchkeyword);
+      $searchKeyword.val(this.searchkeyword);
     },
     renderList() {
       if (this.selectedBoardType !== SELECT_BOARD_TYPE.REVIEWED_PRODUCTS) {
@@ -118,24 +138,33 @@ $(() => {
     },
     renderSortBtn() {
       if (this.selectedBoardType !== SELECT_BOARD_TYPE.REVIEWED_PRODUCTS) {
-        $sortBtnsContainer.render({ sortBtnsData: this.getSortBtnAllPhotoData() });
+        $sortSelecter.render({ sortBtnsData: this.getSortBtnAllPhotoData() });
         return;
       }
 
-      $sortBtnsContainer.render({ sortBtnsData: this.getSortBtnReviewedProductsData() });
+      $sortSelecter.render({ sortBtnsData: this.getSortBtnReviewedProductsData() });
     },
     renderCategories() {
-      $searchBox.render({ categories: this.categories });
+      $categorySelector.render({ categories: this.categories });
     },
     renderPagenation() {
       this.page.render(this.page.totalCount);
     },
     renderReviewBtn() {
-      if (this.logined) $('.p-write-review').css('display', 'block');
+      if (this.logined) $reviewPopupBtn.css('display', 'inline-block');
     },
     async getProductReviewsConfigurations() {
       const { data } = await shopby.api.display.getProductReviewsConfigurations();
       this.isUseReviewRecommend = data.expandedReviewConfig.useReviewRecommend;
+    },
+    getBoardTypeQuery() {
+      const boardTypeQuery = shopby.utils.getUrlParam('boardType');
+
+      if (boardTypeQuery) this.selectedBoardType = shopby.utils.getUrlParam('boardType');
+    },
+    getPagenation() {
+      const page = new shopby.readMore(this.onClickPagination.bind(this), '#pagination');
+      this.page = page;
     },
     get reviewBoardsRequest() {
       return {
@@ -200,8 +229,8 @@ $(() => {
       };
       const data = {
         type,
-        nowType: this.sortingSortCriterionType.allPhoto,
         useRecommend: this.isUseReviewRecommend,
+        nowType: this.sortingSortCriterionType.allPhoto,
         currentTab: 'allPhoto',
       };
 
@@ -221,16 +250,18 @@ $(() => {
 
       return data;
     },
-    getBoardTypeQuery() {
-      this.selectedBoardType = shopby.utils.getUrlParam('boardType')
-        ? shopby.utils.getUrlParam('boardType')
-        : this.selectedBoardType;
-    },
     setWidgetList(data) {
       if (this.selectedBoardType !== SELECT_BOARD_TYPE.REVIEWED_PRODUCTS) {
-        this.widgetList = data.items.map(item => ({ ...item, type: this.selectedBoardType }));
+        const mappingWidgetList = data.items.map(item => ({ ...item, type: this.selectedBoardType }));
+
+        if (this.isClickPagenation) {
+          this.widgetList = this.widgetList.concat(mappingWidgetList);
+          this.isClickPagenation = false;
+        } else {
+          this.widgetList = mappingWidgetList;
+        }
       } else {
-        this.widgetList = data.items.map(item => {
+        const newWidgetList = data.items.map(item => {
           return {
             ...item,
             mainImage: item.mainImage.includes('no_img') ? '' : item.mainImage,
@@ -238,30 +269,43 @@ $(() => {
             appliedImmediateDiscountPrice: item.appliedImmediateDiscountPrice.toLocaleString(),
           };
         });
+
+        if (this.isClickPagenation) {
+          this.widgetList = this.widgetList.concat(newWidgetList);
+          this.isClickPagenation = false;
+        } else {
+          this.widgetList = newWidgetList;
+        }
       }
+
       this.page.totalCount = data.totalCount;
+    },
+    onClickSearchField() {
+      $searchToggleBtn.toggleClass('on');
+      $inputField.attr('hidden', !$inputField.is(':hidden'));
+    },
+    onClickDelSearchText() {
+      this.resetSearch();
+      $searchKeyword.focus();
     },
     async onClickTab(event) {
       event.preventDefault();
       $(event.target).siblings().removeClass('on');
       $(event.target).addClass('on');
+
       this.selectedBoardType = event.target.dataset.type;
       this.resetCommon();
       this.resetMoveTab();
       await this.checkCurrentTab();
-      this.page.pageSize = this.widgetList.length;
       this.renderList();
       this.renderPagenation();
     },
-    async onClickSortBtn(event) {
+    async onClickSortSelect(event) {
       event.preventDefault();
-      $(event.target).siblings().removeClass('on');
-      $(event.target).addClass('on');
-
-      const sortingType = event.target.dataset.type;
-      this.sortingOrdering = event.target.dataset.order ? event.target.dataset.order : 'DESC';
+      const sortingType = event.target.value;
+      const orderType = $sortSelecter.find('option:selected').data('order');
+      this.sortingOrdering = orderType ? orderType : 'DESC';
       this.page.pageNumber = 1;
-      this.renderPagenation();
 
       if (this.selectedBoardType !== SELECT_BOARD_TYPE.REVIEWED_PRODUCTS) {
         this.sortingSortCriterionType.allPhoto = sortingType;
@@ -271,26 +315,25 @@ $(() => {
         await this.getReviewsBoardsReviewedProducts();
       }
       this.renderList();
+      this.renderPagenation();
     },
     async onClickPagination() {
+      this.isClickPagenation = true;
       await this.checkCurrentTab();
       this.renderList();
       this.renderPagenation();
     },
     async onChangeCategory() {
-      this.depth1DisplayCategoryNo = $('#p-sort-select option:selected').val();
       this.page.pageNumber = 1;
+      this.depth1DisplayCategoryNo = $categorySelector.children('option:selected').val();
       await this.checkCurrentTab();
-      this.page.pageSize = this.widgetList.length;
       this.resetChangeCategory();
       this.renderList();
     },
     async onClickSearch(event) {
       event.preventDefault();
-      this.searchkeyword = $('#search-category').val();
       this.page.pageNumber = 1;
       await this.checkCurrentTab();
-      this.page.pageSize = this.widgetList.length;
       this.renderList();
       this.renderPagenation();
     },
@@ -314,15 +357,25 @@ $(() => {
       const { type } = event.currentTarget.dataset;
       const isReviewedProducts = type === 'REVIEWED_PRODUCTS';
       const popupType = isReviewedProducts ? 'productReviews' : 'boards';
-      const parameter = isReviewedProducts ? this.getProductReviewsRequest(productNo) : this.reviewBoardsRequest;
+      const configCopy = { ...this.productReviewConfig };
+      configCopy.name = '포토 상세';
+      const widgetOrder = this.widgetList.findIndex(widget => widget.reviewNo === reviewNo);
+      const currentPageNumber = Math.floor(widgetOrder / this.page.pageSize + 1);
+      let parameter = isReviewedProducts ? this.getProductReviewsRequest(productNo) : this.reviewBoardsRequest;
 
+      if (!isReviewedProducts) {
+        parameter.queryString.pageSize = this.page.pageSize;
+        parameter.queryString.pageNumber = currentPageNumber;
+      }
+
+      //타입B
       shopby.popup('photo-review-detail', {
         reviewNo,
         productNo,
         hasCloseBtn: true,
         type: popupType,
         parameter,
-        totalPage: this.page.totalPage,
+        productReviewConfig: configCopy,
       });
     },
   };

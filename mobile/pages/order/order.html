@@ -16,222 +16,90 @@
 
     <body>
         <header id="header"></header>
-        <div id="contents" class="visible">
-            <div id="app" class="sub_content">
-                <div class="location_wrap">
-                    <div class="location_cont">
-                        <em><a href="/" class="local_home">HOME</a> &gt; 주문서 작성 / 결제</em>
+        <div id="contents">
+            <div class="contents_wrap">
+                <div class="page_top_area">
+                    <div class="navi_g">
+                        <ul>
+                            <li>홈</li>
+                            <li>주문서 작성 / 결제</li>
+                        </ul>
+                    </div>
+                    <div class="sub_top">
+                        <div class="sub_top_left">
+                            <a id="goBack"></a>
+                        </div>
+                        <h2><a href="/pages/order/order.html">주문서 작성 / 결제</a></h2>
                     </div>
                 </div>
 
-                <div class="content">
-                    <div class="content_box">
-                        <div class="order_wrap">
-                            <div class="order_tit">
-                                <h2>주문서 작성/결제</h2>
-                                <ol>
-                                    <li>
-                                        <span>01</span> 장바구니
-                                        <span><img src="/assets/img/member/icon_join_step_off.png" alt="" /></span>
-                                    </li>
-                                    <li class="page_on">
-                                        <span>02</span> 주문서 작성/결제<span><img src="/assets/img/member/icon_join_step_on.png" alt="" /></span>
-                                    </li>
-                                    <li><span>03</span> 주문완료</li>
-                                </ol>
-                            </div>
-
-                            <div class="order_cont">
-                                <div class="cart_cont_list" id="orderProducts">
-                                    <div class="order_cart_tit">
-                                        <h3>주문상품 정보</h3>
-                                    </div>
-
-                                    <div id="orderProductsTable" data-template-id="orderProductsTableTemplate">
-                                        <script type="text/x-handlebars-template" id="orderProductsTableTemplate">
-                                            <div class='order_table_type'>
-                                                <table>
-                                                    <colgroup>
-                                                        <col />
-                                                        <!-- 상품명/옵션 -->
-                                                        <col style='width: 10%;' />
-                                                        <!-- 수량 -->
-                                                        <col style='width: 10%;' />
-                                                        <!-- 상품금액 -->
-                                                        <col style='width: 13%;' />
-                                                        <!-- 할인/적립 -->
-                                                        <col style='width: 10%;' />
-                                                        <!-- 합계금액 -->
-                                                        <col style='width: 10%;' />
-                                                        <!-- 배송비 -->
-                                                    </colgroup>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>
-                                                                상품/옵션
-                                                            </th>
-                                                            <th>
-                                                                수량
-                                                            </th>
-                                                            <th>
-                                                                상품금액
-                                                            </th>
-                                                            <th>
-                                                                할인/적립
-                                                            </th>
-                                                            <th>
-                                                                합계금액
-                                                            </th>
-                                                            <th>
-                                                                배송비
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!---->
-
-                                                    {{#each orderProductInfos}}
-                                                        <tr style='height: 79px;'>
-                                                            <td class='td_left'>
-                                                                <div class='pick_add_cont'>
-                                                                    <span class='pick_add_img'>
-                                                                        <a
-                                                                            href="../../pages/product/view.html?productNo={{
-                                                                                productNo
-                                                                            }}"
-                                                                        >
+                <div class="order">
+                    <div class="pay">
+                        <div class="cart_cont_list" id="orderProducts">
+                            <div id="orderProductsTable" data-template-id="orderProductsTableTemplate">
+                                <script type="text/x-handlebars-template" id="orderProductsTableTemplate">
+                                    <button class="js-order_tit order_tit on">주문 상품</button>
+                                    <div class='my_goods_box cart_cont_list'>
+                                        {{#each deliveryGroups}}
+                                        <ul class="my_goods">
+                                            {{#each orderProducts}}
+                                                <li>
+                                                    <div class='info order-goods-layout'>
+                                                        <a href="../../pages/product/view.html?productNo={{productNo}}">
+                                                        <div>
+                                                            <div class='itemhead'>
+                                                                <div class="thmb_box">
+                                                                    <div class="thmb">
                                                                         {{img imageUrl 0 0 productName 'middle'}}
-                                                                        </a>
-                                                                    </span>
-                                                                    <div class='pick_add_info'>
-                                                                        <em>
-                                                                            <a
-                                                                                href='/pages/product/view.html?productNo={{
-                                                                                productNo
-                                                                                }}'
-                                                                            >
-                                                                                {{safeString productName}}
-                                                                            </a>
-                                                                        </em>
-                                                                        <div class='pick_option_box'>
-                                                                            <span class='text_type_cont'>
-                                                                                {{safeString optionTitle}}
-                                                                                {{#each optionInputs}}
-                                                                                    <br />
-                                                                                    {{safeString inputLabel}}: {{safeString inputValue}}
-                                                                                {{/each}}
-                                                                            </span>
-                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </td>
-                                                            <td class='td_order_amount'>
-                                                                {{orderCnt}}개
-                                                            </td>
-                                                            <td>
-                                                                <strong class='order_sum_txt price'>
-                                                                    {{toCurrencyString standardAmt}}원
-                                                                </strong>
-                                                                <p class='add_currency'></p>
-                                                            </td>
-                                                            <td class='td_benefit'>
-                                                                <ul class='benefit_list'>
-                                                                    {{#if discountAmt}}
-                                                                        <li class='benefit_sale'>
-                                                                            <em>
-                                                                                할인
-                                                                            </em>
-                                                                            <strong>
-                                                                                : -{{toCurrencyString discountAmt}}원
-                                                                            </strong>
-                                                                        </li>
-                                                                    {{/if}}
-                                                                    {{#if accumulationAmtWhenBuyConfirm}}
-                                                                        <li class='benefit_mileage'>
-                                                                            <em>
-                                                                                적립
-                                                                            </em>
-                                                                            <strong>
-                                                                                : {{
-                                                                                    toCurrencyString
-                                                                                    accumulationAmtWhenBuyConfirm
-                                                                                }}{{accumulationUnit}}
-                                                                            </strong>
-                                                                        </li>
-                                                                    {{/if}}
-                                                                </ul>
-                                                            </td>
-                                                            <td>
-                                                                <strong class='order_sum_txt'>
-                                                                    {{toCurrencyString productTotalAmt}}원
-                                                                </strong>
-                                                                <p class='add_currency'></p>
-                                                            </td>
-                                                            {{#ifNe rowSpan 0}}
-                                                                {{#ifNe deliveryAmt 0}}
-                                                                    <td class='td_delivery' rowspan='{{rowSpan}}'>
-                                                                        {{toCurrencyString deliveryAmt}} 원<br/>
-                                                                        ({{deliveryPayType}})
-                                                                    </td>
-                                                                    {{else}}
-                                                                    <td class='td_delivery' rowspan='{{rowSpan}}'>
-                                                                        무료
-                                                                    </td>
-                                                                {{/ifNe}}
-                                                            {{/ifNe}}
-                                                        </tr>
-                                                    {{/each}}
-                                                    <!---->
-                                                </tbody>
-                                            </table>
-                                        </script>
-                                    </div>
-                                </div>
-                                <div class="btn_left_box">
-                                    <a href="/pages/order/cart.html" class="shop_go_link"><em>&lt; 장바구니 가기</em></a>
-                                </div>
-                                <div id="priceSum" class="price_sum invisible">
-                                    <div class="price_sum_cont">
-                                        <div class="price_sum_list">
-                                            <dl>
-                                                <dt>총 <strong>{{totalOrderCnt}}</strong> 개의 상품금액</dt>
-                                                <dd><strong id="totalGoodsPrice">{{toCurrencyString totalStandardAmt}}</strong>원</dd>
-                                            </dl>
-                                            <span><img src="/assets/img/order/order_price_minus.png" alt="뺀다" /></span>
-                                            <dl>
-                                                <dt>할인금액</dt>
-                                                <dd><strong>{{toCurrencyString totalDiscountAmt}}</strong>원</dd>
-                                            </dl>
-                                            <span><img src="/assets/img/order/order_price_plus.png" alt="더하기" /></span>
-                                            <dl>
-                                                <dt>배송비</dt>
-                                                <dd><strong>{{toCurrencyString totalDeliveryAmt}}</strong>원</dd>
-                                            </dl>
-                                            <span><img src="/assets/img/order/order_price_total.png" alt="합계" /></span>
-                                            <dl class="price_total">
-                                                <dt>총 합계</dt>
-                                                <dd><strong>{{toCurrencyString totalOrderAmt}}</strong>원</dd>
-                                            </dl>
+                                                            </div>
+                                                            <div class='itembody'>
+                                                                <p class="name">{{safeString productName}}</p>
+                                                                <p style="margin-bottom:5px;color:#000;">
+                                                                    {{safeString optionTitle}}
+                                                                    {{#each optionInputs}}
+                                                                        <br />
+                                                                        {{safeString inputLabel}}: {{safeString inputValue}}
+                                                                    {{/each}}
+                                                                </p>
+                                                                <p>수량 : {{orderCnt}}</p>
+                                                                <div>
+                                                                    <strong class="prc">
+                                                                        {{toCurrencyString productTotalAmt}}원
+                                                                        <del>{{toCurrencyString standardAmt}}원</del>
+                                                                    </strong>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            {{/each}}
+                                        </ul>
+                                        <div class="delivery_money">
+                                            {{#ifNe deliveryAmt 0}}
+                                                <p>
+                                                    배송비 {{toCurrencyString deliveryAmt}} 원<br/>
+                                                    ({{deliveryPayType}})
+                                                </p>
+                                            {{else}}
+                                                <p>무료</p>
+                                            {{/ifNe}}
                                         </div>
-                                        <h3 class="tobe_mileage"><strong>예상 적립금</strong> : {{toCurrencyString totalAccumulation}}원</h3>
-                                    </div>
-                                </div>
+                                        {{/each}}
+                                </script>
+                            </div>
+                        </div>
 
-                                <!-- order_view_info -->
-                                <div class="order_view_info" id="orderForm">
-                                    <!-- 주문자 정보 -->
-                                    <div class="order_zone_tit">
-                                        <h4>
-                                            주문자 정보
-                                        </h4>
-                                    </div>
-
-                                    <div class="order_table_type">
-                                        <table class="table_left invisible" id="ordererInfo">
-                                            <colgroup>
-                                                <col style="width: 15%;" />
-                                                <col style="width: 85%;" />
-                                            </colgroup>
+                        <!-- order_view_info -->
+                        <div class="order_info invisible" id="orderForm">
+                            <div class="order_box">
+                                <h2 class="order_tit">주문자 정보</h2>
+                                <fieldset>
+                                    <legend>주문고객 정보 영역</legend>
+                                    <div class="table_box">
+                                        <table id="ordererInfo" class="table_style4">
                                             <tbody>
                                                 <tr>
                                                     <th scope="row">
@@ -298,254 +166,220 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <div id="tempPasswordContainer" class="invisible">
-                                            {{#ifLogined}}{{else}}
-                                            <div class="no_member_infor_txt">
-                                                비회원 주문 조회 시 사용할 비밀번호를 영문/숫자/특수문자 조합하여 8~20자 이내로 입력해주세요.
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <!-- 주문자 정보 -->
+
+                            <!-- 비회원 주문자 정보 -->
+                            <div id="tempPasswordContainer" class="order_box">
+                                {{#ifLogined}}{{else}}
+                                <fieldset>
+                                    <legend>비회원 주문 비밀번호</legend>
+                                </fieldset>
+                                <div class="table_box">
+                                    <table class="table_style4" id="tempPasswordTable">
+                                        <caption>
+                                            정보입력
+                                        </caption>
+                                        <tbody>
+                                            <tr>
+                                                <td class="noMember_txt" colspan="2">
+                                                    <p>비회원주문 조회 시 사용할 비밀번호를 영문/숫자/특수문자 모두 조합하여 8~20자 이내로 입력해주세요.</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">
+                                                    <span class="important">비밀번호 입력</span>
+                                                </th>
+                                                <td>
+                                                    <input
+                                                        id="tempPassword"
+                                                        type="password"
+                                                        name="password"
+                                                        maxlength="20"
+                                                        placeholder="영문, 숫자, 특수문자 중 3개 이상 조합하여 8~20자 입력"
+                                                    />
+
+                                                    <div class="error c_red" id="tempPasswordErrorMessage" style="display: none;">
+                                                        영문, 숫자, 특수문자를 3종류 모두 조합하여 8~20자로 입력해주세요.
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">
+                                                    <span class="important">비밀번호확인 입력</span>
+                                                </th>
+                                                <td>
+                                                    <input
+                                                        id="tempPasswordConfirm"
+                                                        type="password"
+                                                        name="passwordConfirm"
+                                                        maxlength="20"
+                                                        placeholder="비밀번호 한번 더 입력"
+                                                    />
+                                                    <div class="error c_red" id="tempPasswordConfirmErrorMessage" style="display: none;">
+                                                        비밀번호와 비밀번호 확인 값이 일치하지 않습니다.
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {{/ifLogined}}
+                            </div>
+
+                            <!-- 배송 정보 -->
+                            <div class="order_box">
+                                <h2 class="order_tit">배송정보</h2>
+
+                                <div class="delivery_box" id="shippingInfo">
+                                    {{#ifLogined}}
+                                    <div class="tab_menu">
+                                        <div class="radio_tab">
+                                            <div class="item">
+                                                <input type="radio" name="shipping" value="default" checked />
+                                                <label>기본 배송지</label>
                                             </div>
-                                            <table class="table_left" id="tempPasswordTable">
-                                                <colgroup>
-                                                    <col style="width: 15%;" />
-                                                    <col style="width: 85%;" />
-                                                </colgroup>
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span class="important">주문 비밀번호 입력</span>
-                                                        </th>
-                                                        <td>
-                                                            <input
-                                                                style="width: 350px;"
-                                                                id="tempPassword"
-                                                                type="password"
-                                                                name="password"
-                                                                maxlength="20"
-                                                                placeholder="영문, 숫자, 특수문자 중 3개 이상 조합하여 8~20자 입력"
-                                                            />
-                                                            <span style="" class="txt tempPassword-error" id="tempPasswordError"
-                                                                ><p class="text_warning mt5" id="tempPasswordErrorMessage" style="display: none;">
-                                                                    영문, 숫자, 특수문자를 3종류 모두 조합하여 8~20자로 입력해주세요.
-                                                                </p></span
-                                                            >
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span class="important">주문 비밀번호확인 입력</span>
-                                                        </th>
-                                                        <td>
-                                                            <input
-                                                                style="width: 350px;"
-                                                                id="tempPasswordConfirm"
-                                                                type="password"
-                                                                name="passwordConfirm"
-                                                                maxlength="20"
-                                                                placeholder="비밀번호 한번 더 입력"
-                                                            />
-                                                            <span style="" class="txt tempPasswordConfirm-error" id="tempPasswordConfirmError"
-                                                                ><p class="text_warning mt5" id="tempPasswordConfirmErrorMessage" style="display: none;">
-                                                                    비밀번호와 비밀번호 확인 값이 일치하지 않습니다.
-                                                                </p></span
-                                                            >
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            {{/ifLogined}}
+                                            <div class="item">
+                                                <input type="radio" name="shipping" value="shipping-list" />
+                                                <label>배송지 목록</label>
+                                            </div>
+                                            <div class="item">
+                                                <input type="radio" name="shipping" value="new" />
+                                                <label>신규 배송지</label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <!-- 주문자 정보 -->
+                                    {{/ifLogined}}
 
-                                    <!-- 배송 정보 -->
-                                    <div class="delivery_info">
-                                        <div class="order_zone_tit">
-                                            <h4>배송지 정보</h4>
+                                    <div id="shippingSameCheckContainer" class="member_chk_box1">
+                                        <div class="inp_chk">
+                                            <input type="checkbox" id="shippingSameCheck" class="require" />
+                                            <label for="shippingSameCheck">
+                                                주문자 정보와 동일
+                                            </label>
                                         </div>
+                                    </div>
 
-                                        <div class="order_table_type shipping_info invisible" id="shippingInfo">
-                                            <table class="table_left shipping_info_table">
-                                                <colgroup>
-                                                    <col style="width: 15%;" />
-                                                    <col style="width:85%; /" />
-                                                </colgroup>
-                                                <tbody>
-                                                    <!--                                                    {{#ifLogined}}-->
-                                                    <tr>
-                                                        <th scope="row">배송지 확인</th>
-                                                        <td>
-                                                            <div class="order_delivery_choice">
-                                                                <div class="form_element">
-                                                                    <input
-                                                                        type="radio"
-                                                                        id="shipping-default"
-                                                                        name="shipping"
-                                                                        value="default"
-                                                                        checked
-                                                                        data-action-type="shipping-default"
-                                                                    />
-                                                                    <label for="shipping-default" class="choice_s">기본 배송지</label>
-
-                                                                    <input
-                                                                        type="radio"
-                                                                        id="shipping-recent"
-                                                                        name="shipping"
-                                                                        value="recent"
-                                                                        data-action-type="shipping-recent"
-                                                                    />
-                                                                    <label for="shipping-recent" class="choice_s">최근 배송지</label>
-
-                                                                    <input
-                                                                        type="radio"
-                                                                        id="shipping-new"
-                                                                        name="shipping"
-                                                                        value="new"
-                                                                        data-action-type="shipping-new"
-                                                                    />
-                                                                    <label for="shipping-new" class="choice_s">신규 배송지</label>
+                                    <div class="table_box">
+                                        <table class="table_style4" style="border-top: none;">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">배송지 이름</th>
+                                                    <td>
+                                                        <input type="text" name="addressName" value="{{addressName}}" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><span class="important">받으실분</span></th>
+                                                    <td>
+                                                        <input type="text" name="receiverName" value="{{receiverName}}" maxlength="20" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><span class="important">주소</span></th>
+                                                    <td>
+                                                        <div class="zipcode_box">
+                                                            <div class="zipcode_top">
+                                                                <div class="zipcode_num">
+                                                                    <input type="text" name="receiverZipCd" readonly="readonly" value="{{receiverZipCd}}" />
                                                                 </div>
-                                                                <span class="btn_gray_list">
-                                                                    <button type="button" class="btn_gray_mid btnManageAddress" id="manageShippingAddressBtn">
-                                                                        <span>배송지 관리</span>
+                                                                <div class="zipcode_btn_box">
+                                                                    <button type="button" class="zipcode_btn1 post_search btn_post_search" id="postSearch">
+                                                                        주소찾기
                                                                     </button>
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <!--                                                    {{/ifLogined}}-->
-                                                    <!--                                                    {{#ifLogined}}-->
-                                                    <tr>
-                                                        <th scope="row">배송지 이름</th>
-                                                        <td>
-                                                            <input type="text" name="addressName" value="{{addressName}}" />
-                                                        </td>
-                                                    </tr>
-                                                    <!--                                                    {{else}}-->
-                                                    <tr>
-                                                        <th scope="row">배송지 확인</th>
-                                                        <td>
-                                                            <div class="order_delivery_choice">
-                                                                <div class="form_element">
-                                                                    <input type="radio" id="shipping-default" name="shipping" value="new" checked />
-                                                                    <label for="shipping-default" class="choice_s">직접 입력</label>
-
-                                                                    <input type="radio" id="shipping-recent" name="shipping" value="orderer" />
-                                                                    <label for="shipping-recent" class="choice_s">주문자 정보와 동일</label>
                                                                 </div>
                                                             </div>
-                                                        </td>
-                                                    </tr>
-                                                    <!--                                                    {{/ifLogined}}-->
+                                                            <input type="text" name="receiverAddress" readonly="readonly" value="{{receiverAddress}}" />
+                                                            <input type="text" name="receiverDetailAddress" value="{{receiverDetailAddress}}" />
+                                                            <input type="hidden" name="receiverJibunAddress" value="{{receiverJibunAddress}}" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><span class="important">휴대폰번호</span></th>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="receiverContact1"
+                                                            value="{{receiverContact1}}"
+                                                            placeholder="-없이 숫자만 입력"
+                                                            inputmode="text"
+                                                            data-pattern="notNumber"
+                                                            maxlength="11"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">전화번호</th>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="receiverContact2"
+                                                            value="{{receiverContact2}}"
+                                                            placeholder="-없이 숫자만 입력"
+                                                            inputmode="text"
+                                                            maxlength="11"
+                                                            data-pattern="notNumber"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <!--                                                    {{#if requireCustomsIdNumber}}-->
+                                                <tr>
+                                                    <th scope="row">
+                                                        <span class="important">개인통관고유부호</span>
+                                                    </th>
+                                                    <td>
+                                                        <input
+                                                            type="text"
+                                                            name="customsIdNumber"
+                                                            value="{{customsIdNumber}}"
+                                                            maxlength="13"
+                                                            data-pattern="customsId"
+                                                            placeholder="P로 시작하는 13자리"
+                                                        />
+                                                        개인통관고유부호 발급
+                                                        <a href="https://unipass.customs.go.kr/csp/persIndex.do" target="_blank">바로가기> </a>
+                                                    </td>
+                                                </tr>
+                                                <!--                                                    {{/if}}-->
+                                                <!---->
+                                                <tr>
+                                                    <th scope="row">배송 메모</th>
+                                                    <td>
+                                                        <input type="text" name="deliveryMemo" />
+                                                    </td>
+                                                </tr>
 
-                                                    <tr>
-                                                        <th scope="row"><span class="important">받으실분</span></th>
-                                                        <td>
-                                                            <input type="text" name="receiverName" value="{{receiverName}}" maxlength="20" />
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row"><span class="important">주소</span></th>
-                                                        <td class="member_address">
-                                                            <div class="address_postcode">
-                                                                <input type="text" name="receiverZipCd" readonly="readonly" value="{{receiverZipCd}}" />
-                                                                <button type="button" class="btn_post_search" id="postSearch">
-                                                                    주소찾기
-                                                                </button>
-                                                            </div>
-                                                            <div class="address_input">
-                                                                <input type="text" name="receiverAddress" readonly="readonly" value="{{receiverAddress}}" />
-                                                                <input type="text" name="receiverDetailAddress" value="{{receiverDetailAddress}}" />
-                                                                <input type="hidden" name="receiverJibunAddress" value="{{receiverJibunAddress}}" />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row"><span class="important">휴대폰번호</span></th>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                name="receiverContact1"
-                                                                value="{{receiverContact1}}"
-                                                                placeholder="-없이 숫자만 입력"
-                                                                inputmode="text"
-                                                                data-pattern="notNumber"
-                                                                maxlength="11"
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">전화번호</th>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                name="receiverContact2"
-                                                                value="{{receiverContact2}}"
-                                                                placeholder="-없이 숫자만 입력"
-                                                                inputmode="text"
-                                                                maxlength="11"
-                                                                data-pattern="notNumber"
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                    <!--                                                    {{#if requireCustomsIdNumber}}-->
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span class="important">개인통관고유부호</span>
-                                                        </th>
-                                                        <td>
-                                                            <input
-                                                                type="text"
-                                                                name="customsIdNumber"
-                                                                value="{{customsIdNumber}}"
-                                                                maxlength="13"
-                                                                data-pattern="customsId"
-                                                                class="valueValidation"
-                                                                placeholder="P로 시작하는 13자리"
-                                                            />
-                                                            개인통관고유부호 발급
-                                                            <a href="https://unipass.customs.go.kr/csp/persIndex.do" target="_blank">바로가기> </a>
-                                                        </td>
-                                                    </tr>
-                                                    <!--                                                    {{/if}}-->
-                                                    <!---->
-                                                    <tr>
-                                                        <th scope="row">배송 메모</th>
-                                                        <td>
-                                                            <input type="text" name="deliveryMemo" />
-                                                        </td>
-                                                    </tr>
-
-                                                    <!--{{#ifLogined}}-->
-                                                    <tr>
-                                                        <th scope="row">회원정보 반영</th>
-                                                        <td>
-                                                            <div class="form_element">
-                                                                <input type="checkbox" name="updateMember" id="updateMember" />
-                                                                <label for="updateMember" class="check_s">배송지의 주소를 회원정보에 반영합니다.</label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <!--{{/ifLogined}}-->
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                <!--{{#ifLogined}}-->
+                                                <tr>
+                                                    <th scope="row">회원정보 반영</th>
+                                                    <td>
+                                                        <div class="inp_chk">
+                                                            <input type="checkbox" name="updateMember" id="updateMember" />
+                                                            <label for="updateMember" class="check_s">배송지의 주소를 회원정보에 반영합니다.</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <!--{{/ifLogined}}-->
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <!-- 배송 정보 -->
+                                </div>
+                            </div>
+                            <!-- 배송 정보 -->
 
-                                    <!-- 결제 정보 -->
-                                    <div class="payment_info invisible" id="paymentInfo">
-                                        <div class="order_zone_tit">
-                                            <h4>결제정보</h4>
-                                        </div>
-
-                                        <div class="order_table_type">
-                                            <table class="table_left">
-                                                <colgroup>
-                                                    <col style="width: 15%;" />
-                                                    <col style="width: 85%;" />
-                                                </colgroup>
+                            <!-- 결제 정보 -->
+                            <div class="payment_info" id="paymentInfo">
+                                <div class="order_box">
+                                    <h2 class="order_tit">결제정보</h2>
+                                    <fieldset>
+                                        <div class="table_box">
+                                            <table class="table_style5">
                                                 <tbody>
                                                     <tr>
-                                                        <th scope="row">상품 합계 금액</th>
+                                                        <th scope="row">상품 금액</th>
                                                         <td>
                                                             <strong class="order_payment_sum format_currency">{{toCurrencyString totalStandardAmt}}</strong>원
                                                         </td>
@@ -564,89 +398,109 @@
                                                     <tr>
                                                         <th scope="row">할인 및 적립</th>
                                                         <td>
-                                                            <ul class="order_benefit_list">
-                                                                <li class="order_benefit_sale">
-                                                                    <em>할인</em><strong> : {{toCurrencyString totalDiscountAmt}}원</strong>
-                                                                    (즉시할인 {{toCurrencyString instantDiscount}}원 + 상품쿠폰할인 {{toCurrencyString
-                                                                    productCouponAmt}}원 + 주문쿠폰 할인 {{toCurrencyString cartCouponAmt}}원)
-                                                                </li>
+                                                            <div class="pay_benefits">
+                                                                <p class="sale">
+                                                                    할인 :
+                                                                    <strong>
+                                                                        (-) <b class="total-member-dc-price">{{toCurrencyString totalDiscountAmt}}원</b>
+                                                                    </strong>
+                                                                    <br />
+                                                                    (즉시할인
+                                                                    <span class="member-dc-price">{{toCurrencyString instantDiscount}}원</span>
+                                                                    + 상품쿠폰할인
+                                                                    <span class="member-dc-price">{{toCurrencyString productCouponAmt}}원</span>
+                                                                    + 주문쿠폰 할인
+                                                                    <span class="goods-coupon-dc-price">{{toCurrencyString cartCouponAmt}}원</span>
+                                                                    )
+                                                                </p>
                                                                 {{#ifLogined}}{{#unless useAccumulation}}
-                                                                <li class="order_benefit_mileage">
-                                                                    <em>적립</em
-                                                                    ><strong> : {{toCurrencyString accumulationAmtWhenBuyConfirm}}{{accumulationUnit}}</strong>
-                                                                </li>
+                                                                <p class="mileage">
+                                                                    적립 :
+                                                                    <strong>
+                                                                        (+)
+                                                                        <b class="toal-member-mileage"
+                                                                            >{{toCurrencyString accumulationAmtWhenBuyConfirm}}{{accumulationUnit}}</b
+                                                                        >
+                                                                    </strong>
+                                                                </p>
                                                                 {{/unless}}{{/ifLogined}}
-                                                            </ul>
+                                                            </div>
                                                         </td>
                                                     </tr>
-                                                    <!---->
-                                                    <!--                                                    {{#ifLogined}}-->
+
+                                                    <!--{{#ifLogined}}-->
                                                     <tr>
                                                         <th scope="row">쿠폰 사용</th>
                                                         <td>
                                                             <ul class="benefit_list dn">
                                                                 <!--[D] 사용 안할 시 class 에 dn 추가, 사용 시 dn 삭제 -->
                                                             </ul>
-                                                            <span class="btn_gray_list">
-                                                                <button type="button" class="btn_gray_mid" id="btnApplyCoupons">
+                                                            <span class="btn_gray_list"
+                                                                ><button type="button" class="btn_open_layer coupon_search_apply_btn" id="btnApplyCoupons">
                                                                     <span>쿠폰 조회 및 적용</span>
-                                                                </button>
-                                                            </span>
+                                                                </button></span
+                                                            >
                                                         </td>
                                                     </tr>
-                                                    <!---->
-                                                    <!---->
                                                     <tr>
                                                         <th scope="row">적립금 사용</th>
                                                         <td>
-                                                            <div class="address_postcode">
-                                                                <input
-                                                                    id="accumulation"
-                                                                    type="text"
-                                                                    name="subPayAmt"
-                                                                    value="{{subPayAmt}}"
-                                                                />{{accumulationUnit}}
-                                                                <button type="button" class="btn_use_all_my_accumulation" id="useAllAccumulation">
-                                                                    전액 사용
-                                                                </button>
-                                                                <ul class="accumulation_list">
-                                                                    <li>
-                                                                        <em>보유 적립금 :</em
-                                                                        ><strong>{{toCurrencyString accumulationAmt}}{{accumulationUnit}}</strong>
-                                                                    </li>
-                                                                    <li>
-                                                                        <em>사용가능 적립금 :</em
-                                                                        ><strong>{{toCurrencyString availableMaxAccumulationAmt}}{{accumulationUnit}}</strong>
-                                                                    </li>
-                                                                </ul>
+                                                            <div class="all_money_box">
+                                                                <div class="money_left">
+                                                                    <input id="accumulation" type="text" name="subPayAmt" value="{{subPayAmt}}" />
+                                                                </div>
+                                                                <div class="money_right">
+                                                                    <button type="button" class="coupon_search_apply_btn" id="useAllAccumulation">
+                                                                        전액 사용
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="point_view">
+                                                                <p>
+                                                                    보유 적립금 :
+                                                                    <span>{{toCurrencyString accumulationAmt}}원</span>
+                                                                </p>
+                                                                <p>
+                                                                    사용가능 적립금 :
+                                                                    <span>{{toCurrencyString availableMaxAccumulationAmt}}원</span>
+                                                                </p>
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <!--                                                    {{/ifLogined}}-->
-                                                    <!---->
-                                                    <tr>
-                                                        <th scope="row">최종 결제 금액</th>
-                                                        <td><strong class="order_payment_sum format_currency">{{toCurrencyString paymentAmt}}</strong>원</td>
-                                                    </tr>
+                                                    <!--{{/ifLogined}}-->
                                                 </tbody>
                                             </table>
                                         </div>
+                                    </fieldset>
+                                </div>
+                                <div class="order_box">
+                                    <div class="sum_prc_wrap">
+                                        <dl class="sum_prc">
+                                            <dt>최종 결제 금액</dt>
+                                            <dd class="c_red"><strong>{{toCurrencyString paymentAmt}}</strong>원</dd>
+                                        </dl>
                                     </div>
-                                    <div class="payment_progress">
-                                        <div class="payment_box">
-                                            <div class="order_zone_tit zeroPay">
-                                                <h4>결제수단 선택 / 결제</h4>
-                                            </div>
-
-                                            <div class="payment_progress_list zeroPay invisible" id="paymentProgressList">
+                                </div>
+                            </div>
+                            <div class="payment_progress">
+                                <div class="how_to_pay">
+                                    <div class="js_pay_content">
+                                        <div class="order_box">
+                                            <div class="payment_progress_list zeroPay" id="paymentProgressList">
+                                                <h2 class="order_tit">
+                                                    <span>
+                                                        <img src="/assets/img/etc/payment_check_on.png" alt="일반결제" class="js_payment_check_general" />
+                                                    </span>
+                                                    결제 수단 선택
+                                                </h2>
                                                 <div id="escrow">
                                                     {{#if isEscrow}} ※ 고객님은 안전거래를 위해 현금으로 결제시 저희 쇼핑몰에서 가입한 구매안전서비스인
                                                     이지페이의 구매안전(에스크로)서비스를 이용하실 수 있습니다. {{/if}}
                                                 </div>
-                                                <div class="js_pay_content">
-                                                    <div class="list-btn invisible" id="payMethodList">
-                                                        {{#each payMethods}}
-                                                        <div class="form_element">
+                                                <ul class="pay_mth" id="payMethodList">
+                                                    {{#each payMethods}}
+                                                    <li>
+                                                        <span class="inp_rdo">
                                                             <input
                                                                 type="radio"
                                                                 class="paymethods"
@@ -661,151 +515,149 @@
                                                                 {{else}} {{#ifEq payType 'KCP-PAYCO'}}
                                                                 <img src="/assets/img/order/logo_payco.png" />
                                                                 {{else}} {{#ifEq payType 'NAVER_EASY_PAY'}}
-                                                                <img src="/assets/img/order/pc_npay.png" />
-                                                                {{else}} {{title}} {{/ifEq}}{{/ifEq}} {{/ifEq}}
+                                                                <img src="/assets/img/order/m_npay.png" />
+                                                                {{else}} {{title}} {{/ifEq}} {{/ifEq}} {{/ifEq}}
                                                             </label>
-                                                        </div>
-                                                        {{else}}
-                                                        <div style="text-align: center; width: 100%;">
-                                                            결제 가능한 수단이 존재하지 않습니다.
-                                                        </div>
-                                                        {{/each}}
+                                                        </span>
+                                                    </li>
+                                                    {{else}}
+                                                    <div style="text-align: center; width: 100%;">
+                                                        결제 가능한 수단이 존재하지 않습니다.
                                                     </div>
-                                                </div>
+                                                    {{/each}}
+                                                </ul>
 
-                                                <div class="account-detail-info" id="accountDetailInfo" style="display: none;">
-                                                    <div class="js_receipt">
-                                                        <div class="order_table_type">
-                                                            <p class="top_txt">
-                                                                (무통장 입금의 경우 입금확인 후부터 배송단계가 진행됩니다.)
-                                                            </p>
-                                                            <table class="table_left">
-                                                                <colgroup>
-                                                                    <col style="width: 15%;" />
-                                                                    <col style="width: 85%;" />
-                                                                </colgroup>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th scope="row">입금자명</th>
-                                                                        <td colspan="3">
-                                                                            <label>
-                                                                                <input type="text" name="remitter" value="" maxlength="30" />
-                                                                            </label>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">계좌번호</th>
-                                                                        <td>
-                                                                            <select class="chosen-select" name="bankAccount">
-                                                                                {{#each accountBankList}}
-                                                                                <option
-                                                                                    value="{{bankAccount}}"
-                                                                                    data-bank-code="{{bankCode}}"
-                                                                                    data-bank-depositor-name="{{bankDepositorName}}"
-                                                                                    >{{bankName}} {{bankAccount}} {{bankDepositorName}}</option
-                                                                                >
-                                                                                {{/each}}
-                                                                            </select>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
+                                                <div class="order_box" id="accountDetailInfo" style="display: none;">
+                                                    <h2 class="order_tit">
+                                                        (무통장 입금의 경우 입금확인 후부터 배송단계가 진행됩니다.)
+                                                    </h2>
+
+                                                    <table class="table_style4">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="row">입금자명</th>
+                                                                <td>
+                                                                    <input type="text" name="remitter" maxlength="30" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">계좌번호</th>
+                                                                <td>
+                                                                    <span class="inp_sel">
+                                                                        <select name="bankAccount">
+                                                                            {{#each accountBankList}}
+                                                                            <option
+                                                                                value="{{bankAccount}}"
+                                                                                data-bank-code="{{bankCode}}"
+                                                                                data-bank-depositor-name="{{bankDepositorName}}"
+                                                                                >{{bankName}} {{bankAccount}} {{bankDepositorName}}</option
+                                                                            >
+                                                                            {{/each}}
+                                                                        </select>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <!-- payment_final -->
+                                            <div class="order_box join_agreement" id="paymentFinal">
+                                                <h2 class="order_tit">약관동의</h2>
 
-                                        <!-- payment_final -->
-                                        <div class="payment_final" id="paymentFinal">
-                                            <div class="payment_final_total">
-                                                <dl>
-                                                    <dt>최종 결제 금액</dt>
-                                                    <dd>
-                                                        <span
-                                                            ><strong id="totalSettlePriceView" class="invisible">{{toCurrencyString paymentAmt}}</strong
-                                                            >원</span
+                                                <div class="payment_final_check privacy_big_box" id="termsChecks">
+                                                    {{#each agreementList}} {{#if required}} {{#if used}} {{#ifEq key 'TRANSFER_AGREE'}}{{#if
+                                                    ../deliveryInternational}}
+                                                    <div class="privacy_box">
+                                                        <dl>
+                                                            <dt>
+                                                                <span class="inp_chk">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        id="agreeCheckbox-{{key}}"
+                                                                        data-term-id="{{key}}"
+                                                                        name="agreeCheckbox"
+                                                                        value="{{key}}"
+                                                                        class="{{#if required}}require{{else}}option{{/if}}"
+                                                                    />
+                                                                    <label for="agreeCheckbox-{{key}}" class="check_s">
+                                                                        <em><b>{{#if required}}[필수]{{else}}[선택]{{/if}}</b> {{label}}</em>
+                                                                    </label>
+                                                                </span>
+                                                            </dt>
+                                                            <dd>
+                                                                {{#if contents}}
+                                                                <span class="agreement_detail" data-term-id="{{key}}">보기 &gt;</span>
+                                                                {{/if}}
+                                                            </dd>
+                                                        </dl>
+                                                    </div>
+                                                    <br />
+                                                    {{/if}}{{else}}
+                                                    <div class="privacy_box">
+                                                        <dl>
+                                                            <dt>
+                                                                <span class="inp_chk">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        id="agreeCheckbox-{{key}}"
+                                                                        data-term-id="{{key}}"
+                                                                        name="agreeCheckbox"
+                                                                        value="{{key}}"
+                                                                        class="{{#if required}}require{{else}}option{{/if}}"
+                                                                    />
+                                                                    <label for="agreeCheckbox-{{key}}" class="check_s">
+                                                                        <em><b>{{#if required}}[필수]{{else}}[선택]{{/if}}</b> {{label}}</em>
+                                                                    </label>
+                                                                </span>
+                                                            </dt>
+                                                            <dd>
+                                                                {{#if contents}}
+                                                                <span class="agreement_detail" data-term-id="{{key}}">보기 &gt;</span>
+                                                                {{/if}}
+                                                            </dd>
+                                                        </dl>
+                                                    </div>
+                                                    <br />{{/ifEq}} {{/if}} {{/if}} {{/each}}
+                                                    <div class="form_element">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="agreeCheckbox-ORDER_DEFAULT"
+                                                            data-term-id="ORDER_DEFAULT"
+                                                            name="agreeCheckbox"
+                                                            value="ORDER_DEFAULT"
+                                                            class="require"
+                                                        />
+                                                        <label for="agreeCheckbox-ORDER_DEFAULT" class="check_s"
+                                                            ><em><b>[필수]</b> 구매하실 상품의 결제정보를 확인하였으며, 구매진행에 동의합니다.</em></label
                                                         >
-                                                    </dd>
-                                                </dl>
-                                            </div>
-
-                                            <div class="payment_final_check invisible" id="termsChecks">
-                                                {{#each agreementList}} {{#if required}} {{#if used}} {{#ifEq key 'TRANSFER_AGREE'}}{{#if
-                                                ../deliveryInternational}}
-                                                <div class="form_element">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="agreeCheckbox-{{key}}"
-                                                        data-term-id="{{key}}"
-                                                        name="agreeCheckbox"
-                                                        value="{{key}}"
-                                                        class="{{#if required}}require{{else}}option{{/if}}"
-                                                    />
-                                                    <label for="agreeCheckbox-{{key}}" class="check_s"
-                                                        ><em><b>{{#if required}}[필수]{{else}}[선택]{{/if}}</b> {{label}}</em></label
-                                                    >
-                                                    {{#if contents}}
-                                                    <span class="agreement_detail" data-term-id="{{key}}">보기 &gt;</span>
-                                                    {{/if}}
+                                                    </div>
+                                                    <br />
+                                                    {{#each agreementList}}{{#unless required}} {{#if used}}
+                                                    <div class="form_element inp_chk">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="agreeCheckbox-{{key}}"
+                                                            data-term-id="{{key}}"
+                                                            name="agreeCheckbox"
+                                                            value="{{key}}"
+                                                            class="{{#if required}}require{{else}}option{{/if}}"
+                                                        />
+                                                        <label for="agreeCheckbox-{{key}}" class="check_s"
+                                                            ><em><b>{{#if required}}[필수]{{else}}[선택]{{/if}}</b> {{label}}</em></label
+                                                        >
+                                                        {{#if contents}}
+                                                        <span class="agreement_detail" data-term-id="{{key}}">보기 &gt;</span>
+                                                        {{/if}}
+                                                    </div>
+                                                    <br />
+                                                    {{/if}} {{/unless}} {{/each}}
                                                 </div>
-                                                <br />
-                                                {{/if}}{{else}}
-                                                <div class="form_element">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="agreeCheckbox-{{key}}"
-                                                        data-term-id="{{key}}"
-                                                        name="agreeCheckbox"
-                                                        value="{{key}}"
-                                                        class="{{#if required}}require{{else}}option{{/if}}"
-                                                    />
-                                                    <label for="agreeCheckbox-{{key}}" class="check_s"
-                                                        ><em><b>{{#if required}}[필수]{{else}}[선택]{{/if}}</b> {{label}}</em></label
-                                                    >
-                                                    {{#if contents}}
-                                                    <span class="agreement_detail" data-term-id="{{key}}">보기 &gt;</span>
-                                                    {{/if}}
+                                                <div class="btn_pay_wrap">
+                                                    <button class="order_payment_btn" id="orderBuy">
+                                                        <em>결제하기</em>
+                                                    </button>
                                                 </div>
-                                                <br />{{/ifEq}}{{/if}}{{/if}} {{/each}}
-                                                <div class="form_element">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="agreeCheckbox-ORDER_DEFAULT"
-                                                        data-term-id="ORDER_DEFAULT"
-                                                        name="agreeCheckbox"
-                                                        value="ORDER_DEFAULT"
-                                                        class="require"
-                                                    />
-                                                    <label for="agreeCheckbox-ORDER_DEFAULT" class="check_s"
-                                                        ><em><b>[필수]</b> 구매하실 상품의 결제정보를 확인하였으며, 구매진행에 동의합니다.</em></label
-                                                    >
-                                                </div>
-                                                <br />
-                                                {{#each agreementList}} {{#unless required}} {{#if used}}
-                                                <div class="form_element">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="agreeCheckbox-{{key}}"
-                                                        data-term-id="{{key}}"
-                                                        name="agreeCheckbox"
-                                                        value="{{key}}"
-                                                        class="{{#if required}}require{{else}}option{{/if}}"
-                                                    />
-                                                    <label for="agreeCheckbox-{{key}}" class="check_s"
-                                                        ><em><b>{{#if required}}[필수]{{else}}[선택]{{/if}}</b> {{label}}</em></label
-                                                    >
-                                                    {{#if contents}}
-                                                    <span class="agreement_detail" data-term-id="{{key}}">보기 &gt;</span>
-                                                    {{/if}}
-                                                </div>
-                                                <br />
-                                                {{/if}} {{/unless}} {{/each}}
-                                            </div>
-                                            <div class="btn_center_box">
-                                                <button class="btn_order_buy order-buy btnOrderTotal" id="orderBuy">
-                                                    <em>결제하기</em>
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -816,7 +668,6 @@
                 </div>
             </div>
         </div>
-        <aside id="aside"></aside>
         <footer id="footer"></footer>
         <div id="popups-area"></div>
         <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
