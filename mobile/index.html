@@ -42,96 +42,110 @@
         <header id="header"></header>
         <div id="contents">
             <main id="promotionBanner" class="sub_content invisible">
+              <!-- 디자인교과서.fe 메인 비주얼 -->
+              <div class="dk-main-visual main_visual">
+                <!-- 동영상 -->
+                <div style="position:relative;padding:100% 0 0 0;overflow:hidden;">
+                  <iframe src="https://player.vimeo.com/video/690397949?h=ad1b8ff673&muted=1&autoplay=1&loop=1&title=0&byline=0&portrait=0&background=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                </div>
+
                 {{#if BANNER01}}
-                <div class="main_visual">
-                    <div class="main_slide slider-wrap slider-banner" id="banner-BANNER01">
-                        {{#each BANNER01.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                {{img imageUrl '' '' description '' ''}}
-                            </a>
-                        </div>
-                        {{/each}}
-                    </div>
-                    {{/if}}
-                </div>
-                <div class="main_content">
-                    <div class="both_wrap">
-                        <div class="main_right_goods">
-                            <!-- 메인 상품 노출 -->
-                            <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCMO0001" style="display: none;"></div>
-                        </div>
-                    </div>
-                    <div class="main_banner_row">
-                        {{#each BANNER02.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER02">
-                                {{img imageUrl '' '' description '' ''}}
-                            </a>
-                        </div>
-                        {{/each}} {{#each BANNER03.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER03">
-                                {{img imageUrl '' '' description '' ''}}
-                            </a>
-                        </div>
-                        {{/each}}
-                    </div>
-
-                    <!-- 메인 상품 노출 -->
-                    <div class="goods_list main_wrap_1 main_goods_cont marT55" id="goodsList-SCMO0002" style="display: none;"></div>
-                    <div class="main_banner_row">
-                        {{#each BANNER04.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" id="banner-BANNER04">
-                                {{img imageUrl '' '' description '' ''}}
-                            </a>
-                        </div>
-                        {{/each}} {{#each BANNER05.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" id="banner-BANNER05">
-                                {{img imageUrl '' '' description '' ''}}
-                            </a>
-                        </div>
-                        {{/each}}
-                    </div>
-
-                    <div class="main_banner_row">
-                        {{#each BANNER06.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" id="banner-BANNER06">
-                                {{img imageUrl '' '' description '' ''}}
-                            </a>
-                        </div>
-                        {{/each}}
-                    </div>
-
-                    {{#if BANNER07}}
+                <div class="main_slide slider-wrap slider-banner" id="banner-BANNER01">
+                    {{#each BANNER01.bannerImages}}
                     <div>
-                        {{#each BANNER07.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER07">
-                                {{img imageUrl '' '' description '' ''}}
-                            </a>
-                        </div>
-                        {{/each}}
+                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                            {{img imageUrl '' '' description '' ''}}
+                        </a>
                     </div>
-                    {{/if}}
-                    <!-- 메인 상품 노출 -->
-                    <div class="goods_list main_wrap_1 main_goods_cont marT55" id="goodsList-SCMO0003" style="display: none;"></div>
-                    <div class="goods_list main_wrap_1 main_goods_cont marT55" id="goodsList-SCMO0004" style="display: none;"></div>
-                    <div class="goods_list main_wrap_1 main_goods_cont marT55" id="goodsList-SCMO0005" style="display: none;"></div>
-
-                    <!-- 플러스 리뷰 위젯 -->
-                    <div class="plus-review_widget" id="plus-review-widget">
-                        <div class="main_goods_cont" id="all-review"></div>
-                        <div class="main_goods_cont" id="photo-review"></div>
-                        <div class="main_goods_cont" id="product-review"></div>
-                    </div>
-
-                    <!-- 인스타그램 위젯 -->
-                    <div id="instagram-widget" class="marT55" style="display: none;"></div>
+                    {{/each}}
                 </div>
+                {{/if}}
+              </div>
+              <!-- 디자인교과서.fe 메인 영역 -->
+              <div class="dk-main-wrap main_content">
+                <div class="dk-main-box">
+                  <div class="dk-bn-wrap1">
+                    {{#each BANNER02.bannerImages}}
+                    <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER02">{{img imageUrl}}</a>
+                    {{/each}}
+                  </div>
+                </div>
+                
+                <div class="dk-main-box2">
+                  <div class="dk-bn-wrap2">
+                      {{#each BANNER03.bannerImages}}
+                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER03">{{img imageUrl}}</a>
+                      {{/each}}
+                  </div>
+                </div>
+
+                <div class="dk-main-box3">
+                  <div class="dk-bn-wrap3">
+                      {{#each BANNER04.bannerImages}}
+                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER04">{{img imageUrl}}</a>
+                      {{/each}}
+                  </div>
+                </div>
+
+                <div class="dk-main-box4">
+                  <div class="dk-bn-wrap4">
+                      {{#each BANNER05.bannerImages}}
+                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER05">{{img imageUrl}}</a>
+                      {{/each}}
+                  </div>
+                </div>
+
+                <div class="dk-main-box5">
+                  <div class="dk-bn-wrap5">
+                      {{#each BANNER06.bannerImages}}
+                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER06">{{img imageUrl}}</a>
+                      {{/each}}
+                  </div>
+                </div>
+
+                <div class="dk-main-box6">
+                  <div class="dk-bn-wrap6">
+                      {{#each BANNER07.bannerImages}}
+                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER07">{{img imageUrl}}</a>
+                      {{/each}}
+                  </div>
+                </div>
+
+                <div class="dk-main-box7">
+                  <div class="dk-bn-wrap7">
+                    <ul>
+                      <li>
+                        {{#each BANNER11.bannerImages}}
+                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER11">{{img imageUrl}}</a>
+                        {{/each}}
+                      </li>
+                      <li>
+                        {{#each BANNER12.bannerImages}}
+                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER12">{{img imageUrl}}</a>
+                        {{/each}}
+                      </li>
+                    </ul>
+                    <ul>
+                      <li>
+                        {{#each BANNER13.bannerImages}}
+                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER13">{{img imageUrl}}</a>
+                        {{/each}}
+                      </li>
+                      <li>
+                        {{#each BANNER14.bannerImages}}
+                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER14">{{img imageUrl}}</a>
+                        {{/each}}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- 인스타그램 위젯 -->
+                <div class="insta-box">
+                  <h3>INSTAGRAM</h3>
+                  <div id="instagram-widget" class="" style="display: none;"></div>
+                </div>
+              </div>
             </main>
         </div>
         <footer id="footer"></footer>

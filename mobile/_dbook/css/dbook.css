@@ -1,0 +1,78 @@
+/*========================================================================
+Layout
+========================================================================*/
+body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
+
+/*========================================================================
+상단영역
+========================================================================*/
+#header .dk-header-wrap .dk-header-box { display:flex; align-items: center; justify-content: space-between; padding:3px 0; border-bottom:1px solid #353535; }
+/* 햄버거 메뉴 */
+#header .dk-header-wrap .dk-header-box .dk-left-menu { display: block; position:static; }
+#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu { height:10px; }
+#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span { position: relative; height:10px; background: none; }
+#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span::before { position: absolute; top: 0; left: 0; width:100%; height:1px; background:#353535; content:''; }
+#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span::after { position: absolute; bottom: 0; left: 0; width:100%; height:1px; background:#353535; content: ''; }
+/* 로고 */
+#header .dk-header-wrap .dk-header-box .h_logo { width:165px; margin-top:0; }
+#header .dk-header-wrap .dk-header-box .h_logo img { width:100%; }
+/* 장바구니 */
+#header .dk-header-wrap .dk-header-box .dk-right-menu { display:block; position: static; }
+#header .dk-header-wrap .dk-header-box .dk-right-menu .cart { display: flex; align-items: center; padding-top:20px; }
+#header .dk-header-wrap .dk-header-box .dk-right-menu .cart span { width:auto; height:auto; padding: 0 4px 0 0; color:#353535; font-size:13px; font-weight:400; background:none; }
+#header .dk-header-wrap .dk-header-box .dk-right-menu .cart .cart_count { position:static; width: auto; font-family: 'Jost', 'Noto Sans KR', sans-serif; }
+/* 슬라이드메뉴 검색 */
+#header .dk-nav-search-box { position: absolute; top:50%; right:50px; transform: translateY(-50%); }
+#header .dk-nav-search-box button { border:0; background:none; }
+#header .dk-nav-search-box button img { width:21px; padding:5px 0 0; }
+#popupSearch ._header_search .layer_search_content .search_bx_area .latest_search_tab.on { border-bottom:2px solid #ddd; }
+/*========================================================================
+하단영역
+========================================================================*/
+#footer { margin:0; border-top: 1px solid #353535; }
+.dk-footer-wrap .ft_top_con { display:none; }
+.dk-footer-wrap .dk-footer-top { padding: 40px 0 25px; }
+.dk-footer-wrap .dk-footer-top .dk-footer-logo { display:flex; align-items:center; width:180px; margin:0 auto 20px; }
+.dk-footer-wrap .dk-footer-top .dk-footer-logo a { font-size:0; }
+.dk-footer-wrap .dk-footer-top .dk-footer-logo img { width:100%; }
+.dk-footer-wrap .dk-footer-top .dk-footer-sns ul { display: flex; align-items: center; justify-content: center; }
+.dk-footer-wrap .dk-footer-top .dk-footer-sns ul li { display: flex; align-items: center; justify-content: center; }
+.dk-footer-wrap .dk-footer-top .dk-footer-sns ul li a { display:block; width:50%; }
+.dk-footer-wrap .dk-footer-top .dk-footer-sns ul li a img { width:100%; }
+.dk-footer-wrap .ft_mid_con { display:none; }
+.dk-footer-wrap .dk-footer-btm .dk-foot-list ul { display:flex; align-items: center; justify-content: center; line-height:1; margin:0 0 10px; }
+.dk-footer-wrap .dk-footer-btm .dk-foot-list ul li { position:relative; padding:0 6px; }
+.dk-footer-wrap .dk-footer-btm .dk-foot-list ul li::after { position:absolute; top:0; right:-1px; color:#353535; font-size:11px; font-weight:400; content:'·'; }
+.dk-footer-wrap .dk-footer-btm .dk-foot-list ul li:last-child::after { display:none; }
+.dk-footer-wrap .dk-footer-btm .dk-foot-list ul li a { color:#353535; font-size:11px; font-weight:400; }
+.dk-footer-wrap .dk-footer-btm .dk-foot-list ul li a > strong { font-weight:500; }
+.dk-footer-wrap .dk-footer-btm .dk-footer-address { text-align: center; }
+.dk-footer-wrap .dk-footer-btm .dk-footer-address span,
+.dk-footer-wrap .dk-footer-btm .dk-footer-address a { color:#717171; font-size:11px; font-weight:400; }
+.dk-footer-wrap .dk-footer-btm .dk-footer-copy { line-height:1; margin:10px 0 0; color:#969696; font-size:11px; font-weight:400; text-align: center; }
+
+/*========================================================================
+브랜드
+========================================================================*/
+#brand div { font-size:0; border-bottom: 1px solid #353535; box-sizing: border-box; }
+#brand div:last-child { border-bottom:0; }
+#brand div img { width:100%; }
+
+/*========================================================================
+목록
+========================================================================*/
+.goods_list .navi_g { display:none; } /* 목록 상단 네비 숨김 */
+body .goods_list .goods_list_content .goods_top_box .goods_arr_box .goods_view_type ul li:nth-child(1) button.on { background:#fff url("/_dbook/img/icon_product_type_list_on.png") no-repeat 50%; background-size:16px; }
+.goods_prd_item .goods_prd_img .img_box > a { display:block; font-size:0; }
+.goods_prd_item2 .goods_prd_img .img_box { min-height:auto; }
+body .goods_prd_item .soldout_img,
+body .goods_prd_item2 .soldout_img { background-size:50%; }
+
+/*========================================================================
+스크롤 우측 버튼
+========================================================================*/
+.scroll-right-btn { position:fixed; bottom:0; right:0; margin:10px; z-index:300; }
+.scroll-right-btn .talk_banner_div { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; }
+.scroll-right-btn .talk_preview_area .talk_banner_preview { min-width: 50px; min-height:50px; max-width: 50px; max-height: 50px; }
+.scroll-right-btn .talk_banner_preview.talk_expose_green .ico_talk_banner { width:25px; height:25px; background-position: -45px 2px; }
+.scroll-right-btn .talk_preview_area .talk_banner_desc { font-size: 0; }

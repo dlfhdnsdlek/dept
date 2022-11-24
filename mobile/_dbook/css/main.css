@@ -1,0 +1,32 @@
+/*========================================================================
+메인 영역
+========================================================================*/
+/* 메인 비주얼 */
+.dk-main-visual { position:relative; width:100%; height:100%; border-bottom: 1px solid #353535; box-sizing: border-box; }
+.dk-yt-wrap { position:relative; padding-bottom:18.25%; padding-top:0; height:100vh; overflow:hidden; }
+.dk-yt-wrap iframe,
+.dk-yt-wrapobject,
+.dk-yt-wrap embed { position:absolute; top:0; left:0; width:100%; height:100%; transform: scale(4); }
+#player { position:absolute; top:0; right:0; bottom:0; left:0; z-index: 99;  }
+.dk-main-visual .slider-wrap .slick-slide { padding:0; }
+
+/* 메인 공통 */
+.dk-main-wrap { font-size:0; }
+.dk-main-wrap img { width:100%; }
+.dk-bn-wrap1,
+.dk-bn-wrap2,
+.dk-bn-wrap3,
+.dk-bn-wrap4,
+.dk-bn-wrap5,
+.dk-bn-wrap6,
+.dk-bn-wrap7 { border-bottom: 1px solid #353535; box-sizing: border-box; }
+
+.dk-bn-wrap7 ul { display:flex; }
+
+/* 인스타그램 */
+.insta-box h3 { margin:30px 12px 0; font-size:16px; font-weight:400; }
+.insta-box .instagram_widget_head { display:none; }
+.instagram_widget { padding:10px 18px; }
+.instagram_widget .instagram_widget_contents li { width:25%; padding:0; }
+.instagram_widget .instagram_widget_contents li:nth-child(n+9) { display:none; }
+.instagram_widget .instagram_widget_contents li a { border:0; }
