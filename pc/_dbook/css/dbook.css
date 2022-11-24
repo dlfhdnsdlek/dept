@@ -9,7 +9,7 @@ body { min-width:1200px; }
 /*========================================================================
 상단 영역
 ========================================================================*/
-body #header { min-height:auto; padding:14px 0; border-bottom:1px solid #353535; visibility: visible; }
+body #header { min-height:auto; padding:28px 0; border-bottom:1px solid #353535; visibility: visible; }
 #header .header_top { display:none; }
 #header .dk-header-gnb { display:flex; justify-content: space-between; align-items: center; width:100%; min-width:1200px; margin-top:0; }
 .dk-header-gnb .dk-left-box { flex:1; }
