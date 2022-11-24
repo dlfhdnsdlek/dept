@@ -43,24 +43,19 @@
         <div id="contents">
             <main id="promotionBanner" class="sub_content invisible">
               <!-- 디자인교과서.fe 메인 비주얼 -->
-              <div class="dk-main-visual main_visual">
-                <!-- 동영상 -->
-                <div style="position:relative;padding:100% 0 0 0;overflow:hidden;">
-                  <iframe src="https://player.vimeo.com/video/690397949?h=ad1b8ff673&muted=1&autoplay=1&loop=1&title=0&byline=0&portrait=0&background=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
-                </div>
-
-                {{#if BANNER01}}
-                <div class="main_slide slider-wrap slider-banner" id="banner-BANNER01">
-                    {{#each BANNER01.bannerImages}}
-                    <div>
-                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                            {{img imageUrl '' '' description '' ''}}
-                        </a>
-                    </div>
-                    {{/each}}
-                </div>
-                {{/if}}
+              {{#if BANNER01}}
+              <div class="main_visual">
+                  <div class="main_slide slider-wrap slider-banner" id="banner-BANNER01">
+                      {{#each BANNER01.bannerImages}}
+                      <div>
+                          <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                              {{img imageUrl '' '' description '' ''}}
+                          </a>
+                      </div>
+                      {{/each}}
+                  </div>
               </div>
+              {{/if}}
               <!-- 디자인교과서.fe 메인 영역 -->
               <div class="dk-main-wrap main_content">
                 <div class="dk-main-box">
