@@ -32,7 +32,7 @@ body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans K
 #footer { margin:0; border-top: 1px solid #353535; }
 .dk-footer-wrap .ft_top_con { display:none; }
 .dk-footer-wrap .dk-footer-top { padding: 40px 0 25px; }
-.dk-footer-wrap .dk-footer-top .dk-footer-logo { display:flex; align-items:center; width:180px; margin:0 auto 20px; }
+.dk-footer-wrap .dk-footer-top .dk-footer-logo { display:flex; align-items:center; width:78px; margin:0 auto 20px; }
 .dk-footer-wrap .dk-footer-top .dk-footer-logo a { font-size:0; }
 .dk-footer-wrap .dk-footer-top .dk-footer-logo img { width:100%; }
 .dk-footer-wrap .dk-footer-top .dk-footer-sns ul { display: flex; align-items: center; justify-content: center; }
