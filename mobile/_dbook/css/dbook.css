@@ -6,19 +6,19 @@ body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans K
 /*========================================================================
 상단영역
 ========================================================================*/
-#header .dk-header-wrap .dk-header-box { display:flex; align-items: center; justify-content: space-between; padding:3px 0; border-bottom:1px solid #353535; }
+#header .dk-header-wrap .dk-header-box { display:flex; align-items: center; justify-content: space-between; padding:0; border-bottom:1px solid #353535; }
 /* 햄버거 메뉴 */
 #header .dk-header-wrap .dk-header-box .dk-left-menu { display: block; position:static; }
-#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu { height:10px; }
+#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu { padding:25px 15px; line-height: 0; }
 #header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span { position: relative; height:10px; background: none; }
 #header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span::before { position: absolute; top: 0; left: 0; width:100%; height:1px; background:#353535; content:''; }
 #header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span::after { position: absolute; bottom: 0; left: 0; width:100%; height:1px; background:#353535; content: ''; }
 /* 로고 */
-#header .dk-header-wrap .dk-header-box .h_logo { width:165px; margin-top:0; }
+#header .dk-header-wrap .dk-header-box .h_logo { width:78px; height:auto; margin-top:0; }
 #header .dk-header-wrap .dk-header-box .h_logo img { width:100%; height:auto; }
 /* 장바구니 */
 #header .dk-header-wrap .dk-header-box .dk-right-menu { display:block; position: static; }
-#header .dk-header-wrap .dk-header-box .dk-right-menu .cart { display: flex; align-items: center; padding-top:20px; }
+#header .dk-header-wrap .dk-header-box .dk-right-menu .cart { display: flex; align-items: center; padding:20px 7px; }
 #header .dk-header-wrap .dk-header-box .dk-right-menu .cart span { width:auto; height:auto; padding: 0 4px 0 0; color:#353535; font-size:13px; font-weight:400; background:none; }
 #header .dk-header-wrap .dk-header-box .dk-right-menu .cart .cart_count { position:static; width: auto; font-family: 'Jost', 'Noto Sans KR', sans-serif; }
 /* 슬라이드메뉴 검색 */
