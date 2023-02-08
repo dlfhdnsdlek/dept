@@ -6,7 +6,8 @@
   ~  @since 2021.6.29
   -->
 
-<div id="footer_wrap" class="invisible">
+<!-- 디자인교과서.fe 푸터 영역 -->
+<div id="footer_wrap" class="invisible dk-footer-wrap">
     <div class="content_info_wrap">
         <div class="content_info">
             {{#with top}}
@@ -46,6 +47,15 @@
                     </div>
                 </div>
             </div>
+            <!-- 디자인교과서.fe 푸터 상단 영역 -->
+            <div class="dk-footer-top">
+                <div class="dk-footer-logo"><a href="#none"><img src="/_dbook/img/footer_logo.png" alt="" /></a></div>
+                <div class="dk-footer-sns">
+                    <ul>
+                        <li><a href="https://www.instagram.com/binwoos/" target="_blank"><img src="/_dbook/img/footer_sns_ico2.png" alt="" /></a></li>
+                    </ul>
+                </div>
+            </div>
             {{/with}}
         </div>
         <!-- //content_info -->
@@ -56,7 +66,6 @@
                 <div class="ft_mid_con">
                     {{#with menu}}
                     <div>
-                        {{#if about.length}}
                         <a href="#">ABOUT</a>
                         <ul>
                             {{#each about}} {{#if used}}
@@ -65,7 +74,6 @@
                             </li>
                             {{/if}} {{/each}}
                         </ul>
-                        {{/if}}
                     </div>
                     <div>
                         <a a href="#">MY ACCOUNT</a>
@@ -119,55 +127,41 @@
                     </div>
                     {{/with}}
                 </div>
-                <div class="ft_info2_box">
-                    <div class="foot_list">
-                        <ul class="ft_menu">
+                <div class="dk-footer-btm">
+                    <div class="dk-foot-list">
+                        <ul>
+                            <li>
+                                <a href="/pages/service/privacy-policy.html">이용안내</a>
+                            </li>
                             <li>
                                 <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
                             </li>
                             <li>
-                                <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
+                                <a href="/pages/service/use-terms.html">이용약관</a>
+                            </li>
+                            <li>
+                                <a href="#none">제휴문의</a>
                             </li>
                         </ul>
                     </div>
-                    <!-- //foot_list -->
                     <div class="foot_cont">
                         {{#with business}}
-                        <div class="ft_address">
-                            대표 : {{serviceBasicInfo.representativeName}} <br />
-                            {{serviceBasicInfo.companyName}} {{serviceBasicInfo.address}} {{serviceBasicInfo.addressDetail}} <br />
-                            사업자등록번호 : {{businessRegistration.no}}
-                            <a href="{{businessRegistration.url}}" class="btn_licensee_info" target="_blank">사업자번호조회</a>
-                            <br />
-                            통신판매업신고번호 : {{serviceBasicInfo.onlineMarketingBusinessDeclarationNo}} <br />
-                            개인정보처리책임자 : {{serviceBasicInfo.privacyManagerName}} <br />
-                            대표번호 : {{serviceBasicInfo.representPhoneNo}} <br />
-                            팩스번호 : {{serviceBasicInfo.faxNo}} <br />
-                            메일 :
-                            <a href="mailto:{{serviceBasicInfo.representEmail}}" class="btn_email">{{serviceBasicInfo.representEmail}}</a>
-                            <br />
-                            호스트제공 : 엔에이치엔커머스(주) <br />
+                        <div class="ft_address dk-footer-address">
+                            <span>상호 : {{serviceBasicInfo.companyName}}</span><span> 대표자 : {{serviceBasicInfo.representativeName}}</span><br/>
+                            <span>EMAIL : <a href="mailto:{{mall.serviceCenter.email}}" class="btn_email">{{mall.serviceCenter.email}}</a></span><br/>
+                            <span>사업자번호 : {{businessRegistration.no}}
+                            <a href="{{businessRegistration.url}}" class="btn_licensee_info" target="_blank">[사업자번호조회]</a></span><br/>
+                            <span>통신판매업신고번호 : {{serviceBasicInfo.onlineMarketingBusinessDeclarationNo}}</span><br/>
+                            <span>대표번호 : {{serviceBasicInfo.representPhoneNo}}</span><br/>
+                            <span>주소 : {{serviceBasicInfo.address}} {{serviceBasicInfo.addressDetail}}</span><br />
+                            <span>호스트제공 : 엔에이치엔커머스(주)</span>
                         </div>
                         {{#if since}}
-                        <address class="ft_copy">Copyright {{since}} {{companyName}} all rights reserved.</address>
+                        <address class="ft_copy dk-footer-copy">Copyright {{since}} {{companyName}} all rights reserved.</address>
                         {{/if}}
                         <div class="foot_certify">
-                            {{#if termsConfig}} {{img termsConfig.fairLogoUrl}} {{/if}} {{#ifEq orderConfig.pgType "INICIS"}} {{{orderConfig.escrow.logo}}}
-                            {{/ifEq}} {{#ifEq orderConfig.pgType "TOSS_PAYMENTS"}}
-                            <a
-                                class="payment_toss"
-                                href="https://pgweb.uplus.co.kr/ms/escrow/s_escrowYn.do?mertid={{orderConfig.escrow.escrowInfoKey}}"
-                                target="_blank"
-                            >
-                                <img src="/assets/img/payments/toss.png" alt="토스" />
-                                <span class="bar"></span>
-                                <img src="/assets/img/payments/escrow.png" alt="에스크로" />
-                            </a>
-                            {{/ifEq}} {{#ifEq orderConfig.pgType "KCP"}}
-                            <a href="https://admin.kcp.co.kr/Modules/escrow/kcp_pop.jsp?site_cd={{orderConfig.escrow.escrowInfoKey}}" target="_blank">
-                                <img src="/assets/img/payments/kcp.png" alt="kcp" />
-                            </a>
-                            {{/ifEq}} {{#if mallSSLSeal}} {{{mallSSLSeal}}} {{/if}}
+                            {{#if termsConfig}} {{img termsConfig.fairLogoUrl}} {{/if}} {{#if mall.escrowLogo.exposure}} {{{mall.escrowLogo.logoHtml}}} {{/if}}
+                            {{#if mall.ssl}} {{{mall.ssl.trustSeal}}} {{/if}}
                         </div>
                         {{/with}}
                     </div>
@@ -180,5 +174,11 @@
         </div>
     </div>
     <!-- //content_info_wrap -->
+    <div class="scroll-right-btn">
+        <!-- Talk Talk Banner Script start -->  
+        <script type="text/javascript" src="https://partner.talk.naver.com/banners/script"></script>  
+        <div class="talk_banner_div" data-id="113483"></div>  
+        <!-- Talk Talk Banner Script end -->
+    </div>
 </div>
 <script type="text/javascript" src="/js/components/footer.js"></script>
