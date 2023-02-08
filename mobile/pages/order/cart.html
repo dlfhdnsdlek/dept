@@ -228,7 +228,7 @@
                                                                             data-can-change-option="true" disabled data-selected-value="{{value}}"
                                                                         >
                                                                             {{#if @last}}
-                                                                                <option value="{{value}}" selected>{{safeString value}} (+{{toCurrencyString ../option.price.addPrice}} 원){{#ifEq ../../displayStock true }} / 재고 : {{../option.stockCnt}}개{{/ifEq}}</option>
+                                                                                <option value="{{value}}" selected>{{safeString value}} (+{{toCurrencyString ../option.price.addPrice}} 원){{#ifEq ../../displayStock true }} / {{/ifEq}}</option>
                                                                             {{else}}
                                                                                 <option value="{{value}}" selected>{{safeString value}}</option>
                                                                             {{/if}}
@@ -243,7 +243,7 @@
                                                                                 id="{{option.optionName}}"
                                                                                 data-can-change-option="true" disabled data-selected-value="{{option.optionValue}}"
                                                                         >
-                                                                        <option value="{{option.optionValue}}" selected>{{safeString option.optionValue}} (+{{toCurrencyString option.price.addPrice}} 원){{#ifEq ../../displayStock true }} / 재고 : {{../option.stockCnt}}개{{/ifEq}}</option>
+                                                                        <option value="{{option.optionValue}}" selected>{{safeString option.optionValue}} (+{{toCurrencyString option.price.addPrice}} 원){{#ifEq ../../displayStock true }} / {{/ifEq}}</option>
                                                                         </select>
                                                                     </div>
                                                                 {{/ifEq}}
