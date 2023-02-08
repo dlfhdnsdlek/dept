@@ -66,7 +66,7 @@ body .goods_list .goods_list_content .goods_top_box .goods_arr_box .goods_view_t
 .goods_prd_item .goods_prd_img .img_box > a { display:block; font-size:0; }
 .goods_prd_item2 .goods_prd_img .img_box { min-height:auto; }
 body .goods_prd_item .soldout_img,
-body .goods_prd_item2 .soldout_img { background-size:50%; }
+body .goods_prd_item2 .soldout_img { background-image:url(/_dbook/img/soldout.png) !important; background-size:50% auto; }
 
 /*========================================================================
 스크롤 우측 버튼
