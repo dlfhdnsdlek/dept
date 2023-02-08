@@ -82,7 +82,7 @@ body #footer { min-height: auto !important; border-top: 1px solid #2a2a2a; box-s
 ========================================================================*/
 .item_photo_box { width:100%; }
 .item_photo_box img { width:100%; }
-.item_photo_box .item_soldout_bg { background-size:auto; }
+.item_photo_box .item_soldout_bg { background-image:url(/_dbook/img/soldout.png) !important; background-size:auto; }
 
 /*========================================================================
 네이버 톡톡
