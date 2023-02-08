@@ -28,6 +28,7 @@ $(() => {
         shopby.cache.setAccessToken(openIdTokenResult.accessToken, openIdTokenResult.expireIn);
 
         const { data: userInfo } = await shopby.api.member.getProfile();
+        const ordinaryMemberData = openIdTokenResult.ordinaryMemberResponse;
 
         // isOauthWithdrawalProcess : 회원탈퇴인지 아닌지에 대한 식별자
         const isOauthWithdrawalProcess = shopby.localStorage.getItemWithExpire(
@@ -41,12 +42,12 @@ $(() => {
           window.location.replace('/pages/my/withdrawal.html');
           return;
         }
-        shopby.helper.login._openIdAuthCallback(userInfo);
+        shopby.helper.login._openIdAuthCallback(userInfo, ordinaryMemberData);
       } catch (error) {
         console.error(error);
         if (error.code === 'M0020') {
           //휴면회원
-          shopby.helper.login._openIdAuthCallback(null, true);
+          shopby.helper.login._openIdAuthCallback(null, null, true);
         } else {
           shopby.cache.removeAccessToken();
           shopby.helper.login._openIdAuthCallback();

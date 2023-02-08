@@ -486,7 +486,8 @@ font-weight:bold;}
 .arrow_up{background: url(/assets/img/icon/icon-arrow-up.png) 96% no-repeat;background-size: 11px;}
 .openblock_header h3 {display:block;}
 .openblock .openblock_content {position:relative; padding:10px 10px 10px 10px; border-top:1px solid #D9D9D9; z-index:10;}
-.openblock .openblock_content .product_certification_info{border: 1px solid #dbdbdb; margin:5px; padding: 10px 10px 10px 50px; background: url('/assets/img/certify/logo_kc.jpg') no-repeat 10px center;background-size:25px auto;}
+.openblock .openblock_content .product_certification_info{border: 1px solid #dbdbdb; padding: 10px 10px 10px 50px; background: url('/assets/img/certify/logo_kc.jpg') no-repeat 10px center;background-size:25px auto;}
+.openblock .openblock_content .product_certification_info + .product_certification_info{margin-top: 10px;}
 .openblock .openblock_header button {background:none; border:none;}
 .openblock .openblock_header button span {display:block; width:16px; height:16px; font-size:0; background:url('/assets/img/icon/icon_arrow1.png') no-repeat center; background-size:100%;}
 .openblock .openblock_header .toggle_btn {

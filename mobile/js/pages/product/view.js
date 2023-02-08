@@ -1131,7 +1131,7 @@ $(() => {
 
   const generateData = {
     summary(product, options, coupons) {
-      const { status, price, baseInfo, deliveryFee, reservationData } = product;
+      const { status, price, baseInfo, deliveryFee, reservationData, limitations } = product;
       const { contentsIfPausing, additionDiscountAmt, immediateDiscountAmt, salePrice: originPrice } = price;
       const totalDiscount = additionDiscountAmt + immediateDiscountAmt;
       const salePrice = originPrice - totalDiscount;
@@ -1161,6 +1161,15 @@ $(() => {
         liked: product.liked,
         naverPayHandling,
         hasCoupon: coupons.length > 0,
+        limitations,
+        useLimitations:
+          limitations.minBuyCnt > 0 ||
+          limitations.maxBuyTimeCnt > 0 ||
+          limitations.maxBuyPersonCnt > 0 ||
+          limitations.maxBuyPeriodCnt > 0,
+        useLimitationsComma:
+          limitations.minBuyCnt > 0 &&
+          (limitations.maxBuyTimeCnt > 0 || limitations.maxBuyPersonCnt > 0 || limitations.maxBuyPeriodCnt > 0),
       };
     },
     detail(product, images, option) {
@@ -1300,10 +1309,19 @@ $(() => {
         });
       },
       mapDutyInfoContents(contents) {
-        return contents.map(content => {
+        let isKcCertifications = false;
+
+        const mappingDutyInfo = contents.map(content => {
           const [key, value] = Object.entries(content).flat();
+
+          if (key === 'KC 인증정보') {
+            isKcCertifications = true;
+          }
+
           return { key, value };
         });
+
+        return { mappingDutyInfo, isKcCertifications };
       },
     },
     review: {
@@ -1480,6 +1498,7 @@ $(() => {
         NO_EXHIBITION: 'PPVE0019',
         NO_MINOR_1: 'PPVE0003',
         NO_MINOR_2: 'ODSH0002',
+        SOLDOUT_OPTION: 'PPVE0011',
       };
       if (error && error.code === ERROR_CODE.NO_EXHIBITION) {
         shopby.goHome();
@@ -1490,6 +1509,10 @@ $(() => {
         const callback = ({ state }) => (state === 'ok' ? shopby.goAdultCertification() : shopby.goHome());
         shopby.confirm({ message }, callback);
         return;
+      }
+      if (error.code === ERROR_CODE.SOLDOUT_OPTION) {
+        shopby.alert('재고가 부족합니다. 수량을 조정해주세요.');
+        throw error;
       }
       if (error && error.code) {
         const message = error.message || error.result.message;

@@ -129,11 +129,11 @@
                                             {{#if adult}}
                                                 <strong class="adult_img" style="background-image:url(/assets/img/goods_icon/only_adult_pc.png);">19금</strong>
                                             {{/if}}
-                                            {{#ifLe stockCnt 0}}
+                                            {{#ifEq isSoldOut true}}
                                                 <strong class="soldout_img"
                                                         style="background-image:url('/assets/img/icon/soldout.png'); display:block;"
                                                 >SOLD OUT</strong>
-                                            {{/ifLe}}
+                                            {{/ifEq}}
                                             {{#ifEq saleStatusType 'READY'}}
                                                 <div class="item_sell_ing"><span>판매<br>임박</span></div>
                                             {{/ifEq}}
@@ -193,9 +193,9 @@
                                     {{#if adult}}
                                         <strong class="adult_img" style="background-image:url(/assets/img/goods_icon/only_adult_pc.png);">19금</strong>
                                     {{/if}}
-                                    {{#ifLe stockCnt 0}}
+                                    {{#ifEq isSoldOut true}}
                                         <strong class="soldout_img" style="background-image:url('/assets/img/icon/soldout.png');">SOLD OUT</strong>
-                                    {{/ifLe}}
+                                    {{/ifEq}}
                                     {{#ifEq saleStatusType 'READY'}}<div class="goods_selling"><span>판매<br>임박</span></div>{{/ifEq}}
                                     {{#ifEq saleStatusType 'FINISHED'}}<div class="goods_selling"><span>판매<br>종료</span></div>{{/ifEq}}
                                     </a>

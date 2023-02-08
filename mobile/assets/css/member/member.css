@@ -185,6 +185,8 @@
 .join_method .sns_login li .naver img{height:42px;}
 .join_method .sns_login li .kakao {background:url('/assets/img/etc/ico_mo_kakao.png') left top no-repeat; background-size: auto 42px; height: 42px; padding-left: 43px;}
 .join_method .sns_login li .kakao img{height:42px;}
+.join_method .sns_login li .kakao-sync {background:url('/assets/img/etc/ico_mo_kakao-sync.png') left top no-repeat, #FEE500; background-size: auto 42px; height: 42px; padding-left: 43px;}
+.join_method .sns_login li .kakao-sync img{height:42px;}
 .join_method .sns_login li .wonder {background:url('/assets/img/etc/ico_mo_wonder.png') left top no-repeat; background-size: auto 42px; height: 42px; padding-left: 43px;}
 .join_method .sns_login li .wonder img{height:42px;}
 .join_method .sns_login li { margin: 7px 0; text-align: center; }
@@ -232,6 +234,8 @@
 .login .login_box .sns_login a.naver img{height:42px;}
 .login .login_box .sns_login a.kakao {background:url('/assets/img/etc/ico_mo_kakao.png') left top no-repeat; background-size: auto 42px; height: 42px; padding-left: 43px;}
 .login .login_box .sns_login a.kakao img{height:42px;}
+.login .login_box .sns_login a.kakao-sync {background:url('/assets/img/etc/ico_mo_kakao-sync.png') left top no-repeat, #FEE500; background-size: auto 42px; height: 42px; padding-left: 43px;}
+.login .login_box .sns_login a.kakao-sync img{height:42px;}
 .login .login_box .sns_login a.wonder {background:url('/assets/img/etc/ico_mo_wonder.png') left top no-repeat; background-size: auto 42px; height: 42px; padding-left: 43px;}
 .login .login_box .sns_login a.wonder img{height:42px;}
 /* 비회원 주문조회 */
@@ -403,3 +407,18 @@
 .kcp-manual-submit { margin: 15px; }
 .kcp-manual-submit button { display:block; width: 100%; padding:10px 0 10px 0; text-align:center; background:#323438; border:1px solid #323438; color:#ffffff; font-weight:bold; box-sizing:border-box; font-size:15px;}
 .kcp-manual-submit p { margin-top: 10px; text-align: center;}
+
+/* 카카오싱크 기존회원전환 팝업 */
+.layer_wrap.type-kakao-sync{height:100%;}
+.ly_cont.type-kakao-sync .join_form .join_form_top_txt{font-size:16px;font-weight:700;text-align:center;}
+.ly_cont.type-kakao-sync .join_form .join_form_box{margin-top:10px;padding:10px 0;background:#eee;}
+.ly_cont.type-kakao-sync .btn_ly_download{display:inline-block;width:100%;height:42px;padding:0 10px;color:#fff;font-size:14px;background:#323437;border:1px solid #323437;}
+.ly_cont.type-kakao-sync .btn_ly_download.kakao-sync{background:#fae100;border:1px solid #fae100;color:#333;}
+.ly_cont.type-kakao-sync .btn_center_box{margin-top:10px;}
+.ly_cont.type-kakao-sync .content-box p{padding-top:10px;}
+.ly_cont.type-kakao-sync .content-box p span{color:#ab3e55;}
+.ly_cont.type-kakao-sync .content-box .input-box{margin-top:20px;}
+.ly_cont.type-kakao-sync .content-box .input-box input{width:100%;height: 33px;text-indent: 10px;border: 1px solid #c3c3c3;box-sizing: border-box;}
+.ly_cont.type-kakao-sync .content-box .input-box input + input{margin-top:10px;}
+.ly_cont.type-kakao-sync .content-box + .content-box{margin-top:30px;border-top:1px solid #ccc;}
+.ly_cont.type-kakao-sync .ly_close img{width:14px;}

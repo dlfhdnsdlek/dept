@@ -122,7 +122,7 @@ $(() => {
 
     _cancelOtherOptionEditing(cartNo);
 
-    const { data } = await shopby.api.product.getProductsProductNoOptions({ pathVariable: { productNo } });
+    const { data } = await shopby.api.product.getProductsProductNoOptions({ pathVariable: { productNo: productNo } });
     const { data: productData } = await shopby.api.product.getProductsProductNo({
       pathVariable: { productNo: productNo },
     });
@@ -196,13 +196,18 @@ $(() => {
     const $li = $select.parents('li');
     const depth = $select.data('depth');
     const selectedIndex = $select.find('option').index($select.find('option:selected'));
+    const displayStock = editOptionData.option._displayableStock;
 
     editOptionData.changeSelectOption(depth, selectedIndex, true);
 
-    if (editOptionData.selectedOptions.length > 0) {
+    // 미 노출일 경우 변경 완료 버튼 클릭 시 체크한다.
+    if (displayStock && editOptionData.selectedOptions.length > 0) {
       const $input = $li.find('input[name=orderCnt]');
       const orderCnt = Number($input.val());
-      if (orderCnt > editOptionData.selectedOptions[0].stockCnt) {
+      const displayStock = editOptionData.option._displayableStock;
+
+      // 미 노출일 경우 변경 완료 버튼 클릭 시 체크한다.
+      if (displayStock && orderCnt > editOptionData.selectedOptions[0].stockCnt) {
         $input.val(editOptionData.selectedOptions[0].stockCnt);
       }
     }
@@ -264,6 +269,9 @@ $(() => {
   const _changeCartCntByInput = e => {
     // 각 옵션별 수량 인풋
     const $input = $(e.target);
+    const displayStock = editOptionData.option._displayableStock;
+
+    if (!displayStock) return; // 미 노출일 경우 변경 완료 버튼 클릭 시 체크한다.
 
     const stockCnt = editOptionData.selectedOptions[0].stockCnt;
     let orderCnt = Number($input.val()) || 1;
@@ -379,9 +387,19 @@ $(() => {
       $('#orderBoxArea').hide();
 
       const cartData = await shopby.helper.cart.getCartData(true);
+
+      // 재고 노출
+      let displayStock = true;
+      if (cartData && cartData.list.length > 0) {
+        const productNo = cartData.list[0].product.productNo;
+        const productOptions = await shopby.api.product.getProductsProductNoOptions({ pathVariable: { productNo } });
+
+        displayStock = productOptions.data.displayableStock;
+      }
+
       this.setHasProducts(cartData);
       this.calculatePrice();
-      this.render(cartData);
+      this.render(cartData, displayStock);
 
       this.naverPay = await this.generateNaverPay();
       this.naverPay && this.naverPay.applyNaverPayButton(this.loadNaverPayOrder.bind(this));
@@ -395,10 +413,10 @@ $(() => {
     setHasProducts(cartData) {
       hasProducts = shopby.utils.isArrayNotEmpty(cartData.list);
     },
-    render(cartData) {
+    render(cartData, displayStock) {
       // list render
       const compiled = Handlebars.compile($('#cartContentsTemplate').html());
-      const html = $(compiled({ carts: cartData.list }));
+      const html = $(compiled({ carts: cartData.list, displayStock: displayStock }));
       $('#cartContents').html(html);
 
       $('#selectRemoveArea').render({ hasProducts }).show();

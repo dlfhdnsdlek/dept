@@ -104,38 +104,57 @@
                             </div>
                         {{/hasUserInfo}}
                     </div>
-                    <div class='terms_wrap'>
-                        {{#each optionalTerms}}
-                            <div class='inp_chk'>
-                                <input type='checkbox' id="agreeCheckbox-{{key}}" name='termItem' class='option' data-term-id="{{key}}" />
-                                <label for="agreeCheckbox-{{key}}" class='check_s'>
-                                    <em>
-                                        <b>
-                                            [선택]
-                                        </b>
-                                        {{#if contents}}
-                                            <span class='agreement_detail' data-term-id="{{key}}">
-                                                {{label}}
-                                            </span>
-                                        {{/if}}
-                                    </em>
-                                </label>
+                    <div class="terms_wrap">
+                        <div class="join_agreement_box">
+                            <div class="all_chk">
+                                <span class="inp_chk">
+                                    <input type="checkbox" id="allAgree" name="termAllTem" {{isAllChecked}} />
+                                    <label class="check" for="allAgree">
+                                        <em>{{profile.mallName}}의 모든 약관을 확인하고 전체동의합니다.<br />(전체동의, 선택항목도 포함됩니다.)</em>
+                                    </label>
+                                </span>
                             </div>
-                        {{/each}}
+                        </div>
+                        <!-- //join_agreement_box -->
+                        <div class="privacy_big_box">
+                            {{#each allTerms}}
+                                <div class="privacy_box ">
+                                    <dl>
+                                        <dt>
+                                            <span class="inp_chk">
+                                                <input type="checkbox" id="agreeCheckbox-{{key}}" name="termItem"
+                                                        class="{{#if required}}require{{else}}option{{/if}}" data-term-id="{{key}}">
+                                                <label for="agreeCheckbox-{{key}}" class="check_s">
+                                                    <em><b>{{#if required}}[필수]{{else}}[선택]{{/if}}</b>{{label}}</em>
+                                                                            </label>
+                                            </span>
+                                        </dt>
+                                        <dd class="agreement_detail">
+                                            {{#if contents}}
+                                                <button class="agreement_detail" data-term-id="{{key}}">보기 > </button>
+                                            {{/if}}
+                                        </dd>
+                                    </dl>
+                                </div>
+                            {{/each}}
+                            <div class="privacy_box">
+                                <dl>
+                                    <dt>
+                                        <span class="inp_chk">
+                                            <input type="checkbox" id="agreeCheckbox-JOIN_POSSIBLE_AGE" name="termItem"
+                                                    class="require" data-term-id="JOIN_POSSIBLE_AGE">
+                                            <label class="check_s" for="agreeCheckbox-JOIN_POSSIBLE_AGE">
+                                                <em><b>[필수]</b>본인은 만 14세 이상입니다.</em>
+                                            </label>
+                                        </span>
+                                    </dt>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="join_certify_box" style="text-align:center; display:none">
+                            <strong class="msg">(!) 필수항목을 체크해주세요.</strong>
+                        </div>
                     </div>
-                    <div class='join_form_agree_txt'>
-                        본인은 만 14세 이상이며,
-                        <a href='#' class='agreement_detail' data-term-id='USE'>
-                            이용약관 (내용보기),
-                        </a>
-                        <br />
-                        <a href='#' class='agreement_detail' data-term-id='PI_COLLECTION_AND_USE_REQUIRED'>
-                            개인정보 수집 및 이용동의 (내용보기)
-                        </a>
-                        <br />
-                        내용을 확인하였으며 동의합니다.
-                    </div>
-                </div>
                 <ul class='btn_box'>
                     <li>
                         <button type='button' class='address_save_btn btnCloseLayer' data-action-type='positive'>

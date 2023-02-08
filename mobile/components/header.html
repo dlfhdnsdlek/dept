@@ -1,24 +1,23 @@
 <div id="navigation" class="wrap">
-    <!-- 디자인교과서.fe 상단 영역 -->
-    <div class="dk-header-wrap header_wrap">
+    <div class="header_wrap">
         <header>
-            <!-- 디자인교과서.fe 상단 영역 묶음 -->
-            <div class="dk-header-box header_box">
+            <div class="header_box">
                 <!-- 좌측 메뉴 -->
-                <ul class="dk-left-menu left_menu visible">
+                <ul class="left_menu invisible" id="logo">
                     <li>
                         <a href="#" class="side_menu btnOpenSideMenu"><span>메뉴</span></a>
                     </li>
-                </ul>
-                <div id="logo">
                     <a href="{{landingUrl}}" class="h_logo" id="banner-logo">
                         {{img imageUrl}}
                     </a>
-                </div>
+                </ul>
                 <!-- 우측 메뉴 -->
-                <ul class="dk-right-menu right_menu invisible" id="headerTop">
+                <ul class="right_menu invisible" id="headerTop">
                     <li>
-                        <a href="/pages/order/cart.html" class="cart"><span>CART</span><span class="cart_count" id="js_cart_length">0</span></a>
+                        <button class="top_search bn_srch btnSearchGlobal"><span>검색</span></button>
+                    </li>
+                    <li>
+                        <a href="/pages/order/cart.html" class="cart"><span>장바구니</span><span class="cart_count" id="js_cart_length">0</span></a>
                     </li>
                 </ul>
             </div>
@@ -48,9 +47,6 @@
                         <!-- //nav_banner -->
                         <div class="nav_category">
                             <div class="nav_tabmenu_box">
-                                <div class="tab_menu0" style="margin: 10px 0 40px;">
-                                    <p class="prd_tit"><a href="/pages/product/list.html?categoryNo=265193">BINWOOS</a></p>
-                                </div>
                                 <div class="tab_menu0">
                                     <p class="prd_tit">CATEGORY</p>
                                     <div class="prd_cate" id="category-navigation">
@@ -96,10 +92,6 @@
                                 </div>
                                 <!-- //tab_menu0 -->
 
-                                <div class="tab_menu0" style="margin: 10px 0 40px;">
-                                    <p class="prd_tit"><a href="/_dbook/pages/brand.html">DEPT.B</a></p>
-                                </div>
-
                                 <div class="tab_menu0">
                                     <p class="prd_tit">COMMUNITY</p>
                                     <div class="prd_cate">
@@ -127,7 +119,7 @@
                                     <!-- //prd_cate -->
                                 </div>
                             </div>
-                            <p class="nav_footer">© CHOI MAISON</p>
+                            <p class="nav_footer">© Another</p>
                         </div>
                     </div>
                     <!-- //nav_content_box -->

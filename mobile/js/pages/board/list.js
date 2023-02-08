@@ -30,6 +30,7 @@ $(() => {
     keyword: shopby.utils.getUrlParam('keyword'),
     initPageSize: 20,
     articles: null,
+    btnWriteUsed: null,
     initiate() {
       window.onpopstate = this.onPopState.bind(this);
       this.page = new shopby.readMore(this.onReadMore.bind(this), '#boardMoreButton');
@@ -37,16 +38,18 @@ $(() => {
         this._fetchBoardConfig(),
         this._getBoardList(this.initPageSize, 1, this.rangeCreator()),
         this._getProfile(),
+        this._setBtnWriteUsed(),
       ]).then(() => {
         this._renderBoardList(this.articles.items, this.articles.totalCount);
-        this.boardNameRender();
+        this.initRender();
         this.bindEvents();
       });
       $('#articlesPage').removeClass('invisible').addClass('visible');
     },
 
-    boardNameRender() {
+    initRender() {
       $('.board_name').render({ boardName: this.boardInfo.name });
+      $('#btnWriteBox').render({ btnWriteUsed: this.btnWriteUsed });
     },
 
     async _getProfile() {
@@ -223,6 +226,11 @@ $(() => {
       $('#contents').addClass('visible');
     },
 
+    _setBtnWriteUsed() {
+      const canWrite = this.boardInfo.guestPostingUsed || this.boardInfo.memberPostingUsed;
+      this.btnWriteUsed = canWrite;
+    },
+
     _ableArticleRegister() {
       const memberCanNotWrite = !this.boardInfo.memberPostingUsed && shopby.logined();
       if (memberCanNotWrite) {
@@ -230,18 +238,23 @@ $(() => {
       }
       const guestCanNotWrite = !this.boardInfo.guestPostingUsed && !shopby.logined();
       if (guestCanNotWrite) {
-        throw new Error('로그인하셔야 본 서비스를 이용하실 수 있습니다.');
+        if (confirm('로그인하셔야 본 서비스를 이용하실 수 있습니다.')) {
+          shopby.goLogin();
+        }
+        return false;
       }
+      return true;
     },
     openArticleRegister() {
       try {
-        this._ableArticleRegister();
-        const writer = shopby.logined() ? this.userInfo.memberName : null;
-        shopby.popup('board-article', { boardInfo: this.boardInfo, writer }, callback => {
-          if (callback.state === 'ok') {
-            this._getBoardList(this.initPageSize, 1);
-          }
-        });
+        if (this._ableArticleRegister()) {
+          const writer = shopby.logined() ? this.userInfo.memberName : null;
+          shopby.popup('board-article', { boardInfo: this.boardInfo, writer }, callback => {
+            if (callback.state === 'ok') {
+              this._getBoardList(this.initPageSize, 1);
+            }
+          });
+        }
       } catch (e) {
         shopby.alert(e.message);
       }

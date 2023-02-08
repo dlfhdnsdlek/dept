@@ -1,0 +1,67 @@
+<script id="joinKakaoSyncPopupTemplate" type="text/x-handlebars-template">
+    <div class='layer_wrap coupon_down_layer dimed'>
+        <div class='layer_wrap_cont layer_join_open_id type-kakao-sync'>
+            <div class='ly_tit'>
+                <h4>
+                    간편로그인 회원가입
+                </h4>
+            </div>
+            <div class='ly_cont type-kakao-sync'>
+                <div class='join_form'>
+                    <p class='join_form_top_txt'>
+                        이미 가입된 회원 정보가 있습니다.
+                    </p>
+                    <div class='join_form_box'>
+                        <span>
+                            {{ordinary.email}}
+                        </span>
+                        <span>
+                            (회원가입일 {{ordinary.signUpDateTime}})
+                        </span>
+                    </div>
+                </div>
+                <div class='content-box'>
+                    <p>
+                        해당 계정으로 로그인하시면 카카오 계정으로 전환됩니다.
+                        <br />
+                        <span>
+                            카카오 계정으로 전환하신 이후
+                        </span>
+                        에는
+                        <span>
+                            기존 계정으로 로그인이 불가
+                        </span>
+                        합니다
+                    </p>
+                    <div class='input-box'>
+                        <input id='existingId' name='existingId' type='text' placeholder='아이디' />
+                        <input id='existingPw' name='existingPw' type='password' placeholder='비밀번호' />
+                    </div>
+                    <div class='btn_center_box'>
+                        <button id='synchronizeLogin' class='btn_ly_download btnCloseLayer' data-action-type='login'>
+                            <strong>
+                                간편로그인으로 전환하기
+                            </strong>
+                        </button>
+                    </div>
+                </div>
+                <div class='content-box'>
+                    <p>
+                        아직 회원이 아니라면 원클릭으로 가입하세요.
+                    </p>
+                    <div class='btn_center_box'>
+                        <button id='closeLayer' class='btn_ly_download btnCloseLayer kakao-sync' data-action-type='post'>
+                            <strong>
+                                카카오 계정으로 신규 가입하기
+                            </strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <a id='closeLayer' href='#close' class='ly_close btnCloseLayer' data-action-type='cancel'>
+                <img src='/assets/img/icon/icon_x2.png' alt='닫기' />
+            </a>
+        </div>
+    </div>
+</script>
+<script type="text/javascript" src="/js/components/popup/join-open-id-kakaosync.js"></script>

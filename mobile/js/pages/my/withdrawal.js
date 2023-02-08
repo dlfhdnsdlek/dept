@@ -30,8 +30,8 @@ $(() => {
         this.initiateWithdrawalForm();
       } else {
         $('#certifyOpenId').render({
-          providerTypes: userInfo.providerTypes.map(type => type.toLowerCase()),
-          providerType: userInfo.providerType.toLowerCase(),
+          providerTypes: userInfo.providerTypes.map(type => type.toLowerCase().replace('_', '-')),
+          providerType: userInfo.providerType.toLowerCase().replace('_', '-'),
         });
       }
     },
@@ -40,7 +40,7 @@ $(() => {
     },
     async certifyOpenId(event) {
       event.preventDefault();
-      const provider = `ncp_${event.currentTarget.dataset.provider}`;
+      const provider = `ncp_` + `${event.currentTarget.dataset.provider}`.replace('_', '-');
       const data = await shopby.helper.login.fetchOauthLogin(provider);
       shopby.helper.login.openLoginPopup(data);
       shopby.localStorage.setItemWithExpire(shopby.cache.key.member.isOauthWithdrawalProcess, true); //탈퇴페이지 인지

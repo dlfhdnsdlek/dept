@@ -782,7 +782,7 @@ window['shopby'] = window.shopby
         const { status, url } = response;
         const _url = url || '';
         const data = _url.includes('/kcp') ? await response.text() : await response.json().catch(() => null);
-        const noAlertCode = ['M0010', 'ODSH0010', 'NCPE0002'];
+        const noAlertCode = ['M0010', 'ODSH0010', 'NCPE0002', 'M0020'];
 
         if (status === 503) {
           location.href = '/pages/error_503.html';
@@ -935,6 +935,10 @@ window['shopby'] = window.shopby
         }
         if (error.code === ERROR_CODE.MY_ORDER.COUPON) {
           shopby.alert('프로모션 코드를 확인해주세요.');
+          throw error;
+        }
+        if (error.code === ERROR_CODE.CART.SOLDOUT_OPTION) {
+          shopby.alert('재고가 부족합니다. 수량을 조정해주세요.');
           throw error;
         }
       },
@@ -2347,6 +2351,24 @@ $(() => {
   };
 
   /**
+   * 구매제한 수량 관련
+   *
+   * @param cart
+   * @returns {boolean}
+   * @private
+   */
+  const _isLimitations = cart => {
+    if (
+      cart.product.minBuyCount > 0 ||
+      cart.product.maxBuyCountInfo.maxBuyTimeCnt > 0 ||
+      cart.product.maxBuyCountInfo.maxBuyPersonCnt > 0 ||
+      cart.product.maxBuyCountInfo.maxBuyPeriodCnt > 0
+    ) {
+      return true;
+    }
+  };
+
+  /**
    * get 카트 멀티 옵션 리스트 (=> {name, value}[])
    *
    * @param cart
@@ -2368,7 +2390,7 @@ $(() => {
    */
   const _getCartDiscountHtml = cart => {
     const discount =
-      (cart.option.price.immediateDiscountAmt + cart.option.price.additionalDiscountAmt) * cart.option.orderCnt;
+      cart.option.price.immediateDiscountAmt * cart.option.orderCnt + cart.option.price.additionalDiscountAmt;
     if (discount > 0) {
       return `-${shopby.utils.toCurrencyString(discount)}원`;
     }
@@ -2468,6 +2490,9 @@ $(() => {
           ),
         )
         .map((cart, index, carts) => {
+          // 구매수량 제한 추가
+          cart.isLimitations = _isLimitations(cart);
+
           // 중복 여부 추가
           cart.isDuplicateCart = _isDuplicateCart(cart, carts);
 
@@ -2835,11 +2860,12 @@ $(() => {
       this._selectedOptionsValues = [];
       this._reservationData = reservationData;
 
-      const { selectType, multiLevelOptions, labels, flatOptions } = optionInfo;
+      const { selectType, multiLevelOptions, labels, flatOptions, displayableStock } = optionInfo;
       this._originSelectOptions = selectType === 'MULTI' ? multiLevelOptions : flatOptions;
       this._labels = selectType === 'MULTI' ? labels : [flatOptions[0].label];
       this._lastDepth = selectType === 'MULTI' ? labels.length - 1 : 0;
       this._selectType = selectType;
+      this._displayableStock = displayableStock;
       this._convertOptionInfo(flatOptions, selectedOptionNo, selectType);
     }
     get options() {
@@ -2897,6 +2923,7 @@ $(() => {
         this._selectOptions,
         this._selectType,
         this._reservationData,
+        this._displayableStock,
       );
     }
     _getSelectedOptionDetail(selectedDepth, selectedIndex, selectedOptionNo) {
@@ -3037,9 +3064,13 @@ $(() => {
       const selectedOption = this._selectedOptions.find(({ optionNo: no }) => no === optionNo);
       const { orderCnt, stockCnt, reservationStockCnt } = selectedOption;
       const orderStockCnt = isPreSalePeriod ? reservationStockCnt : stockCnt;
+      const { displayableStock } = this.option;
       switch (action) {
         case 'up':
-          if (orderCnt < orderStockCnt) {
+          if (!displayableStock && orderCnt < 99999999) {
+            // 수량 미노출일 경우 99999999까지 입력 가능
+            selectedOption.orderCnt += 1;
+          } else if (orderCnt < orderStockCnt) {
             selectedOption.orderCnt += 1;
           }
           break;
@@ -3053,8 +3084,12 @@ $(() => {
             selectedOption.orderCnt = 1;
             break;
           }
-          if (customOrderCount > stockCnt) {
+          if (displayableStock && customOrderCount > stockCnt) {
             selectedOption.orderCnt = stockCnt;
+            break;
+          } else if (!displayableStock && customOrderCount > 99999999) {
+            // 수량 미노출일 경우 99999999를 초과하여 입력할 수 없다.
+            selectedOption.orderCnt = 99999999;
             break;
           }
           selectedOption.orderCnt = customOrderCount;
@@ -3132,20 +3167,40 @@ $(() => {
       };
     }
   }
-  const getStockLabel = (option, reservationData) => {
+  const getStockLabel = (option, reservationData, displayStock) => {
     const { saleType, forcedSoldOut, stockCnt, reservationStockCnt } = option;
     //옵션 : 판매기간동안 판매재고 0 , 예약판매기간동안 예약재고 0
     if (saleType === 'SOLDOUT') {
-      return { disabled: 'disabled', stockStatusLabel: '[품절]' };
+      return {
+        disabled: 'disabled',
+        stockStatusLabel: '[품절]',
+      };
     }
     if (forcedSoldOut) {
-      return { disabled: 'disabled', stockStatusLabel: '[임시품절]' };
+      return {
+        disabled: 'disabled',
+        stockStatusLabel: '[임시품절]',
+      };
     }
-    //예약기간동안 예약재고 노출
-    if (shopby.utils.isPreSalePeriod(reservationData)) {
-      return { disabled: '', stockStatusLabel: `재고 : ${reservationStockCnt}개` };
+    if (displayStock) {
+      //예약기간동안 예약재고 노출
+      if (shopby.utils.isPreSalePeriod(reservationData)) {
+        return {
+          disabled: '',
+          stockStatusLabel: `재고 : ${reservationStockCnt}개`,
+        };
+      }
+      return {
+        disabled: '',
+        stockStatusLabel: `재고 : ${stockCnt}개`,
+      };
+    } else {
+      // 재고 미 노출
+      return {
+        disabled: '',
+        stockStatusLabel: ``,
+      };
     }
-    return { disabled: '', stockStatusLabel: `재고 : ${stockCnt}개` };
   };
   const getAddPriceLabel = option => {
     const { addPrice } = option;
@@ -3165,8 +3220,8 @@ $(() => {
       ? `${labels[depth]} 을(를) 선택해주세요.`
       : `${labels[depth - 1]} 을(를) 먼저 선택해주세요.`;
   };
-  const getLabels = (option, reservationData) => {
-    option.stockStatus = getStockLabel(option, reservationData);
+  const getLabels = (option, reservationData, displayableStock) => {
+    option.stockStatus = getStockLabel(option, reservationData, displayableStock);
     option.priceLabel = getAddPriceLabel(option);
     return option;
   };
@@ -3194,6 +3249,7 @@ $(() => {
     selectedValues,
     selectType,
     reservationData,
+    displayableStock,
   ) => {
     const lastOptionAllSoldOutStatus = currentDepthData.flatMap(data => isLastOptionSoldOut(data));
     const needsLastDepthCustomLabels = isSelectedPrevDepthOption && labels.length - 1 === depth;
@@ -3216,8 +3272,8 @@ $(() => {
       let label;
 
       if (needsLastDepthCustomLabels || selectType === 'FLAT') {
-        const { priceLabel, stockStatus } = { ...getLabels({ ...rest }, reservationData) };
-        label = `${priceLabel} / ${stockStatus.stockStatusLabel}`;
+        const { priceLabel, stockStatus } = { ...getLabels({ ...rest }, reservationData, displayableStock) };
+        label = `${priceLabel}${stockStatus.stockStatusLabel ? ' / ' + stockStatus.stockStatusLabel : ''}`;
         const customValue = `${value} ${label}`;
         const detail = {
           ...rest,
@@ -3277,6 +3333,7 @@ $(() => {
     nextSelectOptions,
     selectType,
     reservationData,
+    displayableStock,
   ) => {
     const isLastDepth = labels.length === depth;
     if (isLastDepth) return;
@@ -3289,6 +3346,7 @@ $(() => {
       selectedValues,
       selectType,
       reservationData,
+      displayableStock,
     );
 
     nextSelectOptions.push(nextSelectOption);
@@ -3303,6 +3361,7 @@ $(() => {
         nextSelectOptions,
         selectType,
         reservationData,
+        displayableStock,
       );
     }
   };
@@ -3769,7 +3828,7 @@ $(() => {
     openLoginPopup(result) {
       location.href = `${result.loginUrl}`;
     },
-    _openIdAuthCallback(profileResult = null, isDormant = false) {
+    _openIdAuthCallback(profileResult = null, ordinaryMemberData = null, isDormant = false) {
       if (isDormant === true) {
         shopby.confirm({ message: '휴면해제가 필요합니다.' }, function (e) {
           if (e.state === 'ok') {
@@ -3784,18 +3843,37 @@ $(() => {
         shopby.alert({ message: '간편 인증에 실패하였습니다.' });
         return;
       }
-      if (profileResult.memberStatus === 'WAITING') {
+
+      if (profileResult.memberStatus === 'WAITING' && !!ordinaryMemberData) {
+        shopby.popup('join-open-id-kakaosync', { ordinary: ordinaryMemberData }, this._JoinOpenIdKakaoSync);
+      } else if (profileResult.memberStatus === 'WAITING') {
         shopby.popup('join-open-id', { profile: profileResult }, this._joinOpenId);
       } else {
-        //NOTE : 무조건 메인페이지로 : shopby.helper.login.goNextUrl 경우 이전페이지를 각 간편로그인 계정페이지로 이동함.
         shopby.alert('로그인이 완료 되었습니다.', shopby.goHome);
       }
     },
-    async _joinOpenId(data) {
+    async _JoinOpenIdKakaoSync(data) {
+      if (data.state === 'cancel') {
+        shopby.cache.removeAccessToken();
+        shopby.goHome();
+        return;
+      } else if (data.state === 'login') {
+        shopby.goHome();
+        return;
+      }
       try {
         await shopby.api.member.postProfileOpenId({
-          requestBody: { joinTermsAgreements: data.agreedTerms },
+          requestBody: {},
         });
+        shopby.alert({ message: '로그인이 완료 되었습니다.' }, shopby.goHome);
+      } catch (e) {
+        shopby.goHome();
+      }
+    },
+    async _joinOpenId({ agreedTerms: joinTermsAgreements }) {
+      try {
+        const request = { requestBody: { joinTermsAgreements } };
+        await shopby.api.member.postProfileOpenId(request);
         //NOTE : 무조건 메인페이지로 : shopby.helper.login.goNextUrl 경우 이전페이지를 각 간편로그인 계정페이지로 이동함.
         shopby.alert('회원가입이 완료 되었습니다.', shopby.goHome);
       } catch (e) {
