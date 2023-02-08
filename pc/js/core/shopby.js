@@ -3279,15 +3279,18 @@ $(() => {
     }
     if (displayStock) {
       //예약기간동안 예약재고 노출
+      //디자인교과서 2023.02.08 재고 관련 삭제 요청
       if (shopby.utils.isPreSalePeriod(reservationData)) {
         return {
           disabled: '',
-          stockStatusLabel: `재고 : ${reservationStockCnt}개`,
+          //stockStatusLabel: `재고 : ${reservationStockCnt}개`,
+          stockStatusLabel: ``,
         };
       }
       return {
         disabled: '',
-        stockStatusLabel: `재고 : ${stockCnt}개`,
+        //stockStatusLabel: `재고 : ${stockCnt}개`,
+        stockStatusLabel: ``,
       };
     } else {
       // 재고 미 노출
@@ -3369,8 +3372,11 @@ $(() => {
         //label은 재고, 옵션가처럼 상품 뒤에 따라오는 부연 텍스트들을 모아놓은 변수입니다.
         //옵션명과 겹치지 않고 언제든지 커스텀 할 수 있게 따로 전역변수로 설정을 했습니다.
         //만약 '옵션가, 재고'가 옵션에 포함이 안되더라도 빈값으로('') 반환됩니다.
-        label = `${priceLabel}${stockStatus.stockStatusLabel ? ' / ' + stockStatus.stockStatusLabel : ''}`;
-        const customValue = `${value} ${label}`;
+        //디자인교과서 2023.02.08 재고 관련 삭제 요청진행 및 품절 문구 앞으로 이동
+        //label = `${priceLabel}${stockStatus.stockStatusLabel ? ' / ' + stockStatus.stockStatusLabel : ''}`;
+        //const customValue = `${value} ${label}`;
+        label = `${priceLabel}`;
+        const customValue = `${stockStatus.stockStatusLabel} ${value} ${label}`;
         const detail = {
           ...rest,
           disabled: stockStatus.disabled,
