@@ -37,6 +37,10 @@
         <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
         <script src="/js/core/shopby.js"></script>
         <title>쇼핑몰명</title>
+        <!-- video JS -->
+        <script src="/_dbook/js/yt-video-background.min.js"></script>
+        <!-- Main CSS -->
+        <link href="/_dbook/css/main.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <header id="header"></header>
@@ -56,92 +60,103 @@
                 </div>
                 {{/if}}
 
-                <div class="main_content main_banner_row">
-                    <div class="main_left_banner">
-                        {{#each BANNER10.bannerImages}}
-                        <div class="main_left_banner">
-                            <div>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER10">
-                                    {{img imageUrl}}
-                                </a>
-                            </div>
-                        </div>
+              <!-- 디자인교과서.fe 메인 묶음 -->
+              <div class="dk-main-wrap main_content">
+                <!-- 디자인교과서.fe 메인 박스 1 -->
+                <div class="dk-main-box">
+                  <div class="dk-bn-wrap1">
+                    <div class="let">
+                      {{#each BANNER02.bannerImages}}
+                      <a href="{{landingUrl}}" id="banner-BANNER02">{{img imageUrl}}</a>
+                      {{/each}}
+                    </div>
+                    <div class="rgt">
+                      <ul class="top-wrap">
+                        <li>
+                          {{#each BANNER03.bannerImages}}
+                          <a href="{{landingUrl}}" id="banner-BANNER03">{{img imageUrl}}</a>
+                          {{/each}}
+                        </li>
+                        <li>
+                          {{#each BANNER04.bannerImages}}
+                          <a href="{{landingUrl}}" id="banner-BANNER04">{{img imageUrl}}</a>
+                          {{/each}}
+                        </li>
+                      </ul>
+                      <div class="btm-wrap">
+                        {{#each BANNER05.bannerImages}}
+                        <a href="{{landingUrl}}" id="banner-BANNER05">{{img imageUrl}}</a>
                         {{/each}}
+                      </div>
                     </div>
-                    <div class="main_right_goods">
-                        <!-- 메인 상품 노출 -->
-                        <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0001" style="display: none;"></div>
-                    </div>
+                  </div>
                 </div>
-                <div class="main_content">
-                    <!-- 배너 2단 -->
-                    <div class="main_banner_row">
-                        {{#each BANNER02.bannerImages}}
-                        <div class="main_banner_column">
-                            <div>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER02">
-                                    {{img imageUrl}}
-                                </a>
-                            </div>
-                        </div>
-                        {{/each}} {{#each BANNER03.bannerImages}}
-                        <div class="main_banner_column">
-                            <div>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER03">
-                                    {{img imageUrl}}
-                                </a>
-                            </div>
-                        </div>
+          
+                <!-- 디자인교과서.fe 메인 박스 2 -->
+                <div class="dk-main-box2">
+                  <div class="dk-bn-wrap2">
+                    {{#each BANNER06.bannerImages}}
+                    <a href="{{landingUrl}}" id="banner-BANNER06">{{img imageUrl}}</a>
+                    {{/each}}
+                  </div>
+                </div>
+          
+                <!-- 디자인교과서.fe 메인 박스 3 -->
+                <div class="dk-main-box3">
+                  <div class="dk-bn-wrap3">
+                    <ul class="top-wrap">
+                      <li>
+                        {{#each BANNER07.bannerImages}}
+                        <a href="{{landingUrl}}" id="banner-BANNER07">{{img imageUrl}}</a>
                         {{/each}}
-                    </div>
-
-                    <!-- 메인 상품 노출 -->
-                    <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0002" style="display: none;"></div>
-                    <!-- 배너 2단 복합 -->
-                    <div class="main_banner_2">
-                        {{#each BANNER04.bannerImages}}
-                        <div class="main_banner_2_left">
-                            <a href="{{landingUrl}}" id="banner-BANNER04">{{img imageUrl}}</a>
-                        </div>
+                      </li>
+                      <li>
+                        {{#each BANNER11.bannerImages}}
+                        <a href="{{landingUrl}}" id="banner-BANNER11">{{img imageUrl}}</a>
                         {{/each}}
-                        <div class="main_banner_2_right">
-                            {{#each BANNER05.bannerImages}}
-                            <a href="{{landingUrl}}" id="banner-BANNER05">{{img imageUrl}}</a>
-                            {{/each}} {{#each BANNER06.bannerImages}}
-                            <div>
-                                <a href="{{landingUrl}}" id="banner-BANNER06">{{img imageUrl}}</a>
-                            </div>
+                      </li>
+                    </ul>
+                    <div class="btm-wrap">
+                      <div class="let">
+                        <ul class="top-wrap">
+                          <li>
+                            {{#each BANNER12.bannerImages}}
+                            <a href="{{landingUrl}}" id="banner-BANNER12">{{img imageUrl}}</a>
                             {{/each}}
-                        </div>
-                    </div>
-
-                    <!--배너 1단 : 하단 -->
-                    {{#if BANNER07}}
-                    <div class="main_cont_slide_ban">
-                        <div class="main_cont_slide">
-                            {{#each BANNER07.bannerImages}}
-                            <div>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER07">{{img imageUrl}}</a>
-                            </div>
+                          </li>
+                          <li>
+                            {{#each BANNER13.bannerImages}}
+                            <a href="{{landingUrl}}" id="banner-BANNER13">{{img imageUrl}}</a>
                             {{/each}}
-                        </div>
+                          </li>
+                        </ul>
+                        <ul class="btm-wrap">
+                          <li>
+                            {{#each BANNER14.bannerImages}}
+                            <a href="{{landingUrl}}" id="banner-BANNER14">{{img imageUrl}}</a>
+                            {{/each}}
+                          </li>
+                          <li>
+                            {{#each BANNER15.bannerImages}}
+                            <a href="{{landingUrl}}" id="banner-BANNER15">{{img imageUrl}}</a>
+                            {{/each}}
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="rgt">
+                        {{#each BANNER16.bannerImages}}
+                        <a href="{{landingUrl}}" id="banner-BANNER16">{{img imageUrl}}</a>
+                        {{/each}}
+                      </div>
                     </div>
-                    {{/if}}
-                    <!-- 메인 상품 노출 -->
-                    <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0003" style="display: none;"></div>
-                    <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0004" style="display: none;"></div>
-                    <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0005" style="display: none;"></div>
-
-                    <!-- 플러스 리뷰 위젯 -->
-                    <div class="plus-review_widget" id="plus-review-widget">
-                        <div class="main_goods_cont" id="all-review"></div>
-                        <div class="main_goods_cont" id="photo-review"></div>
-                        <div class="main_goods_cont" id="product-review"></div>
-                    </div>
-
-                    <!-- 인스타그램 위젯 -->
+                  </div>
+                </div>
+                <!-- 인스타그램 위젯 -->
+                <div class="insta-box">
+                    <h3>INSTAGRAM</h3>
                     <div class="instagram_widget" id="instagram-widget" style="display: none;"></div>
                 </div>
+              </div>
             </main>
         </div>
         <aside id="aside"></aside>
