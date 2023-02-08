@@ -191,6 +191,18 @@
                                             <dt>상품번호</dt>
                                             <dd>{{productNo}}</dd>
                                         </dl>
+                                        {{#if useLimitations }}
+                                        <dl>
+                                            <dt>구매수량제한</dt>
+                                            <dd>
+                                                {{#if limitations.minBuyCnt}}최소 {{ limitations.minBuyCnt }}개{{/if}}{{#if useLimitationsComma }}, {{/if}}
+                                                {{#if limitations.maxBuyTimeCnt}} 최대 {{ limitations.maxBuyTimeCnt }}개(1회) {{else if
+                                                limitations.maxBuyPersonCnt}}최대 {{limitations.maxBuyPersonCnt }}개(1인) {{else if
+                                                limitations.maxBuyPeriodCnt}}최대 {{limitations.maxBuyPeriodCnt }}개 ({{ limitations.maxBuyDays }}일 동안)
+                                                {{/if}}
+                                            </dd>
+                                        </dl>
+                                        {{/if}}
 
                                         <!-- // option selector -->
 
@@ -387,8 +399,9 @@
                                 <ul id="detailTab"></ul>
                             </div>
                             <div class="detail_cont" id="detail" data-template-id="detailTemplate"></div>
+
                             <script id="detailTemplate" type="text/x-handlebars-template">
-                                <div id="detail" data-template-id="detailTemplate>
+                                <div id="detail" data-template-id="detailTemplate">
                                     <div class="detail_cont">
                                     {{#if showsDetailInfo }}
                                         <h3>상품상세정보</h3>
@@ -467,38 +480,76 @@
                                                         <col style="width: 20%;" />
                                                         <col style="width: 80%;" />
                                                     </colgroup>
-                                                    <tbody>
-                                                    {{#each dutyInfoContents}}
-                                                        <tr>
-                                                            <td>{{key}}</td>
-                                                            <td>{{value}}</td>
-                                                        </tr>
+                                                    {{#each dutyInfoContents.mappingDutyInfo}}
+                                                    <tr>
+                                                        <td>{{key}}</td>
+                                                        <td>
+                                                            <!-- 만약 key값이 'KC 인증정보'일 시 인증 정보가 여기에 표시됩니다.-->
+                                                            {{#ifEq key 'KC 인증정보'}}
+                                                                {{value}}
+                                                                {{#each ../certifications}}
+                                                                    <div class="product_certification_info">
+                                                                        <div>{{type}} 안전확인 대상 품목으로 아래의 국가 통합인증 필함</div>
+                                                                        <div>인증 번호 :
+                                                                            <a
+                                                                             href="https://www.safetykorea.kr/search/searchPop?certNum={{code}}"
+                                                                             onclick="window.open(this.href,'_blank', 'width=800, height=600'); return false;"
+                                                                             >
+                                                                            {{code}}
+                                                                            </a>
+                                                                        </div>
+                                                                        {{#ifEqOneOfThree no 8 9 10}}
+                                                                            <div>인증 일자 : {{date}}</div>
+                                                                        {{/ifEqOneOfThree}}
+                                                                    </div>
+                                                                {{/each}}
+                                                            {{else}}
+                                                                {{value}}
+                                                            {{/ifEq}}
+                                                        </td>
+                                                    </tr>
                                                     {{/each}}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                         </div>
                                     {{/if}}
-                                {{#ifNe certificationType 'NOT_TARGET'}}
-                                <h3>인증정보</h3>
-                                <div class="detail_info_box">
-                                {{#ifEq certificationType 'DETAIL_PAGE'}}
-                                    상품 상세페이지 내 별도 표기
-                                {{else}}
-                                    {{#each certifications}}
-                                        <div class="product_certification_info">
-                                            <div>{{type}} 안전확인 대상 품목으로 아래의 국가 통합인증 필함</div>
-                                            <div>인증 번호 : <a href="//www.safetykorea.kr/search/searchPop?certNum={{code}}">{{code}}</a></div>
-                                            {{#ifEqOneOfThree no 8 9 10}}
-                                            <div>인증 일자 : {{date}}</div>
-                                            {{/ifEqOneOfThree}}
+                                    {{#ifNe certificationType 'NOT_TARGET'}}
+                                        <!-- 만약 KC인증이 있을시(isKcCertifications === true) 인증정보는 비표시 됩니다.-->
+                                        {{#if dutyInfoContents.isKcCertifications}}
+                                            {{#ifEq certificationType 'DETAIL_PAGE'}}
+                                            <!-- 만약 KC 인증이 있고 상세페이지 별도표이일때 -->
+                                            <h3>인증정보</h3>
+                                            <div class="detail_info_box">상품 상세페이지 내 별도 표기</div>
+                                            {{/ifEq}}
+                                        {{else}}
+                                        <h3>인증정보</h3>
+                                        <div class="detail_info_box">
+                                            <!-- 만약 KC 인증이 없고 상세페이지 별도표이일때 -->
+                                            {{#ifEq certificationType 'DETAIL_PAGE'}}
+                                                상품 상세페이지 내 별도 표기
+                                            {{else}}
+                                                {{#each certifications}}
+                                                    <div class="product_certification_info">
+                                                        <div>{{type}} 안전확인 대상 품목으로 아래의 국가 통합인증 필함</div>
+                                                        <div>
+                                                            인증 번호 :
+                                                            <a
+                                                            href="https://www.safetykorea.kr/search/searchPop?certNum={{code}}"
+                                                            onclick="window.open(this.href,'_blank', 'width=800, height=600'); return false;"
+                                                            >
+                                                           {{code}}
+                                                           </a>
+                                                        </div>
+                                                        {{#ifEqOneOfThree no 8 9 10}}
+                                                        <div>인증 일자 : {{date}}</div>
+                                                        {{/ifEqOneOfThree}}
+                                                    </div>
+                                                {{/each}}
+                                            {{/ifEq}}
                                         </div>
-                                    {{/each}}
-                                {{/ifEq}}
-                                </div>
-
-                                {{/ifNe}}
-                                    </div>
+                                        {{/if}}
+                                    {{/ifNe}}
                                 </div>
                             </script>
 

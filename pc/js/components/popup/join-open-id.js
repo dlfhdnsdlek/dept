@@ -14,6 +14,7 @@
     async getTerms() {
       const usedTerms = await shopby.helper.member.getAgreements();
 
+      this.option.allTerms = usedTerms;
       this.option.requiredTerms = usedTerms.filter(({ required }) => required);
       this.option.optionalTerms = usedTerms.filter(({ required }) => !required);
     }
@@ -27,7 +28,9 @@
     bindEvents() {
       this.$el
         .on('click', '.agreement_detail', this._openDetailTerm.bind(this))
-        .on('click', '.btnCloseLayer', this._closeButtonEvent.bind(this));
+        .on('click', '.btnCloseLayer', this._closeButtonEvent.bind(this))
+        .on('change', '#allAgree', this.onChangeAllAgreed.bind(this))
+        .on('change', 'input:checkbox[name="termItem"]', this.onChangeTermItem.bind(this));
     }
 
     _openDetailTerm({ target }) {
@@ -45,15 +48,48 @@
     _closeButtonEvent(event) {
       const actionType = $(event.currentTarget).data('action-type') || 'negative';
       if (actionType === 'positive') {
-        const agreeTerms = $('input:checkbox[name="termItem"]:checked')
+        if (!this._validateTerms()) return;
+        const agreedTerms = $('input:checkbox[name="termItem"]:checked')
           .map((_, target) => $(target).data('term-id'))
           .get()
-          .concat(this.option.requiredTerms.map(({ key }) => key))
-          .join();
-        this.close({ state: 'ok', agreeTerms });
+          .concat(this.option.allTerms.map(({ key }) => key))
+          .filter((value, index, arr) => arr.indexOf(value) === index && value !== 'JOIN_POSSIBLE_AGE');
+        //NOTE: JOIN_POSSIBLE_AGE 필터 이유 - BE에서 Enum정의가 되어있지 않음
+
+        this.close({ state: 'ok', agreedTerms });
       } else {
         this.close({ state: 'close' });
       }
+    }
+    onChangeAllAgreed({ target }) {
+      $('input:checkbox[name="termItem"]').prop('checked', $(target).prop('checked'));
+      this.onChangeTermItem();
+    }
+    onChangeTermItem() {
+      window.history.pushState(null, document.title, `/pages/join/agreement.html?${this._checkedTerms()}`);
+      const checked = this.option.allTerms.length + 1 === $('input[name=termItem]:checked').length;
+      //NOTE: JOIN_POSSIBLE_AGE가 allTerms에 미존재 하기에 +1
+      $('#allAgree').prop('checked', checked);
+    }
+    _checkedTerms() {
+      const checkedTerms = $('input:checkbox[name="termItem"]:checked')
+        .map(function () {
+          return $(this).data('term-id');
+        })
+        .get()
+        .join();
+      const params = new URLSearchParams();
+      params.set('terms', checkedTerms);
+      return params.toString();
+    }
+    _validateTerms() {
+      const checkRequired = this.option.requiredTerms.every(({ key }) => $(`#agreeCheckbox-${key}`).is(':checked'));
+      const checkPossibleAge = $('#agreeCheckbox-JOIN_POSSIBLE_AGE').is(':checked');
+
+      const isCheckRequiredAgreements = checkRequired && checkPossibleAge;
+      const $mustCheckMessage = $('.important_check_box');
+      isCheckRequiredAgreements ? $mustCheckMessage.hide() : $mustCheckMessage.show();
+      return isCheckRequiredAgreements;
     }
   }
 

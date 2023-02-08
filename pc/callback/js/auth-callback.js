@@ -25,14 +25,17 @@ $(() => {
             platformType: shopby.platform,
           },
         });
+
         shopby.cache.setAccessToken(openIdTokenResult.accessToken, openIdTokenResult.expireIn);
         const { data: profileResult } = await shopby.api.member.getProfile();
-        shopOauthCallback && shopOauthCallback(profileResult);
+        const ordinaryMemberData = openIdTokenResult.ordinaryMemberResponse;
+
+        shopOauthCallback && shopOauthCallback(profileResult, ordinaryMemberData);
       } catch (error) {
         console.error(error);
         if (shopOauthCallback) {
           if (error.code === 'M0020') {
-            shopOauthCallback(null, true);
+            shopOauthCallback(null, null, true);
           } else {
             shopby.cache.removeAccessToken();
             shopOauthCallback();

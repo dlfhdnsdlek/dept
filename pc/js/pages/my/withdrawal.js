@@ -22,8 +22,8 @@ $(() => {
         $('#certifyPassword').render({ memberId: userInfo.memberId });
       } else {
         $('#certifyOpenId').render({
-          providerTypes: userInfo.providerTypes.map(type => type.toLowerCase()),
-          providerType: userInfo.providerType.toLowerCase(),
+          providerTypes: userInfo.providerTypes.map(type => type.toLowerCase().replace('_', '-')),
+          providerType: userInfo.providerType.toLowerCase().replace('_', '-'),
         });
       }
     },
@@ -47,7 +47,7 @@ $(() => {
     },
     async certifyOpenId(event) {
       event.preventDefault();
-      const provider = `ncp_${event.currentTarget.dataset.provider}`;
+      const provider = `ncp_` + `${event.currentTarget.dataset.provider}`.replace('_', '-');
       const { oauthIdNo } = shopby.sessionStorage.getItemWithExpire(shopby.cache.dataKey.profile);
       const customCallback = profileResult => {
         if (!profileResult) {

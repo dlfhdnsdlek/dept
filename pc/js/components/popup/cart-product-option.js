@@ -178,7 +178,7 @@
     // product start
 
     _getProductData(product) {
-      const { status, price, deliveryFee } = product;
+      const { status, price, deliveryFee, limitations } = product;
       const totalDiscount = price.additionalDiscountAmt + price.immediateDiscountAmt;
       const hasBenefit = totalDiscount + price.accumulationAmtWhenBuyConfirm > 0;
       const coupon = this._getCouponRateAndPrice(price);
@@ -202,6 +202,15 @@
           conditionLabel: this._getDeliveryConditionLabel(deliveryFee),
           deliveryLabel: this._getDeliveryLabel(deliveryFee),
         },
+        useLimitations:
+          limitations.minBuyCnt > 0 ||
+          limitations.maxBuyTimeCnt > 0 ||
+          limitations.maxBuyPersonCnt > 0 ||
+          limitations.maxBuyPeriodCnt > 0,
+        limitations,
+        useLimitationsComma:
+          limitations.minBuyCnt > 0 &&
+          (limitations.maxBuyTimeCnt > 0 || limitations.maxBuyPersonCnt > 0 || limitations.maxBuyPeriodCnt > 0),
       };
     }
 

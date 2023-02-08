@@ -3,6 +3,7 @@ $(() => {
   let cartOptionsCompiled = null;
   let cartTextOptionsCompiled = null;
   let $originOptions = null;
+  let prevProductOrderCnt = null;
 
   const _getTextOptions = $tr => {
     return $tr
@@ -71,19 +72,38 @@ $(() => {
           return Promise.reject();
         }
 
-        return shopby.helper.cart.addCart([
-          {
-            productNo: productNo,
-            optionNo: editOptionData.selectedOptions.length > 0 && editOptionData.selectedOptions[0].optionNo,
-            orderCnt: orderCnt,
-            optionInputs: optionInputs.map(input => ({
-              inputLabel: input.inputLabel,
-              inputValue: input.inputValue || '',
-            })),
-          },
-        ]);
+        // 변경된 수량으로 카트 추가
+        return shopby.helper.cart
+          .addCart([
+            {
+              productNo: productNo,
+              optionNo: editOptionData.selectedOptions.length > 0 && editOptionData.selectedOptions[0].optionNo,
+              orderCnt: orderCnt,
+              optionInputs: optionInputs.map(input => ({
+                inputLabel: input.inputLabel,
+                inputValue: input.inputValue || '',
+              })),
+            },
+          ])
+          .catch(() => {
+            // 기존 수량으로 다시 변경
+            return shopby.helper.cart.addCart([
+              {
+                productNo: productNo,
+                optionNo: editOptionData.selectedOptions.length > 0 && editOptionData.selectedOptions[0].optionNo,
+                orderCnt: prevProductOrderCnt,
+                optionInputs: optionInputs.map(input => ({
+                  inputLabel: input.inputLabel,
+                  inputValue: input.inputValue || '',
+                })),
+              },
+            ]);
+          });
       })
       .finally(() => {
+        // 이전 수량 초기화
+        prevProductOrderCnt = null;
+
         shopby.cart.initiate(true);
       });
   };
@@ -117,6 +137,9 @@ $(() => {
        * 2. 기존 select box hide
        * 3. 새로운 select box rendering
        */
+
+      // 기존 수량 저장
+      prevProductOrderCnt = $tr.find('[name=orderCnt]').val();
 
       const { data } = await shopby.api.product.getProductsProductNoOptions({ pathVariable: { productNo: productNo } });
       const { data: productData } = await shopby.api.product.getProductsProductNo({
@@ -175,10 +198,12 @@ $(() => {
 
     const depth = $dl.data('depth');
     const selectedIndex = $select.find('option').index($select.find('option:selected'));
+    const displayStock = editOptionData.option._displayableStock;
 
     editOptionData.changeSelectOption(depth, selectedIndex, true);
 
-    if (editOptionData.selectedOptions.length > 0) {
+    // 미 노출일 경우 변경 완료 버튼 클릭 시 체크한다.
+    if (displayStock && editOptionData.selectedOptions.length > 0) {
       const $input = $tr.find('input[name=orderCnt]');
       const orderCnt = Number($input.val());
       if (orderCnt > editOptionData.selectedOptions[0].stockCnt) {
@@ -215,6 +240,7 @@ $(() => {
 
     const type = $button.data('type');
 
+    const displayStock = editOptionData.option._displayableStock;
     const isPreSalePeriod = editOptionData.option.isPreSalePeriod;
     const stockCnt = isPreSalePeriod
       ? editOptionData.selectedOptions[0].reservationStockCnt
@@ -222,7 +248,9 @@ $(() => {
     let orderCnt = Number($input.val());
 
     if (type === 'increase') {
-      if (orderCnt < stockCnt) {
+      // 재고 노출 상태일 경우 재고 수량까지만 추가 가능
+      // 재고 미노출 상태일 경우 99999999 까지 입력 가능
+      if (orderCnt < stockCnt || (!displayStock && orderCnt < 99999999)) {
         orderCnt += 1;
       }
     } else {
@@ -243,6 +271,9 @@ $(() => {
   const _changeCartCntByInput = e => {
     // 각 옵션별 수량 인풋
     const $input = $(e.target);
+    const displayStock = editOptionData.option._displayableStock;
+
+    if (!displayStock) return; // 미 노출일 경우 변경 완료 버튼 클릭 시 체크한다.
 
     const stockCnt = editOptionData.selectedOptions[0].stockCnt;
     let orderCnt = Number($input.val()) || 1;
@@ -348,7 +379,19 @@ $(() => {
       $('#orderBoxArea').hide();
 
       const cartData = await shopby.helper.cart.getCartData(true);
-      this.render(cartData);
+
+      // 재고 노출
+      let displayStock = true;
+      if (cartData && cartData.list.length > 0) {
+        const productNo = cartData.list[0].product.productNo;
+        const productOptions = await shopby.api.product.getProductsProductNoOptions({
+          pathVariable: { productNo: productNo },
+        });
+
+        displayStock = productOptions.data.displayableStock;
+      }
+
+      this.render(cartData, displayStock);
 
       this.naverPay = await this.generateNaverPay();
       this.naverPay && this.naverPay.applyNaverPayButton(this.loadNaverPayOrder.bind(this));
@@ -359,12 +402,12 @@ $(() => {
 
       this.calculatePrice();
     },
-    render(cartData) {
+    render(cartData, displayStock) {
       // list render
       // todo cartData.list  selectType => 일체형 / 분리형 구분
 
       const compiled = Handlebars.compile($('#cartContentsTemplate').html());
-      const html = $(compiled({ carts: cartData.list }));
+      const html = $(compiled({ carts: cartData.list, displayStock: displayStock }));
       $('#cartContents').html(html);
 
       $('#removeButtonArea')

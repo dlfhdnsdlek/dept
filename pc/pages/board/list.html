@@ -66,10 +66,13 @@
                                     <button id="btnArticleSearch" class="btn_board_search"><em>검색</em></button>
                                 </div>
                             </div>
-                            <div class="btn_right_box">
+
+                            <div class="btn_right_box" id="btnWriteBox">
+                                {{#if btnWriteUsed}}
                                 <button type="button" id="btnArticleWrite" class="btn_write js_btn_write">
                                     <strong>글쓰기</strong>
                                 </button>
+                                {{/if}}
                             </div>
                         </div>
                     </div>

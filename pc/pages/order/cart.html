@@ -124,7 +124,11 @@
                                                 </span>
                                         <div class="pick_add_info">
                                             {{#if valid}}
-                                                {{#if isDuplicateCart}}<div class="icon_exclamationmark">중복상품</div>{{/if}}
+                                                {{#if isLimitations}}
+                                                    <div class="icon_exclamationmark">구매수량 제한 상품</div>
+                                                {{else if isDuplicateCart}}
+                                                    <div class="icon_exclamationmark">중복상품</div>
+                                                {{/if}}
                                             {{else}}
                                                 <div class="icon_exclamationmark">구매제한 상품</div>
                                             {{/if}}
@@ -139,7 +143,7 @@
                                                         <dd>
                                                             <select can-change-option="true" disabled data-selected-value="{{value}}">
                                                                 {{#if @last}}
-                                                                    <option value="{{value}}" selected>{{safeString value}} (+{{toCurrencyString ../option.price.addPrice}} 원) / 재고 : {{../option.stockCnt}}개</option>
+                                                                    <option value="{{value}}" selected>{{safeString value}} (+{{toCurrencyString ../option.price.addPrice}} 원){{#ifEq ../../displayStock true }} / 재고 : {{../option.stockCnt}}개{{/ifEq}}</option>
                                                                 {{else}}
                                                                     <option value="{{value}}" selected>{{safeString value}}</option>
                                                                 {{/if}}
@@ -153,7 +157,8 @@
                                                         <dt>{{safeString option.optionName}}</dt>
                                                         <dd>
                                                             <select can-change-option="true" disabled data-selected-value="{{option.optionValue}}">
-                                                                <option value="{{option.optionValue}}" selected>{{safeString option.optionValue}} (+{{toCurrencyString option.price.addPrice}} 원) / 재고 : {{option.stockCnt}}개</option>                                                            </select>
+                                                                <option value="{{option.optionValue}}" selected>{{safeString option.optionValue}} (+{{toCurrencyString option.price.addPrice}} 원){{#ifEq ../../displayStock true }} / 재고 : {{../option.stockCnt}}개{{/ifEq}}</option>
+                                                            </select>
                                                         </dd>
                                                     </dl>
                                                 {{/ifEq}}

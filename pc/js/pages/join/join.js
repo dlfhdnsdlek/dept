@@ -141,8 +141,8 @@ $(() => {
       const authType = $target.data('authType');
       const { value, errorMessage, key } = shopby.helper.member.getCurrentAuth(authType);
       const $invalidInput = $target.parents('.member_warning').find(`input[name=${key}]`);
-
-      if (value.length === 0 || value === '@') {
+      const [id, domain] = value.split('@');
+      if (!id.length || !domain.length) {
         $warnMessage.text(errorMessage).show();
         $invalidInput.addClass('fail_valid');
         shopby.alert(errorMessage);

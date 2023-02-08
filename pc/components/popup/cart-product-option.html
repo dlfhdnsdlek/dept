@@ -292,6 +292,31 @@
                                         </dl>
                                     {{/ifNe}}
 
+                                    {{#if useLimitations}}
+                                        <dl>
+                                            <dt>
+                                                구매수량제한
+                                            </dt>
+                                            <dd>
+                                                {{#if limitations.minBuyCnt}}
+                                                    최소 {{limitations.minBuyCnt}}개
+                                                    {{#if useLimitationsComma}}
+                                                        ,
+                                                    {{/if}}
+                                                {{/if}}
+                                                {{#if limitations.maxBuyTimeCnt}}
+                                                    최대 {{limitations.maxBuyTimeCnt}}개(1회)
+                                                {{/if}}
+                                                {{#if limitations.maxBuyPersonCnt}}
+                                                    최대 {{limitations.maxBuyPersonCnt}}개(1인)
+                                                {{/if}}
+                                                {{#if limitations.maxBuyPeriodCnt}}
+                                                    최대 {{limitations.maxBuyPeriodCnt}}개({{limitations.maxBuyDays}}일 동안)
+                                                {{/if}}
+                                            </dd>
+                                        </dl>
+                                    {{/if}}
+
                                     <div class='item_add_option_box' id='selectOption' data-template-id='selectOptionTemplate'>
                                     </div>
                                 </div>

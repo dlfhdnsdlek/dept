@@ -948,7 +948,7 @@ $(() => {
         const { counter, deliveryGuide, refundGuide, afterServiceGuide, exchangeGuide } = await this.fetchProducts();
         const hasGuide = deliveryGuide || refundGuide || afterServiceGuide || exchangeGuide ? true : false;
 
-        counter.inquiryCnt = this.inquiry.totalCount;
+        counter.inquiryCnt = this.totalCount;
         shopby.product.view.renderTabs(counter, hasGuide);
       },
       viewMore($target) {
@@ -1023,7 +1023,7 @@ $(() => {
 
   const generateData = {
     summary(product, options, coupons) {
-      const { status, price, baseInfo, deliveryFee, reservationData } = product;
+      const { status, price, baseInfo, deliveryFee, reservationData, limitations } = product;
       const { contentsIfPausing, additionDiscountAmt, immediateDiscountAmt, salePrice: originPrice } = price;
       const totalDiscount = additionDiscountAmt + immediateDiscountAmt;
       const salePrice = originPrice - totalDiscount;
@@ -1054,12 +1054,22 @@ $(() => {
         liked: product.liked,
         naverPayHandling,
         hasCoupon: coupons.length > 0,
+        limitations,
+        useLimitations:
+          limitations.minBuyCnt > 0 ||
+          limitations.maxBuyTimeCnt > 0 ||
+          limitations.maxBuyPersonCnt > 0 ||
+          limitations.maxBuyPeriodCnt > 0,
+        useLimitationsComma:
+          limitations.minBuyCnt > 0 &&
+          (limitations.maxBuyTimeCnt > 0 || limitations.maxBuyPersonCnt > 0 || limitations.maxBuyPeriodCnt > 0),
       };
     },
     detail(product, images, option) {
       const { baseInfo } = product;
       const dutyInfo = JSON.parse(baseInfo.dutyInfo);
       const { showsDetailInfo, showsBasicInfo, showsDutyInfo, optionImages, mapDutyInfoContents } = helper.detail;
+
       return {
         ...baseInfo,
         dutyInfoContents: mapDutyInfoContents(dutyInfo.contents),
@@ -1187,10 +1197,19 @@ $(() => {
         });
       },
       mapDutyInfoContents(contents) {
-        return contents.map(content => {
+        let isKcCertifications = false;
+
+        const mappingDutyInfo = contents.map(content => {
           const [key, value] = Object.entries(content).flat();
+
+          if (key === 'KC 인증정보') {
+            isKcCertifications = true;
+          }
+
           return { key, value };
         });
+
+        return { mappingDutyInfo, isKcCertifications };
       },
     },
     review: {
@@ -1378,7 +1397,10 @@ $(() => {
         NO_EXHIBITION: 'PPVE0019',
         NO_MINOR_1: 'PPVE0003',
         NO_MINOR_2: 'ODSH0002',
+        SOLDOUT_OPTION: 'PPVE0011',
       };
+      if (error.code === ERROR_CODE.SOLDOUT_OPTION) return; // 재고 부족 시 shopby 공통모듈에서 처리
+
       if (error && error.code === ERROR_CODE.NO_EXHIBITION) {
         shopby.goHome();
         return;

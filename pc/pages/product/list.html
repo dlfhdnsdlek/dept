@@ -125,13 +125,13 @@
                                                                 style="background-image: url('/assets/img/icon/goods_icon/only_adult_pc.png'); display: block;"
                                                                 >19금</strong
                                                             >
-                                                            {{/if}} {{#ifLe stockCnt 0}}
+                                                            {{/if}} {{#ifEq isSoldOut true}}
                                                             <strong
                                                                 class="item_soldout_bg"
                                                                 style="background-image: url('/assets/img/icon/goods_icon/soldout.png'); display: block;"
                                                                 >SOLD OUT</strong
                                                             >
-                                                            {{/ifLe}} {{#ifEq saleStatusType 'READY'}}
+                                                            {{/ifEq}} {{#ifEq saleStatusType 'READY'}}
                                                             <div class="item_sell_ing"><span>판매임박</span></div>
                                                             {{/ifEq}} {{#ifEq saleStatusType 'FINISHED'}}
                                                             <div class="item_sell_ing"><span>판매종료</span></div>
