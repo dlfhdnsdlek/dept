@@ -6,6 +6,10 @@ body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans K
 /* LAYOUT */
 body { min-width:1200px; }
 
+/* 우측 스크롤 윙 */
+.scroll_right_cont { background:#fff; }
+
+
 /*========================================================================
 상단 영역
 ========================================================================*/
