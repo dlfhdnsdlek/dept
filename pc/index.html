@@ -59,9 +59,29 @@
                     </div>
                 </div>
                 {{/if}}
+                <div class="main-wrap main_content">
+                    <div class="main-box">                        
+                        {{#each BANNER02.bannerImages}}
+                        <a href="{{landingUrl}}">
+                            <span class="main-bn">{{img imageUrl}}</span>
+                        </a>
+                        {{/each}}
+                    </div>
+                    <div class="main-box2">
+                        <ul>
+                            {{#each BANNER03.bannerImages}}
+                            <li>
+                                <a href="{{landingUrl}}">
+                                    <span class="main-bn">{{img imageUrl}}</span>
+                                </a>
+                            </li>
+                            {{/each}}
+                        </ul>                 
+                    </div>            
+                </div>
 
               <!-- 디자인교과서.fe 메인 묶음 -->
-              <div class="dk-main-wrap main_content">
+              <div class="dk-main-wrap" style="display:none;">
                 <!-- 디자인교과서.fe 메인 박스 1 -->
                 <div class="dk-main-box">
                   <div class="dk-bn-wrap1">
