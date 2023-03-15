@@ -72,7 +72,7 @@ body #footer { min-height: auto !important; border-top: 1px solid #2a2a2a; box-s
 .foot_cont .foot_info p { color:#717171; font-size:14px; font-weight:400; }
 .foot_cont .foot_info p.copyright { color:#969696; font-size:14px; font-weight:400; text-align: center; }*/
 
-
+body #footer { min-height:0; }
 
 /*========================================================================
 브랜드 페이지
