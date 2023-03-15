@@ -43,7 +43,8 @@ body #header { min-height:auto; padding:28px 0; border-bottom:1px solid #353535;
 #header .gnb_search { display:none; } */ /* 상단 검색창 없앰 */
 
 body #header { padding:0; min-height:100px; }
-#header .header_gnb { width:100%; max-width:1670px; margin:0 auto; z-index:1; }
+.dk-header-wrap { display:flex; justify-content: space-between; width:100%; max-width:1670px; margin:0 auto; }
+#header .header_gnb { display:inline-block; z-index:1; }
 #header .h1_logo { width:auto; margin:19px 0 18px; }
 #header .h1_logo a { height:auto; }
 
