@@ -45,8 +45,9 @@
 .main-box5 ul li:hover img { transform: scale(1.1); transition: 1s all ease-out; }
 
 /* instagram */
-.insta-box { width:1200px; margin:140px auto; }
-.insta-box h3 { font-size:32px; font-weight:400; }
+.insta-box { margin:160px 0 180px; }
+.insta-box .main-inner {  max-width:1670px; width:100%; padding:0; margin:0 auto; box-sizing: border-box; }
+.insta-box h2 { color:#000000; font-size:48px; text-align:left; font-family: 'Montserrat', sans-serif; }
 .insta-box .instagram_widget { padding-top:0; }
 #instagram-widget { overflow:hidden; }
 #instagram-widget .instagram_widget_head { display:none; }
