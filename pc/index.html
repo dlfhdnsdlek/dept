@@ -47,7 +47,7 @@
         <div id="contents">
             <main id="promotionBanner" class="sub_content main">
                 {{#if BANNER01}}
-                <div class="main_visual">
+                <div class="dk-main-visual main_visual">
                     <div class="slider-wrap slider-banner" id="banner-BANNER01">
                         {{#each BANNER01.bannerImages}}
                         <div>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 {{/if}}
-                <div class="main-wrap main_content">
+                <div class="dk-main-wrap main_content">
                     <div class="main-box">                        
                         {{#each BANNER02.bannerImages}}
                         <a href="{{landingUrl}}">
@@ -75,13 +75,13 @@
                                     <span class="main-bn">{{img imageUrl}}</span>
                                 </a>
                             </li>
-                            {{/each}} {{#each BANNER04.bannerImages}}
+                            {{/each}} {{#each BANNER05.bannerImages}}
                             <li>
                                 <a href="{{landingUrl}}">
                                     <span class="main-bn">{{img imageUrl}}</span>
                                 </a>
                             </li>
-                            {{/each}} {{#each BANNER05.bannerImages}}
+                            {{/each}} {{#each BANNER04.bannerImages}}
                             <li>
                                 <a href="{{landingUrl}}">
                                     <span class="main-bn">{{img imageUrl}}</span>
@@ -119,15 +119,17 @@
                             {{/each}}
                         </ul>              
                     </div>    
-                    <div class="main-box4"> 
+                    {{#if BANNER07}}
+                    <div class="main-box4">
                         {{#each BANNER07.bannerImages}}
                         <div>
                             <a href="{{landingUrl}}">
                                 <span class="main-bn">{{img imageUrl}}</span>
                             </a>    
                         </div>    
-                        {{/each}}       
-                    </div>    
+                        {{/each}}
+                    </div>   
+                    {{/if}} 
                     <div class="main-box5">
                         <ul>
                             {{#each BANNER15.bannerImages}}

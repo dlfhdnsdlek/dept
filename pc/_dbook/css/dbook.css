@@ -9,7 +9,6 @@ body { min-width:1200px; }
 /* 우측 스크롤 윙 */
 .scroll_right_cont { background:#fff; }
 
-
 /*========================================================================
 상단 영역
 ========================================================================*/
@@ -89,10 +88,12 @@ body #footer { min-height: auto !important; border-top: 1px solid #2a2a2a; box-s
 .item_photo_box .item_soldout_bg { background-image:url(/_dbook/img/soldout.png) !important; background-size:auto; }
 
 /*========================================================================
-네이버 톡톡
+우측 스크롤 윙
 ========================================================================*/
-#scroll_right { position:fixed; top:auto; bottom:20px; right:0; left:auto; width:auto; margin:20px; }
+#scroll_right { display:none; position:fixed; top:auto; bottom:20px; right:0; left:auto; width:auto; margin:20px; }
 #scroll_right.ban_fixed { top:auto; bottom:20px; left:auto; right:0; margin:20px; }
+
+/* 네이버 톡톡 */
 body .talk_banner_div .talk_preview_area .talk_banner_link { width:72px; height:72px; border-radius:50%; overflow:hidden; }
 body .talk_banner_div .talk_preview_area .talk_banner_preview { min-width:72px; min-height:72px; max-width:72px; max-height:72px; }
 body .talk_banner_div .talk_banner_preview.talk_expose_green .ico_talk_banner { width:40px; height:40px; background-size:150px auto; background-position:-79px -34px; }
