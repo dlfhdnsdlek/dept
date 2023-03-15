@@ -37,7 +37,7 @@
 
 .main-box4 { position:relative; width:100%; }
 .video-wrap { position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index: 1; }
-.video-wrap iframe { position:absolute; top:-1px; bottom:-1px; left:-1px; right:-1px; width:calc(100% + 2px); height:calc(100% + 2px); }
+.video-wrap iframe { position:absolute; top:-1px; bottom:-1px; left:-2px; right:-2px; width:calc(100% + 4px); height:calc(100% + 2px); }
 
 .main-box5 ul { display:flex; }
 .main-box5 ul li { width:calc(100% / 3); overflow:hidden; }
