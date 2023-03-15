@@ -4,7 +4,7 @@ Layout
 body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
 .dk-noto { font-family: 'Noto Sans KR', sans-serif; }
 /* LAYOUT */
-body { min-width:1200px; }
+body { min-width:1200px; max-width:1980px; margin:0 auto; }
 
 /* 우측 스크롤 윙 */
 .scroll_right_cont { background:#fff; }
