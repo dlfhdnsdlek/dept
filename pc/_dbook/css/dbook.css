@@ -42,6 +42,10 @@ body #header { min-height:auto; padding:28px 0; border-bottom:1px solid #353535;
 
 #header .gnb_search { display:none; } */ /* 상단 검색창 없앰 */
 
+#header { padding:0; }
+#header .header_gnb { width:100%; max-width:1670px; min-height:100px; margin:0 auto; }
+#header .h1_logo { width:auto; margin:19px 0 18px; }
+#header .h1_logo a { height:auto; }
 
 /*========================================================================
 하단 영역
