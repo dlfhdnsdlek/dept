@@ -1,5 +1,73 @@
+<div class="header_gnb">
+    <div id="logo" class="h1_logo">
+        <a href="{{landingUrl}}" id="banner-logo">
+            {{img imageUrl}}
+        </a>
+    </div>
+    <div class="gnb">
+        <div class="gnb_allmenu_wrap">
+            <div class="gnb_allmenu" id="categoryAll">
+                <div class="gnb_allmenu_box">
+                    <ul>
+                        {{#each multiLevelCategories}}
+                        <li style="width: 20%;">
+                            <div class="all_menu_cont">
+                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}">{{label}}</a>
+                                {{#if children }}
+                                <ul class="all_depth1">
+                                    {{#each children}}
+                                    <li>
+                                        <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=2">{{label}}</a>
+                                        {{#if children }} {{#each children}}
+                                        <ul class="all_depth2">
+                                            <li>
+                                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=3">{{label}}</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    {{/each}} {{/if}} {{/each}}
+                                </ul>
+                                {{/if}}
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+            <div id="category-navigation">
+                <ul class="depth0 gnb_menu0">
+                    <li data-type="all">
+                        <a href="#" class="openMenuAll" data-type="all">
+                            ALL
+                        </a>
+                    </li>
+                    {{#each multiLevelCategories}}
+                    <li>
+                        <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
+                            {{label}}
+                        </a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="gnb_search visible">
+        <div class="top_search">
+            <div class="top_search_cont" id="keywordSearch">
+                <div class="top_text_cont">
+                    <input type="text" id="search_form" name="keyword" class="top_srarch_text" placeholder="" autocomplete="off" />
+                    <button type="button" id="btnSearchTop" title="검색" value="검색">
+                        <img src="/assets/img/common/btn/btn_top_search.png" class="btn_top_srarch" alt="검색" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 디자인교과서.fe 상단 영역 -->
-<nav class="dk-header-gnb header_gnb visible">
+<nav class="dk-header-gnb header_gnb" style="display:none;">
     <div class="dk-left-box">
         <ul>
             <li><a href="/pages/product/list.html?categoryNo=265193">BINWOOS</a></li>
