@@ -42,20 +42,20 @@ body #header { min-height:auto; padding:28px 0; border-bottom:1px solid #353535;
 
 #header .gnb_search { display:none; } */ /* 상단 검색창 없앰 */
 
-#header { padding:0; min-height:100px; }
-#header .header_gnb { width:100%; max-width:1670px; margin:0 auto; }
+body #header { padding:0; min-height:100px; }
+#header .header_gnb { width:100%; max-width:1670px; margin:0 auto; z-index:1; }
 #header .h1_logo { width:auto; margin:19px 0 18px; }
 #header .h1_logo a { height:auto; }
 
 #header .gnb { width:auto; }
 #header .gnb_allmenu_wrap { width:auto; height:auto; overflow:visible; margin:0; }
 #header #category-navigation { margin:23px 0 0 13px; }
-#header .gnb .depth0 { display:flex; height:51px; font-size:20px; overflow: visible; }
+#header .gnb .depth0 { display:flex; height:51px; font-size:18px; overflow: visible; }
 #header .gnb .depth0 > li { position:relative; margin:0 27px; }
-#header .gnb .depth0 > li > a { line-height:51px; color:#000000; font-size:20px; font-weight:500; letter-spacing: 0; }
-#header .gnb .depth0 > li > ul { position:absolute; top:100%; left:50%; transform:translateX(-50%); background:#fff; text-align:center; }
-#header .gnb .depth0 > li > ul > li { padding:5px 0; }
-#header .gnb .depth0 > li > ul > li > a {  }
+#header .gnb .depth0 > li > a { line-height:51px; padding:0; color:#000000; font-size:20px; font-weight:500; letter-spacing: 0; }
+#header .gnb .depth0 > li > ul { display:none; position:absolute; top:100%; left:50%; transform:translateX(-50%); padding:10px 0; background:rgba(255,255,255,0.8); text-align:center; }
+#header .gnb .depth0 > li > ul > li { padding:5px 10px; }
+#header .gnb .depth0 > li > ul > li > a { display:block; }
 
 
 /*========================================================================
