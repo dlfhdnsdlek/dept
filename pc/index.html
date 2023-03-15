@@ -155,6 +155,10 @@
                                         draggable: true,
                                     },
                                 });	
+                                var slideCount = $('.main-box3 .swiper-container .swiper-slide').length;
+                                if ( slideCount < 2) {
+                                    $('.main-box3 .swiper-container .swiper-slide').addClass('single');
+                                }
                             });		
                         </script>       
                     </div> 
