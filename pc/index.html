@@ -91,33 +91,58 @@
                         </ul>   
                     </div> 
                     <div class="main-box3">  
-                        <ul>
-                            {{#each BANNER11.bannerImages}}
-                            <li>
-                                <a href="{{landingUrl}}">
-                                    <span class="main-bn">{{img imageUrl}}</span>
-                                </a>
-                            </li>
-                            {{/each}} {{#each BANNER12.bannerImages}}
-                            <li>
-                                <a href="{{landingUrl}}">
-                                    <span class="main-bn">{{img imageUrl}}</span>
-                                </a>
-                            </li>
-                            {{/each}} {{#each BANNER13.bannerImages}}
-                            <li>
-                                <a href="{{landingUrl}}">
-                                    <span class="main-bn">{{img imageUrl}}</span>
-                                </a>
-                            </li>
-                            {{/each}} {{#each BANNER14.bannerImages}}
-                            <li>
-                                <a href="{{landingUrl}}">
-                                    <span class="main-bn">{{img imageUrl}}</span>
-                                </a>
-                            </li>
-                            {{/each}}
-                        </ul>              
+                        <div class="swiper-container">
+                            <ul class="swiper-wrapper">
+                                {{#each BANNER11.bannerImages}}
+                                <li class="swiper-slide">
+                                    <a href="{{landingUrl}}">
+                                        <span class="main-bn">{{img imageUrl}}</span>
+                                    </a>
+                                </li>
+                                {{/each}} {{#each BANNER12.bannerImages}}
+                                <li class="swiper-slide">
+                                    <a href="{{landingUrl}}">
+                                        <span class="main-bn">{{img imageUrl}}</span>
+                                    </a>
+                                </li>
+                                {{/each}} {{#each BANNER13.bannerImages}}
+                                <li class="swiper-slide">
+                                    <a href="{{landingUrl}}">
+                                        <span class="main-bn">{{img imageUrl}}</span>
+                                    </a>
+                                </li>
+                                {{/each}} {{#each BANNER14.bannerImages}}
+                                <li class="swiper-slide">
+                                    <a href="{{landingUrl}}">
+                                        <span class="main-bn">{{img imageUrl}}</span>
+                                    </a>
+                                </li>
+                                {{/each}}
+                            </ul> 
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-scrollbar"></div> 
+                        </div>   
+                        <script>
+                            $(document).ready(function(){		
+                                var swiper = new Swiper('.main-box3 .swiper-container', {	
+                                    spaceBetween: '2.6%',	
+                                    slidesPerView: 2,
+                                    loop: false,		
+                                    grabCursor: true,	
+                                    autoplay: false,
+                                    navigation: {	
+                                        nextEl: '.main-box3 .swiper-button-next',
+                                        prevEl: '.main-box3 .swiper-button-prev',
+                                    },	
+                                    scrollbar: {
+                                        el: '.main-box3 .swiper-scrollbar',
+                                        hide: false,
+                                        draggable: true,
+                                    },
+                                });	
+                            });		
+                        </script>       
                     </div> 
                     <div class="main-box4">
                         {{#each BANNER07.bannerImages}}
