@@ -92,39 +92,45 @@
                             {{/each}}
                         </ul>   
                     </div> 
-                    <div class="main-box3">  
-                        <div class="swiper-container">
-                            <ul class="swiper-wrapper">
-                                {{#each BANNER11.bannerImages}}
-                                <li class="swiper-slide">
-                                    <a href="{{landingUrl}}">
-                                        <span class="main-bn">{{img imageUrl}}</span>
-                                    </a>
-                                </li>
-                                {{/each}} {{#each BANNER12.bannerImages}}
-                                <li class="swiper-slide">
-                                    <a href="{{landingUrl}}">
-                                        <span class="main-bn">{{img imageUrl}}</span>
-                                    </a>
-                                </li>
-                                {{/each}} {{#each BANNER13.bannerImages}}
-                                <li class="swiper-slide">
-                                    <a href="{{landingUrl}}">
-                                        <span class="main-bn">{{img imageUrl}}</span>
-                                    </a>
-                                </li>
-                                {{/each}} {{#each BANNER14.bannerImages}}
-                                <li class="swiper-slide">
-                                    <a href="{{landingUrl}}">
-                                        <span class="main-bn">{{img imageUrl}}</span>
-                                    </a>
-                                </li>
-                                {{/each}}
-                            </ul> 
+                    <div class="main-box3"> 
+                        <div class="main-inner">
+                            <div class="main-title">
+                                <h2>SHOP</h2>
+                                <p>새롭고 트렌디한 아이템을 만나보세요.</p>
+                            </div>
+                            <div class="swiper-container">
+                                <ul class="swiper-wrapper">
+                                    {{#each BANNER11.bannerImages}}
+                                    <li class="swiper-slide">
+                                        <a href="{{landingUrl}}">
+                                            <span class="main-bn">{{img imageUrl}}</span>
+                                        </a>
+                                    </li>
+                                    {{/each}} {{#each BANNER12.bannerImages}}
+                                    <li class="swiper-slide">
+                                        <a href="{{landingUrl}}">
+                                            <span class="main-bn">{{img imageUrl}}</span>
+                                        </a>
+                                    </li>
+                                    {{/each}} {{#each BANNER13.bannerImages}}
+                                    <li class="swiper-slide">
+                                        <a href="{{landingUrl}}">
+                                            <span class="main-bn">{{img imageUrl}}</span>
+                                        </a>
+                                    </li>
+                                    {{/each}} {{#each BANNER14.bannerImages}}
+                                    <li class="swiper-slide">
+                                        <a href="{{landingUrl}}">
+                                            <span class="main-bn">{{img imageUrl}}</span>
+                                        </a>
+                                    </li>
+                                    {{/each}}
+                                </ul> 
+                                <div class="swiper-scrollbar"></div> 
+                            </div>  
                             <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
-                            <div class="swiper-scrollbar"></div> 
-                        </div>   
+                            <div class="swiper-button-prev"></div> 
+                        </div>
                         <script>
                             $(document).ready(function(){		
                                 var swiper = new Swiper('.main-box3 .swiper-container', {	
