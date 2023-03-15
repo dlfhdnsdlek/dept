@@ -7,6 +7,9 @@
 메인 영역
 ========================================================================*/
 .dk-main-visual { margin:0; }
+.dk-main-visual .slick-arrow { width:28px; height:51px; }
+.dk-main-visual .slick-prev { background-image:url('/_dbook/img/main_prev.png'); }
+.dk-main-visual .slick-next { background-image:url('/_dbook/img/main_next.png'); }
 
 .dk-main-video { position:relative; margin:0; padding:56% 0 0; overflow: hidden; }
 .yt-video-background { position:absolute; top: 0; bottom:0; right:0; left:0; width:100%; height: 100%; transform: scale(1.2); z-index: 99;}

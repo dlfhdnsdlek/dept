@@ -11,7 +11,7 @@ body { min-width:1200px; max-width:1980px; margin:0 auto; }
 
 /*========================================================================
 상단 영역
-========================================================================*/
+========================================================================
 body #header { min-height:auto; padding:28px 0; border-bottom:1px solid #353535; visibility: visible; }
 #header .header_top { display:none; }
 #header .dk-header-gnb { display:flex; justify-content: space-between; align-items: center; width:100%; min-width:1200px; margin-top:0; }
@@ -40,7 +40,8 @@ body #header { min-height:auto; padding:28px 0; border-bottom:1px solid #353535;
 .top_member_box > li a::after { position:absolute; top:2px; right:0; width:1px; height:10px; background:#5b5b5b; content: ''; }
 .top_member_box > li:last-child a::after { display: none; }
 
-#header .gnb_search { display:none; } /* 상단 검색창 없앰 */
+#header .gnb_search { display:none; } */ /* 상단 검색창 없앰 */
+
 
 /*========================================================================
 하단 영역
