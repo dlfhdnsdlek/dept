@@ -19,9 +19,9 @@
 .main-box { width:100%; }
 
 .main-box2 ul { display: grid; grid-template-columns: 1fr 1.577fr; grid-template-rows: 1fr; }
-.main-box2 ul li:nth-child(1) { grid-column: 1; }
-.main-box2 ul li:nth-child(2) { grid-row: 2; }
-.main-box2 ul li:nth-child(3) { grid-row: span 2; }
+.main-box2 ul li:nth-child(1) { grid-row: span 2; }
+.main-box2 ul li:nth-child(2) { grid-column: 1; }
+.main-box2 ul li:nth-child(3) { grid-row: 2; }
 
 .main-box3 { position:relative; }
 
