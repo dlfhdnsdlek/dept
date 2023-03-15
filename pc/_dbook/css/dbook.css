@@ -72,8 +72,8 @@ body #header { padding:0; min-height:100px; }
 #header .header_top { display:flex; align-items: center; }
 #header .header_top .header_top_cont { width:auto; }
 
-#header .header_top .header_top_cont .top_member_box { line-height: 23px; }
-#header .header_top .header_top_cont .top_member_box > li a { line-height: 23px; color:#191919; font-size:16px; font-weight:500; letter-spacing:0; }
+#header .header_top .header_top_cont .top_member_box { margin:0; line-height: 23px; }
+#header .header_top .header_top_cont .top_member_box > li a { padding:0; margin-left:30px; line-height: 23px; color:#191919; font-size:16px; font-weight:500; letter-spacing:0; }
 #header .header_top .header_top_cont .top_member_box > li.top-cart .js_cart_length { width:auto; height:auto; line-height: 23px; margin:0; color:#191919; font-size:16px; font-weight:500; letter-spacing:0; font-family: 'Montserrat', sans-serif; background:none; }
 
 #header .header_top .header_top_cont .top_member_box > li a span { display:inline-block; vertical-align:top; width:27px; height:23px; font-size:0; }
