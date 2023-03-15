@@ -1,91 +1,111 @@
-<div class="header_gnb">
-    <div id="logo" class="h1_logo">
-        <a href="{{landingUrl}}" id="banner-logo">
-            {{img imageUrl}}
-        </a>
-    </div>
-    <div class="gnb">
-        <div class="gnb_allmenu_wrap">
-            <!--
-            <div class="gnb_allmenu" id="categoryAll" style="display:none;">
-                <div class="gnb_allmenu_box">
-                    <ul>
-                        {{#each multiLevelCategories}}
-                        <li style="width: 20%;">
-                            <div class="all_menu_cont">
-                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}">{{label}}</a>
-                                {{#if children }}
-                                <ul class="all_depth1">
-                                    {{#each children}}
-                                    <li>
-                                        <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=2">{{label}}</a>
-                                        {{#if children }} {{#each children}}
-                                        <ul class="all_depth2">
-                                            <li>
-                                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=3">{{label}}</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    {{/each}} {{/if}} {{/each}}
-                                </ul>
-                                {{/if}}
-                            </div>
-                        </li>
-                        {{/each}}
-                    </ul>
-                </div>
-            </div>-->
-            <div id="category-navigation">
-                <ul class="depth0 gnb_menu0">
-                    <!--
-                    <li data-type="all">
-                        <a href="#" class="openMenuAll" data-type="all">
-                            ALL
-                        </a>
-                    </li>-->
-                    <li>
-                        <a href="#none">COLLABO</a>
-                    </li>
-                    <li>
-                        <a href="#none">SHOP</a>
+<div class="dk-header-wrap">
+    <div class="header_gnb">
+        <div id="logo" class="h1_logo">
+            <a href="{{landingUrl}}" id="banner-logo">
+                {{img imageUrl}}
+            </a>
+        </div>
+        <div class="gnb">
+            <div class="gnb_allmenu_wrap">
+                <!--
+                <div class="gnb_allmenu" id="categoryAll" style="display:none;">
+                    <div class="gnb_allmenu_box">
                         <ul>
                             {{#each multiLevelCategories}}
-                            <li>
-                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
-                                    {{label}}
-                                </a>
+                            <li style="width: 20%;">
+                                <div class="all_menu_cont">
+                                    <a href="/pages/product/list.html?categoryNo={{categoryNo}}">{{label}}</a>
+                                    {{#if children }}
+                                    <ul class="all_depth1">
+                                        {{#each children}}
+                                        <li>
+                                            <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=2">{{label}}</a>
+                                            {{#if children }} {{#each children}}
+                                            <ul class="all_depth2">
+                                                <li>
+                                                    <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=3">{{label}}</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        {{/each}} {{/if}} {{/each}}
+                                    </ul>
+                                    {{/if}}
+                                </div>
                             </li>
                             {{/each}}
                         </ul>
-                    </li>
-                    <li>
-                        <a href="/_dbook/pages/brand.html">Dept.b</a>
-                    </li>
-                    <li>
-                        <a href="#none">COMMUNITY</a>
-                        <ul>
-                            <li><a href="/pages/my/inquiries.html">Q&amp;A</a></li>
-                            <li><a href="/pages/my/product-reviews.html">Review</a></li>
-                            <li><a href="/pages/board/list.html?boardId=notice">Notice</a></li>
-                            <li><a href="/pages/my/mypage.html">My page</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="gnb_search visible">
-        <div class="top_search">
-            <div class="top_search_cont" id="keywordSearch">
-                <div class="top_text_cont">
-                    <input type="text" id="search_form" name="keyword" class="top_srarch_text" placeholder="" autocomplete="off" />
-                    <button type="button" id="btnSearchTop" title="검색" value="검색">
-                        <img src="/assets/img/common/btn/btn_top_search.png" class="btn_top_srarch" alt="검색" />
-                    </button>
+                    </div>
+                </div>-->
+                <div id="category-navigation">
+                    <ul class="depth0 gnb_menu0">
+                        <!--
+                        <li data-type="all">
+                            <a href="#" class="openMenuAll" data-type="all">
+                                ALL
+                            </a>
+                        </li>-->
+                        <li>
+                            <a href="#none">COLLABO</a>
+                        </li>
+                        <li>
+                            <a href="#none">SHOP</a>
+                            <ul>
+                                {{#each multiLevelCategories}}
+                                <li>
+                                    <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
+                                        {{label}}
+                                    </a>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/_dbook/pages/brand.html">Dept.b</a>
+                        </li>
+                        <li>
+                            <a href="#none">COMMUNITY</a>
+                            <ul>
+                                <li><a href="/pages/my/inquiries.html">Q&amp;A</a></li>
+                                <li><a href="/pages/my/product-reviews.html">Review</a></li>
+                                <li><a href="/pages/board/list.html?boardId=notice">Notice</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+        <div class="gnb_search visible">
+            <div class="top_search">
+                <div class="top_search_cont" id="keywordSearch">
+                    <div class="top_text_cont">
+                        <input type="text" id="search_form" name="keyword" class="top_srarch_text" placeholder="" autocomplete="off" />
+                        <button type="button" id="btnSearchTop" title="검색" value="검색">
+                            <img src="/assets/img/common/btn/btn_top_search.png" class="btn_top_srarch" alt="검색" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>  
     </div>
+    <div id="headerTop" class="header_top">
+        <div class="header_top_cont">
+            <ul class="top_member_box">
+                {{#if logined}}
+                <li><a id="logout" href="/">LOGOUT</a></li>
+                <li><a href="/pages/my/mypage.html">MYPAGE</a></li>      
+                {{else}}
+                <li class="loginText"><a href="/pages/login/login.html">LOG IN</a></li>
+                <li class="joinText"><a href="/pages/join/method.html">JOIN</a></li>
+                {{/if}}
+                <li class="top-cart">
+                    <a href="/pages/order/cart.html"><span>CART</span><strong class="js_cart_length">({{cartCount}})</strong></a>
+                </li>
+                <li class="top-wish">
+                    <a href="/pages/my/wishes.html"><span>WISH</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>  
 </div>
 
 <!-- 디자인교과서.fe 상단 영역 -->
