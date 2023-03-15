@@ -53,23 +53,13 @@ body #header { padding:0; min-height:100px; }
 #header .header_top .header_top_cont .top_member_box > li.top-cart a span { background:url('/_dbook/img/btn_top_cart.png') no-repeat; }
 #header .header_top .header_top_cont .top_member_box > li.top-wish a span { background:url('/_dbook/img/btn_top_wish.png') no-repeat; }
 
-
 /*========================================================================
 하단 영역
 ========================================================================*/
 body #footer { min-height: auto !important; border-top: 1px solid #2a2a2a; box-sizing: border-box; visibility: visible; }
-.dk-bottom-search { position:relative; padding:60px 100px; }
-.dk-bottom-search .footer-logo { display:inline-block; }
-.dk-bottom-search .top_search { position:absolute; top:58px; left:50%; margin-left:-270px; }
-.dk-bottom-search .top_text_cont { position: relative; width:520px; height:58px; border:1px solid #353535; border-radius:40px; overflow: hidden; }
-.dk-bottom-search .top_text_cont input { width:520px; height:58px; padding:0 40px; color:#828282; font-size:18px; border:0; }
-.dk-bottom-search .top_text_cont button { position: absolute; top:50%; right:26px; transform: translateY(-50%); }
 #footer_wrap { border-top: 0; }
-.dk-bottom-search .dk-footer-sns { float:right; padding:18px 0; }
-.dk-bottom-search .dk-footer-sns ul { display:flex; align-items: center; }
-.dk-bottom-search .dk-footer-sns ul li { padding:0 10px; }
-.dk-bottom-search .dk-footer-sns ul li:last-child { padding-right:0; }
-#footer .footer_content { background:none; padding:0; }
+
+
 #footer .footer_content .footer_left { float:none; width:100%; }
 #footer .footer_content .foot_list ul { display:flex; justify-content: center; }
 #footer .footer_content .foot_list ul li { float:none; padding:0 0 15px; }
