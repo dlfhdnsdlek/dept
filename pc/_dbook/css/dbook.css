@@ -47,6 +47,7 @@ body #header { min-height:auto; padding:28px 0; border-bottom:1px solid #353535;
 #header .h1_logo { width:auto; margin:19px 0 18px; }
 #header .h1_logo a { height:auto; }
 
+#header .gnb { width:auto; }
 #header .gnb_allmenu_wrap { width:auto; height:auto; overflow:visible; margin:0; }
 #header #category-navigation { margin:23px 0 0 13px; }
 #header .gnb .depth0 > li { margin:0 27px; }
