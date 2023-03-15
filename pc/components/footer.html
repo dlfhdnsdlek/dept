@@ -9,30 +9,7 @@
 <div id="footer_wrap">
     <div class="content_info_wrap">
         <div class="content_info">
-            {{#with top}} {{#if boardList.used}}
-            <div class="notice_list" id="footerBoardList">
-                <h3><a href="/pages/board/list.html?boardId={{boardList.boardId}}">{{boardList.name}}</a></h3>
-                <ul>
-                    {{#each articles}}
-                    <li>
-                        <a href="/pages/board/view.html?boardId={{../boardList.boardId}}&articleNo={{articleNo}}&secreted={{secreted}}">{{title}}</a>
-                    </li>
-                    {{/each}}
-                </ul>
-            </div>
-            {{/if}}
-
-            <div class="bank_info">
-                <h3>BANK INFO</h3>
-                {{#if bankAccountInfos}} {{#each bankAccountInfos}}
-                <p>
-                    <span>{{bankName}}</span>
-                    {{bankAccount}}(예금주: {{bankDepositorName}})
-                </p>
-                {{/each}} {{else}}
-                <p>-</p>
-                {{/if}}
-            </div>
+            {{#with top}} 
             <div class="cs_center">
                 <h3>CS CENTER</h3>
                 {{#if mall.serviceCenter}}
@@ -53,12 +30,17 @@
                     <div class="foot_list">
                         <ul>
                             <li>
+                                <a href="/pages/service/guide.html"><strong>이용안내</strong></a>
+                            </li>
+                            <li>
                                 <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
                             </li>
                             <li>
                                 <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
                             </li>
-                            <li><a href="//{{ business.mall.url.mobile }}">모바일 버전</a></li>
+                            <li>
+                                <a href="/pages/my/product-inquiries.html"><strong>제휴문의</strong></a>
+                            </li>
                         </ul>
                     </div>
                     <!-- //foot_list -->
@@ -121,66 +103,7 @@
                 </div>
                 <div class="footer_right">
                     {{#with menu}}
-                    <div class="foot_info2">
-                        <p>ABOUT</p>
-                        <ul>
-                            {{#each about}} {{#if used}}
-                            <li>
-                                <a href="/pages/service/{{page}}.html">{{label}}</a>
-                            </li>
-                            {{/if}} {{/each}}
-                        </ul>
-                    </div>
-                    <div class="foot_info2">
-                        <p>MY ACCOUNT</p>
-                        <ul>
-                            <li>
-                                <a href="/pages/my/modify-member.html">회원정보수정</a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/mileages.html">{{customAccumulationMenuName}}현황</a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/coupons.html">쿠폰</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="foot_info2">
-                        <p>MY ORDER</p>
-                        <ul>
-                            <li>
-                                <a href="/pages/my/orders.html">주문/배송</a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/claims.html">취소/교환/반품</a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/wishes.html">찜리스트</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="foot_info2">
-                        <p>HELP</p>
-                        <ul>
-                            {{#if boardsConfig.inquiryConfig.used}}
-                            <li>
-                                <a href="/pages/my/inquiries.html">{{boardsConfig.inquiryConfig.name}}</a>
-                            </li>
-                            {{/if}} {{#if boardsConfig.productReviewConfig.used}}
-                            <li>
-                                <a href="/pages/my/product-reviews.html">{{boardsConfig.productReviewConfig.name}}</a>
-                            </li>
-                            {{/if}} {{#if boardsConfig.productInquiryConfig.used}}
-                            <li>
-                                <a href="/pages/my/product-inquiries.html">{{boardsConfig.productInquiryConfig.name}}</a>
-                            </li>
-                            {{/if}} {{#each boardsConfig.boardConfigs}} {{#if used}}
-                            <li>
-                                <a href="/pages/board/list.html?boardId={{boardId}}">{{name}}</a>
-                            </li>
-                            {{/if}} {{/each}}
-                        </ul>
-                    </div>
+
                     {{/with}}
                 </div>
                 {{/with}}
