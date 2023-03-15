@@ -27,8 +27,10 @@
 
 .main-box4 { width:100%; }
 
-.main-box5 { display:flex; }
-.main-box5 li { width:calc(100% / 3); }
+.main-box5 ul { display:flex; }
+.main-box5 ul li { width:calc(100% / 3); overflow:hidden; }
+.main-box5 ul li img { transform: scale(1); transition: .8s all ease; transform-origin: center; }
+.main-box5 ul li:hover img { transform: scale(1.2); transition: 2s all ease-out; }
 
 /* instagram */
 .insta-box { width:1200px; margin:140px auto; }
