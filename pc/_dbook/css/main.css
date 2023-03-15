@@ -26,7 +26,7 @@
 .main-box3 { position:relative; }
 
 .main-box4 { position:relative; width:100%; }
-.video-wrap { position:absolute; width:100%; height:100%; overflow:hidden; }
+.video-wrap { position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index: 1; }
 .video-wrap iframe { position:absolute; top:-1px; bottom:-1px; left:-1px; right:-1px; width:calc(100% + 2px); height:calc(100% + 2px); }
 
 .main-box5 ul { display:flex; }
