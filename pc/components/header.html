@@ -7,43 +7,8 @@
         </div>
         <div class="gnb">
             <div class="gnb_allmenu_wrap">
-                <!--
-                <div class="gnb_allmenu" id="categoryAll" style="display:none;">
-                    <div class="gnb_allmenu_box">
-                        <ul>
-                            {{#each multiLevelCategories}}
-                            <li style="width: 20%;">
-                                <div class="all_menu_cont">
-                                    <a href="/pages/product/list.html?categoryNo={{categoryNo}}">{{label}}</a>
-                                    {{#if children }}
-                                    <ul class="all_depth1">
-                                        {{#each children}}
-                                        <li>
-                                            <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=2">{{label}}</a>
-                                            {{#if children }} {{#each children}}
-                                            <ul class="all_depth2">
-                                                <li>
-                                                    <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=3">{{label}}</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        {{/each}} {{/if}} {{/each}}
-                                    </ul>
-                                    {{/if}}
-                                </div>
-                            </li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>-->
                 <div id="category-navigation">
                     <ul class="depth0 gnb_menu0">
-                        <!--
-                        <li data-type="all">
-                            <a href="#" class="openMenuAll" data-type="all">
-                                ALL
-                            </a>
-                        </li>-->
                         <li>
                             <a href="#none">COLLABO</a>
                         </li>
@@ -107,70 +72,5 @@
         </div>
     </div>  
 </div>
-
-<!-- 디자인교과서.fe 상단 영역 -->
-<nav class="dk-header-gnb header_gnb" style="display:none;">
-    <div class="dk-left-box">
-        <ul>
-            <li><a href="/pages/product/list.html?categoryNo=265193">BINWOOS</a></li>
-            <li><a href="#none">SHOP</a></li>
-        </ul>
-    </div>
-    <div id="logo" class="h1_logo">
-        <a href="{{landingUrl}}" id="banner-logo">
-            {{img imageUrl}}
-        </a>
-    </div>
-    <div class="dk-right-box">
-        <ul>
-            <li><a href="/_dbook/pages/brand.html">DEPT.B</a></li>
-            <li><a href="#none">COMMUNITY</a></li>
-        </ul>
-    </div>
-    <div class="gnb">
-        <!-- <div class="gnb_left visible" data-type="prev">
-            <a href="#" class="active" data-type="prev">PREV</a>
-        </div> -->
-        <div class="gnb_allmenu_wrap">
-            <div class="gnb_allmenu_wrap visible">
-                <div class="gnb-wrap">
-                    <div id="category-navigation">
-                        <ul class="depth0 gnb_menu0">
-                            {{#each multiLevelCategories}}
-                            <li style="width:100%;">
-                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
-                                    {{label}}
-                                </a>
-                            </li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                    <div class="community-menu">
-                        <ul>
-                            <li><a href="/pages/my/inquiries.html">Q&amp;A</a></li>
-                            <li><a href="/pages/my/product-reviews.html">Review</a></li>
-                            <li><a href="/pages/board/list.html?boardId=notice">Notice</a></li>
-                            <li><a href="/pages/my/mypage.html">My page</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div id="headerTop" class="member-box">
-                    <ul class="member-menu top_member_box">
-                        {{#if logined}}
-                        <li><a id="logout" href="/">LOGOUT</a></li>
-                        {{else}}
-                        <li><a href="/pages/login/login.html">LOGIN</a></li>
-                        <li><a href="/pages/join/method.html">JOIN</a></li>
-                        {{/if}}
-                        <li>
-                            <a href="/pages/order/cart.html">CART <span class="js_cart_length">{{cartCount}}</span></a>
-                        </li>
-                        <li><a href="/pages/my/wishes.html">WISH</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
 <script type="text/javascript" src="/js/components/header.js"></script>
 <script type="text/javascript" src="/_dbook/js/dbook.js"></script>
