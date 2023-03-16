@@ -119,9 +119,9 @@
         <!-- 핸들바 기본 방식 -->
         <script id="product-list-type-gallery" type="text/x-handlebars-template">
                 <div class="item_gallery_type">
-                <ul>
+                <ul class="dk-goods-wrapper">
                     {{#each productList}}
-                    <li data-product-no="{{productNo}}" style="width:25%">
+                    <li class="dk-goods-slide" data-product-no="{{productNo}}" style="width:25%">
                         <div class="item_cont">
                             <div class="item_photo_box">
                                 <a
@@ -191,7 +191,19 @@
                     <div class="goods_no_data"><strong>상품이 존재하지 않습니다.</strong></div>
                     {{/each}}
                 </ul>
+				<div class="swiper-scrollbar"></div>
             </div>
+			<script>
+			var swiper = new Swiper(".cont-box2 .item_gallery_type", {
+				spaceBetween: 30,
+				slidesPerView: 3,
+				wrapperClass: "dk-goods-wrapper",
+				slideClass: "dk-goods-slide",
+				scrollbar: {
+					el: ".cont-box2 .swiper-scrollbar",
+				}
+			});
+			</script>
         </script>
 
         <!-- 2. 리스트형 -->

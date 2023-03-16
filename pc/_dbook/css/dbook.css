@@ -196,15 +196,18 @@ collabo
 .collabo-content { padding:70px 0 0; }
 .collabo-content h2 { margin:0 0 23px; color:#191919; font-size:38px; text-align:center; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 
+/* 공통 */
+.collabo .goods_list_tit,
+.collabo .item_list_type .item_btn_box,
+.collabo .paging  { display:none; }
+.collabo .goods_list_cont ul li { margin:0; border:0; }
+.collabo .goods_list_cont ul li .item_photo_box a img { border:0; }
+
 .cont-box { margin:50px 0 150px;}
-.cont-box .goods_list_tit,
-.cont-box .item_list_type .item_btn_box,
-.cont-box .paging  { display:none; }
-.cont-box .goods_list_cont .item_list_type li { margin:0; border:0; }
 .cont-box .goods_list_cont .item_list_type .item_cont { display:flex; align-items: flex-end; position:relative; }
 .cont-box .goods_list_cont .item_list_type .item_photo_box { width:600px; }
 .cont-box .goods_list_cont .item_list_type .item_photo_box a::before { content:''; position:absolute; top:0; left:0; width:100%; height: 100%;}
-.cont-box .goods_list_cont .item_list_type .item_photo_box a img { border:0; }
+
 .cont-box .goods_list_cont .item_list_type .item_info_cont { width:calc(100% - 600px); padding:0 0 0 65px; box-sizing: border-box; }
 .cont-box .item_list_type .item_tit_box { margin:0 0 35px; }
 .cont-box .item_list_type .item_tit_box .item_brand strong { color:#6f6f6f; font-size:24px; font-weight:500; }
@@ -213,8 +216,5 @@ collabo
 .cont-box .item_list_type .item_money_box .item_price b { color:#191919; font-size: 42px; font-weight: 700; }
 .cont-box .item_list_type .item_money_box del { color:#8b8b8b; font-size:24px; font-weight: 300; }
 
-.cont-box2 .goods_list_tit,
-.cont-box2 .item_list_type .item_btn_box,
-.cont-box2 .paging  { display:none; }
 .cont-box2 h3 { color:#191919; font-size:38px; font-weight:700; text-align: center; }
-
+.cont-box2 .item_gallery_type .item_cont { padding:0; }
