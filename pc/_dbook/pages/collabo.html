@@ -251,12 +251,12 @@
                                         </div>
                                     </div>
                                     <div class="item_money_box">
-                                        <strong class="item_price">
-                                            <b>{{toCurrencyString calculatedSalePrice}}</b>원
-                                        </strong>
                                         {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
                                             <del>{{toCurrencyString salePrice}}원</del>
                                         {{/ifHasDiscount}}
+                                        <strong class="item_price">
+                                            <b>{{toCurrencyString calculatedSalePrice}}</b>원
+                                        </strong>
                                     </div>
                                     <div class="item_icon_box">
                                         {{#each stickerInfos}}
