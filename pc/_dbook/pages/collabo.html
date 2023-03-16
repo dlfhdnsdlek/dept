@@ -28,7 +28,6 @@
 
         <link rel="shortcut icon" href="/favicon.ico" />
         <link type="text/css" rel="stylesheet" href="/assets/css/index.css" />
-        <link type="text/css" rel="stylesheet" href="/assets/css/main/main.css" />
         <script src="/js/pages/ie-support-end/browser.js"></script>
         <script src="/lib/jquery/jquery-3.5.1.min.js"></script>
         <script src="/lib/handlebar/handlebars.min-v4.7.6.js"></script>
@@ -116,32 +115,34 @@
         </div>
         <aside id="aside"></aside>
         <footer id="footer"></footer>
+
         <!-- 1. 갤러리형 -->
+        <!-- 핸들바 기본 방식 -->
         <script id="product-list-type-gallery" type="text/x-handlebars-template">
                 <div class="item_gallery_type">
-                <ul class="dk-goods-wrapper">
+                <ul>
                     {{#each productList}}
-                    <li class="dk-goods-slide" data-product-no="{{productNo}}" style="width:25%">
+                    <li data-product-no="{{productNo}}" style="width:25%">
                         <div class="item_cont">
                             <div class="item_photo_box">
                                 <a
                                   href="/pages/product/view.html?productNo={{productNo}}"
                                   class="{{#if adult}}item_adult{{/if}}"
                                 >
-                                    {{img listImageUrls productName 'middle'}} {{#if
+                                    {{img listImageUrls 180 180 productName 'middle'}} {{#if
                                     adult}}
                                     <strong
                                       class="item_adult_bg"
                                       style="background-image:url('/assets/img/icon/goods_icon/only_adult_pc.png'); display:block;"
                                     >19금</strong
                                     >
-                                    {{/if}} {{#ifLe stockCnt 0}}
+                                    {{/if}} {{#if isSoldOut}}
                                     <strong
                                       class="item_soldout_bg"
                                       style="background-image:url('/assets/img/icon/goods_icon/soldout.png'); display:block;"
                                     >SOLD OUT</strong
                                     >
-                                    {{/ifLe}} {{#ifEq saleStatusType 'READY'}}
+                                    {{/if}} {{#ifEq saleStatusType 'READY'}}
                                     <div class="item_sell_ing"><span>판매임박</span></div>
                                     {{/ifEq}} {{#ifEq saleStatusType 'FINISHED'}}
                                     <div class="item_sell_ing"><span>판매종료</span></div>
@@ -191,19 +192,7 @@
                     <div class="goods_no_data"><strong>상품이 존재하지 않습니다.</strong></div>
                     {{/each}}
                 </ul>
-				<div class="swiper-scrollbar"></div>
             </div>
-            <script>
-                var swiper = new Swiper(".cont-box2 .item_gallery_type", {
-                    spaceBetween: 10,
-                    slidesPerView: 4,
-                    wrapperClass: "dk-goods-wrapper",
-                    slideClass: "dk-goods-slide",
-                    scrollbar: {
-                        el: ".cont-box2 .swiper-scrollbar",
-                    }
-                });
-            </script>
         </script>
 
         <!-- 2. 리스트형 -->
@@ -219,9 +208,13 @@
                                     {{#if adult}}
                                         <strong class="item_adult_bg" style="background-image:url(/assets/img/icon/goods_icon/only_adult_pc.png); display:block;">19금</strong>
                                     {{/if}}
-                                    {{#ifLe stockCnt 0}}
-                                        <strong class="item_soldout_bg" style="background-image:url(/assets/img/icon/goods_icon/soldout.png); display:block;">SOLD OUT</strong>
-                                    {{/ifLe}}
+                                    {{#if isSoldOut}}
+                                        <strong
+                                                class="item_soldout_bg"
+                                                style="background-image:url('/assets/img/icon/goods_icon/soldout.png'); display:block;"
+                                        >SOLD OUT</strong
+                                        >
+                                    {{/if}}
                                     {{#ifEq saleStatusType 'READY'}}<div class="item_sell_ing"><span>판매임박</span></div>{{/ifEq}}
                                     {{#ifEq saleStatusType 'FINISHED'}}<div class="item_sell_ing"><span>판매종료</span></div>{{/ifEq}}
                                     </a>
@@ -245,15 +238,6 @@
                                             {{/if}}
                                             </a>
                                         </div>
-                                        <div class="item_icon_box">
-                                            {{#each stickerInfos}}
-                                                {{#ifEq type 'TEXT'}}
-                                                    <span>{{label}}</span>
-                                                {{else}}
-                                                    {{img label}}
-                                                {{/ifEq}}
-                                            {{/each}}
-                                        </div>
                                     </div>
                                     <div class="item_money_box">
                                         <strong class="item_price">
@@ -263,10 +247,18 @@
                                             <del>{{toCurrencyString salePrice}}원</del>
                                         {{/ifHasDiscount}}
                                     </div>
+                                    <div class="item_icon_box">
+                                        {{#each stickerInfos}}
+                                            {{#ifEq type 'TEXT'}}
+                                                <span>{{label}}</span>
+                                            {{else}}
+                                                {{img label}}
+                                            {{/ifEq}}
+                                        {{/each}}
+                                    </div>
                                 </div>
                                 <div class="item_btn_box">
-                                    <button class="btn_list_cart btn_add_cart" id="cartBtn"><span>장바구니</span></button><!-- 비활성화 시 button 에 disabled 추가 -->
-                                    <button class="btn_list_get btn_add_wish {{#if liked}}on{{/if}}" id="wishBtn"><span>찜하기</span></button><!-- 찜하기 선택 시 button 에 on 추가 -->
+                                    <button class="btn_list_cart btn_add_cart" id="cartBtn" {{#if isUnablePurchasing}}disabled{{/if}}><span>장바구니</span></button><!-- 비활성화 시 button 에 disabled 추가 -->                                    <button class="btn_list_get btn_add_wish {{#if liked}}on{{/if}}" id="wishBtn"><span>찜하기</span></button><!-- 찜하기 선택 시 button 에 on 추가 -->
                                 </div>
                             </div>
                         </li>
@@ -290,16 +282,19 @@
                                      {{#if adult}}
                                         <strong class="item_adult_bg" style="background-image:url(/assets/img/icon/goods_icon/only_adult_pc.png); display:block;">19금</strong>
                                     {{/if}}
-                                    {{#ifLe stockCnt 0}}
-                                        <strong class="item_soldout_bg" style="background-image:url(/assets/img/icon/goods_icon/soldout.png); display:block;">SOLD OUT</strong>
-                                    {{/ifLe}}
+                                    {{#if isSoldOut}}
+                                        <strong
+                                                class="item_soldout_bg"
+                                                style="background-image:url('/assets/img/icon/goods_icon/soldout.png'); display:block;"
+                                        >SOLD OUT</strong
+                                        >
+                                    {{/if}}
                                     {{#ifEq saleStatusType 'READY'}}<div class="item_sell_ing"><span>판매임박</span></div>{{/ifEq}}
                                     {{#ifEq saleStatusType 'FINISHED'}}<div class="item_sell_ing"><span>판매종료</span></div>{{/ifEq}}
                                     </a>
                                     <div class="item_link">
                                         <button type="button" class="btn_basket_get btn_add_wish {{#if liked}}on{{/if}}"  id="wishBtn"><span>찜하기</span></button>
-                                        <button type="button" class="btn_basket_cart btn_add_cart" id="cartBtn"><span>장바구니</span></button><!-- 비활성화 시 button 에 disabled 추가 -->
-                                    </div>
+                                        <button type="button" class="btn_basket_cart btn_add_cart" id="cartBtn" {{#if isUnablePurchasing}}disabled{{/if}}><span>장바구니</span></button><!-- 비활성화 시 button 에 disabled 추가 -->                                    </div>
                                 </div>
                                 <div class="item_info_cont">
                                     <div class="item_tit_box">
@@ -361,9 +356,13 @@
                                     {{#if adult}}
                                         <strong class="item_adult_bg" style="background-image:url(/assets/img/icon/goods_icon/only_adult_pc.png); display:block;">19금</strong>
                                     {{/if}}
-                                    {{#ifLe stockCnt 0}}
-                                        <strong class="item_soldout_bg" style="background-image:url(/assets/img/icon/goods_icon/soldout.png); display:block;">SOLD OUT</strong>
-                                    {{/ifLe}}
+                                    {{#if isSoldOut}}
+                                        <strong
+                                                class="item_soldout_bg"
+                                                style="background-image:url('/assets/img/icon/goods_icon/soldout.png'); display:block;"
+                                        >SOLD OUT</strong
+                                        >
+                                    {{/if}}
                                     {{#ifEq saleStatusType 'READY'}}<div class="item_sell_ing"><span>판매임박</span></div>{{/ifEq}}
                                     {{#ifEq saleStatusType 'FINISHED'}}<div class="item_sell_ing"><span>판매종료</span></div>{{/ifEq}}
                                     <div class="item_simple_over">
@@ -428,9 +427,13 @@
                                     {{#if adult}}
                                         <strong class="item_adult_bg" style="background-image:url(/assets/img/icon/goods_icon/only_adult_pc.png); display:block;">19금</strong>
                                     {{/if}}
-                                    {{#ifLe stockCnt 0}}
-                                        <strong class="item_soldout_bg" style="background-image:url(/assets/img/icon/goods_icon/soldout.png); display:block;">SOLD OUT</strong>
-                                    {{/ifLe}}
+                                    {{#if isSoldOut}}
+                                        <strong
+                                                class="item_soldout_bg"
+                                                style="background-image:url('/assets/img/icon/goods_icon/soldout.png'); display:block;"
+                                        >SOLD OUT</strong
+                                        >
+                                    {{/if}}
                                     {{#ifEq saleStatusType 'READY'}}<div class="item_sell_ing"><span>판매임박</span></div>{{/ifEq}}
                                     {{#ifEq saleStatusType 'FINISHED'}}<div class="item_sell_ing"><span>판매종료</span></div>{{/ifEq}}
 
@@ -481,7 +484,159 @@
                 </ul>
             </div>
         </script>
+
+        <!-- 위젯(전체, 포토) -->
+        <script id="widget-list-allPhoto-template" type="text/x-handlebars-template">
+            <div class="widget-head">
+                <h3 class="widget-tit">{{#ifEq type 'ALL'}}상품후기{{else}}포토후기{{/ifEq}}</h3>
+                <a href="/pages/board/product-reviews.html?boardType={{#ifEq type 'ALL'}}ALL{{else}}PHOTO{{/ifEq}}" class="widget-btn">
+                    {{#ifEq type 'ALL'}}전체 상품후기 보기{{else}}포토 상품후기 보기{{/ifEq}}
+                </a>
+            </div>
+            {{#if widgetList}}
+            <ul class="plusReviewList">
+                {{#each widgetList}}
+                <li>
+                    <div class="p-thumb">
+                        <a
+                        href="javascript:;"
+                        data-review-no="{{reviewNo}}"
+                        data-product-no="{{productInfo.no}}"
+                        data-type="{{#ifEq type 'ALL'}}ALL{{else}}PHOTO{{/ifEq}}"
+                        class="photo-display-popup-open"
+                        >
+                            <span class="img-frame img-frame--normal">
+                                {{#if images.length}}
+                                {{img images.[0] productInfo.name}}
+                                {{/if}} {{#if images.length}} {{#ifEq images.length 1}} {{else}}
+                                <span class="p-thumb__file-count">
+                                    {{images.length}}
+                                </span>
+                                {{/ifEq}} {{/if}}
+                            </span>
+                            <div class="p-thumb__desc">
+                                <p>
+                                    <span class="collapse-2">
+                                        {{#if isBestReview}}
+                                        <em class="tag">best</em>
+                                        {{/if}} {{content}}
+                                    </span>
+                                    <span class="p-thumb__auth">{{register.name}}</span>
+                                </p>
+                            </div>
+                        </a>
+                        <a href="/pages/product/view.html?productNo={{productInfo.no}}" class="p-thumb__desc">
+                            <span class="img-frame">
+                                <img src="{{productInfo.thumbnailImage}}" alt="{{productInfo.name}}" />
+                            </span>
+                            <p>
+                                <span class="collapse-1">{{productInfo.name}}</span>
+                                <em class="p-thumb__comment-cnt"> 후기:<span>{{productInfo.totalReviewCount}}</span> </em>
+                            </p>
+                        </a>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <p class="p-empty em">
+                <span class="p-empty-ico"></span>
+                게시글이 존재하지 않습니다.
+            </p>
+            {{/if}}
+        </script>
+
+        <!-- 위젯(상품 후기) -->
+        <script id="widget-list-reviewedProducts-template" type="text/x-handlebars-template">
+            <div class='main_goods_cont' id='plus-review-widget-container'>
+                <div class='widget-head'>
+                    <h3 class='widget-tit'>
+                        상품별 후기
+                    </h3>
+                    <a href='/pages/board/product-reviews.html?boardType=REVIEWED_PRODUCTS' class='widget-btn'>
+                        전체 상품후기 보기
+                    </a>
+                </div>
+                {{#if widgetList}}
+                <ul class='plusReviewList'>
+                    {{#each widgetList}}
+                    <li>
+                        <div class='p-thumb'>
+                            <a href="/pages/product/view.html?productNo={{productNo}}">
+                                <span class='img-frame img-frame--normal'>
+                                    {{#if mainImage}}
+                                    {{img mainImage productName}}
+                                    {{/if}}
+                                </span>
+                                <div class='p-thumb__desc'>
+                                    <p>
+                                        <span class='collapse-1'>
+                                            {{productName}}
+                                        </span>
+                                        <span class='p-thumb__price em'>
+                                            {{toCurrencyString salePrice}} 원 | 즉시 할인가 {{toCurrencyString appliedImmediateDiscountPrice}}원
+                                        </span>
+                                        <span class='p-thumb__comment'>
+                                            <em class='em'>
+                                                후기:
+                                                <span>
+                                                    {{totalReviewCount}}
+                                                </span>
+                                            </em>
+                                            <em class='em'>
+                                                평점:
+                                                <span>
+                                                    {{reviewRate}}
+                                                </span>
+                                            </em>
+                                        </span>
+                                    </p>
+                                </div>
+                            </a>
+                            {{#if reviews}}
+                                {{#each reviews}}
+                                <a
+                                        href="javascript:;"
+                                        data-review-no="{{reviewNo}}"
+                                        data-product-no="{{../productNo}}"
+                                        data-type="REVIEWED_PRODUCTS"
+                                        class="photo-display-popup-open"
+                                        >
+                                    <div class='p-thumb__desc'>
+
+                                            <span class='img-frame'>
+                                                {{#if attachedImage}}
+                                                {{img attachedImage content}}
+                                                {{/if}}
+                                            </span>
+                                            <p>
+                                                <span class='collapse-2'>
+                                                    {{#if isBestReview}}
+                                                        <em class='tag'>
+                                                            best
+                                                        </em>
+                                                    {{/if}}
+                                                    {{content}}
+                                                </span>
+                                            </p>
+
+                                    </div>
+                                </a>
+                                {{/each}}
+                            {{/if}}
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <p class='p-empty em'>
+                    <span class='p-empty-ico'></span>
+                    게시글이 존재하지 않습니다.
+                </p>
+                {{/if}}
+            </div>
+        </script>
         <script type="text/javascript" src="/js/pages/naver-inflow/naverInflow.js"></script>
-        <script src="/_dbook/js/pages/index.js"></script>
+        <script src="/js/pages/index.js"></script>
     </body>
 </html>
