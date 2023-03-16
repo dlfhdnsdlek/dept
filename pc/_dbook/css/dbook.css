@@ -79,15 +79,16 @@ body #footer { min-height:0; }
 #footer .footer_content > div { display:flex; justify-content: space-between; width:100%; max-width:1520px; min-width:1220px; padding:0 10px; margin:0 auto; box-sizing: border-box; }
 
 #footer .footer_content { padding:78px 0 68px; background:#212121; }
-#footer .footer_content .foot_cont { color: #979797; font-size: 18px; line-height: 1.6; }
+#footer .footer_content .foot_cont { color: #979797; font-size: 18px; font-weight: 300; line-height: 1.6; }
 #footer .footer_content .foot_cont .foot_info_list { color: #979797; font-size: 18px; }
 #footer .footer_content .foot_cont .foot_info_list dd a { color:#979797; }
-#footer .footer_content .foot_cont .foot_info_list dd strong { font-weight:400; }
+#footer .footer_content .foot_cont .foot_info_list dd strong { font-weight:300; }
 #footer .footer_content .foot_cont .copyright { color: #979797; font-size: 18px; line-height: 1.6; }
-#footer .btn_licensee_info { color:#979797; font-size:18px; border-bottom-color:#979797; }
+#footer .btn_licensee_info { vertical-align: 2px; color:#979797; font-size:14px; border-bottom-color:#979797; }
 
-#footer .foot_list { margin-top:20px; }
-#footer .foot_list ul li a { color:#979797; font-size:16px; border:0; }
+#footer .foot_list { margin-top:18px; }
+#footer .foot_list ul li a { padding:0 10px; color:#979797; font-size:16px; border:0; }
+#footer .foot_list ul li:first-child a { padding-left:0; }
 #footer .foot_list ul li a strong { font-weight:400; }
 
 #footer .content_info { width:auto; padding:0; }
