@@ -1,8 +1,8 @@
 $(()=>{
     $('#header .gnb .depth0 > li').on('mouseenter',function(){
-        $(this).addClass('on').find('ul').stop().fadeIn();
+        $(this).addClass('on').find('ul').stop().slideDown(200);
     }).on('mouseleave', function(){
-        $(this).removeClass('on').find('ul').stop().fadeOut();
+        $(this).removeClass('on').find('ul').stop().slideUp(200);
     });
 
     $('#header').on('mouseenter',function(){
