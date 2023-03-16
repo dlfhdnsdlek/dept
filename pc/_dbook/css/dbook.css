@@ -128,6 +128,23 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 
 #loginContent .member_sns_login .btn_kakao-sync_login { background-image:url('/_dbook/img/pc_kakao-sync.png') no-repeat; }
 
+
+/*========================================================================
+collabo
+========================================================================*/
+.collabo-visual { padding-bottom:80px; border-bottom:1px solid #e6e6e6; }
+
+.collabo-content h2 { margin-bottom:30px; color:#191919; font-size:38px; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
+
+/* 탭버튼 */
+.tab-type1 ul { display:flex; justify-content: center; }
+.tab-type1 ul li { width:160px; height:49px; margin:0 5px; border:1px solid #e6e6e6; text-align:center; }
+.tab-type1 ul li a { color:#7b7a7a; font-size:20px; }
+.tab-type1 ul li.on {  border-color:#000000;  }
+.tab-type1 ul li.on a { color:#191919; font-weight:500; }
+
+.cont-box { margin:50px 0 0;}
+
 /* 커스텀 swiper 슬라이드 */
 .collabo .cont-box2 .item_gallery_type {
     margin: 0 auto;
