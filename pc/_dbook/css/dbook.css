@@ -56,28 +56,16 @@ body #header { padding:0; min-height:100px; }
 
 /*========================================================================
 하단 영역
-========================================================================
-body #footer { min-height: auto !important; border-top: 1px solid #2a2a2a; box-sizing: border-box; visibility: visible; }
-#footer_wrap { border-top: 0; }
-#footer .footer_content .footer_left { float:none; width:100%; }
-#footer .footer_content .foot_list ul { display:flex; justify-content: center; }
-#footer .footer_content .foot_list ul li { float:none; padding:0 0 15px; }
-#footer .footer_content .foot_list ul li a { position:relative; color:#353535; font-size:14px; font-weight:400; border-left:0; }
-#footer .footer_content .foot_list ul li a::after { position:absolute; top:-3px; right:0; content:'·'; }
-#footer .footer_content .foot_list ul li:last-child a::after { display:none; }
-#footer .footer_content .foot_list ul li a strong { font-weight:500; }
-.foot_cont .foot_info_list { display:flex; justify-content: center; }
-.foot_cont .foot_info { text-align:center; }
-.foot_cont .foot_info span { padding:0 4px; color:#717171; font-size:14px; font-weight:400; }
-.foot_cont .foot_info a { color:#717171; font-size:14px; font-weight:400; border-bottom:0; }
-.foot_cont .foot_info p { color:#717171; font-size:14px; font-weight:400; }
-.foot_cont .foot_info p.copyright { color:#969696; font-size:14px; font-weight:400; text-align: center; }*/
-
+========================================================================*/
 body #footer { min-height:0; }
 #footer #footer_wrap { border-top:0; }
 #footer .content_info_wrap { border-top:0; }
 #footer .footer_content > div { display:flex; justify-content: space-between; width:100%; max-width:1520px; min-width:1220px; padding:0 10px; margin:0 auto; box-sizing: border-box; }
+#footer .footer_content > div:after { display:none; }
+#footer .footer_content .footer_left,
+#footer .footer_content .footer_right { width:auto; }
 
+/* 회사 정보 */
 #footer .footer_content { padding:78px 0 68px; background:#212121; }
 #footer .footer_content .foot_cont { color: #979797; font-size: 18px; font-weight: 300; line-height: 1.6; }
 #footer .footer_content .foot_cont .foot_info_list { color: #979797; font-size: 18px; }
@@ -86,11 +74,13 @@ body #footer { min-height:0; }
 #footer .footer_content .foot_cont .copyright { color: #979797; font-size: 18px; line-height: 1.6; }
 #footer .btn_licensee_info { vertical-align: 2px; color:#979797; font-size:14px; border-bottom-color:#979797; }
 
+/* 하단 메뉴 */
 #footer .foot_list { margin-top:18px; }
 #footer .foot_list ul li a { padding:0 10px; color:#979797; font-size:16px; border:0; }
 #footer .foot_list ul li:first-child a { padding-left:0; }
 #footer .foot_list ul li a strong { font-weight:400; }
 
+/* 고객센터 */
 #footer .content_info { width:auto; padding:0; }
 #footer .content_info .cs_center { width:auto; padding:0; margin:0; background:none; text-align:left; }
 #footer .content_info h3 { color:#b7b8bb; font-size:18px; font-weight:500; font-family: 'Pretendard', sans-serif; letter-spacing:0.3px; }
