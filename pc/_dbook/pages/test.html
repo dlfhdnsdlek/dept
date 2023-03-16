@@ -41,6 +41,7 @@
         <link href="/_dbook/css/lib/swiper.min.css" rel="stylesheet" type="text/css" />
         <script src="/_dbook/js/lib/swiper.min.js"></script>
     </head>
+    </head>
     <body>
         <header id="header"></header>
         <div id="contents">
@@ -114,14 +115,15 @@
         </div>
         <aside id="aside"></aside>
         <footer id="footer"></footer>
+        <div id="popups-area"></div>
 
         <!-- 1. 갤러리형 -->
         <!-- 핸들바 기본 방식 -->
         <script id="product-list-type-gallery" type="text/x-handlebars-template">
                 <div class="item_gallery_type">
-                <ul class="dk-goods-wrapper">
+                <ul>
                     {{#each productList}}
-                    <li class="dk-goods-slide" data-product-no="{{productNo}}" style="width:25%">
+                    <li data-product-no="{{productNo}}" style="width:25%">
                         <div class="item_cont">
                             <div class="item_photo_box">
                                 <a
@@ -191,19 +193,7 @@
                     <div class="goods_no_data"><strong>상품이 존재하지 않습니다.</strong></div>
                     {{/each}}
                 </ul>
-				<div class="swiper-scrollbar"></div>
             </div>
-			<script>
-			var swiper = new Swiper(".cont-box2 .item_gallery_type", {
-				spaceBetween: 30,
-				slidesPerView: 3,
-				wrapperClass: "dk-goods-wrapper",
-				slideClass: "dk-goods-slide",
-				scrollbar: {
-					el: ".cont-box2 .swiper-scrollbar",
-				}
-			});
-			</script>
         </script>
 
         <!-- 2. 리스트형 -->
@@ -251,12 +241,12 @@
                                         </div>
                                     </div>
                                     <div class="item_money_box">
-                                        {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                                            <del>{{toCurrencyString salePrice}}원</del>
-                                        {{/ifHasDiscount}}
                                         <strong class="item_price">
                                             <b>{{toCurrencyString calculatedSalePrice}}</b>원
                                         </strong>
+                                        {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                                            <del>{{toCurrencyString salePrice}}원</del>
+                                        {{/ifHasDiscount}}
                                     </div>
                                     <div class="item_icon_box">
                                         {{#each stickerInfos}}
