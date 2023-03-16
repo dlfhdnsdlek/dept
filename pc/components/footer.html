@@ -12,23 +12,6 @@
             <div>
                 {{#with bottom}}
                 <div class="footer_left">
-                    <div class="foot_list">
-                        <ul>
-                            <li>
-                                <a href="/pages/service/guide.html"><strong>이용안내</strong></a>
-                            </li>
-                            <li>
-                                <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
-                            </li>
-                            <li>
-                                <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/product-inquiries.html"><strong>제휴문의</strong></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- //foot_list -->
                     <div class="foot_cont">
                         {{#with business}}
                         <div class="foot_info">
@@ -79,6 +62,23 @@
                             <p class="copyright">Copyright {{since}} {{companyName}} all rights reserved.</p>
                             {{/if}}
                         </div>
+                        <div class="foot_list">
+                            <ul>
+                                <li>
+                                    <a href="/pages/service/guide.html"><strong>이용안내</strong></a>
+                                </li>
+                                <li>
+                                    <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
+                                </li>
+                                <li>
+                                    <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
+                                </li>
+                                <li>
+                                    <a href="/pages/my/product-inquiries.html"><strong>제휴문의</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- //foot_list -->
                         <div class="foot_certify">
                             {{#if termsConfig}} {{img termsConfig.fairLogoUrl}} {{/if}} {{#if mall.escrowLogo.exposure}} {{{mall.escrowLogo.logoHtml}}} {{/if}}
                             {{#if mall.ssl}} {{{mall.ssl.trustSeal}}} {{/if}}
