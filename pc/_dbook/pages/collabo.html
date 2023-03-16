@@ -42,115 +42,85 @@
     <body>
         <header id="header"></header>
         <div id="contents">
-            <main id="promotionBanner" class="sub_content">
-                {{#if BANNER01}}
-                <div class="main_visual">
-                    <div class="slider-wrap slider-banner" id="banner-BANNER01">
-                        {{#each BANNER01.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                {{img imageUrl '' '' '슬라이드 배너' '' 'max-width:100%'}}
-                            </a>
-                        </div>
-                        {{/each}}
-                    </div>
-                </div>
-                {{/if}}
-
-                <div class="main_content main_banner_row">
-                    <div class="main_left_banner">
-                        {{#each BANNER10.bannerImages}}
-                        <div class="main_left_banner">
-                            <div>
+            <main id="promotionBanner" class="sub_content collabo">
+                <div class="collabo-visual">
+                    <div class="swiper-container">
+                        <ul class="swiper-wrapper">
+                            {{#each BANNER19.bannerImages}}
+                            <li>
                                 <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER10">
                                     {{img imageUrl}}
                                 </a>
-                            </div>
-                        </div>
-                        {{/each}}
+                            </li>
+                            {{/each}}
+                            {{#each BANNER20.bannerImages}}
+                            <li>
+                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER10">
+                                    {{img imageUrl}}
+                                </a>
+                            </li>
+                            {{/each}}
+                            {{#each BANNER21.bannerImages}}
+                            <li>
+                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER10">
+                                    {{img imageUrl}}
+                                </a>
+                            </li>
+                            {{/each}}
+                        </ul>
+                        <div class="swiper-pagination"></div>
                     </div>
-                    <div class="main_right_goods">
+                    <script>		
+                        var swiper = new Swiper('.collabo-visual .swiper-container', {	
+                            spaceBetween: 0,	
+                            slidesPerView: 1,
+                            loop: true,		
+                            pagination: {	
+                                el: '.collabo-visual .swiper-pagination',
+                                clickable: true,
+                            },	
+                            autoplay: {	
+                                delay: 4000,
+                                disableOnInteraction: false
+                            }
+                        });
+                    </script>  
+                </div>
+                <div class="collabo-content">
+                    <ul class="tab-type1">
+                        <li class="on">
+                            <a href="#none">진행 중인 공구</a>
+                        </li>
+                        <li>
+                            <a href="#tab2">종료된 공구</a>
+                        </li>
+                    </ul>
+                    <div class="cont-box">
                         <!-- 메인 상품 노출 -->
                         <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0001" style="display: none;"></div>
                     </div>
-                </div>
-                <div class="main_content">
-                    <!-- 배너 2단 -->
-                    <div class="main_banner_row">
-                        {{#each BANNER02.bannerImages}}
-                        <div class="main_banner_column">
-                            <div>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER02">
-                                    {{img imageUrl}}
-                                </a>
-                            </div>
-                        </div>
-                        {{/each}} {{#each BANNER03.bannerImages}}
-                        <div class="main_banner_column">
-                            <div>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER03">
-                                    {{img imageUrl}}
-                                </a>
-                            </div>
-                        </div>
-                        {{/each}}
+                    <div class="cont-box2">
+                        <!-- 메인 상품 노출 -->
+                        <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0002" style="display: none;"></div>
                     </div>
-
-                    <!-- 메인 상품 노출 -->
-                    <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0002" style="display: none;"></div>
-                    <!-- 배너 2단 복합 -->
-                    <div class="main_banner_2">
-                        {{#each BANNER04.bannerImages}}
-                        <div class="main_banner_2_left">
-                            <a href="{{landingUrl}}" id="banner-BANNER04">{{img imageUrl}}</a>
-                        </div>
-                        {{/each}}
-                        <div class="main_banner_2_right">
-                            {{#each BANNER05.bannerImages}}
-                            <a href="{{landingUrl}}" id="banner-BANNER05">{{img imageUrl}}</a>
-                            {{/each}} {{#each BANNER06.bannerImages}}
-                            <div>
-                                <a href="{{landingUrl}}" id="banner-BANNER06">{{img imageUrl}}</a>
-                            </div>
-                            {{/each}}
-                        </div>
-                    </div>
-
-                    <!--배너 1단 : 하단 -->
-                    {{#if BANNER07}}
-                    <div class="main_cont_slide_ban">
-                        <div class="main_cont_slide">
-                            {{#each BANNER07.bannerImages}}
-                            <div>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER07">{{img imageUrl}}</a>
-                            </div>
-                            {{/each}}
-                        </div>
-                    </div>
-                    {{/if}}
-                    <!-- 메인 상품 노출 -->
-                    <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0003" style="display: none;"></div>
-                    <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0004" style="display: none;"></div>
-                    <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0005" style="display: none;"></div>
                 </div>
             </main>
         </div>
         <aside id="aside"></aside>
         <footer id="footer"></footer>
-        <div id="popups-area"></div>
         <!-- 1. 갤러리형 -->
         <script id="product-list-type-gallery" type="text/x-handlebars-template">
                 <div class="item_gallery_type">
-                <ul>
+                <ul class="dk-goods-wrapper">
                     {{#each productList}}
-                    <li data-product-no="{{productNo}}" style="width:25%">
+                    <li class="dk-goods-slide" data-product-no="{{productNo}}" style="width:25%">
                         <div class="item_cont">
                             <div class="item_photo_box">
                                 <a
                                   href="/pages/product/view.html?productNo={{productNo}}"
                                   class="{{#if adult}}item_adult{{/if}}"
                                 >
-                                    {{img listImageUrls 180 180 productName 'middle'}} {{#if
+                                    {{img listImageUrls productName 'middle'}} {{#if
                                     adult}}
                                     <strong
                                       class="item_adult_bg"
@@ -213,7 +183,19 @@
                     <div class="goods_no_data"><strong>상품이 존재하지 않습니다.</strong></div>
                     {{/each}}
                 </ul>
+				<div class="swiper-scrollbar"></div>
             </div>
+            <script>
+                var swiper = new Swiper(".cont-box2 .item_gallery_type", {
+                    spaceBetween: 10,
+                    slidesPerView: 4,
+                    wrapperClass: "dk-goods-wrapper",
+                    slideClass: "dk-goods-slide",
+                    scrollbar: {
+                        el: ".cont-box2 .swiper-scrollbar",
+                    }
+                });
+            </script>
         </script>
 
         <!-- 2. 리스트형 -->

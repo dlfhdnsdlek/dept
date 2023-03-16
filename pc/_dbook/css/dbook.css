@@ -127,3 +127,55 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 .member_sns_login .btn_kakao-sync_login img { display:none; }
 
 #loginContent .member_sns_login .btn_kakao-sync_login { background-image:url('/_dbook/img/pc_kakao-sync.png') no-repeat; }
+
+/* 커스텀 swiper 슬라이드 */
+.collabo .cont-box2 .item_gallery_type {
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    z-index: 1;
+}
+.collabo .cont-box2 .swiper-scrollbar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 50;
+    height: 2px;
+    width: 100%;
+	background:#d0cfca;
+}
+.collabo .cont-box2 .swiper-scrollbar-drag { background:#000; }
+.dk-goods-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    -o-transition-property: transform;
+    transition-property: transform;
+    transition-property: transform,-webkit-transform;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+}
+.dk-goods-slide {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    -o-transition-property: transform;
+    transition-property: transform;
+    transition-property: transform,-webkit-transform;
+}
