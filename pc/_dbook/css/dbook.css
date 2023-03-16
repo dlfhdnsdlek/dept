@@ -205,6 +205,7 @@ collabo
 .collabo .paging,
 .collabo .item_wish { display:none; }
 .collabo .goods_list_cont ul li { margin:0; border:0; }
+.collabo .goods_list_cont ul li .item_photo_box,
 .collabo .goods_list_cont ul li .item_photo_box a img { border:0; }
 .collabo .goods_list_cont ul li .item_tit_box { margin:0 0 35px;font-family: 'Montserrat','Pretendard','Noto Sans KR', sans-serif; }
 
