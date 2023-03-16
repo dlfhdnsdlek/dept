@@ -40,10 +40,8 @@ body #header::after { border-bottom:0; }
 .main-box3 .swiper-button-prev.swiper-button-disabled { pointer-events: auto; }
 
 .main-box4 { position:relative; width:100%; }
-.video-wrap { position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index: 1; }
-.video-wrap iframe { position:absolute; top:-1px; bottom:-1px; left:-2px; right:-2px; width:calc(100% + 4px); height:calc(100% + 2px); }
-
-.dk-main-video { position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index: 1; }
+.dk-main-video { position:relative; margin:0; padding:46.9% 0 0; overflow: hidden; }
+.dk-main-video .video-bgimg img { position:absolute; top: 0; width:100%; height:100%; object-fit: cover; }
 .yt-video-background { position:absolute; top: 0; bottom:0; right:0; left:0; width:100%; height: 100%; transform: scale(1.2); z-index: 99;}
 .yt-video-background iframe { width:100%; height: 100%; pointer-events: none; opacity:1 !important; }
 
