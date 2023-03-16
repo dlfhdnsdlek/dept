@@ -207,7 +207,7 @@ collabo
 .collabo .goods_list_cont ul li { margin:0; border:0; }
 .collabo .goods_list_cont ul li .item_photo_box,
 .collabo .goods_list_cont ul li .item_photo_box a img { border:0; }
-.collabo .goods_list_cont ul li .item_tit_box { margin:0 0 35px;font-family: 'Montserrat','Pretendard','Noto Sans KR', sans-serif; }
+.collabo .goods_list_cont ul li .item_info_cont { font-family: 'Montserrat','Pretendard','Noto Sans KR', sans-serif; }
 
 .cont-box { margin:50px 0 150px;}
 .cont-box .goods_list_cont .item_list_type .item_cont { display:flex; align-items: flex-end; position:relative; }
