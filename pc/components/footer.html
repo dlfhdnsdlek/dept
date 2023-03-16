@@ -8,22 +8,22 @@
 
 <div id="footer_wrap">
     <div class="content_info_wrap">
-        <div class="content_info">
-            {{#with top}} 
-            <div class="cs_center">
-                <h3>CS CENTER</h3>
-                {{#if mall.serviceCenter}}
-                <p>{{mall.serviceCenter.phoneNo}}</p>
-                <p>{{mall.serviceCenter.email}}</p>
-                {{else}}
-                <p>-</p>
-                {{/if}}
-            </div>
-            {{/with}}
-        </div>
-        <!-- //content_info -->
 
         <div class="footer_content">
+            <div class="content_info">
+                {{#with top}} 
+                <div class="cs_center">
+                    <h3>CS CENTER</h3>
+                    {{#if mall.serviceCenter}}
+                    <p>{{mall.serviceCenter.phoneNo}}</p>
+                    <p>{{mall.serviceCenter.email}}</p>
+                    {{else}}
+                    <p>-</p>
+                    {{/if}}
+                </div>
+                {{/with}}
+            </div>
+            <!-- //content_info -->
             <div>
                 {{#with bottom}}
                 <div class="footer_left">
