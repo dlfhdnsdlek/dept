@@ -2,7 +2,7 @@
 Layout
 ========================================================================*/
 body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
-body { min-width:1200px; max-width:1980px; margin:0 auto; }
+body { min-width:1300px; max-width:1980px; padding:0; margin:0 auto; }
 
 /* 우측 스크롤 윙 */
 .scroll_right_cont { background:#fff; }
