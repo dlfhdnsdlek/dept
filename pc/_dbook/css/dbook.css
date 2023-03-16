@@ -199,7 +199,8 @@ collabo
 /* 공통 */
 .collabo .goods_list_tit,
 .collabo .item_list_type .item_btn_box,
-.collabo .paging  { display:none; }
+.collabo .paging,
+.collabo .item_wish { display:none; }
 .collabo .goods_list_cont ul li { margin:0; border:0; }
 .collabo .goods_list_cont ul li .item_photo_box a img { border:0; }
 
