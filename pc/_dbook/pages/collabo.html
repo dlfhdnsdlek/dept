@@ -50,21 +50,19 @@
                         <ul class="swiper-wrapper">
                             {{#each BANNER19.bannerImages}}
                             <li>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER10">
+                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
                                     {{img imageUrl}}
                                 </a>
                             </li>
-                            {{/each}}
-                            {{#each BANNER20.bannerImages}}
+                            {{/each}} {{#each BANNER20.bannerImages}}
                             <li>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER10">
+                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
                                     {{img imageUrl}}
                                 </a>
                             </li>
-                            {{/each}}
-                            {{#each BANNER21.bannerImages}}
+                            {{/each}} {{#each BANNER21.bannerImages}}
                             <li>
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER10">
+                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
                                     {{img imageUrl}}
                                 </a>
                             </li>
@@ -86,8 +84,6 @@
                                     delay: 4000,
                                     disableOnInteraction: false
                                 },
-                                wrapperClass: "dk-goods-wrapper",
-                                slideClass: "dk-goods-slide",
                             });
                         });
                     </script>  
