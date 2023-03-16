@@ -1,13 +1,14 @@
 /*========================================================================
 Layout
 ========================================================================*/
-body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
+body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
 .dk-noto { font-family: 'Noto Sans KR', sans-serif; }
 /* LAYOUT */
 body { min-width:1200px; max-width:1980px; margin:0 auto; }
 
 /* 우측 스크롤 윙 */
 .scroll_right_cont { background:#fff; }
+
 
 /*========================================================================
 상단 영역
@@ -75,7 +76,7 @@ body #footer { min-height: auto !important; border-top: 1px solid #2a2a2a; box-s
 body #footer { min-height:0; }
 #footer #footer_wrap { border-top:0; }
 #footer .content_info_wrap { border-top:0; }
-#footer .footer_content > div { width:100%; max-width:1670px; min-width:1200px; padding:0 80px; margin:0 auto; box-sizing: border-box; }
+#footer .footer_content > div { display:flex; justify-content: space-between; width:100%; max-width:1520px; min-width:1220px; padding:0 10px; margin:0 auto; box-sizing: border-box; }
 
 #footer .footer_content { padding:78px 0 68px; background:#212121; }
 #footer .footer_content .foot_cont { color: #979797; font-size: 18px; line-height: 1.6; }
@@ -88,6 +89,12 @@ body #footer { min-height:0; }
 #footer .foot_list { margin-top:20px; }
 #footer .foot_list ul li a { color:#979797; font-size:16px; border:0; }
 #footer .foot_list ul li a strong { font-weight:400; }
+
+#footer .content_info { width:auto; padding:0; }
+#footer .content_info .cs_center { width:auto; padding:0; margin:0; background:none; text-align:left; }
+#footer .content_info h3 { color:#b7b8bb; font-size:18px; font-weight:500; font-family: 'Pretendard', sans-serif; letter-spacing:0.3px; }
+#footer .content_info strong { color:#ffffff; font-size:22px; font-weight:700; font-family: 'Montserrat', sans-serif; }
+#footer .content_info p { color:#b7b8bb; font-size:16px; line-height: 1.63; }
 
 
 /*========================================================================

@@ -12,6 +12,7 @@
             <div>
                 {{#with bottom}}
                 <div class="footer_left">
+                    <div class="footer-logo"><img src="/_dbook/img/footer_logo.png" alt="" /></div>
                     <div class="foot_cont">
                         {{#with business}}
                         <div class="foot_info">
@@ -91,12 +92,13 @@
                 <div class="footer_right">
                     <div class="content_info">
                         <div class="cs_center">
-                            <h3>CS CENTER</h3>
+                            <h3>고객센터</h3>
                             {{#if mall.serviceCenter}}
-                            <p>{{mall.serviceCenter.phoneNo}}</p>
-                            <p>{{mall.serviceCenter.email}}</p>
-                            {{else}}
-                            <p>-</p>
+                            <p><strong>{{mall.serviceCenter.phoneNo}}</strong></p>
+                            <p>평일 : 10:00~18:00<br/>
+                                점심시간 : 12:30 ~ 13:30<br/>
+                                토요일,일요일,공휴일 휴무입니다.
+                            </p>
                             {{/if}}
                         </div>
                     </div>
