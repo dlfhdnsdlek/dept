@@ -45,69 +45,71 @@
         <header id="header"></header>
         <div id="contents">
             <main id="promotionBanner" class="sub_content collabo">
-                <div class="collabo-visual">
-                    <div class="swiper-container">
-                        <ul class="swiper-wrapper">
-                            {{#each BANNER19.bannerImages}}
-                            <li class="swiper-slide">
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                    {{img imageUrl}}
-                                </a>
-                            </li>
-                            {{/each}} {{#each BANNER20.bannerImages}}
-                            <li class="swiper-slide">
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                    {{img imageUrl}}
-                                </a>
-                            </li>
-                            {{/each}} {{#each BANNER21.bannerImages}}
-                            <li class="swiper-slide">
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                    {{img imageUrl}}
-                                </a>
-                            </li>
-                            {{/each}}
-                        </ul>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                    <script>		
-                        $(document).ready(function(){		
-                            var swiper = new Swiper('.collabo-visual .swiper-container', {	
-                                spaceBetween: 0,	
-                                slidesPerView: 1,
-                                loop: true,		
-                                pagination: {	
-                                    el: '.collabo-visual .swiper-pagination',
-                                    clickable: true,
-                                },	
-                                autoplay: {	
-                                    delay: 4000,
-                                    disableOnInteraction: false
-                                },
+                <div class="main_content">
+                    <div class="collabo-visual">
+                        <div class="swiper-container">
+                            <ul class="swiper-wrapper">
+                                {{#each BANNER19.bannerImages}}
+                                <li class="swiper-slide">
+                                    <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                                        {{img imageUrl}}
+                                    </a>
+                                </li>
+                                {{/each}} {{#each BANNER20.bannerImages}}
+                                <li class="swiper-slide">
+                                    <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                                        {{img imageUrl}}
+                                    </a>
+                                </li>
+                                {{/each}} {{#each BANNER21.bannerImages}}
+                                <li class="swiper-slide">
+                                    <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                                        {{img imageUrl}}
+                                    </a>
+                                </li>
+                                {{/each}}
+                            </ul>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                        <script>		
+                            $(document).ready(function(){		
+                                var swiper = new Swiper('.collabo-visual .swiper-container', {	
+                                    spaceBetween: 0,	
+                                    slidesPerView: 1,
+                                    loop: true,		
+                                    pagination: {	
+                                        el: '.collabo-visual .swiper-pagination',
+                                        clickable: true,
+                                    },	
+                                    autoplay: {	
+                                        delay: 4000,
+                                        disableOnInteraction: false
+                                    },
+                                });
                             });
-                        });
-                    </script>  
-                </div>
-                <div class="collabo-content">
-                    <h2>Collabo</h2>
-                    <div class="tab-type1">
-                        <ul>
-                            <li class="on">
-                                <a href="#none">진행 중인 공구</a>
-                            </li>
-                            <li>
-                                <a href="#tab2">종료된 공구</a>
-                            </li>
-                        </ul>
+                        </script>  
                     </div>
-                    <div class="cont-box">
-                        <!-- 메인 상품 노출 -->
-                        <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0001" style="display: none;"></div>
-                    </div>
-                    <div class="cont-box2">
-                        <h3>오픈 준비중인 공구</h3>
-                        <!-- 메인 상품 노출 -->
-                        <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0002" style="display: none;"></div>
+                    <div class="collabo-content">
+                        <h2>Collabo</h2>
+                        <div class="tab-type1">
+                            <ul>
+                                <li class="on">
+                                    <a href="#none">진행 중인 공구</a>
+                                </li>
+                                <li>
+                                    <a href="#tab2">종료된 공구</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="cont-box">
+                            <!-- 메인 상품 노출 -->
+                            <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0001" style="display: none;"></div>
+                        </div>
+                        <div class="cont-box2">
+                            <h3>오픈 준비중인 공구</h3>
+                            <!-- 메인 상품 노출 -->
+                            <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0002" style="display: none;"></div>
+                        </div>
                     </div>
                 </div>
             </main>
