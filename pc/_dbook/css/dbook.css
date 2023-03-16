@@ -10,8 +10,8 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 /*========================================================================
 상단 영역
 ========================================================================*/
-body #header { position:relative; padding:0; min-height:100px; visibility: visible; }
-body #header::after { content: ''; position:absolute; bottom:1px; width:100%; border-bottom:1px solid #353535; }
+body #header { position:relative; padding:0; min-height:100px; visibility: visible; z-index:100; }
+body #header::after { content: ''; position:absolute; bottom:0; width:100%; border-bottom:1px solid #353535; }
 .dk-header-wrap { display:flex; justify-content: space-between; width:100%; max-width:1670px; margin:0 auto; }
 
 /* 로고 */
