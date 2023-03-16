@@ -134,11 +134,11 @@ collabo
 ========================================================================*/
 .collabo-visual { padding-bottom:80px; border-bottom:1px solid #e6e6e6; }
 
-.collabo-content h2 { margin-bottom:30px; color:#191919; font-size:38px; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
+.collabo-content h2 { margin:75px 0 30px; color:#191919; font-size:38px; text-align:center; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 
 /* 탭버튼 */
 .tab-type1 ul { display:flex; justify-content: center; }
-.tab-type1 ul li { width:160px; height:49px; margin:0 5px; border:1px solid #e6e6e6; text-align:center; }
+.tab-type1 ul li { width:160px; height:49px; line-height:48px; margin:0 5px; border:1px solid #e6e6e6; text-align:center; }
 .tab-type1 ul li a { color:#7b7a7a; font-size:20px; }
 .tab-type1 ul li.on {  border-color:#000000;  }
 .tab-type1 ul li.on a { color:#191919; font-weight:500; }
