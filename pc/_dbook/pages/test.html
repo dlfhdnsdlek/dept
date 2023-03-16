@@ -46,49 +46,6 @@
         <header id="header"></header>
         <div id="contents">
             <main id="promotionBanner" class="sub_content main">
-                <div class="collabo-visual">
-                    <div class="swiper-container">
-                        <ul class="swiper-wrapper">
-                            {{#each BANNER19.bannerImages}}
-                            <li class="swiper-slide">
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                    {{img imageUrl}}
-                                </a>
-                            </li>
-                            {{/each}} {{#each BANNER20.bannerImages}}
-                            <li class="swiper-slide">
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                    {{img imageUrl}}
-                                </a>
-                            </li>
-                            {{/each}} {{#each BANNER21.bannerImages}}
-                            <li class="swiper-slide">
-                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                    {{img imageUrl}}
-                                </a>
-                            </li>
-                            {{/each}}
-                        </ul>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                    <script>		
-                        $(document).ready(function(){		
-                            var swiper = new Swiper('.collabo-visual .swiper-container', {	
-                                spaceBetween: 0,	
-                                slidesPerView: 1,
-                                loop: true,		
-                                pagination: {	
-                                    el: '.collabo-visual .swiper-pagination',
-                                    clickable: true,
-                                },	
-                                autoplay: {	
-                                    delay: 4000,
-                                    disableOnInteraction: false
-                                },
-                            });
-                        });
-                    </script>  
-                </div>
 
             </main>
         </div>
