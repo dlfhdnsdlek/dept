@@ -133,6 +133,9 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 collabo
 ========================================================================*/
 .collabo-visual { padding-bottom:80px; border-bottom:1px solid #e6e6e6; }
+.collabo-visual .swiper-pagination { bottom:20px; }
+.collabo-visual .swiper-pagination > span { width:8px; height:8px; margin:0 5px; background:#fff; opacity:1; }
+.collabo-visual .swiper-pagination > span.swiper-pagination-bullet-active { background:#191919; }
 
 /* 커스텀 swiper 슬라이드 */
 .collabo .cont-box2 .item_gallery_type {
