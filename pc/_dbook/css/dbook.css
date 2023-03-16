@@ -19,7 +19,7 @@ body #header { padding:0; min-height:100px; }
 
 /* 카테고리 */
 #header .header_gnb { width:auto; margin:0; white-space: nowrap; z-index:1; }
-#header .gnb { width:auto; float: none; }
+#header .gnb { width:auto; }
 #header .gnb_allmenu_wrap { width:auto; height:auto; overflow:visible; margin:0; }
 #header #category-navigation { margin:0 0 0 13px; }
 #header .gnb .depth0 { display:flex; height:100px; font-size:18px; overflow: visible; }
