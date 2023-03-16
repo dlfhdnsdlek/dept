@@ -37,141 +37,91 @@
         <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
         <script src="/js/core/shopby.js"></script>
         <title>쇼핑몰명</title>
-        <!-- video JS -->
-        <script src="/_dbook/js/yt-video-background.min.js"></script>
-        <!-- Main CSS -->
-        <link href="/_dbook/css/main.css" rel="stylesheet" type="text/css" />
+        <!-- swiper -->
+        <link href="/_dbook/css/lib/swiper.min.css" rel="stylesheet" type="text/css" />
+        <script src="/_dbook/js/lib/swiper.min.js"></script>
     </head>
     <body>
         <header id="header"></header>
         <div id="contents">
-            <main id="promotionBanner" class="sub_content main">
-                {{#if BANNER01}}
-                <div class="main_visual">
-                    <div class="slider-wrap slider-banner" id="banner-BANNER01">
-                        {{#each BANNER01.bannerImages}}
-                        <div>
-                            <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                                {{img imageUrl '' '' '슬라이드 배너' '' 'max-width:100%'}}
-                            </a>
-                        </div>
-                        {{/each}}
-                    </div>
-                </div>
-                {{/if}}
-
-              <!-- 디자인교과서.fe 메인 묶음 -->
-              <div class="dk-main-wrap main_content">
-                <!-- 디자인교과서.fe 메인 박스 1 -->
-                <div class="dk-main-box">
-                  <div class="dk-bn-wrap1">
-                    <div class="let">
-                      {{#each BANNER02.bannerImages}}
-                      <a href="{{landingUrl}}" id="banner-BANNER02">{{img imageUrl}}</a>
-                      {{/each}}
-                    </div>
-                    <div class="rgt">
-                      <ul class="top-wrap">
-                        <li>
-                          {{#each BANNER03.bannerImages}}
-                          <a href="{{landingUrl}}" id="banner-BANNER03">{{img imageUrl}}</a>
-                          {{/each}}
-                        </li>
-                        <li>
-                          {{#each BANNER04.bannerImages}}
-                          <a href="{{landingUrl}}" id="banner-BANNER04">{{img imageUrl}}</a>
-                          {{/each}}
-                        </li>
-                      </ul>
-                      <div class="btm-wrap">
-                        {{#each BANNER05.bannerImages}}
-                        <a href="{{landingUrl}}" id="banner-BANNER05">{{img imageUrl}}</a>
-                        {{/each}}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-          
-                <!-- 디자인교과서.fe 메인 박스 2 -->
-                <div class="dk-main-box2">
-                  <div class="dk-bn-wrap2">
-                    {{#each BANNER06.bannerImages}}
-                    <a href="{{landingUrl}}" id="banner-BANNER06">{{img imageUrl}}</a>
-                    {{/each}}
-                  </div>
-                </div>
-          
-                <!-- 디자인교과서.fe 메인 박스 3 -->
-                <div class="dk-main-box3">
-                  <div class="dk-bn-wrap3">
-                    <ul class="top-wrap">
-                      <li>
-                        {{#each BANNER07.bannerImages}}
-                        <a href="{{landingUrl}}" id="banner-BANNER07">{{img imageUrl}}</a>
-                        {{/each}}
-                      </li>
-                      <li>
-                        {{#each BANNER11.bannerImages}}
-                        <a href="{{landingUrl}}" id="banner-BANNER11">{{img imageUrl}}</a>
-                        {{/each}}
-                      </li>
-                    </ul>
-                    <div class="btm-wrap">
-                      <div class="let">
-                        <ul class="top-wrap">
-                          <li>
-                            {{#each BANNER12.bannerImages}}
-                            <a href="{{landingUrl}}" id="banner-BANNER12">{{img imageUrl}}</a>
+            <main id="promotionBanner" class="sub_content collabo">
+                <div class="collabo-visual">
+                    <div class="swiper-container">
+                        <ul class="swiper-wrapper">
+                            {{#each BANNER19.bannerImages}}
+                            <li class="swiper-slide">
+                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                                    {{img imageUrl}}
+                                </a>
+                            </li>
+                            {{/each}} {{#each BANNER20.bannerImages}}
+                            <li class="swiper-slide">
+                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                                    {{img imageUrl}}
+                                </a>
+                            </li>
+                            {{/each}} {{#each BANNER21.bannerImages}}
+                            <li class="swiper-slide">
+                                <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                                    {{img imageUrl}}
+                                </a>
+                            </li>
                             {{/each}}
-                          </li>
-                          <li>
-                            {{#each BANNER13.bannerImages}}
-                            <a href="{{landingUrl}}" id="banner-BANNER13">{{img imageUrl}}</a>
-                            {{/each}}
-                          </li>
                         </ul>
-                        <ul class="btm-wrap">
-                          <li>
-                            {{#each BANNER14.bannerImages}}
-                            <a href="{{landingUrl}}" id="banner-BANNER14">{{img imageUrl}}</a>
-                            {{/each}}
-                          </li>
-                          <li>
-                            {{#each BANNER15.bannerImages}}
-                            <a href="{{landingUrl}}" id="banner-BANNER15">{{img imageUrl}}</a>
-                            {{/each}}
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="rgt">
-                        {{#each BANNER16.bannerImages}}
-                        <a href="{{landingUrl}}" id="banner-BANNER16">{{img imageUrl}}</a>
-                        {{/each}}
-                      </div>
+                        <div class="swiper-pagination"></div>
                     </div>
-                  </div>
+                    <script>		
+                        $(document).ready(function(){		
+                            var swiper = new Swiper('.collabo-visual .swiper-container', {	
+                                spaceBetween: 0,	
+                                slidesPerView: 1,
+                                loop: true,		
+                                pagination: {	
+                                    el: '.collabo-visual .swiper-pagination',
+                                    clickable: true,
+                                },	
+                                autoplay: {	
+                                    delay: 4000,
+                                    disableOnInteraction: false
+                                },
+                            });
+                        });
+                    </script>  
                 </div>
-                <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0001" style="display: none;">
+                <div class="collabo-content">
+                    <h2>Collabo</h2>
+                    <div class="tab-type1">
+                        <ul>
+                            <li class="on">
+                                <a href="#none">진행 중인 공구</a>
+                            </li>
+                            <li>
+                                <a href="#tab2">종료된 공구</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="cont-box">
+                        <!-- 메인 상품 노출 -->
+                        <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0001" style="display: none;"></div>
+                    </div>
+                    <div class="cont-box2">
+                        <h3>오픈 준비중인 공구</h3>
+                        <!-- 메인 상품 노출 -->
+                        <div class="goods_list main_wrap_1 main_goods_cont" id="goodsList-SCPC0002" style="display: none;"></div>
+                    </div>
                 </div>
-                <!-- 인스타그램 위젯 -->
-                <div class="insta-box">
-                    <h3>INSTAGRAM</h3>
-                    <div class="instagram_widget" id="instagram-widget" style="display: none;"></div>
-                </div>
-              </div>
             </main>
         </div>
         <aside id="aside"></aside>
         <footer id="footer"></footer>
-        <div id="popups-area"></div>
 
         <!-- 1. 갤러리형 -->
         <!-- 핸들바 기본 방식 -->
         <script id="product-list-type-gallery" type="text/x-handlebars-template">
                 <div class="item_gallery_type">
-                <ul>
+                <ul class="dk-goods-wrapper">
                     {{#each productList}}
-                    <li data-product-no="{{productNo}}" style="width:25%">
+                    <li class="dk-goods-slide" data-product-no="{{productNo}}" style="width:25%">
                         <div class="item_cont">
                             <div class="item_photo_box">
                                 <a
@@ -241,7 +191,19 @@
                     <div class="goods_no_data"><strong>상품이 존재하지 않습니다.</strong></div>
                     {{/each}}
                 </ul>
+				<div class="swiper-scrollbar"></div>
             </div>
+			<script>
+			var swiper = new Swiper(".cont-box2 .item_gallery_type", {
+				spaceBetween: 30,
+				slidesPerView: 3,
+				wrapperClass: "dk-goods-wrapper",
+				slideClass: "dk-goods-slide",
+				scrollbar: {
+					el: ".cont-box2 .swiper-scrollbar",
+				}
+			});
+			</script>
         </script>
 
         <!-- 2. 리스트형 -->
@@ -289,12 +251,12 @@
                                         </div>
                                     </div>
                                     <div class="item_money_box">
-                                        <strong class="item_price">
-                                            <b>{{toCurrencyString calculatedSalePrice}}</b>원
-                                        </strong>
                                         {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
                                             <del>{{toCurrencyString salePrice}}원</del>
                                         {{/ifHasDiscount}}
+                                        <strong class="item_price">
+                                            <b>{{toCurrencyString calculatedSalePrice}}</b>원
+                                        </strong>
                                     </div>
                                     <div class="item_icon_box">
                                         {{#each stickerInfos}}
