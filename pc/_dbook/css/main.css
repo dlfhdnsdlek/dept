@@ -30,7 +30,7 @@ body #header { width:100%; max-height:1670px; min-width:1200px; min-height:0; ma
 .main-box3 { padding:160px 0 180px; }
 .main-box3 .main-inner { position:relative; max-width:1670px; width:100%; padding:0 7.29%; margin:0 auto; box-sizing: border-box;}
 .main-box3 .main-title { margin-bottom:55px; text-align:center; }
-.main-box3 .main-title h2 { color:#000000; font-size:60px; font-family: 'Montserrat', sans-serif; }
+.main-box3 .main-title h2 { color:#000000; font-size:60px; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 .main-box3 .main-title p { color:#191919; font-size:25px; }
 .main-box3 ul li.single { max-width:690px; }
 .main-box3 .swiper-button { position:absolute; top:60%; width:40px; height:70px; margin-top:-35px; background:no-repeat; }
@@ -54,7 +54,7 @@ body #header { width:100%; max-height:1670px; min-width:1200px; min-height:0; ma
 /* instagram */
 .insta-box { margin:160px 0 180px; }
 .insta-box .main-inner {  max-width:1670px; width:100%; padding:0; margin:0 auto; box-sizing: border-box; }
-.insta-box h2 { color:#000000; font-size:48px; text-align:left; font-family: 'Montserrat', sans-serif; }
+.insta-box h2 { color:#000000; font-size:48px; text-align:left; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 .insta-box .instagram_widget { padding-top:0; }
 #instagram-widget { overflow:hidden; }
 #instagram-widget .instagram_widget_head { display:none; }

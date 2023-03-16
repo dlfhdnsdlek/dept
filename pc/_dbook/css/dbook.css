@@ -2,13 +2,10 @@
 Layout
 ========================================================================*/
 body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
-.dk-noto { font-family: 'Noto Sans KR', sans-serif; }
-/* LAYOUT */
 body { min-width:1200px; max-width:1980px; margin:0 auto; }
 
 /* 우측 스크롤 윙 */
 .scroll_right_cont { background:#fff; }
-
 
 /*========================================================================
 상단 영역
@@ -49,7 +46,7 @@ body #header { padding:0; min-height:100px; }
 #header .header_top .header_top_cont { width:auto; }
 #header .header_top .header_top_cont .top_member_box { margin:0; line-height: 23px; }
 #header .header_top .header_top_cont .top_member_box > li a { padding:0; margin-left:30px; line-height: 23px; color:#191919; font-size:16px; font-weight:500; letter-spacing:0; }
-#header .header_top .header_top_cont .top_member_box > li.top-cart .js_cart_length { width:auto; height:auto; line-height: 23px; margin:0; color:#191919; font-size:16px; font-weight:500; letter-spacing:0; font-family: 'Montserrat', sans-serif; background:none; }
+#header .header_top .header_top_cont .top_member_box > li.top-cart .js_cart_length { width:auto; height:auto; line-height: 23px; margin:0; color:#191919; font-size:16px; font-weight:500; letter-spacing:0; font-family: 'Montserrat','Noto Sans KR', sans-serif; background:none; }
 #header .header_top .header_top_cont .top_member_box > li a span { display:inline-block; vertical-align:top; width:27px; height:23px; font-size:0; }
 #header .header_top .header_top_cont .top_member_box > li.top-cart a span { background:url('/_dbook/img/btn_top_cart.png') no-repeat; }
 #header .header_top .header_top_cont .top_member_box > li.top-wish a span { background:url('/_dbook/img/btn_top_wish.png') no-repeat; }
@@ -88,10 +85,9 @@ body #footer { min-height:0; }
 /* 고객센터 */
 #footer .content_info { width:auto; padding:52px 0 0; }
 #footer .content_info .cs_center { width:auto; padding:0; margin:0; background:none; text-align:left; }
-#footer .content_info h3 { color:#b7b8bb; font-size:18px; font-weight:500; font-family: 'Pretendard', sans-serif; letter-spacing:0.3px; }
-#footer .content_info strong { color:#ffffff; font-size:22px; font-weight:700; font-family: 'Montserrat', sans-serif; }
-#footer .content_info p { color:#b7b8bb; font-size:16px; line-height: 1.63; }
-
+#footer .content_info h3 { color:#b7b8bb; font-size:18px; font-weight:500; font-family: 'Pretendard','Noto Sans KR', sans-serif; letter-spacing:0.3px; }
+#footer .content_info strong { color:#ffffff; font-size:22px; font-weight:700; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
+#footer .content_info p { color:#b7b8bb; font-size:16px; font-weight:300; line-height: 1.63; }
 
 /*========================================================================
 브랜드 페이지
