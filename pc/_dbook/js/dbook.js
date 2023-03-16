@@ -4,4 +4,10 @@ $(()=>{
     }).on('mouseleave', function(){
         $(this).removeClass('on').find('ul').stop().slideUp(400);
     });
+    
+    $('#header .dk-header-wrap').on('mouseenter',function(){
+        $(this).addClass('active');
+    }).on('mouseleave', function(){
+        $(this).removeClass('active');
+    });
 });
