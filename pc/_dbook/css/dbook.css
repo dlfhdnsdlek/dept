@@ -210,7 +210,7 @@ collabo
 .cont-box .item_list_type .item_tit_box .item_name { color:#191919; font-size:38px; font-weight:700; }
 .cont-box .item_list_type .item_money_box .item_price,
 .cont-box .item_list_type .item_money_box .item_price b { color:#191919; font-size: 42px; font-weight: 700; }
-.cont-box .item_list_type .item_money_box .item_price del { color:#8b8b8b; font-size:24px; font-weight: 300; }
+.cont-box .item_list_type .item_money_box del { color:#8b8b8b; font-size:24px; font-weight: 300; }
 
 .cont-box2 .goods_list_tit,
 .cont-box2 .item_list_type .item_btn_box,
