@@ -170,9 +170,17 @@
                             </a>    
                         </div>    
                         {{/each}}
-                        <div class="video-wrap">
+                        <div class="video-wrap" style="display:none;">
                             <iframe width="100%" src="https://www.youtube.com/embed/xxGAkgSqjJ8?controls=0&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                         </div>
+                        <div class="dk-main-video">
+                            <div class="video-background"></div>
+                        </div>
+                        <script>
+                            $('.video-background').youtubeBackground({
+                                videoId: 'xxGAkgSqjJ8',
+                            });
+                        </script>
                     </div>   
                     <div class="main-box5">
                         <ul>
