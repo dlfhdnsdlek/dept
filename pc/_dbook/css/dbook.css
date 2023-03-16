@@ -72,6 +72,7 @@ body #footer { min-height:0; }
 
 /* 회사 정보 */
 #footer .footer_content .foot_cont { color: #979797; font-size: 18px; font-weight: 300; line-height: 1.6; }
+#footer .footer_content .foot_cont .foot_info > p { margin-bottom:3px; }
 #footer .footer_content .foot_cont .foot_info_list { color: #979797; font-size: 18px; }
 #footer .footer_content .foot_cont .foot_info_list dd a { color:#979797; }
 #footer .footer_content .foot_cont .foot_info_list dd strong { font-weight:300; }
