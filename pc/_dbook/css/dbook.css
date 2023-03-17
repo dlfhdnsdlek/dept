@@ -94,21 +94,6 @@ body #footer { min-height:0; }
 #footer .content_info p { color:#b7b8bb; font-size:16px; font-weight:300; line-height: 1.63; }
 
 /*========================================================================
-브랜드 페이지
-========================================================================*/
-#brand { overflow:hidden; }
-#brand .brand-top { display:flex; justify-content: center; }
-#brand .brand-btm { display:flex; justify-content: center; }
-#brand img { width:100%; }
-
-/*========================================================================
-목록
-========================================================================*/
-.item_photo_box { width:100%; }
-.item_photo_box img { width:100%; }
-.item_photo_box .item_soldout_bg { background-image:url(/_dbook/img/soldout.png) !important; background-size:auto; }
-
-/*========================================================================
 우측 스크롤 윙
 ========================================================================*/
 #scroll_right { display:none; position:fixed; top:auto; bottom:20px; right:0; left:auto; width:auto; margin:20px; }
@@ -121,6 +106,13 @@ body .talk_banner_div .talk_banner_preview.talk_expose_green .ico_talk_banner { 
 body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 
 /*========================================================================
+목록
+========================================================================*/
+.item_photo_box { width:100%; }
+.item_photo_box img { width:100%; }
+.item_photo_box .item_soldout_bg { background-image:url(/_dbook/img/soldout.png) !important; background-size:auto; }
+
+/*========================================================================
 로그인 & 회원가입
 ========================================================================*/
 .member_sns_login .btn_kakao-sync_login { width:100%; height:64px; background:url('/_dbook/img/pc_kakao-sync_join.png') no-repeat; }
@@ -128,6 +120,13 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 
 #loginContent .member_sns_login .btn_kakao-sync_login { background-image:url('/_dbook/img/pc_kakao-sync.png') no-repeat; }
 
+/*========================================================================
+브랜드 페이지
+========================================================================*/
+#brand { overflow:hidden; }
+#brand .brand-top { display:flex; justify-content: center; }
+#brand .brand-btm { display:flex; justify-content: center; }
+#brand img { width:100%; }
 
 /*========================================================================
 collabo
@@ -209,6 +208,7 @@ collabo
 .collabo .goods_list_cont ul li .item_photo_box a img { border:0; }
 .collabo .goods_list_cont ul li .item_info_cont { font-family: 'Montserrat','Pretendard','Noto Sans KR', sans-serif; }
 
+/* 진행 상품 */
 .cont-box { margin:50px 0 150px;}
 .cont-box .goods_list_cont .item_list_type .item_cont { display:flex; align-items: flex-end; position:relative; }
 .cont-box .goods_list_cont .item_list_type .item_photo_box { width:600px; }
@@ -221,6 +221,7 @@ collabo
 .cont-box .item_list_type .item_money_box .item_price,
 .cont-box .item_list_type .item_money_box .item_price b { color:#191919; font-size: 42px; font-weight: 700; }
 
+/* 준비중인 상품 */
 .cont-box2 h3 { margin-bottom:30px; color:#191919; font-size:38px; font-weight:700; text-align: center; }
 .cont-box2 .item_gallery_type .item_cont { padding:0; }
 .cont-box2 .item_gallery_type .item_tit_box { margin:0 0 10px; }
