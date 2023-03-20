@@ -5,9 +5,9 @@
 .dk-main-visual { position:relative; width:100%; height:100%; border-bottom: 1px solid #353535; box-sizing: border-box; }
 .dk-main-visual .slider-wrap .slick-slide { padding:0; }
 
-.dk-main-visual .slick-arrow { top:50%; width:14px; height:26px; background-size:100% auto; transform: translate(0, -50%); }
-.dk-main-visual .slick-prev { left:20px; background-image:url('/_dbook/img/main_prev.png') !important; }
-.dk-main-visual .slick-next { right:20px; background-image:url('/_dbook/img/main_next.png') !important; }
+.dk-main-visual .slider-wrap .slick-arrow { top:50%; width:14px; height:26px; background-size:100% auto; transform: translate(0, -50%); }
+.dk-main-visual .slider-wrap .slick-prev { left:20px; background-image:url('/_dbook/img/main_prev.png') !important; }
+.dk-main-visual .slider-wrap .slick-next { right:20px; background-image:url('/_dbook/img/main_next.png') !important; }
 
 /*
 .dk-yt-wrap { position:relative; padding-bottom:18.25%; padding-top:0; height:100vh; overflow:hidden; }
@@ -16,7 +16,7 @@
 
 /* 메인 공통 */
 .dk-main-wrap {  }
-.main-bn img { width:100%; max-width:100%; }
+.main-bn img { width:100%; max-width:100%; vertical-align: top; }
 
 .main-box4 { position:relative; }
 .dk-main-video { position:relative; margin:0; padding:100% 0 0; overflow: hidden; }
