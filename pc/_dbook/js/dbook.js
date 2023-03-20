@@ -10,4 +10,9 @@ $(()=>{
     }).on('mouseleave', function(){
         $(this).removeClass('active');
     });
+
+    var frmPathSearch = location.pathname + location.search;
+    if ( frmPathSearch == '/pages/product/list.html?categoryNo=286231') {
+        $('.sub_content').addClass('collabo-end');
+    }
 });
