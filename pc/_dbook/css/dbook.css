@@ -112,6 +112,18 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 .item_photo_box img { width:100%; }
 .item_photo_box .item_soldout_bg { background-image:url(/_dbook/img/soldout.png) !important; background-size:auto; }
 
+.goods_list_item .goods_list_cont ul { width: calc(100% + 30px); margin-left:-15px; }
+.goods_list_item .goods_list_cont ul li { width:calc(100% / 3) !important; }
+.goods_list_item .goods_list_cont ul li .item_cont { padding:0 15px; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_photo_box { border:0; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box { margin:0 0 10px; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box .item_brand strong { color:#6f6f6f; font-size:14px; font-weight:500; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box .item_name { color:#191919; font-size:18px; font-weight:500; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_money_box del { display:block; margin-bottom:5px; color:#8b8b8b; font-size:16px; font-weight:400; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_money_box .item_price,
+.goods_list_item .goods_list_cont ul li .item_cont .item_money_box .item_price b { color:#191919; font-size: 20px; font-weight: 700; }
+
+
 /*========================================================================
 로그인 & 회원가입
 ========================================================================*/
@@ -233,4 +245,6 @@ collabo
 
 /* 종료된 공구 */
 .collabo-end .location_wrap { display:none; }
-.collabo-end  .collabo-content { display:block; }
+.collabo-end .collabo-content { display:block !important; }
+.collabo-end .goods_list_item_tit { display:none; }
+.collabo-end .goods_list_item_tit + .list_item_category { display:none; }
