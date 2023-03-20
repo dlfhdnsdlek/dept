@@ -1,32 +1,36 @@
 /*========================================================================
 Layout
 ========================================================================*/
-body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
+body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
 
 /*========================================================================
 상단영역
 ========================================================================*/
 #header .dk-header-wrap .dk-header-box { display:flex; align-items: center; justify-content: space-between; padding:0; border-bottom:1px solid #353535; }
 
-/* 햄버거 메뉴 */
-.dk-header-wrap header .header_box { display:flex; align-items:center; justify-content:space-between; padding-top:0; font-size:0; border-bottom:0; }
-.dk-header-wrap header .header_box .left_menu { position:static; }
-.dk-header-wrap header .header_box .left_menu .side_menu { padding:17px 15px; }
-.dk-header-wrap header .header_box .left_menu .side_menu span { display:block; position:relative; width:20px; height:16px; box-sizing:border-box; background:none; }
-.dk-header-wrap header .header_box .left_menu .side_menu span::before { position:absolute; top:0; left:0; border-top:2px solid #000; border-bottom:2px solid #000; width:100%; height:100%; box-sizing:border-box; content:''; }
-.dk-header-wrap header .header_box .left_menu .side_menu span::after { position:absolute; top:50%; left:0; width:100%; height:2px; margin-top:-1px; background:#000; content:''; }
-.dk-header-wrap header .header_box .right_menu { position:static; }
-.dk-header-wrap header .header_box .cart { display:inline-block; vertical-align:top; width:20px; padding:16px 8px 17px; font-weight:500; font-size:10px; }
-
 /* 로고 */
 #header .dk-header-wrap .header_box .h_logo { width:80px; height:auto; margin-top:0; }
 #header .dk-header-wrap .header_box .h_logo img { width:100%; height:auto; }
 
+/* 햄버거 메뉴 */
+#header .dk-header-wrap header .header_box { display:flex; align-items:center; justify-content:space-between; padding-top:0; font-size:0; border-bottom:0; }
+#header .dk-header-wrap header .header_box .left_menu { position:static; }
+#header .dk-header-wrap header .header_box .left_menu .side_menu { padding:17px 15px; }
+#header .dk-header-wrap header .header_box .left_menu .side_menu span { display:block; position:relative; width:20px; height:17px; box-sizing:border-box; background:none; }
+#header .dk-header-wrap header .header_box .left_menu .side_menu span::before { position:absolute; top:0; left:0; border-top:1px solid #000; border-bottom:1px solid #000; width:100%; height:100%; box-sizing:border-box; content:''; }
+#header .dk-header-wrap header .header_box .left_menu .side_menu span::after { position:absolute; top:50%; left:0; width:100%; height:1px; margin-top:-1px; background:#000; content:''; }
+
 /* 장바구니 */
-#header .dk-header-wrap .header_box .right-menu { display:block; position: static; }
-#header .dk-header-wrap .header_box .right-menu .cart { display: flex; align-items: center; padding:20px 7px; }
-#header .dk-header-wrap .header_box .right-menu .cart span { width:auto; height:auto; padding: 0 4px 0 0; color:#353535; font-size:13px; font-weight:400; background:none; }
-#header .dk-header-wrap .header_box .right-menu .cart .cart_count { position:static; width: auto; font-family: 'Jost', 'Noto Sans KR', sans-serif; }
+#header .dk-header-wrap header .header_box .right_menu { position:static; display:flex; }
+#header .dk-header-wrap header .header_box .right_menu li { display:inline-block; }
+#header .dk-header-wrap header .header_box .cart { display:flex; align-items: center; vertical-align:top; padding:16px 8px; color:#000000; font-size:13px; font-weight:500; }
+#header .dk-header-wrap header .header_box .cart span { width:18px; height:16px; padding:15px 8px; margin: 0 3px 0 0; background:url('/_dbook/img/btn_top_cart.png') no-repeat; background-size:100% auto; }
+#header .dk-header-wrap header .header_box .cart .cart_count { position:static; width:auto; height:auto; color:#000000; font-size:13px; font-weight:500; line-height:1; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
+
+/* 검색 */
+#header .dk-header-wrap header .header_box .top_search { padding:17px 7px; }
+#header .dk-header-wrap header .header_box .top_search span { width:16px; height:16px; background:url('/_dbook/img/btn_top_search.png') no-repeat; background-size:100% auto; }
+
 
 /* 슬라이드메뉴 검색 */
 #header .dk-nav-search-box { position: absolute; top:50%; right:50px; transform: translateY(-50%); }
