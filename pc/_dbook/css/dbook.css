@@ -110,20 +110,36 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 ========================================================================*/
 .item_photo_box { width:100%; }
 .item_photo_box img { width:100%; }
+
+/* 품절 */
 .item_photo_box .item_soldout_bg { background:rgba(25,25,25,0.4) !important; }
 .item_info_cont .item-soldout { display:inline-block; margin:0 0 18px; padding:4px 11px; color:#fff; font-size:18px; background:#ed4e00; }
 
+/* 상품 공통 */
+.goods_list_cont ul li .item_cont .item_photo_box { border:0; }
+.goods_list_cont ul li .item_cont .item_tit_box { margin:0 0 4px; }
+.goods_list_cont ul li .item_cont .item_tit_box .item_brand strong { color:#6f6f6f; font-size:14px; font-weight:500; }
+.goods_list_cont ul li .item_cont .item_tit_box .item_name { padding:1px 0 0; color:#191919; font-size:18px; font-weight:500; }
+.goods_list_cont ul li .item_cont .item_money_box del { display:block; margin-bottom:1px; color:#8b8b8b; font-size:16px; font-weight:400; }
+.goods_list_cont ul li .item_cont .item_money_box .item_price,
+.goods_list_cont ul li .item_cont .item_money_box .item_price b { color:#191919; font-size: 20px; font-weight: 700; }
+
+/* 목록 */
 .goods_list_item .goods_list_cont ul { width: calc(100% + 30px); margin-left:-15px; }
 .goods_list_item .goods_list_cont ul li { width:calc(100% / 3) !important; }
 .goods_list_item .goods_list_cont ul li .item_cont { padding:0 15px; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_photo_box { border:0; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box { margin:0 0 4px; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box .item_brand strong { color:#6f6f6f; font-size:14px; font-weight:500; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box .item_name { padding:1px 0 0; color:#191919; font-size:18px; font-weight:500; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_money_box del { display:block; margin-bottom:1px; color:#8b8b8b; font-size:16px; font-weight:400; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_money_box .item_price,
-.goods_list_item .goods_list_cont ul li .item_cont .item_money_box .item_price b { color:#191919; font-size: 20px; font-weight: 700; }
 
+/* 상품 정렬 타입 */
+.goods_pick_list .pick_list_box { border-top:1px solid #2b2b2b; border-bottom:1px solid #dfdfdf; }
+.goods_pick_list .pick_list_box .pick_list { padding-left:18px; }
+.goods_pick_list .pick_list_box .pick_list li { margin-right:2px; }
+.goods_pick_list .pick_list_box .pick_list label { padding-left:26px; color:#7b7a7a; font-size:16px; font-weight:300; }
+.goods_pick_list .pick_list_box .pick_list label.on { color:#191919; font-weight:500; background:url('/_dbook/img/icon_sort_check.png') no-repeat 0 4px; }
+/* 개수보기 */
+.pick_list_box .choice_num_view select { width:140px; height:40px; padding:0 0 0 8px; color: #191919; font-size: 16px; background:url('/_dbook/icon_select.png') no-repeat 100% 50%; border:1px solid #dbdbdb; border-radius:0; }
+
+/* 페이지네이션*/
+.goods_list + .pagination { margin-top:60px; }
 
 /*========================================================================
 로그인 & 회원가입
