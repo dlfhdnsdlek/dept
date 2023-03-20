@@ -12,9 +12,9 @@ body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans K
 .dk-header-wrap header .header_box { display:flex; align-items:center; justify-content:space-between; padding-top:0; font-size:0; border-bottom:0; }
 .dk-header-wrap header .header_box .left_menu { position:static; }
 .dk-header-wrap header .header_box .left_menu .side_menu { padding:17px 15px; }
-.dk-header-wrap header .header_box .left_menu .side_menu span { display:block; position:relative; width:20px; height:17px; box-sizing:border-box; background:none; }
-.dk-header-wrap header .header_box .left_menu .side_menu span::before { position:absolute; top:0; left:0; border-top:1px solid #000; border-bottom:1px solid #000; width:100%; height:100%; box-sizing:border-box; content:''; }
-.dk-header-wrap header .header_box .left_menu .side_menu span::after { position:absolute; top:50%; left:0; width:100%; height:1px; margin-top:-1px; background:#000; content:''; }
+.dk-header-wrap header .header_box .left_menu .side_menu span { display:block; position:relative; width:20px; height:16px; box-sizing:border-box; background:none; }
+.dk-header-wrap header .header_box .left_menu .side_menu span::before { position:absolute; top:0; left:0; border-top:2px solid #000; border-bottom:2px solid #000; width:100%; height:100%; box-sizing:border-box; content:''; }
+.dk-header-wrap header .header_box .left_menu .side_menu span::after { position:absolute; top:50%; left:0; width:100%; height:2px; margin-top:-1px; background:#000; content:''; }
 .dk-header-wrap header .header_box .right_menu { position:static; }
 .dk-header-wrap header .header_box .cart { display:inline-block; vertical-align:top; width:20px; padding:16px 8px 17px; font-weight:500; font-size:10px; }
 
