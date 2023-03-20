@@ -136,10 +136,10 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 .goods_pick_list .pick_list_num { padding-bottom:15px; color:#191919; font-size:18px; font-weight:500; }
 /* 상품 정렬 타입 */
 .goods_pick_list .pick_list_box { height:40px; padding:19px 0; border-top:1px solid #2b2b2b; border-bottom:1px solid #dfdfdf; }
-.goods_pick_list .pick_list_box .pick_list { padding-left:18px; }
+.goods_pick_list .pick_list_box .pick_list { padding-left:0; }
 .goods_pick_list .pick_list_box .pick_list li { margin-right:2px; padding:8px 0 0; }
 .goods_pick_list .pick_list_box .pick_list label { padding-left:26px; color:#7b7a7a; font-size:16px; font-weight:300; }
-.goods_pick_list .pick_list_box .pick_list label.on { color:#191919; font-weight:500; background:url('/_dbook/img/icon_sort_check.png') no-repeat 0 4px; }
+.goods_pick_list .pick_list_box .pick_list label.on { margin-left:18px; color:#191919; font-weight:500; background:url('/_dbook/img/icon_sort_check.png') no-repeat 0 4px; }
 /* 보기 개수 선택 */
 .pick_list_box .choice_num_view select { width:140px; height:40px; padding:0 0 0 8px; color: #191919; font-size: 16px; background:url('/_dbook/img/icon_select.png') no-repeat 93% 50%; border:1px solid #dbdbdb; border-radius:0; appearance:none; }
 
