@@ -2,7 +2,7 @@
 메인 영역
 ========================================================================*/
 /* 메인 비주얼 */
-.dk-main-visual { position:relative; width:100%; height:100%; border-bottom: 1px solid #353535; box-sizing: border-box; }
+.dk-main-visual { position:relative; width:100%; }
 .dk-main-visual .slider-wrap .slick-slide { padding:0; }
 
 .dk-main-visual .slider-wrap .slick-arrow { top:50%; width:14px; height:26px; background-size:100% auto; transform: translate(0, -50%); }
