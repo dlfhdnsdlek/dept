@@ -1291,6 +1291,7 @@ window['shopby'] = window.shopby
       this.setMetaInfo();
       this.setGATC();
       shopby.setGlobalVariableBy = this.setGlobalVariableBy.bind(this);
+      this.setStatisticsLogging();
       this.setDefaultGlobalVariable();
       this.appendExternalScript();
 
@@ -1407,6 +1408,33 @@ window['shopby'] = window.shopby
     </script>
       `;
       $(document.head).append(gtagScript);
+    },
+
+    setStatisticsLogging() {
+      const SCRIPT_URL = 'https://rl3flznkr.toastcdn.net/shopby-statistics-recorder.js';
+      const scriptElement = document.createElement('script');
+      scriptElement.async = true;
+      scriptElement.src = SCRIPT_URL;
+      document.head.append(scriptElement);
+
+      scriptElement.addEventListener('load', () => {
+        const { clientId } = shopby.config.skin;
+        const memberNo = sb.profile ? sb.profile.memberNo.toString() : '';
+        const { profile } = shopby.config.skin;
+
+        if (typeof window.shopbyStatistics === 'function') {
+          const statParams = {
+            clientId,
+            memberNo,
+          };
+
+          if (profile === 'alpha') {
+            statParams.profile = profile;
+          }
+
+          window.shopbyStatistics(statParams);
+        }
+      });
     },
 
     appendExternalScript() {
