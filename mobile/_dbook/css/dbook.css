@@ -7,12 +7,13 @@ body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans K
 상단영역
 ========================================================================*/
 #header .dk-header-wrap .dk-header-box { display:flex; align-items: center; justify-content: space-between; padding:0; border-bottom:1px solid #353535; }
+
 /* 햄버거 메뉴 */
 #header .dk-header-wrap .dk-header-box .dk-left-menu { display: block; position:static; }
 #header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu { padding:25px 15px; line-height: 0; }
-#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span { position: relative; height:10px; background: none; }
-#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span::before { position: absolute; top: 0; left: 0; width:100%; height:1px; background:#353535; content:''; }
-#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span::after { position: absolute; bottom: 0; left: 0; width:100%; height:1px; background:#353535; content: ''; }
+#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span { display:block; position:relative; width:20px; height:14px; box-sizing:border-box; background:none; }
+#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span::before { position:absolute; top:0; left:0; border-top:2px solid #2f2f2f; border-bottom:2px solid #2f2f2f; width:100%; height:100%; box-sizing:border-box; content:''; }
+#header .dk-header-wrap .dk-header-box .dk-left-menu .btnOpenSideMenu span::after { position:absolute; top:50%; left:0; width:100%; height:2px; margin-top:-1px; background:#2f2f2f; content:''; }
 /* 로고 */
 #header .dk-header-wrap .dk-header-box .h_logo { width:78px; height:auto; margin-top:0; }
 #header .dk-header-wrap .dk-header-box .h_logo img { width:100%; height:auto; }
@@ -26,6 +27,7 @@ body, th, td, input, select, textarea, button { font-family:'Jost', 'Noto Sans K
 #header .dk-nav-search-box button { border:0; background:none; }
 #header .dk-nav-search-box button img { width:21px; padding:5px 0 0; }
 #popupSearch ._header_search .layer_search_content .search_bx_area .latest_search_tab.on { border-bottom:2px solid #ddd; }
+
 /*========================================================================
 하단영역
 ========================================================================*/

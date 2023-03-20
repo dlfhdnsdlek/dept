@@ -20,7 +20,8 @@
  * custom
  * 디자인교과서.fe
  */
- @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800;900&family=Jost:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+ @import '../../_dbook/css/font.css';
  @import '../../_dbook/css/dbook.css';
 
 /**
