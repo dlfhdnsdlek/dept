@@ -19,10 +19,4 @@ $(()=>{
         $('.sub_content').addClass('collabo-end');
     }
 
-    /* collabo 진행중인 공구 */
-    var price = parseFloat($('.cont-box .item_list_type .item_money_box .item_price b').text().replace(/,/g, ""));
-    var customPrice = parseFloat($('.cont-box .item_list_type .item_money_box del').text().replace(/,/g, ""));
-    var saleRate = (((customPrice - price) / customPrice) * 100).toFixed(0);
-    var regexp = /\B(?=(\d{3})+(?!\d))/g;
-    $('.cont-box .item_list_type .item_money_box .item_price').prepend( '<span class="sale-rate">' + saleRate.replace(regexp, ',') + '%</spna>');
 });
