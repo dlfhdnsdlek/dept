@@ -15,7 +15,7 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 /* 햄버거 메뉴 */
 #header .dk-header-wrap header .header_box { display:flex; align-items:center; justify-content:space-between; padding-top:0; font-size:0; border-bottom:0; }
 #header .dk-header-wrap header .header_box .left_menu { position:static; }
-#header .dk-header-wrap header .header_box .left_menu .side_menu { padding:17px 15px; }
+#header .dk-header-wrap header .header_box .left_menu .side_menu { padding:17px 15px 16px; }
 #header .dk-header-wrap header .header_box .left_menu .side_menu span { display:block; position:relative; width:20px; height:17px; box-sizing:border-box; background:none; }
 #header .dk-header-wrap header .header_box .left_menu .side_menu span::before { position:absolute; top:0; left:0; border-top:1px solid #000; border-bottom:1px solid #000; width:100%; height:100%; box-sizing:border-box; content:''; }
 #header .dk-header-wrap header .header_box .left_menu .side_menu span::after { position:absolute; top:50%; left:0; width:100%; height:1px; margin-top:-1px; background:#000; content:''; }
@@ -23,8 +23,8 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 /* 장바구니 */
 #header .dk-header-wrap header .header_box .right_menu { position:static; display:flex; }
 #header .dk-header-wrap header .header_box .right_menu li { display:inline-block; }
-#header .dk-header-wrap header .header_box .cart { display:flex; align-items: center; vertical-align:top; padding:16px 8px; color:#000000; font-size:13px; font-weight:500; }
-#header .dk-header-wrap header .header_box .cart span { width:18px; height:16px; padding:15px 8px; margin: 0 3px 0 0; background:url('/_dbook/img/btn_top_cart.png') no-repeat; background-size:100% auto; }
+#header .dk-header-wrap header .header_box .cart { display:flex; align-items: center; vertical-align:top; padding:17px 8px; color:#000000; font-size:13px; font-weight:500; line-height:1; }
+#header .dk-header-wrap header .header_box .cart span { width:18px; height:16px; margin: 0 3px 0 0; background:url('/_dbook/img/btn_top_cart.png') no-repeat; background-size:100% auto; }
 #header .dk-header-wrap header .header_box .cart .cart_count { position:static; width:auto; height:auto; color:#000000; font-size:13px; font-weight:500; line-height:1; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 
 /* 검색 */
