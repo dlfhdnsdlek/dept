@@ -230,3 +230,7 @@ collabo
 .cont-box2 .item_gallery_type .item_money_box del { display:block; margin-bottom:5px; color:#8b8b8b; font-size:16px; font-weight:400; }
 .cont-box2 .item_gallery_type .item_money_box .item_price,
 .cont-box2 .item_gallery_type .item_money_box .item_price b { color:#191919; font-size: 20px; font-weight: 700; }
+
+/* 종료된 공구 */
+.collabo-end .location_wrap { display:none; }
+.collabo-end  .collabo-content { display:block; }
