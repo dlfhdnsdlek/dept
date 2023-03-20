@@ -110,16 +110,17 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 ========================================================================*/
 .item_photo_box { width:100%; }
 .item_photo_box img { width:100%; }
-.item_photo_box .item_soldout_bg { background-image:url(/_dbook/img/soldout.png) !important; background-size:auto; }
+.item_photo_box .item_soldout_bg { background:rgba(25,25,25,0.4) !important; }
+.item_info_cont .item-soldout { display:inline-block; margin:0 0 18px; padding:4px 11px; color:#fff; font-size:18px; background:#ed4e00; }
 
 .goods_list_item .goods_list_cont ul { width: calc(100% + 30px); margin-left:-15px; }
 .goods_list_item .goods_list_cont ul li { width:calc(100% / 3) !important; }
 .goods_list_item .goods_list_cont ul li .item_cont { padding:0 15px; }
 .goods_list_item .goods_list_cont ul li .item_cont .item_photo_box { border:0; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box { margin:0 0 10px; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box { margin:0 0 4px; }
 .goods_list_item .goods_list_cont ul li .item_cont .item_tit_box .item_brand strong { color:#6f6f6f; font-size:14px; font-weight:500; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box .item_name { color:#191919; font-size:18px; font-weight:500; }
-.goods_list_item .goods_list_cont ul li .item_cont .item_money_box del { display:block; margin-bottom:5px; color:#8b8b8b; font-size:16px; font-weight:400; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_tit_box .item_name { padding:1px 0 0; color:#191919; font-size:18px; font-weight:500; }
+.goods_list_item .goods_list_cont ul li .item_cont .item_money_box del { display:block; margin-bottom:1px; color:#8b8b8b; font-size:16px; font-weight:400; }
 .goods_list_item .goods_list_cont ul li .item_cont .item_money_box .item_price,
 .goods_list_item .goods_list_cont ul li .item_cont .item_money_box .item_price b { color:#191919; font-size: 20px; font-weight: 700; }
 
@@ -210,7 +211,7 @@ collabo
 .collabo-content { padding:70px 0 0; }
 .collabo-content h2 { margin:0 0 23px; color:#191919; font-size:38px; text-align:center; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 
-/* 공통 */
+/* collabo 공통 */
 .collabo .goods_list_tit,
 .collabo .item_list_type .item_btn_box,
 .collabo .paging,
