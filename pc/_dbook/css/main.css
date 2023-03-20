@@ -1,7 +1,7 @@
 /*========================================================================
 레이아웃
 ========================================================================*/
-body #header { position: absolute; top: 0; width:100%; max-height:1670px; min-width:1280px; min-height:0; padding:0 10px; margin:0 auto; box-sizing: border-box; transition:all .2s; }
+body #header { position: absolute; top: 0; left:0; width:100%; min-width:1280px; min-height:0; padding:0; margin:0 auto; box-sizing: border-box; transition:all .2s; }
 body #header::after { border-bottom:0; }
 #header.active { background:rgba(255,255,255,0.95); }
 #contents { padding:0; }
