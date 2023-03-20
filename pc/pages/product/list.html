@@ -156,7 +156,10 @@
                                                         <a class="item_wish {{#if liked}}on{{/if}}" id="wishBtn" href="#"></a>
                                                         {{/ifGt}}
                                                     </div>
-                                                    <div class="item_info_cont">
+                                                    <div class="item_info_cont"> 
+                                                        {{#ifEq isSoldOut true}}
+                                                        <strong>SOLD OUT</strong>
+                                                        {{/ifEq}}
                                                         <div class="item_tit_box">
                                                             {{#if brandName}}
                                                             <span class="item_brand">
