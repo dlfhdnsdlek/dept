@@ -37,114 +37,128 @@
         <script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
         <script src="/js/core/shopby.js"></script>
         <title>모바일 Home</title>
-        <!-- Main JS -->
-		<script src="/_dbook/js/main.js"></script>
-        <!-- Main CSS -->
-		<link href="/_dbook/css/main.css" rel="stylesheet" type="text/css" />
+        <!-- Css -->
+        <link href="/_dbook/css/lib/swiper.min.css" rel="stylesheet" type="text/css" />
+        <link href="/_dbook/css/main.css" rel="stylesheet" type="text/css" />
+        <!-- JS -->
+        <script src="/_dbook/js/lib/yt-video-background.min.js"></script>
+        <script src="/_dbook/js/lib/swiper.min.js"></script>
     </head>
     <body>
         <header id="header"></header>
         <div id="contents">
             <main id="promotionBanner" class="sub_content invisible">
-              <!-- 디자인교과서.fe 메인 비주얼 -->
-              <div class="dk-main-visual main_visual">
                 {{#if BANNER01}}
-                <div class="main_slide slider-wrap slider-banner" id="banner-BANNER01">
-                    {{#each BANNER01.bannerImages}}
-                    <div>
-                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
-                            {{img imageUrl '' '' description '' ''}}
-                        </a>
+                <div class="dk-main-visual main_visual">
+                    <div class="main_slide slider-wrap slider-banner" id="banner-BANNER01">
+                        {{#each BANNER01.bannerImages}}
+                        <div>
+                            <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}">
+                                {{img imageUrl '' '' description '' ''}}
+                            </a>
+                        </div>
+                        {{/each}}
                     </div>
-                    {{/each}}
                 </div>
                 {{/if}}
-              </div>
-              <!-- 디자인교과서.fe 메인 영역 -->
-              <div class="dk-main-wrap main_content">
-                <div class="dk-main-box">
-                  <div class="dk-bn-wrap1">
-                    {{#each BANNER02.bannerImages}}
-                    <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER02">{{img imageUrl}}</a>
-                    {{/each}}
-                  </div>
-                </div>
-                
-                <div class="dk-main-box2">
-                  <div class="dk-bn-wrap2">
-                      {{#each BANNER03.bannerImages}}
-                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER03">{{img imageUrl}}</a>
-                      {{/each}}
-                  </div>
-                </div>
 
-                <div class="dk-main-box3">
-                  <div class="dk-bn-wrap3">
-                      {{#each BANNER04.bannerImages}}
-                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER04">{{img imageUrl}}</a>
-                      {{/each}}
-                  </div>
+                <div class="dk-main-wrap main_content">
+                    <div class="main-box">                      
+                        {{#each BANNER02.bannerImages}}
+                        <a href="{{landingUrl}}">
+                            <span class="main-bn">{{img imageUrl}}</span>
+                        </a>
+                        {{/each}}                      
+                    </div>
+                    <div class="main-box2">                      
+                        {{#each BANNER03.bannerImages}}
+                        <a href="{{landingUrl}}">
+                            <span class="main-bn">{{img imageUrl}}</span>
+                        </a>
+                        {{/each}} {{#each BANNER04.bannerImages}}
+                        <a href="{{landingUrl}}">
+                            <span class="main-bn">{{img imageUrl}}</span>
+                        </a>
+                        {{/each}}                      
+                    </div>
+                    <div class="main-box3"> 
+                        <div class="main-title">
+                            <h2>SHOP</h2>
+                            <p>새롭고 트렌디한 아이템을 만나보세요.</p>
+                        </div>
+                        <div class="swiper-container">
+                            <ul class="swiper-wrapper">
+                                {{#each BANNER11.bannerImages}}
+                                <li class="swiper-slide">
+                                    <a href="{{landingUrl}}">
+                                        <span class="main-bn">{{img imageUrl}}</span>
+                                    </a>
+                                </li>
+                                {{/each}}
+                            </ul>
+                            <div class="swiper-scrollbar"></div> 
+                        </div>
+                        <div class="swiper-button swiper-button-next"></div>
+                        <div class="swiper-button swiper-button-prev"></div> 
+                        <script>
+                            $(document).ready(function(){		
+                                var swiper = new Swiper('.main-box3 .swiper-container', {	
+                                    spaceBetween: 0,	
+                                    slidesPerView: 1,
+                                    loop: false,		
+                                    grabCursor: true,	
+                                    autoplay: false,
+                                    navigation: {	
+                                        nextEl: '.main-box3 .swiper-button-next',
+                                        prevEl: '.main-box3 .swiper-button-prev',
+                                    },	
+                                    scrollbar: {
+                                        el: '.main-box3 .swiper-scrollbar',
+                                        hide: false,
+                                        draggable: true,
+                                    },
+                                });
+                            });		
+                        </script>   
+                    </div>
+                    <div class="main-box4">
+                        <div class="dk-main-video">
+                            {{#each BANNER05.bannerImages}}
+                            <div class="video-bgimg">
+                                <a href="{{landingUrl}}">
+                                    <span class="main-bn">{{img imageUrl}}</span>
+                                </a>    
+                            </div>    
+                            {{/each}}
+                            <div class="video-background"></div>
+                        </div>
+                        <script>
+                            $('.video-background').youtubeBackground({
+                                videoId: 'BOH9In8qRiY',
+                            });
+                        </script>
+                    </div>
+                    <div class="main-box5">                    
+                        {{#each BANNER06.bannerImages}}
+                        <a href="{{landingUrl}}">
+                            <span class="main-bn">{{img imageUrl}}</span>
+                        </a>
+                        {{/each}} {{#each BANNER07.bannerImages}}
+                        <a href="{{landingUrl}}">
+                            <span class="main-bn">{{img imageUrl}}</span>
+                        </a>
+                        {{/each}} {{#each BANNER11.bannerImages}}
+                        <a href="{{landingUrl}}">
+                            <span class="main-bn">{{img imageUrl}}</span>
+                        </a>
+                        {{/each}}           
+                    </div>
+                    <!-- 인스타그램 위젯 -->
+                    <div class="insta-box">
+                        <h2>INSTAGRAM</h2>
+                        <div class="instagram_widget" id="instagram-widget" style="display: none;"></div>
+                    </div>   
                 </div>
-
-                <div class="dk-main-box4">
-                  <div class="dk-bn-wrap4">
-                      {{#each BANNER05.bannerImages}}
-                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER05">{{img imageUrl}}</a>
-                      {{/each}}
-                  </div>
-                </div>
-
-                <div class="dk-main-box5">
-                  <div class="dk-bn-wrap5">
-                      {{#each BANNER06.bannerImages}}
-                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER06">{{img imageUrl}}</a>
-                      {{/each}}
-                  </div>
-                </div>
-
-                <div class="dk-main-box6">
-                  <div class="dk-bn-wrap6">
-                      {{#each BANNER07.bannerImages}}
-                      <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER07">{{img imageUrl}}</a>
-                      {{/each}}
-                  </div>
-                </div>
-
-                <div class="dk-main-box7">
-                  <div class="dk-bn-wrap7">
-                    <ul>
-                      <li>
-                        {{#each BANNER11.bannerImages}}
-                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER11">{{img imageUrl}}</a>
-                        {{/each}}
-                      </li>
-                      <li>
-                        {{#each BANNER12.bannerImages}}
-                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER12">{{img imageUrl}}</a>
-                        {{/each}}
-                      </li>
-                    </ul>
-                    <ul>
-                      <li>
-                        {{#each BANNER13.bannerImages}}
-                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER13">{{img imageUrl}}</a>
-                        {{/each}}
-                      </li>
-                      <li>
-                        {{#each BANNER14.bannerImages}}
-                        <a href="{{landingUrl}}" target="{{#ifEq openLocationType 'NEW'}}_blank{{/ifEq}}" id="banner-BANNER14">{{img imageUrl}}</a>
-                        {{/each}}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <!-- 인스타그램 위젯 -->
-                <div class="insta-box">
-                  <h3>INSTAGRAM</h3>
-                  <div id="instagram-widget" class="" style="display: none;"></div>
-                </div>
-              </div>
             </main>
         </div>
         <footer id="footer"></footer>
