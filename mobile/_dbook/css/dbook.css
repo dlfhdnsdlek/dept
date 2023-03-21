@@ -54,7 +54,7 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 
 /* 회사 정보 */
 #footer .dk-footer-wrap .ft_info2_box { padding:0 20px 10px; background: none; }
-#footer .dk-footer-wrap .ft_info2_box .ft_address { padding:25px 0 0; color:#979797; font-size:11px; border-top:1px solid #4d4d4d;s }
+#footer .dk-footer-wrap .ft_info2_box .ft_address { padding:25px 0 0; color:#979797; font-size:11px; border-top:1px solid #4d4d4d; }
 #footer .dk-footer-wrap .ft_info2_box .ft_address a { color:#979797; }
 #footer .dk-footer-wrap .ft_copy { padding:0; color:#979797; font-size:11px; }
 
