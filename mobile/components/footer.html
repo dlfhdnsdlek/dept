@@ -55,6 +55,23 @@
                         {{#if since}}
                         <address class="ft_copy">Copyright {{since}} {{companyName}} all rights reserved.</address>
                         {{/if}}
+                        <div class="foot_list">
+                            <ul class="ft_menu">
+                                <li>
+                                    <a href="/pages/service/guide.html"><strong>이용안내</strong></a>
+                                </li>
+                                <li>
+                                    <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
+                                </li>
+                                <li>
+                                    <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
+                                </li>
+                                <li>
+                                    <a href="#none"><strong>제휴문의</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- //foot_list -->
                         <div class="foot_certify">
                             {{#if termsConfig}} {{img termsConfig.fairLogoUrl}} {{/if}} {{#ifEq orderConfig.pgType "INICIS"}} {{{orderConfig.escrow.logo}}}
                             {{/ifEq}} {{#ifEq orderConfig.pgType "TOSS_PAYMENTS"}}
@@ -75,23 +92,6 @@
                         </div>
                         {{/with}}
                     </div>
-                    <div class="foot_list">
-                        <ul class="ft_menu">
-                            <li>
-                                <a href="/pages/service/guide.html"><strong>이용안내</strong></a>
-                            </li>
-                            <li>
-                                <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
-                            </li>
-                            <li>
-                                <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
-                            </li>
-                            <li>
-                                <a href="#none"><strong>제휴문의</strong></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- //foot_list -->
                 </div>
                 {{/with}}
             </div>
