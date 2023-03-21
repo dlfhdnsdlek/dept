@@ -55,6 +55,22 @@
                         </div>
                     </div>
                     <div class="content_box">
+                        
+                        <!-- dbook.fe -->
+                        <div class="collabo-content visible" style="display:none;">
+                            <h2>Collabo</h2>
+                            <div class="tab-type1">
+                                <ul>
+                                    <li>
+                                        <a href="/_dbook/pages/collabo.html">진행 중인 공구</a>
+                                    </li>
+                                    <li class="on">
+                                        <a href="/pages/product/list.html?categoryNo=286231">종료된 공구</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div class="goods_list_box">
                             <div class="goods_list_category" id="searchBoxOrCategoryBoxArea">
                                 {{#if selectedChildCategories}}
@@ -149,15 +165,27 @@
                                         <div class="goods_list_info">
                                             <a href="/pages/product/view.html?productNo={{productNo}}">
                                             <ul class="goods_info_list">
+
+                                                <!-- dbook.fe -->
+                                                {{#ifEq isSoldOut true}}
+                                                <li class="item-soldout">
+                                                    <strong>SOLD OUT</strong>
+                                                </li>
+                                                {{/ifEq}}
+
                                                 <li class="prd_name">{{safeString productName}}</li>
                                                 {{#if promotionText}}
                                                     <li class="short_des">{{promotionText}}</li>
                                                 {{/if}}
+
+                                                <!-- dbook.fe -->
+                                                {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                                                <li>
+                                                    <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                                                </li>
+                                                {{/ifHasDiscount}}
                                                 <li class="price">
                                                     {{toCurrencyString calculatedSalePrice}}원
-                                                    {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                                                        <del class="add_currency">{{toCurrencyString salePrice}}원</del>
-                                                    {{/ifHasDiscount}}
                                                 </li>
                                                 <li class="sticker">
                                                 {{#each stickerInfos}}
@@ -207,16 +235,29 @@
                                 <div class="goods_list_info">
                                     <a href="/pages/product/view.html?productNo={{productNo}}">
                                     <ul class="goods_info_list">
+
+                                        <!-- dbook.fe -->
+                                        {{#ifEq isSoldOut true}}
+                                        <li class="item-soldout">
+                                            <strong>SOLD OUT</strong>
+                                        </li>
+                                        {{/ifEq}}
+
                                         <li class="prd_name">{{safeString productName}}</li>
                                         {{#if promotionText}}
                                             <li class="short_des">{{promotionText}}</li>
                                         {{/if}}
+
+                                        <!-- dbook.fe -->
+                                        {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                                        <li>
+                                            <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                                        </li>
+                                        {{/ifHasDiscount}}
+                                        
                                         <li class="price">
                                             <span class="c_price">
                                               {{toCurrencyString calculatedSalePrice}}원
-                                                {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                                                    <del class="add_currency">{{toCurrencyString salePrice}}원</del>
-                                                {{/ifHasDiscount}}
                                             </span>
                                         </li>
                                         <li class="sticker">

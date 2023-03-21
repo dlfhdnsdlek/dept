@@ -1,0 +1,5 @@
+/_dbook/
+/assets/css/index.css
+/components/header.html
+/components/footer.html
+/pages/product/list.html
