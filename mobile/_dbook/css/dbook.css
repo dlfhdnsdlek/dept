@@ -167,17 +167,17 @@ collabo
 .collabo .item_list_type .item_btn_box,
 .collabo .paging,
 .collabo .item_wish { display:none; }
-.collabo .goods_list_cont > div > ul > li { margin:0; border:0; }
+.collabo .goods_list_cont > div > ul > li { padding:0; margin:0; border:0; }
 .collabo .goods_list_cont ul li .item_photo_box,
 .collabo .goods_list_cont ul li .item_photo_box a img { border:0; }
 .collabo .goods_list_cont ul li .item_info_cont { font-family: 'Montserrat','Pretendard','Noto Sans KR', sans-serif; }
 .collabo .goods_list_cont ul li .goods_prd_img .img_box .goods_wish { display:none; }
 
 /* 진행 상품 */
-.cont-box { margin:50px 0 150px;}
-.cont-box .goods_list_cont .item_list_type > ul > li { padding:0; }
+.cont-box { margin:30px 20px 60px;}
+.cont-box .goods_list_cont .item_list_type > ul > li { display:flex; flex-direction: column; }
 .cont-box .goods_list_cont .item_list_type .goods_prd_img,
-.cont-box .goods_list_cont .item_list_type .goods_prd_content { display:block; width: 100%; }
+.cont-box .goods_list_cont .item_list_type .goods_prd_content { display:block; width: 100%; padding:0; }
 
 .cont-box .goods_list_cont .item_list_type .item_cont { display:flex; align-items: flex-end; position:relative; }
 .cont-box .goods_list_cont .item_list_type .item_photo_box { width:600px; }

@@ -150,7 +150,10 @@
                       <div class="goods_prd_content">
                         <div class="goods_list_info">
                           <a href="/pages/product/view.html?productNo={{productNo}}">
-                            <ul class="goods_info_list">
+                            <ul class="goods_info_list">                             
+                              {{#if brandName}}
+                              <li class="item_brand">{{brandName}}</li>
+                              {{else}}
                               <li class="prd_name">{{safeString productName}}</li>
                               {{#if promotionText}}
                                 <li class="short_des">{{promotionText}}</li>
@@ -183,8 +186,8 @@
             </div>
 			<script>
 			var swiper = new Swiper(".cont-box2 .item_gallery_type", {
-				spaceBetween: 30,
-				slidesPerView: 3,
+				spaceBetween: 15,
+				slidesPerView: 1.6,
 				wrapperClass: "dk-goods-wrapper",
 				slideClass: "dk-goods-slide",
 				scrollbar: {
@@ -222,7 +225,10 @@
                     <div class="goods_prd_content">
                         <div class="goods_list_info">
                           <a href="/pages/product/view.html?productNo={{productNo}}">
-                            <ul class="goods_info_list">
+                            <ul class="goods_info_list">                                
+                              {{#if brandName}}
+                              <li class="item_brand">{{brandName}}</li>
+                              {{else}}
                               <li class="prd_name">{{safeString productName}}</li>
                               {{#if promotionText}}
                                 <li class="short_des">{{promotionText}}</li>
