@@ -86,20 +86,24 @@ body .goods_list .goods_list_content .goods_top_box .goods_arr_box .goods_view_t
 
 /* 품절 */
 .goods_list .goods_list_cont .goods_prd_img .img_box .soldout_img { border:0; background:rgba(25,25,25,0.4) !important; }
-.goods_list .goods_list_cont .goods_prd_content .item-soldout > strong { display:inline-block; margin:0 0 10px; padding:1px 7px; color:#fff; font-size:12px; background:#ed4e00; }
+.goods_list .goods_list_cont .goods_prd_content .item-soldout > strong { display:inline-block; margin:0 0 5px; padding:1px 7px; color:#fff; font-size:12px; background:#ed4e00; }
 
 /* 상품 공통 */
 .goods_list .goods_list_cont .goods_prd_content .goods_info_list li.prd_name { color:#191919; font-size:14px; font-weight:500; }
 .goods_list .goods_list_cont .goods_prd_content .goods_info_list li.add_currency { color:#8b8b8b; font-size:13px; font-weight: 400; }
 .goods_list .goods_list_cont .goods_prd_content .goods_info_list li.price .c_price { color:#191919; font-size:14px; }
+#productsPage .goods_list_cont .goods_product_list { margin:0 13px; }
 
-/* 목록 */
-#productsPage .goods_list_cont .item_list_type > ul > li:first-child { border-top:0; }
-#productsPage .goods_list_cont .item_list_type .goods_prd_item { padding:15px 0; margin:0 20px; }
+/* 목록 : 리스트형 */
+#productsPage .goods_list_cont .goods_product_list .goods_prd_item:first-child { border-top:0; }
+#productsPage .goods_list_cont .goods_product_list .goods_prd_item { padding:15px 0; margin:0 7px; }
+
+/* 목록 : 갤러리형 */
+#productsPage .goods_list_cont .goods_product_list .goods_prd_item2 { width: calc(50% - 14px); padding:0 7px; }
 
 /* 상품 정렬 타입 */
-.goods_list .goods_list_content .goods_top_box { padding: 15px 0; margin:0 20px; border-top:1px solid #2b2b2b; border-bottom:1px solid #dbdbdb; background:none; }
-.goods_list .goods_list_content .goods_top_box .inp_sel select { border:1px solid #dbdbdb; background:url('/_dbook/img/icon_select.png') no-repeat 93% 50%; background-size:7px auto; }
+#productsPage .goods_list .goods_list_content .goods_top_box { padding: 15px 0; margin:0 20px; border-top:1px solid #2b2b2b; border-bottom:1px solid #dbdbdb; background:none; }
+#productsPage .goods_list .goods_list_content .goods_top_box .inp_sel select { border:1px solid #dbdbdb; background:url('/_dbook/img/icon_select.png') no-repeat 93% 50%; background-size:7px auto; }
 
 
 /*========================================================================
