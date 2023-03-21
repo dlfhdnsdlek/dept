@@ -95,6 +95,7 @@ body .goods_prd_item2 .soldout_img { background-image:url(/_dbook/img/soldout.pn
 collabo
 ========================================================================*/
 .collabo-visual { padding:30px 20px 40px; border-bottom:1px solid #e6e6e6; }
+.collabo-visual .swiper-slide img { width:100%; }
 .collabo-visual .swiper-pagination { bottom:15px; }
 .collabo-visual .swiper-pagination > span { width:8px; height:8px; margin:0 5px; background:#fff; opacity:1; }
 .collabo-visual .swiper-pagination > span.swiper-pagination-bullet-active { background:#191919; }
