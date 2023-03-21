@@ -31,7 +31,6 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 #header .dk-header-wrap header .header_box .top_search { padding:17px 7px; }
 #header .dk-header-wrap header .header_box .top_search span { width:16px; height:16px; background:url('/_dbook/img/btn_top_search.png') no-repeat; background-size:100% auto; }
 
-
 /* 슬라이드메뉴 검색 */
 #header .dk-nav-search-box { position: absolute; top:50%; right:50px; transform: translateY(-50%); }
 #header .dk-nav-search-box button { border:0; background:none; }
@@ -42,8 +41,17 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 하단영역
 ========================================================================*/
 #footer { margin:0; background:#212121; }
-.dk-footer-wrap {}
-.dk-footer-logo {}
+#footer .dk-footer-wrap .ft_top_con { padding:42px 20px; border-top:0; }
+#footer .dk-footer-wrap .dk-footer-logo { width: 71px; margin-bottom:22px; }
+#footer .dk-footer-wrap .dk-footer-logo img { width:100%; }
+#footer .dk-footer-wrap .ft_slide { border-top:0; margin:0; padding:0; }
+#footer .dk-footer-wrap .ft_slide .cs_center { text-align:left; }
+#footer .dk-footer-wrap .ft_slide .cs_center h3 { color:#b7b8bb; font-size:14px; font-weight: 500; }
+#footer .dk-footer-wrap .ft_slide .cs_center p strong { color:#ffffff; font-size:19px; font-weight: 700; }
+#footer .dk-footer-wrap .ft_slide .cs_center p { color:#b7b8bb; font-size:13px; font-weight: 300; line-height: 20px; }
+
+#footer .dk-footer-wrap .ft_info2_box { background: none; }
+
 
 .dk-footer-wrap .dk-footer-top { padding: 40px 0 25px; }
 .dk-footer-wrap .dk-footer-top .dk-footer-logo { display:flex; align-items:center; width:78px; margin:0 auto 20px; }
