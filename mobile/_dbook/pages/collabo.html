@@ -155,11 +155,13 @@
                               {{#if promotionText}}
                                 <li class="short_des">{{promotionText}}</li>
                               {{/if}}
+                              {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                              <li>                                
+                                  <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                              </li>
+                              {{/ifHasDiscount}}
                               <li class="price">
                                 {{toCurrencyString calculatedSalePrice}}원
-                                {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                                  <del class="add_currency">{{toCurrencyString salePrice}}원</del>
-                                {{/ifHasDiscount}}
                               </li>
                                 <li class="sticker">
                                 {{#each stickerInfos}}
@@ -226,11 +228,11 @@
                                 <li class="short_des">{{promotionText}}</li>
                               {{/if}}
                               <li class="price">
+                                {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                                <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                                {{/ifHasDiscount}}
                                 <span class="c_price">
                                   {{toCurrencyString calculatedSalePrice}}원
-                                  {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                                  <del class="add_currency">{{toCurrencyString salePrice}}원</del>
-                                  {{/ifHasDiscount}}
                                 </span>
                               </li>
                                 <li class="sticker">
