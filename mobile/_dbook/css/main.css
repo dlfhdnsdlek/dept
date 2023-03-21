@@ -38,9 +38,11 @@
 .video-background iframe { width:100%; height: 100%; pointer-events: none; opacity:1 !important; }
 
 /* 인스타그램 */
-.insta-box h2 { margin:30px 12px 0; font-size:16px; font-weight:400; }
+.insta-box { padding:50px 0 40px; }
+.insta-box h2 { margin-bottom:15px; color:#000000; font-size:26px; text-align:center; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 .insta-box .instagram_widget_head { display:none; }
-.instagram_widget { padding:10px 18px; }
-.instagram_widget .instagram_widget_contents li { width:25%; padding:0; }
-.instagram_widget .instagram_widget_contents li:nth-child(n+9) { display:none; }
-.instagram_widget .instagram_widget_contents li a { border:0; }
+.insta-box .instagram_widget { padding:0 20px; }
+.insta-box .instagram_widget .instagram_widget_contents { margin:-7px; }
+.insta-box .instagram_widget .instagram_widget_contents li { width:50%; padding:7px; box-sizing:border-box; }
+.insta-box .instagram_widget .instagram_widget_contents li:nth-child(n+5) { display:none; }
+.insta-box .instagram_widget .instagram_widget_contents li a { border:0; }
