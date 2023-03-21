@@ -189,7 +189,9 @@
 				slideClass: "dk-goods-slide",
 				scrollbar: {
 					el: ".cont-box2 .swiper-scrollbar",
-				}
+				},
+                slidesOffsetBefore: 20,
+                slidesOffsetAfter: 20
 			});
 			</script>
         </script>
@@ -226,11 +228,13 @@
                               <li class="prd_name">{{safeString productName}}</li>
                               {{#if promotionText}}
                                 <li class="short_des">{{promotionText}}</li>
-                              {{/if}}
-                              <li class="price">
-                                {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                              {{/if}}                              
+                              {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
+                              <li>
                                 <del class="add_currency">{{toCurrencyString salePrice}}원</del>
-                                {{/ifHasDiscount}}
+                              </li>
+                              {{/ifHasDiscount}}
+                              <li class="price"> 
                                 <span class="c_price">
                                   {{toCurrencyString calculatedSalePrice}}원
                                 </span>

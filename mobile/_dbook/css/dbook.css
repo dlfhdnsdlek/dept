@@ -111,11 +111,11 @@ collabo
 }
 .collabo .cont-box2 .swiper-scrollbar {
     position: absolute;
-    left: 0;
+    left: 20px;
     bottom: 0;
     z-index: 50;
-    height: 3px;
-    width: 100%;
+    height: 2px;
+    width: calc(100% - 40px);
 	background:#d2d2d2;
 }
 .collabo .cont-box2 .swiper-scrollbar-drag { background:#000000; }
@@ -192,5 +192,5 @@ collabo
 .cont-box .goods_list_cont .sale-rate { margin-right:8px; color:#fe5000; font-size:42px; font-weight:700; }
 
 /* 준비중인 상품 */
-.cont-box2 h3 { margin-bottom:30px; color:#191919; font-size:26px; font-weight:700; text-align: center; }
+.cont-box2 h3 { margin-bottom:15px; color:#191919; font-size:26px; font-weight:700; text-align: center; }
 .cont-box2 .item_gallery_type .item_cont { padding:0; }
