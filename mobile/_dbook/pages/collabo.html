@@ -117,9 +117,9 @@
         <!-- 1. 갤러리형 -->
         <script id="product-list-type-gallery" type="text/x-handlebars-template">
             <div class="item_gallery_type">
-              <ul class="goods_product_list">
+              <ul class="dk-goods-wrapper goods_product_list">
                 {{#each productList}}
-                  <li class="goods_prd_item2 list_num_{{../displayWidth}}" data-product-no="{{productNo}}">
+                  <li class="dk-goods-slide goods_prd_item2 list_num_{{../displayWidth}}" data-product-no="{{productNo}}">
                     <div class="goods_prd_item2_box">
                       <div class="goods_prd_img">
                         <div class="img_box">
@@ -177,7 +177,19 @@
                 <div class="goods_no_data"><strong>상품이 존재하지 않습니다.</strong></div>
                 {{/each}}
               </ul>
+              <div class="swiper-scrollbar"></div>
             </div>
+			<script>
+			var swiper = new Swiper(".cont-box2 .item_gallery_type", {
+				spaceBetween: 30,
+				slidesPerView: 3,
+				wrapperClass: "dk-goods-wrapper",
+				slideClass: "dk-goods-slide",
+				scrollbar: {
+					el: ".cont-box2 .swiper-scrollbar",
+				}
+			});
+			</script>
         </script>
 
         <!-- 2. 리스트형 -->
