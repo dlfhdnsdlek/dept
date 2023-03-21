@@ -211,7 +211,7 @@ collabo
 
 /* 준비중인 상품 */
 .cont-box2 h3 { margin-bottom:15px; color:#191919; font-size:26px; font-weight:700; text-align: center; }
-.cont-box2 .item_gallery_type .item_cont { padding:0; }
+.cont-box2 .goods_list_cont .goods_prd_content .goods_info_list li { text-align:left; }
 
 /* 종료된 공구 */
 .collabo-end .location_wrap,
