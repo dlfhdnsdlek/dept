@@ -180,9 +180,9 @@
                                 {{/each}}
                             </ul>
                             <div class="swiper-scrollbar"></div> 
+                            <div class="swiper-button swiper-button-next"></div>
+                            <div class="swiper-button swiper-button-prev"></div> 
                         </div>
-                        <div class="swiper-button swiper-button-next"></div>
-                        <div class="swiper-button swiper-button-prev"></div> 
                         <script>
                             $(document).ready(function(){		
                                 var swiper = new Swiper('.main-box3 .swiper-container', {	
@@ -215,21 +215,21 @@
                         </div>
                         <script src="http://www.youtube.com/iframe_api"></script>
                         <script>
-                          var player;                        
-                          function onYouTubeIframeAPIReady(){                        
-                            player = new YT.Player('player',{                        
-                              width:'100%',
-                              height:'100%',
-                              position:'absolute',                        
-                              videoId:'BOH9In8qRiY',                        
-                              playerVars:{'autoplay':1,'playsinline':1,'loop':1,'mute':1,'controls':0,'modestbranding':1,'rel':0, 'playlist':'BOH9In8qRiY'},                        
-                              events:{ 'onReady':onPlayerReady }                        
-                            });                        
-                          }                        
-                          function onPlayerReady(e){                        
-                            e.target.mute();                        
-                            e.target.playVideo();                        
-                          }                        
+                            var player;                        
+                            function onYouTubeIframeAPIReady(){                        
+                                player = new YT.Player('player',{                        
+                                    width:'100%',
+                                    height:'100%',
+                                    position:'absolute',                        
+                                    videoId:'BOH9In8qRiY',                        
+                                    playerVars:{'autoplay':1,'playsinline':1,'loop':1,'mute':1,'controls':0,'modestbranding':1,'rel':0, 'playlist':'BOH9In8qRiY'},                        
+                                    events:{ 'onReady':onPlayerReady }                        
+                                });                        
+                            }                        
+                            function onPlayerReady(e){                        
+                                e.target.mute();                        
+                                e.target.playVideo();                        
+                            }                        
                         </script>
                     </div>
                     <div class="main-box5">                    
