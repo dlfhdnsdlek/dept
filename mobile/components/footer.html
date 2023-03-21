@@ -6,54 +6,25 @@
   ~  @since 2021.6.29
   -->
 
-<!-- 디자인교과서.fe 푸터 영역 -->
-<div id="footer_wrap" class="invisible dk-footer-wrap">
+<div id="footer_wrap" class="dk-footer-wrap invisible">
     <div class="content_info_wrap">
         <div class="content_info">
             {{#with top}}
             <div class="ft_top_con">
-                {{#if boardList.used}}
-                <div class="ft_notice" id="footerBoardList">
-                    <h3><a href="/pages/board/list.html?boardId={{boardList.boardId}}">{{boardList.name}}</a></h3>
-                    <ul>
-                        {{#each articles}}
-                        <li>
-                            <a href="/pages/board/view.html?boardId={{../boardList.boardId}}&articleNo={{articleNo}}&secreted={{secreted}}">{{title}}</a>
-                        </li>
-                        {{/each}}
-                    </ul>
+                <div class="dk-footer-logo">
+                    <span><img src="/_dbook/img/footer_logo.png" alt=""></span>
                 </div>
-                {{/if}}
                 <div class="ft_slide">
-                    <div class="bank_info">
-                        <h3>BANK INFO</h3>
-                        {{#if bankAccountInfos}} {{#each bankAccountInfos}}
-                        <p>
-                            <span>{{bankName}}</span>
-                            {{bankAccount}}(예금주: {{bankDepositorName}})
-                        </p>
-                        {{/each}} {{else}}
-                        <p>-</p>
-                        {{/if}}
-                    </div>
                     <div class="cs_center">
-                        <h3>CS CENTER</h3>
+                        <h3>고객센터</h3>
                         {{#if mall.serviceCenter}}
                         <p>{{mall.serviceCenter.phoneNo}}</p>
-                        <p>{{mall.serviceCenter.email}}</p>
-                        {{else}}
-                        <p>-</p>
                         {{/if}}
+                        <p>
+                            평일 : 10:00~18:00  점심시간 : 12:30 ~ 13:30<br/>
+                            토요일,일요일,공휴일 휴무입니다.
+                        </p>
                     </div>
-                </div>
-            </div>
-            <!-- 디자인교과서.fe 푸터 상단 영역 -->
-            <div class="dk-footer-top">
-                <div class="dk-footer-logo"><a href="#none"><img src="/_dbook/img/footer_logo.png" alt="" /></a></div>
-                <div class="dk-footer-sns">
-                    <ul>
-                        <li><a href="https://www.instagram.com/binwoos/" target="_blank"><img src="/_dbook/img/footer_sns_ico2.png" alt="" /></a></li>
-                    </ul>
                 </div>
             </div>
             {{/with}}
@@ -63,122 +34,69 @@
         <div class="footer_content">
             <div>
                 {{#with bottom}}
-                <div class="ft_mid_con">
-                    {{#with menu}}
-                    <div>
-                        <a href="#">ABOUT</a>
-                        <ul>
-                            {{#each about}} {{#if used}}
-                            <li>
-                                <a href="/pages/service/{{page}}.html">{{label}}</a>
-                            </li>
-                            {{/if}} {{/each}}
-                        </ul>
+                <div class="ft_info2_box">
+                    <div class="foot_cont">
+                        {{#with business}}
+                        <div class="ft_address">
+                            대표 : {{serviceBasicInfo.representativeName}} <br />
+                            {{serviceBasicInfo.companyName}} {{serviceBasicInfo.address}} {{serviceBasicInfo.addressDetail}} <br />
+                            사업자등록번호 : {{businessRegistration.no}}
+                            <a href="{{businessRegistration.url}}" class="btn_licensee_info" target="_blank">사업자번호조회</a>
+                            <br />
+                            통신판매업신고번호 : {{serviceBasicInfo.onlineMarketingBusinessDeclarationNo}} <br />
+                            개인정보처리책임자 : {{serviceBasicInfo.privacyManagerName}} <br />
+                            대표번호 : {{serviceBasicInfo.representPhoneNo}} <br />
+                            팩스번호 : {{serviceBasicInfo.faxNo}} <br />
+                            메일 :
+                            <a href="mailto:{{serviceBasicInfo.representEmail}}" class="btn_email">{{serviceBasicInfo.representEmail}}</a>
+                            <br />
+                            호스트제공 : 엔에이치엔커머스(주) <br />
+                        </div>
+                        {{#if since}}
+                        <address class="ft_copy">Copyright {{since}} {{companyName}} all rights reserved.</address>
+                        {{/if}}
+                        <div class="foot_certify">
+                            {{#if termsConfig}} {{img termsConfig.fairLogoUrl}} {{/if}} {{#ifEq orderConfig.pgType "INICIS"}} {{{orderConfig.escrow.logo}}}
+                            {{/ifEq}} {{#ifEq orderConfig.pgType "TOSS_PAYMENTS"}}
+                            <a
+                                class="payment_toss"
+                                href="https://pgweb.uplus.co.kr/ms/escrow/s_escrowYn.do?mertid={{orderConfig.escrow.escrowInfoKey}}"
+                                target="_blank"
+                            >
+                                <img src="/assets/img/payments/toss.png" alt="토스" />
+                                <span class="bar"></span>
+                                <img src="/assets/img/payments/escrow.png" alt="에스크로" />
+                            </a>
+                            {{/ifEq}} {{#ifEq orderConfig.pgType "KCP"}}
+                            <a href="https://admin.kcp.co.kr/Modules/escrow/kcp_pop.jsp?site_cd={{orderConfig.escrow.escrowInfoKey}}" target="_blank">
+                                <img src="/assets/img/payments/kcp.png" alt="kcp" />
+                            </a>
+                            {{/ifEq}} {{#if mallSSLSeal}} {{{mallSSLSeal}}} {{/if}}
+                        </div>
+                        {{/with}}
                     </div>
-                    <div>
-                        <a a href="#">MY ACCOUNT</a>
-                        <ul>
+                    <div class="foot_list">
+                        <ul class="ft_menu">
                             <li>
-                                <a href="/pages/my/modify-member.html">회원정보수정</a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/mileages.html">{{customAccumulationMenuName}}현황</a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/coupons.html">쿠폰</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <a a href="#">MY ORDER</a>
-                        <ul>
-                            <li>
-                                <a href="/pages/my/orders.html">주문/배송</a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/claims.html">취소/교환/반품</a>
-                            </li>
-                            <li>
-                                <a href="/pages/my/wishes.html">찜리스트</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <a href="#">HELP</a>
-                        <ul>
-                            {{#if boardsConfig.inquiryConfig.used}}
-                            <li>
-                                <a href="/pages/my/inquiries.html">{{boardsConfig.inquiryConfig.name}}</a>
-                            </li>
-                            {{/if}} {{#if boardsConfig.productReviewConfig.used}}
-                            <li>
-                                <a href="/pages/my/product-reviews.html">{{boardsConfig.productReviewConfig.name}}</a>
-                            </li>
-                            {{/if}} {{#if boardsConfig.productInquiryConfig.used}}
-                            <li>
-                                <a href="/pages/my/product-inquiries.html">{{boardsConfig.productInquiryConfig.name}}</a>
-                            </li>
-                            {{/if}} {{#each boardsConfig.boardConfigs}} {{#if used}}
-                            <li>
-                                <a href="/pages/board/list.html?boardId={{boardId}}">{{name}}</a>
-                            </li>
-                            {{/if}} {{/each}}
-                        </ul>
-                    </div>
-                    {{/with}}
-                </div>
-                <div class="dk-footer-btm">
-                    <div class="dk-foot-list">
-                        <ul>
-                            <li>
-                                <a href="/pages/service/privacy-policy.html">이용안내</a>
+                                <a href="/pages/service/guide.html"><strong>이용안내</strong></a>
                             </li>
                             <li>
                                 <a href="/pages/service/privacy-policy.html"><strong>개인정보처리방침</strong></a>
                             </li>
                             <li>
-                                <a href="/pages/service/use-terms.html">이용약관</a>
+                                <a href="/pages/service/use-terms.html"><strong>이용약관</strong></a>
                             </li>
                             <li>
-                                <a href="#none">제휴문의</a>
+                                <a href="#none"><strong>제휴문의</strong></a>
                             </li>
                         </ul>
                     </div>
-                    <div class="foot_cont">
-                        {{#with business}}
-                        <div class="ft_address dk-footer-address">
-                            <span>상호 : {{serviceBasicInfo.companyName}}</span><span> 대표자 : {{serviceBasicInfo.representativeName}}</span><br/>
-                            <span>EMAIL : <a href="mailto:{{mall.serviceCenter.email}}" class="btn_email">{{mall.serviceCenter.email}}</a></span><br/>
-                            <span>사업자번호 : {{businessRegistration.no}}
-                            <a href="{{businessRegistration.url}}" class="btn_licensee_info" target="_blank">[사업자번호조회]</a></span><br/>
-                            <span>통신판매업신고번호 : {{serviceBasicInfo.onlineMarketingBusinessDeclarationNo}}</span><br/>
-                            <span>대표번호 : {{serviceBasicInfo.representPhoneNo}}</span><br/>
-                            <span>주소 : {{serviceBasicInfo.address}} {{serviceBasicInfo.addressDetail}}</span><br />
-                            <span>호스트제공 : 엔에이치엔커머스(주)</span>
-                        </div>
-                        {{#if since}}
-                        <address class="ft_copy dk-footer-copy">Copyright {{since}} {{companyName}} all rights reserved.</address>
-                        {{/if}}
-                        <div class="foot_certify">
-                            {{#if termsConfig}} {{img termsConfig.fairLogoUrl}} {{/if}} {{#if mall.escrowLogo.exposure}} {{{mall.escrowLogo.logoHtml}}} {{/if}}
-                            {{#if mall.ssl}} {{{mall.ssl.trustSeal}}} {{/if}}
-                        </div>
-                        {{/with}}
-                    </div>
-                    <div class="foot_wrap_shortcut">
-                        <button class="foot_shortcut">{{ business.mall.mallName }} 바로가기 아이콘 추가</button>
-                    </div>
+                    <!-- //foot_list -->
                 </div>
                 {{/with}}
             </div>
         </div>
     </div>
     <!-- //content_info_wrap -->
-    <div class="scroll-right-btn">
-        <!-- Talk Talk Banner Script start -->  
-        <script type="text/javascript" src="https://partner.talk.naver.com/banners/script"></script>  
-        <div class="talk_banner_div" data-id="113483"></div>  
-        <!-- Talk Talk Banner Script end -->
-    </div>
 </div>
 <script type="text/javascript" src="/js/components/footer.js"></script>

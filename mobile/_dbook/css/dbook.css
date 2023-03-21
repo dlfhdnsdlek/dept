@@ -41,8 +41,10 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 /*========================================================================
 하단영역
 ========================================================================*/
-#footer { margin:0; border-top: 1px solid #353535; }
-.dk-footer-wrap .ft_top_con { display:none; }
+#footer { margin:0; background:#212121; }
+.dk-footer-wrap {}
+.dk-footer-logo {}
+
 .dk-footer-wrap .dk-footer-top { padding: 40px 0 25px; }
 .dk-footer-wrap .dk-footer-top .dk-footer-logo { display:flex; align-items:center; width:78px; margin:0 auto 20px; }
 .dk-footer-wrap .dk-footer-top .dk-footer-logo a { font-size:0; }
