@@ -169,7 +169,7 @@
                                                 <!-- dbook.fe -->
                                                 {{#ifEq isSoldOut true}}
                                                 <li class="item-soldout">
-                                                    <strong>SOLD OUT</strong>
+                                                    <strong>Sold out</strong>
                                                 </li>
                                                 {{/ifEq}}
 
@@ -180,8 +180,8 @@
 
                                                 <!-- dbook.fe -->
                                                 {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                                                <li>
-                                                    <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                                                <li class="add_currency">
+                                                    <del>{{toCurrencyString salePrice}}원</del>
                                                 </li>
                                                 {{/ifHasDiscount}}
                                                 <li class="price">
@@ -239,7 +239,7 @@
                                         <!-- dbook.fe -->
                                         {{#ifEq isSoldOut true}}
                                         <li class="item-soldout">
-                                            <strong>SOLD OUT</strong>
+                                            <strong>Sold out</strong>
                                         </li>
                                         {{/ifEq}}
 
@@ -250,11 +250,11 @@
 
                                         <!-- dbook.fe -->
                                         {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                                        <li>
-                                            <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                                        <li class="add_currency">
+                                            <del>{{toCurrencyString salePrice}}원</del>
                                         </li>
                                         {{/ifHasDiscount}}
-                                        
+
                                         <li class="price">
                                             <span class="c_price">
                                               {{toCurrencyString calculatedSalePrice}}원
