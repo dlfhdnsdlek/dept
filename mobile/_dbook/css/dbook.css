@@ -59,9 +59,10 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 #footer .dk-footer-wrap .ft_copy { padding:0; color:#979797; font-size:11px; }
 
 /* 하단 메뉴 */
-#footer .dk-footer-wrap .ft_info2_box .ft_menu { padding:0; display:flex; }
-#footer .dk-footer-wrap .ft_info2_box .ft_menu li { margin:0; padding:0; background:none; }
-#footer .dk-footer-wrap .ft_info2_box .ft_menu li a { padding:0; color:#b7b8bb; font-size:12px; }
+#footer .dk-footer-wrap .ft_info2_box .ft_menu { margin:10px 0 0; padding:0; display:flex; }
+#footer .dk-footer-wrap .ft_info2_box .ft_menu li { margin:0 10px 0 0; padding:0; background:none; }
+#footer .dk-footer-wrap .ft_info2_box .ft_menu li a { padding:10px 0; color:#b7b8bb; font-size:12px; }
+#footer .dk-footer-wrap .ft_info2_box .ft_menu li a strong { color:#b7b8bb; font-weight: 400; }
 
 .dk-footer-wrap .dk-footer-top { padding: 40px 0 25px; }
 .dk-footer-wrap .dk-footer-top .dk-footer-logo { display:flex; align-items:center; width:78px; margin:0 auto 20px; }
