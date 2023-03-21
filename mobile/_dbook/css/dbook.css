@@ -153,13 +153,13 @@ collabo
 
 /* 탭버튼 */
 .tab-type1 ul { display:flex; justify-content: center; }
-.tab-type1 ul li { width:160px; height:49px; line-height:49px; margin:0 5px; border:1px solid #e6e6e6; text-align:center; }
-.tab-type1 ul li a { display:block; color:#7b7a7a; font-size:20px; }
+.tab-type1 ul li { width:100px; height:40px; line-height:40px; margin:0 5px; border:1px solid #e6e6e6; text-align:center; }
+.tab-type1 ul li a { display:block; color:#7b7a7a; font-size:14px; }
 .tab-type1 ul li.on {  border-color:#000000;  }
 .tab-type1 ul li.on a { color:#191919; font-weight:500; }
 
-.collabo-content { padding:70px 0 0; }
-.collabo-content h2 { margin:0 0 23px; color:#191919; font-size:38px; text-align:center; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
+.collabo-content { padding:35px 0 0; }
+.collabo-content h2 { margin:0 0 15px; color:#191919; font-size:26px; text-align:center; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 
 /* collabo 공통 */
 .collabo .goods_list_tit,
