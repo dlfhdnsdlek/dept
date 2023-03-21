@@ -22,10 +22,10 @@
 .main-box3 .main-title { margin-bottom:18px; text-align:center; }
 .main-box3 .main-title h2 { color:#000000; font-size:26px; font-family: 'Montserrat','Noto Sans KR', sans-serif; }
 .main-box3 .main-title p { color:#191919; font-size:14px; }
-.main-box3 .swiper-button { position:absolute; top:60%; width:40px; height:70px; margin-top:-35px; background:no-repeat; }
+.main-box3 .swiper-button { position:absolute; top:50%; width:20px; height:35px; margin-top:-10px; background:no-repeat; background-size:100% auto; }
 .main-box3 .swiper-container { padding-bottom:32px }
-.main-box3 .swiper-button-prev { left:0; background-image: url('/_dbook/img/bn_prev.png'); }
-.main-box3 .swiper-button-next { right:0; background-image: url('/_dbook/img/bn_next.png'); }
+.main-box3 .swiper-button-prev { left:15px; background-image: url('/_dbook/img/bn_prev.png'); }
+.main-box3 .swiper-button-next { right:15px; background-image: url('/_dbook/img/bn_next.png'); }
 .main-box3 .swiper-container-horizontal>.swiper-scrollbar { left:0; bottom:0; width:100%; height:2px; background:#d2d2d2; border-radius:0; }
 .main-box3 .swiper-scrollbar-drag {background:#000000; border-radius:0; }
 .main-box3 .swiper-button-next.swiper-button-disabled, 
