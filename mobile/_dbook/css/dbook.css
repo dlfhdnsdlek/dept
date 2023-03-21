@@ -89,8 +89,8 @@ body .goods_prd_item .goods_prd_img .img_box > a { display:block; font-size:0; }
 body .goods_prd_item2 .goods_prd_img .img_box { min-height:auto; }
 
 /* 상품 공통 */
-.goods_list .goods_list_cont .goods_prd_content .goods_info_list li.prd_name { color:#191919; font-size:14px; font-weight:500; }
-.goods_list .goods_list_cont .goods_prd_content .goods_info_list li.add_currency { color:#8b8b8b; font-size:13px; font-weight: 400; text-align:left; }
+.goods_list .goods_list_cont .goods_prd_content .goods_info_list li.prd_name { margin: 0 0 7px; color:#191919; font-size:14px; font-weight:500; }
+.goods_list .goods_list_cont .goods_prd_content .goods_info_list li.add_currency { color:#8b8b8b; font-size:13px; font-weight: 400; line-height: 1.4; text-align:left; }
 .goods_list .goods_list_cont .goods_prd_content .goods_info_list li.price .c_price { color:#191919; font-size:14px; }
 #productsPage .goods_list_cont .goods_product_list { margin:0 13px; }
 
@@ -104,6 +104,7 @@ body .goods_prd_item2 .goods_prd_img .img_box { min-height:auto; }
 
 /* 목록 : 갤러리형 */
 #productsPage .goods_list_cont .goods_product_list .goods_prd_item2 { width: calc(50% - 14px); padding:0 7px; }
+#productsPage .goods_list_cont .goods_product_list .goods_prd_item2 .goods_prd_content { padding-top:10px; }
 
 
 /*========================================================================
