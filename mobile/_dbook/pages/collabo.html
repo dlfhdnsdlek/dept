@@ -151,13 +151,18 @@
                         <div class="goods_list_info">
                           <a href="/pages/product/view.html?productNo={{productNo}}">
                             <ul class="goods_info_list">
+                              {{#ifEq isSoldOut true}}
+                              <li class="item-soldout">
+                                <strong>Sold out</strong>
+                              </li>
+                              {{/ifEq}}
                               <li class="prd_name">{{safeString productName}}</li>
                               {{#if promotionText}}
                                 <li class="short_des">{{promotionText}}</li>
                               {{/if}}
                               {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                              <li>                                
-                                  <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                              <li class="add_currency">                                
+                                  <del>{{toCurrencyString salePrice}}원</del>
                               </li>
                               {{/ifHasDiscount}}
                               <li class="price">
@@ -225,13 +230,18 @@
                         <div class="goods_list_info">
                           <a href="/pages/product/view.html?productNo={{productNo}}">
                             <ul class="goods_info_list">
+                              {{#ifEq isSoldOut true}}
+                              <li class="item-soldout">
+                                <strong>Sold out</strong>
+                              </li>
+                              {{/ifEq}}
                               <li class="prd_name">{{safeString productName}}</li>
                               {{#if promotionText}}
                                 <li class="short_des">{{promotionText}}</li>
                               {{/if}}                              
                               {{#ifHasDiscount immediateDiscountAmt additionDiscountAmt}}
-                              <li>
-                                <del class="add_currency">{{toCurrencyString salePrice}}원</del>
+                              <li class="add_currency">
+                                <del>{{toCurrencyString salePrice}}원</del>
                               </li>
                               {{/ifHasDiscount}}
                               <li class="price"> 
@@ -256,6 +266,16 @@
                 {{/each}}
               </ul>
             </div>
+            <script>		
+                $(document).ready(function(){		
+                    /* collabo 진행중인 공구 */
+                    var price = parseFloat($('.cont-box .goods_list_cont .item_list_type .goods_prd_content .goods_info_list .price .c_price').text().replace(/,/g, ""));
+                    var customPrice = parseFloat($('.cont-box .goods_list_cont .item_list_type .goods_prd_content .goods_info_list del').text().replace(/,/g, ""));
+                    var saleRate = (((customPrice - price) / customPrice) * 100).toFixed(0);
+                    var regexp = /\B(?=(\d{3})+(?!\d))/g;
+                    $('.cont-box .goods_list_cont .item_list_type .goods_prd_content .goods_info_list .price').prepend( '<span class="sale-rate">' + saleRate.replace(regexp, ',') + '%</spna>');
+                });
+            </script> 
         </script>
 
         <!-- 3. 스와이프형 -->
