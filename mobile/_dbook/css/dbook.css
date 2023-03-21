@@ -193,18 +193,16 @@ collabo
 .collabo .paging,
 .collabo .item_wish { display:none; }
 .collabo .goods_list_cont > div > ul > li { padding:0; margin:0; border:0; }
-.collabo .goods_list_cont ul li .item_photo_box,
-.collabo .goods_list_cont ul li .item_photo_box a img { border:0; }
-.collabo .goods_list_cont ul li .item_info_cont { font-family: 'Montserrat','Pretendard','Noto Sans KR', sans-serif; }
+.collabo .goods_list_cont ul li .goods_prd_content { font-family: 'Montserrat','Pretendard','Noto Sans KR', sans-serif; }
 .collabo .goods_list_cont ul li .goods_prd_img .img_box .goods_wish { display:none; }
 
 /* 진행 상품 */
 .cont-box { margin:30px 20px 60px; }
 .cont-box .goods_list_cont .item_list_type > ul > li { display:flex; flex-direction: column; }
 .cont-box .goods_list_cont .item_list_type .goods_prd_img,
-.cont-box .goods_list_cont .item_list_type .goods_prd_content { display:block; width: 100%; padding:0; }
+.cont-box .goods_list_cont .item_list_type .goods_prd_content { display:block; width: 100%; padding:13px 0 0; }
 .cont-box .goods_list_cont .item_list_type .goods_prd_content .goods_info_list .prd_name { color:#191919; font-size:19px; font-weight:700; }
-.cont-box .goods_list_cont .item_list_type .goods_prd_content .goods_info_list .add_currency { display:block; margin-bottom:8px; color:#8b8b8b; font-size:12px; font-weight: 400; }
+.cont-box .goods_list_cont .item_list_type .goods_prd_content .goods_info_list .add_currency { display:block; color:#8b8b8b; font-size:12px; font-weight: 400; }
 .cont-box .goods_list .goods_list_cont .item_list_type .goods_prd_content .goods_info_list .price .c_price { color:#191919; font-size: 21px; font-weight: 700; }
 .cont-box .goods_list_cont .sale-rate { margin-right:8px; color:#fe5000; font-size:21px; font-weight:700; }
 
