@@ -41,20 +41,20 @@ body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto 
 하단영역
 ========================================================================*/
 #footer { margin:0; background:#212121; }
-#footer .dk-footer-wrap .ft_top_con { padding:42px 20px; border-top:0; }
+#footer .dk-footer-wrap .ft_top_con { padding:42px 20px 25px; border-top:0; }
 #footer .dk-footer-wrap .dk-footer-logo { width: 71px; margin-bottom:22px; }
-#footer .dk-footer-wrap .dk-footer-logo img { width:100%; }
+#footer .dk-footer-wrap .dk-footer-logo img { width:100%; vertical-align: top; }
 
 /* 고객센터 */
 #footer .dk-footer-wrap .ft_slide { border-top:0; margin:0; padding:0; }
-#footer .dk-footer-wrap .ft_slide .cs_center { text-align:left; font-family: 'Montserrat','Pretendard', sans-serif; }
-#footer .dk-footer-wrap .ft_slide .cs_center h3 { color:#b7b8bb; font-size:14px; font-weight: 500; }
+#footer .dk-footer-wrap .ft_slide .cs_center { padding-top:0; background:none; text-align:left; }
+#footer .dk-footer-wrap .ft_slide .cs_center h3 { color:#b7b8bb; font-size:14px; font-weight: 500; font-family: 'Montserrat','Pretendard', sans-serif; }
 #footer .dk-footer-wrap .ft_slide .cs_center p strong { color:#ffffff; font-size:19px; font-weight: 700; }
-#footer .dk-footer-wrap .ft_slide .cs_center p { color:#b7b8bb; font-size:13px; font-weight: 300; line-height: 20px; }
+#footer .dk-footer-wrap .ft_slide .cs_center p { margin:10px 0 0; color:#b7b8bb; font-size:13px; font-weight: 300; line-height: 20px; font-family: 'Montserrat','Pretendard', sans-serif; }
 
 /* 회사 정보 */
 #footer .dk-footer-wrap .ft_info2_box { padding:0 20px 10px; background: none; }
-#footer .dk-footer-wrap .ft_info2_box .ft_address { padding:0; color:#979797; font-size:11px; }
+#footer .dk-footer-wrap .ft_info2_box .ft_address { padding:25px 0 0; color:#979797; font-size:11px; border-top:1px solid #4d4d4d;s }
 #footer .dk-footer-wrap .ft_info2_box .ft_address a { color:#979797; }
 #footer .dk-footer-wrap .ft_copy { padding:0; color:#979797; font-size:11px; }
 
