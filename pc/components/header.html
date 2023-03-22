@@ -76,22 +76,24 @@
             </div>
         </div>
     </nav>
-    <div class="header_top_cont">
-        <ul class="top_member_box">
-            {{#if logined}}
-            <li><a id="logout" href="/">LOG OUT</a></li>
-            <li><a href="/pages/my/mypage.html">MY PAGE</a></li>      
-            {{else}}
-            <li class="loginText"><a href="/pages/login/login.html">LOG IN</a></li>
-            <li class="joinText"><a href="/pages/join/method.html">JOIN</a></li>
-            {{/if}}
-            <li class="top-cart">
-                <a href="/pages/order/cart.html"><span>CART</span><em>(<strong class="js_cart_length">{{cartCount}}</strong>)</em></a>
-            </li>
-            <li class="top-wish">
-                <a href="/pages/my/wishes.html"><span>WISH</span></a>
-            </li>
-        </ul>
+    <div id="headerTop" class="header_top">
+        <div class="header_top_cont">
+            <ul class="top_member_box">
+                {{#if logined}}
+                <li><a id="logout" href="/">LOG OUT</a></li>
+                <li><a href="/pages/my/mypage.html">MY PAGE</a></li>      
+                {{else}}
+                <li class="loginText"><a href="/pages/login/login.html">LOG IN</a></li>
+                <li class="joinText"><a href="/pages/join/method.html">JOIN</a></li>
+                {{/if}}
+                <li class="top-cart">
+                    <a href="/pages/order/cart.html"><span>CART</span><em>(<strong class="js_cart_length">{{cartCount}}</strong>)</em></a>
+                </li>
+                <li class="top-wish">
+                    <a href="/pages/my/wishes.html"><span>WISH</span></a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="/js/components/header.js"></script>
