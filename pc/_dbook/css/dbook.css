@@ -246,10 +246,11 @@ collabo
 
 /* 진행 상품 */
 .cont-box { margin:50px 0 150px;}
+.cont-box .goods_list_cont .item_list_type ul li { padding:0 0 0 72px; box-sizing:border-box; }
 .cont-box .goods_list_cont .item_list_type .item_cont { display:flex; align-items: flex-end; position:relative; }
 .cont-box .goods_list_cont .item_list_type .item_photo_box { width:600px; }
 .cont-box .goods_list_cont .item_list_type .item_photo_box a::before { content:''; position:absolute; top:0; left:0; width:100%; height: 100%;}
-.cont-box .goods_list_cont .item_list_type .item_info_cont { width:calc(100% - 600px); padding:0 0 0 45px; box-sizing: border-box; }
+.cont-box .goods_list_cont .item_list_type .item_info_cont { width:calc(100% - 672px); padding:0 0 0 45px; box-sizing: border-box; }
 .cont-box .goods_list_cont .item_list_type .item_tit_box { margin:0 0 35px; }
 .cont-box .goods_list_cont .item_list_type .item_tit_box .item_brand strong { color:#6f6f6f; font-size:24px; font-weight:500; }
 .cont-box .goods_list_cont .item_list_type .item_tit_box .item_name { color:#191919; font-size:38px; font-weight:700; }
