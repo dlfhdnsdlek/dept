@@ -1,4 +1,16 @@
 $(()=>{
+
+    /* 상단 고정 */
+    function showHeader() {
+        if ($(window).scrollTop() > 0) {
+            $("#header").addClass("fixed");
+        } else {
+            $("#header").removeClass("fixed");
+        }
+    }
+	$(window).scroll(showHeader);
+	showHeader();
+
     /* 상단 카테고리 하위 메뉴 */
     $('#header .gnb .depth0 > li').on('mouseenter',function(){
         $(this).addClass('on').find('ul').stop().slideDown(200);

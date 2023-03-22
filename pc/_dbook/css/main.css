@@ -3,9 +3,12 @@
 ========================================================================*/
 body #header { position: absolute; top: 0; left:0; width:100%; min-width:1280px; min-height:0; padding:0; margin:0 auto; box-sizing: border-box; transition:all .2s; }
 body #header::after { border-bottom:0; }
-#header.active { background:rgba(255,255,255,0.95); }
 #contents { padding:0; }
 #header .gnb .depth0 > li > ul { border:0; }
+
+#header.fixed,
+#header.active { background:rgba(255,255,255,0.95); }
+
 
 /*========================================================================
 메인 영역
