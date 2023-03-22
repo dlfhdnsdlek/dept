@@ -219,4 +219,4 @@ collabo
 .collabo-end .location_wrap,
 .collabo-end .goods_list_item_tit,
 .collabo-end .goods_list_category { display:none; }
-.collabo-end .collabo-content { display:block !important; padding:30px 0 28px; }
+.collabo-end .collabo-content { display:block !important; padding:30px 0 0; }
