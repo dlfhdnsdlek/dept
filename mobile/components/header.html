@@ -58,7 +58,7 @@
                                         {{#if multiLevelCategories}}
                                         <ul class="category_side">
                                             {{#each multiLevelCategories}}
-                                            <li>
+                                            <li data-categoryno="{{categoryNo}}" >
                                                 {{#if children}}
                                                 <a href="#">{{label}}<span class="icon_plus">ICON</span></a>
                                                 <ul>
