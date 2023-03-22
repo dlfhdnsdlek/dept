@@ -6,6 +6,46 @@
             </a>
         </div>
         <div class="gnb">
+            <div class="gnb_left visible" data-type="prev" style="display:none;">
+                <a href="#" class="active" data-type="prev">PREV</a>
+            </div>
+            <div class="gnb_allmenu" id="categoryAll" style="display:none;">
+                <div class="gnb_allmenu_box">
+                    <ul>
+                        {{#each multiLevelCategories}}
+                        <li style="width: 20%;">
+                            <div class="all_menu_cont">
+                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}">{{label}}</a>
+                                {{#if children }}
+                                <ul class="all_depth1">
+                                    {{#each children}}
+                                    <li>
+                                        <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=2">{{label}}</a>
+                                        {{#if children }} {{#each children}}
+                                        <ul class="all_depth2">
+                                            <li>
+                                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=3">{{label}}</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    {{/each}} {{/if}} {{/each}}
+                                </ul>
+                                {{/if}}
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+            <div class="gnb_all visible" style="display:none;">
+                <ul class="depth0 gnb_menu0">
+                    <li data-type="all">
+                        <a href="#" class="openMenuAll" data-type="all">
+                            ALL
+                        </a>
+                    </li>
+                </ul>
+            </div>            
             <div class="gnb_allmenu_wrap">
                 <div id="category-navigation">
                     <ul class="depth0 gnb_menu0">
@@ -42,7 +82,6 @@
     </nav>
     <div id="headerTop" class="header_top">
         <div class="gnb_search visible">
-            <div id="categoryAll"></div>
             <div class="top_search">
                 <div class="top_search_cont" id="keywordSearch">
                     <div class="top_text_cont">
