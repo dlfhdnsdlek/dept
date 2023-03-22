@@ -22,7 +22,7 @@ body #header { position:relative; padding:0; min-height:100px; visibility: visib
 #header .h1_logo a { height:auto; }
 
 /* 카테고리 */
-#header .header_gnb { width:calc(100% - 310px); margin:0; white-space: nowrap; z-index:1; }
+#header .header_gnb { width:calc(100% - 340px); margin:0; white-space: nowrap; z-index:1; }
 #header .gnb { width:auto; }
 #header .gnb_allmenu_wrap { width:auto; height:auto; overflow:visible; margin:0; }
 #header #category-navigation { margin:0 0 0 13px; }
