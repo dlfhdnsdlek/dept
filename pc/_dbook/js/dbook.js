@@ -23,10 +23,8 @@ $(()=>{
     /* 상단 마우스 오버시 */
     $('#header').on('mouseenter',function(){
         $(this).addClass('active');
-        $(".dk-header-wrap").removeClass("main-header");
     }).on('mouseleave', function(){
         $(this).removeClass('active');
-        $(".dk-header-wrap").addClass("main-header");
     });
 
     /* 종료된 공구 페이지 */
