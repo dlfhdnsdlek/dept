@@ -8,6 +8,7 @@
 .dk-main-visual .slider-wrap .slick-arrow { top:50%; width:14px; height:26px; background-size:100% auto; transform: translate(0, -50%); }
 .dk-main-visual .slider-wrap .slick-prev { left:20px; background-image:url('/_dbook/img/main_prev.png') !important; }
 .dk-main-visual .slider-wrap .slick-next { right:20px; background-image:url('/_dbook/img/main_next.png') !important; }
+.dk-main-visual .slider-wrap .slick-dots li button { width:5px; height:5px; padding:0; }
 
 /* 메인 공통 */
 .dk-main-wrap {  }
