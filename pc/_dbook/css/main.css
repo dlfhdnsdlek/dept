@@ -6,9 +6,18 @@ body #header::after { border-bottom:0; }
 #contents { padding:0; }
 #header .gnb .depth0 > li > ul { border:0; }
 
-#header.fixed,
 #header.active { background:rgba(255,255,255,0.95); }
 
+#header .main-header .h1_logo a { background:url('/_dbook/img/logo_w.png') no-repeat; }
+#header .main-header .h1_logo a img { opacity:0; }
+#header .main-header .gnb .depth0 > li > a,
+#header .main-header .header_top .header_top_cont .top_member_box > li a,
+#header .main-header .header_top .header_top_cont .top_member_box > li.top-cart .js_cart_length { color:#fff; }
+#header .main-header .top_search .top_search_cont { border-color:#fff; }
+#header .main-header .top_search .top_text_cont #btnSearchTop { background-image: url('/_dbook/img/btn_top_search_w.png'); }
+#header .main-header .header_top .header_top_cont .top_member_box > li a { color:#fff; }
+#header .main-header .header_top .header_top_cont .top_member_box > li.top-cart a span { background-image: url('/_dbook/img/btn_top_cart_w.png'); }
+#header .main-header .header_top .header_top_cont .top_member_box > li.top-wish a span { background-image: url('/_dbook/img/btn_top_wish_w.png'); }
 
 /*========================================================================
 메인 영역

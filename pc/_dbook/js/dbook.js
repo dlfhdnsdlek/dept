@@ -4,8 +4,10 @@ $(()=>{
     function showHeader() {
         if ($(window).scrollTop() > 0) {
             $("#header").addClass("fixed");
+            $(".dk-header-wrap").removeClass("main-header");
         } else {
             $("#header").removeClass("fixed");
+            $(".dk-header-wrap").addClass("main-header");
         }
     }
 	$(window).scroll(showHeader);
