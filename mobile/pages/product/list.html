@@ -91,8 +91,10 @@
                             <div class="goods_top_box" id="searchResult">
                                 {{#if keyword}}
                                 <div class="pick_list_num"><span>{{searchWord}}</span> 검색결과 <strong>{{totalCount}}</strong>개</div>
+                                {{else}}
+                                <div class="pick_list_num">상품 <strong>{{totalCount}}</strong>개 </div>
                                 {{/if}}
-                                <div>
+                                <div class="sort-wrap"><!-- dbook.fe -->
                                     <div id="sort-ui" name="sort-ui">
                                         <div class="goods_arr_box">
                                             <div class="goods_sort">
