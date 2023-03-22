@@ -1,107 +1,109 @@
-
-<nav class="header_gnb">
-    <div id="logo" class="h1_logo">
-        <a href="{{landingUrl}}" id="banner-logo">
-            {{img imageUrl}}
-        </a>
-    </div>
-    <div class="gnb">
-        <div class="gnb_left visible" data-type="prev">
-            <a href="#" class="active" data-type="prev">PREV</a>
+<div class="dk-header-wrap visible"></div>
+    <nav class="header_gnb">
+        <div id="logo" class="h1_logo">
+            <a href="{{landingUrl}}" id="banner-logo">
+                {{img imageUrl}}
+            </a>
         </div>
-        <div class="gnb_allmenu" id="categoryAll">
-            <div class="gnb_allmenu_box">
-                <ul>
-                    {{#each multiLevelCategories}}
-                    <li style="width: 20%;">
-                        <div class="all_menu_cont">
-                            <a href="/pages/product/list.html?categoryNo={{categoryNo}}">{{label}}</a>
-                            {{#if children }}
-                            <ul class="all_depth1">
-                                {{#each children}}
-                                <li>
-                                    <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=2">{{label}}</a>
-                                    {{#if children }} {{#each children}}
-                                    <ul class="all_depth2">
-                                        <li>
-                                            <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=3">{{label}}</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                {{/each}} {{/if}} {{/each}}
-                            </ul>
-                            {{/if}}
-                        </div>
+        <div class="gnb">
+            <div class="gnb_left visible" data-type="prev">
+                <a href="#" class="active" data-type="prev">PREV</a>
+            </div>
+            <div class="gnb_allmenu" id="categoryAll">
+                <div class="gnb_allmenu_box">
+                    <ul>
+                        {{#each multiLevelCategories}}
+                        <li style="width: 20%;">
+                            <div class="all_menu_cont">
+                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}">{{label}}</a>
+                                {{#if children }}
+                                <ul class="all_depth1">
+                                    {{#each children}}
+                                    <li>
+                                        <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=2">{{label}}</a>
+                                        {{#if children }} {{#each children}}
+                                        <ul class="all_depth2">
+                                            <li>
+                                                <a href="/pages/product/list.html?categoryNo={{categoryNo}}&depth=3">{{label}}</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    {{/each}} {{/if}} {{/each}}
+                                </ul>
+                                {{/if}}
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+            <div class="gnb_all visible">
+                <ul class="depth0 gnb_menu0">
+                    <li data-type="all">
+                        <a href="#" class="openMenuAll" data-type="all">
+                            ALL
+                        </a>
                     </li>
-                    {{/each}}
                 </ul>
             </div>
+            <div class="gnb_allmenu_wrap">
+                <div id="category-navigation">
+                    <ul class="depth0 gnb_menu0">
+                        {{#each multiLevelCategories}}
+                        <li>
+                            <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
+                                {{label}}
+                            </a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+            <div class="gnb_right visible" data-type="next">
+                <a href="#" class="active" data-type="next">NEXT</a>
+            </div>
         </div>
-        <div class="gnb_all visible">
-            <ul class="depth0 gnb_menu0">
-                <li data-type="all">
-                    <a href="#" class="openMenuAll" data-type="all">
-                        ALL
-                    </a>
+        <div class="gnb_search visible">
+            <div class="top_search">
+                <div class="top_search_cont" id="keywordSearch">
+                    <div class="top_text_cont">
+                        <input type="text" id="search_form" name="keyword" class="top_srarch_text" placeholder="" autocomplete="off" />
+                        <button type="button" id="btnSearchTop" title="검색" value="검색">
+                            <img src="/assets/img/common/btn/btn_top_search.png" class="btn_top_srarch" alt="검색" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="headerTop" class="header_top">
+        <div class="header_top_cont">
+            <ul class="top_member_box">
+                <li>
+                    <div id="mypageDiv" class="js_hover_drop_down_trigger top_mypage_cont">
+                        <span class="top_mypage_tit"><a id="myPageHeader" href="/pages/my/mypage.html">MY</a></span>
+                        <ul class="js_hover_drop_down_content" style="display: none;">
+                            <li><a href="/pages/my/orders.html">주문조회</a></li>
+                            {{#unless openIdProvider}}
+                            <li class="modify_member"><a href="/pages/my/modify-member.html">내정보수정</a></li>
+                            {{/unless}}
+                            <li><a href="/pages/my/wishes.html">찜 리스트</a></li>
+                            <li class="sb_li_inquiry"><a href="/pages/my/inquiries.html">1:1 문의</a></li>
+                        </ul>
+                    </div>
+                </li>
+                {{#if logined}}
+                <li><a id="logout" href="/">LOGOUT</a></li>
+                {{else}}
+                <li class="joinText"><a href="/pages/join/method.html">JOIN</a></li>
+                <li class="loginText"><a href="/pages/login/login.html">LOGIN</a></li>
+                {{/if}}
+                <li>
+                    <a href="/pages/order/cart.html">CART<strong class="js_cart_length">{{cartCount}}</strong></a>
                 </li>
             </ul>
         </div>
-        <div class="gnb_allmenu_wrap">
-            <div id="category-navigation">
-                <ul class="depth0 gnb_menu0">
-                    {{#each multiLevelCategories}}
-                    <li>
-                        <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
-                            {{label}}
-                        </a>
-                    </li>
-                    {{/each}}
-                </ul>
-            </div>
-        </div>
-        <div class="gnb_right visible" data-type="next">
-            <a href="#" class="active" data-type="next">NEXT</a>
-        </div>
-    </div>
-</nav>
-<div id="headerTop" class="header_top">
-    <div class="gnb_search visible">
-        <div class="top_search">
-            <div class="top_search_cont" id="keywordSearch">
-                <div class="top_text_cont">
-                    <input type="text" id="search_form" name="keyword" class="top_srarch_text" placeholder="" autocomplete="off" />
-                    <button type="button" id="btnSearchTop" title="검색" value="검색">
-                        <img src="/assets/img/common/btn/btn_top_search.png" class="btn_top_srarch" alt="검색" />
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="header_top_cont">
-        <ul class="top_member_box">
-            <li>
-                <div id="mypageDiv" class="js_hover_drop_down_trigger top_mypage_cont">
-                    <span class="top_mypage_tit"><a id="myPageHeader" href="/pages/my/mypage.html">MY</a></span>
-                    <ul class="js_hover_drop_down_content" style="display: none;">
-                        <li><a href="/pages/my/orders.html">주문조회</a></li>
-                        {{#unless openIdProvider}}
-                        <li class="modify_member"><a href="/pages/my/modify-member.html">내정보수정</a></li>
-                        {{/unless}}
-                        <li><a href="/pages/my/wishes.html">찜 리스트</a></li>
-                        <li class="sb_li_inquiry"><a href="/pages/my/inquiries.html">1:1 문의</a></li>
-                    </ul>
-                </div>
-            </li>
-            {{#if logined}}
-            <li><a id="logout" href="/">LOGOUT</a></li>
-            {{else}}
-            <li class="joinText"><a href="/pages/join/method.html">JOIN</a></li>
-            <li class="loginText"><a href="/pages/login/login.html">LOGIN</a></li>
-            {{/if}}
-            <li>
-                <a href="/pages/order/cart.html">CART<strong class="js_cart_length">{{cartCount}}</strong></a>
-            </li>
-        </ul>
     </div>
 </div>
 <script type="text/javascript" src="/js/components/header.js"></script>
+<script type="text/javascript" src="/_dbook/js/dbook.js"></script>
