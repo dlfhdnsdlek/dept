@@ -22,7 +22,7 @@ body #header { position:relative; padding:0; min-height:100px; visibility: visib
 #header .h1_logo a { height:auto; }
 
 /* 카테고리 */
-#header .header_gnb { width:auto; margin:0; white-space: nowrap; z-index:1; }
+#header .header_gnb { width:calc(100% - 310px); margin:0; white-space: nowrap; z-index:1; }
 #header .gnb { width:auto; }
 #header .gnb_allmenu_wrap { width:auto; height:auto; overflow:visible; margin:0; }
 #header #category-navigation { margin:0 0 0 13px; }
@@ -40,7 +40,7 @@ body #header { position:relative; padding:0; min-height:100px; visibility: visib
 #header .gnb .depth0 > li > a:hover::after { transform:translateX(0); transition:transform .2s; }
 
 /* 검색 */
-#header .top_search { position:relative; top:0; background:none; }
+#header .top_search { position:relative; top:30px; background:none; }
 #header .top_search .top_search_cont { width:242px; height:40px; padding:10px 15px; border: 1px solid #969696; border-radius:40px; box-sizing:border-box; }
 #header .top_search .top_text_cont { position:relative; width:100%; border:0; background:none; }
 #header .top_search .top_text_cont .top_srarch_text { font-size:14px; border-bottom:0; background:none; }
