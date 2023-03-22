@@ -76,33 +76,22 @@
             </div>
         </div>
     </nav>
-    <div id="headerTop" class="header_top">
-        <div class="header_top_cont">
-            <ul class="top_member_box">
-                <li>
-                    <div id="mypageDiv" class="js_hover_drop_down_trigger top_mypage_cont">
-                        <span class="top_mypage_tit"><a id="myPageHeader" href="/pages/my/mypage.html">MY</a></span>
-                        <ul class="js_hover_drop_down_content" style="display: none;">
-                            <li><a href="/pages/my/orders.html">주문조회</a></li>
-                            {{#unless openIdProvider}}
-                            <li class="modify_member"><a href="/pages/my/modify-member.html">내정보수정</a></li>
-                            {{/unless}}
-                            <li><a href="/pages/my/wishes.html">찜 리스트</a></li>
-                            <li class="sb_li_inquiry"><a href="/pages/my/inquiries.html">1:1 문의</a></li>
-                        </ul>
-                    </div>
-                </li>
-                {{#if logined}}
-                <li><a id="logout" href="/">LOGOUT</a></li>
-                {{else}}
-                <li class="joinText"><a href="/pages/join/method.html">JOIN</a></li>
-                <li class="loginText"><a href="/pages/login/login.html">LOGIN</a></li>
-                {{/if}}
-                <li>
-                    <a href="/pages/order/cart.html">CART<strong class="js_cart_length">{{cartCount}}</strong></a>
-                </li>
-            </ul>
-        </div>
+    <div class="header_top_cont">
+        <ul class="top_member_box">
+            {{#if logined}}
+            <li><a id="logout" href="/">LOG OUT</a></li>
+            <li><a href="/pages/my/mypage.html">MY PAGE</a></li>      
+            {{else}}
+            <li class="loginText"><a href="/pages/login/login.html">LOG IN</a></li>
+            <li class="joinText"><a href="/pages/join/method.html">JOIN</a></li>
+            {{/if}}
+            <li class="top-cart">
+                <a href="/pages/order/cart.html"><span>CART</span><em>(<strong class="js_cart_length">{{cartCount}}</strong>)</em></a>
+            </li>
+            <li class="top-wish">
+                <a href="/pages/my/wishes.html"><span>WISH</span></a>
+            </li>
+        </ul>
     </div>
 </div>
 <script type="text/javascript" src="/js/components/header.js"></script>
