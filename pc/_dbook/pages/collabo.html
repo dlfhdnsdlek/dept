@@ -197,6 +197,11 @@
                             </div>
                             <div class="item_info_cont">
                                 <div class="item_tit_box">
+                                    {{#ifEq isSoldOut true}}
+                                    <div class="item-soldout">
+                                        <strong>Sold out</strong>
+                                    </div>
+                                    {{/ifEq}}
                                     {{#if brandName}}
                                     <span class="item_brand">
                                      <strong>{{brandName}}</strong>
