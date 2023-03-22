@@ -6,9 +6,10 @@
             </a>
         </div>
         <div class="gnb">
+            <!--
             <div class="gnb_left visible" data-type="prev">
                 <a href="#" class="active" data-type="prev">PREV</a>
-            </div>
+            </div>-->
             <div class="gnb_allmenu" id="categoryAll">
                 <div class="gnb_allmenu_box">
                     <ul>
@@ -37,6 +38,7 @@
                     </ul>
                 </div>
             </div>
+            <!--
             <div class="gnb_all visible">
                 <ul class="depth0 gnb_menu0">
                     <li data-type="all">
@@ -45,17 +47,36 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div>-->
             <div class="gnb_allmenu_wrap">
                 <div id="category-navigation">
                     <ul class="depth0 gnb_menu0">
-                        {{#each multiLevelCategories}}
                         <li>
-                            <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
-                                {{label}}
-                            </a>
+                            <a href="/_dbook/pages/collabo.html">COLLABO</a>
                         </li>
-                        {{/each}}
+                        <li>
+                            <a href="#none">SHOP</a>
+                            <ul>
+                                {{#each multiLevelCategories}}
+                                <li>
+                                    <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
+                                        {{label}}
+                                    </a>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/_dbook/pages/brand.html">Dept.b</a>
+                        </li>
+                        <li>
+                            <a href="#none">COMMUNITY</a>
+                            <ul>
+                                <li><a href="/pages/my/inquiries.html">Q&amp;A</a></li>
+                                <li><a href="/pages/my/product-reviews.html">Review</a></li>
+                                <li><a href="/pages/board/list.html?boardId=notice">Notice</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
