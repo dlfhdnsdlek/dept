@@ -9,7 +9,7 @@ $(()=>{
     $('#category-navigation .category_side > li').each(function(){
         var eCategoryNo = $(this).attr('data-categoryno');
         if (eCategoryNo == '286231') {
-            $(this).hide();
+            $(this).remove();
         }
     });
 });
