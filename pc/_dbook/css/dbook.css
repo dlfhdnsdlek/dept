@@ -102,6 +102,8 @@ body #footer { min-height:0; }
 #scroll_right { display:none; position:fixed; top:auto; bottom:20px; right:0; left:auto; width:auto; margin:20px; }
 #scroll_right.ban_fixed { top:auto; bottom:20px; left:auto; right:0; margin:20px; }
 
+#kakao-talk-channel-chat-button { position:fixed; top:auto; bottom:20px; right:0; }
+
 /* 네이버 톡톡 */
 body .talk_banner_div .talk_preview_area .talk_banner_link { width:72px; height:72px; border-radius:50%; overflow:hidden; }
 body .talk_banner_div .talk_preview_area .talk_banner_preview { min-width:72px; min-height:72px; max-width:72px; max-height:72px; }
