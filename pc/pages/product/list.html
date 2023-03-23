@@ -34,7 +34,7 @@
                                     </div>
                                     <ul style="display: none;">
                                         {{#each children}}
-                                        <li>
+                                        <li data-productno="{{categoryNo}}">
                                             <a href="/pages/product/list.html?depth={{depth}}&categoryNo={{categoryNo}}"><span>{{label}}</span></a>
                                         </li>
                                         {{/each}}
