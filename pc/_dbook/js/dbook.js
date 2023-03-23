@@ -37,5 +37,6 @@ $(()=>{
         if (eCategoryNo == '286231') {
             $(this).remove();
         }
+        console.log('test');
     });
 });
