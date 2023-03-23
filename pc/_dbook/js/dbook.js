@@ -32,11 +32,10 @@ $(()=>{
     if ( frmSearch.match('categoryNo=286231') ) {
         $('.sub_content').addClass('collabo-end');
     }
-    $('#header .gnb .depth0 > li > ul > li, .location_select .location_tit + ul > li').each(function(){
+    $('#header .gnb .depth0 > li > ul > li').each(function(){
         var eCategoryNo = $(this).attr('data-categoryno');
         if (eCategoryNo == '286231') {
             $(this).remove();
         }
-        console.log('test');
     });
 });

@@ -111,6 +111,8 @@ body .talk_banner_div .talk_preview_area .talk_banner_desc { font-size:0; }
 /*========================================================================
 목록
 ========================================================================*/
+.location_select .location_tit + ul > li[data-categoryno="286231"] { display:none; } /* 종료된 공구 감춤 */
+
 .item_photo_box { width:100%; }
 .item_photo_box img { width:100%; }
 
