@@ -23,7 +23,7 @@ $(()=>{
     $('#header .gnb .depth0 .shop-menu').each(function(){
         var shopMenuCount = $(this).find('li').length;
         if ( shopMenuCount > 6) {
-            $(this).addClass('full-r');
+            $(this).addClass('full-list');
         }
     });
 
