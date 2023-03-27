@@ -38,6 +38,7 @@ body #header { position:relative; padding:0; min-height:100px; min-width:1320px;
 #header .gnb .depth0 > li ul.shop-menu.full-list > li { padding-left:20px; padding-right:20px; }
 #header .gnb .depth0 > li ul.shop-menu.full-list > li:nth-child(-n+6) { grid-column: 1; }
 #header .gnb .depth0 > li ul.shop-menu.full-list > li:nth-child(n+7):nth-child(-n+12) { grid-column:2; }
+#header .gnb .depth0 > li ul.shop-menu.full-list > li:nth-child(n+13):nth-child(-n+18) { grid-column:3; }
 #header .gnb .depth0 > li ul.shop-menu.full-list > li:nth-child(7n) { grid-row: 1; }
 #header .gnb .depth0 > li ul.shop-menu.full-list > li:nth-child(8n) { grid-row: 2; }
 #header .gnb .depth0 > li ul.shop-menu.full-list > li:nth-child(9n) { grid-row: 3; }
