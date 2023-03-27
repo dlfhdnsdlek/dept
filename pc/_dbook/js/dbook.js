@@ -20,6 +20,13 @@ $(()=>{
         $(this).removeClass('on').find('div').stop().slideUp(200);
     });
 
+    $('#header .gnb .depth0 .shop-menu').each(function(){
+        var shopMenuCount = $(this).find('li').length;
+        if ( shopMenuCount > 6) {
+            $(this).addClass('full-r');
+        }
+    });
+
     /* 상단 마우스 오버시 */
     $('#header').on('mouseenter',function(){
         $(this).addClass('active');
