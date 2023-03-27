@@ -22,8 +22,11 @@ $(()=>{
 
     $('#header .gnb .depth0 .shop-menu').each(function(){
         var shopMenuCount = $(this).find('li').length;
-        if ( shopMenuCount > 6) {
+        var num = 6;
+        var quo = parseInt(shopMenuCount/num) + 1;        
+        if ( shopMenuCount > num) {
             $(this).addClass('full-list');
+            $(this).css({'grid-template-columns':'repeat('+ quo +', 1fr)'});
         }
     });
 
