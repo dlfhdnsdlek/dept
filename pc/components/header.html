@@ -52,26 +52,30 @@
                         </li>
                         <li>
                             <a href="#none">SHOP</a>
-                            <ul>
-                                {{#each multiLevelCategories}}
-                                <li data-categoryno="{{categoryNo}}">
-                                    <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
-                                        {{label}}
-                                    </a>
-                                </li>
-                                {{/each}}
-                            </ul>
+                            <div>
+                                <ul class="shop-menu">
+                                    {{#each multiLevelCategories}}
+                                    <li data-categoryno="{{categoryNo}}">
+                                        <a href="/pages/product/list.html?categoryNo={{categoryNo}}">
+                                            {{label}}
+                                        </a>
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </div>
                         </li>
                         <li>
                             <a href="/_dbook/pages/brand.html">Dept.b</a>
                         </li>
                         <li>
                             <a href="#none">COMMUNITY</a>
-                            <ul>
-                                <li><a href="/pages/my/inquiries.html">Q&amp;A</a></li>
-                                <li><a href="/pages/my/product-reviews.html">Review</a></li>
-                                <li><a href="/pages/board/list.html?boardId=notice">Notice</a></li>
-                            </ul>
+                            <div>
+                                <ul>
+                                    <li><a href="/pages/my/inquiries.html">Q&amp;A</a></li>
+                                    <li><a href="/pages/my/product-reviews.html">Review</a></li>
+                                    <li><a href="/pages/board/list.html?boardId=notice">Notice</a></li>
+                                </ul>
+                            </div>
                         </li>
                     </ul>
                 </div>

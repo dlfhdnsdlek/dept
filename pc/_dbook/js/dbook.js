@@ -15,9 +15,9 @@ $(()=>{
 
     /* 상단 카테고리 하위 메뉴 */
     $('#header .gnb .depth0 > li').on('mouseenter',function(){
-        $(this).addClass('on').find('ul').stop().slideDown(200);
+        $(this).addClass('on').find('div').stop().slideDown(200);
     }).on('mouseleave', function(){
-        $(this).removeClass('on').find('ul').stop().slideUp(200);
+        $(this).removeClass('on').find('div').stop().slideUp(200);
     });
 
     /* 상단 마우스 오버시 */
@@ -32,7 +32,7 @@ $(()=>{
     if ( frmSearch.match('categoryNo=286231') ) {
         $('.sub_content').addClass('collabo-end');
     }
-    $('#header .gnb .depth0 > li > ul > li').each(function(){
+    $('#header .gnb .depth0 > li ul > li').each(function(){
         var eCategoryNo = $(this).attr('data-categoryno');
         if (eCategoryNo == '286231') {
             $(this).remove();
