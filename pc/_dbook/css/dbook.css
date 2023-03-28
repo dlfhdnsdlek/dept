@@ -13,9 +13,9 @@ body { min-width:1300px; max-width:1980px; padding:0; margin:0 auto; }
 /*========================================================================
 상단 영역
 ========================================================================*/
-body #header { position:relative; padding:0; min-height:100px; min-width:1320px; visibility: visible; z-index:100; }
+body #header { position:relative; padding:0; min-height:100px; min-width:1340px; visibility: visible; z-index:100; }
 /*body #header::after { content: ''; position:absolute; bottom:-1px; width:100%; border-bottom:1px solid #dbdbdb; }*/
-.dk-header-wrap { display:flex; justify-content: space-between; width:100%; max-width:1670px; margin:0 auto; }
+.dk-header-wrap { display:flex; justify-content: space-between; width:100%; max-width:1690px; padding:0 10px; margin:0 auto; box-sizing: border-box; }
 
 /* 로고 */
 #header .h1_logo { width:auto; margin:19px 0 18px; }
