@@ -38,7 +38,7 @@ $(()=>{
             $(this).css({'grid-template-columns':'repeat('+ quo +', 1fr)'});
 
             $('#header .gnb .depth0 .shop-menu > li').each(function(){
-                var idx = $(this).index();
+                var idx = $(this).index()+1;
                 var mod = Math.ceil(idx/num);
                 $(this).css({'grid-column':mod});
             });
