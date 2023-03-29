@@ -2,8 +2,8 @@
 Layout
 ========================================================================*/
 body, th, td, input, select, textarea, button { font-family:'Pretendard', 'Noto Sans KR', Verdana, Dotum, AppleGothic, sans-serif; }
-body { min-width:1300px; max-width:1980px; padding:0; margin:0 auto; }
-#wrap { min-width:1300px; }
+body { min-width:1320px; max-width:1980px; padding:0; margin:0 auto; }
+#wrap { min-width:1320px; }
 
 #header.fixed { position:fixed; top:0; left:0; width: 100%; background:rgba(255,255,255,0.95); }
 
@@ -51,7 +51,7 @@ body #header { position:relative; padding:0; min-height:100px; min-width:1340px;
 
 /* 검색 */
 #header .top_search { position:relative; top:40px; background:none; }
-#header .top_search .top_search_cont { width:242px; height:40px; padding:10px 15px; border: 1px solid #969696; border-radius:40px; box-sizing:border-box; }
+#header .top_search .top_search_cont { width:190px; height:34px; padding:7px 15px; border: 1px solid #969696; border-radius:40px; box-sizing:border-box; }
 #header .top_search .top_text_cont { position:relative; width:100%; border:0; background:none; }
 #header .top_search .top_text_cont .top_srarch_text { font-size:14px; border-bottom:0; background:none; }
 #header .top_search .top_text_cont .btn_top_srarch { display:none; }
